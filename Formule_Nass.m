@@ -65,25 +65,3 @@ for i = 1:6,
   upper_leg(i).end_point = pos_base(i,:) +  (1/4)*legs(i,:);  
   upper_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
 end
-
-% Inertia and mass calculation
-top_thickness = 0.05;
-base_thickness = 0.05;
-inner_radius = 0.03;
-outer_radius = 0.05;
-density = 76e3/9.81; % steel density in Kg/m^3
-
-%leg inertia and mass
-[lower_leg_mass, lower_leg_inertia] = inertiaCylinder(density, ... 
-              0.75*leg_length(1),outer_radius, inner_radius);
-[upper_leg_mass, upper_leg_inertia] = inertiaCylinder(density, ... 
-              0.75*leg_length(1),inner_radius, 0);
-
-% top and base plate mass and inertia
-[top_mass, top_inertia] = inertiaCylinder(density, ... 
-              top_thickness, radius_t, 0);
-[base_mass, base_inertia] = inertiaCylinder(density, ... 
-              base_thickness,radius_b, 0);
-
-% PID controller gains
-Kp = 2e6; Ki = 1e4; Kd = 4.5e4;
