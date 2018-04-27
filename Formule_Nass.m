@@ -1,3 +1,11 @@
+%%
+clear;
+clc;
+
+%%
+run Design_Nass.m
+
+%%
 deg2rad = pi/180;
 x_axis = [1 0 0];
 y_axis = [0 1 0];

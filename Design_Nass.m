@@ -1,5 +1,3 @@
-run Formule_Nass.m
-
 %% Nass height
 Nass.h = 90 ; %mm
 
@@ -7,7 +5,7 @@ Nass.h = 90 ; %mm
 BP = struct();
 BP.rad.int = 105 ; %mm
 BP.rad.ext = 152.5 ; %mm
-BP.thickness = 20 % mm
+BP.thickness = 20; % mm
 BP.leg.rad = 140 ; %mm
 BP.leg.ang = 2.5 ; %deg
 BP.density = 1000 ; %kg/m^3
@@ -17,7 +15,7 @@ BP.color = [0.5 0.5 0.5] ; %rgb
 TP = struct();
 TP.rad.int = 0 ;%mm
 TP.rad.ext = 150 ; %mm
-TP.thickness = 20 % mm
+TP.thickness = 20; % mm
 TP.leg.rad = 140 ; %mm
 TP.leg.ang = 5 ; %deg
 TP.density = 1000 ; %kg/m^3
@@ -30,6 +28,7 @@ Leg.rad.top = 10 ; %mm
 Leg.sphere.bottom = 20 ; % mm 
 Leg.sphere.top = 10 ; % mm
 Leg.density = 1000 ; %kg/m^3
+Leg.lenght = 0.8*Nass.h; % mm (approximate)
 Leg.m = Leg.density*2*pi*((Leg.rad.bottom)^2)*(Leg.lenght); %kg
 Leg.color.bottom = [0.5 0.5 0.5] ; %rgb
 Leg.color.top = [0.5 0.5 0.5] ; %rgb
@@ -43,12 +42,12 @@ SP = struct();
 SP.thickness.bottom = 1 ; %mm
 SP.thickness.top = 1 ; %mm
 SP.rad.bottom = Leg.rad.bottom ; %mm
-SP.rad.top = Leg.rad.ttop ; %mm
+SP.rad.top = Leg.rad.top ; %mm
 SP.height.bottom = 5 ; %mm
 SP.height.top = 5 ; %mm
 SP.density.bottom = 1000 ; %kg/m^3
 SP.density.top = 1000 ; %kg/m^3
-SP.m = SP.density*2*pi*((SP.rad.bottom)^2)*(SP.height.bottom); %kg
+SP.m = SP.density.bottom*2*pi*((SP.rad.bottom)^2)*(SP.height.bottom); %kg
 SP.color.bottom = [0.5 0.5 0.5] ; %rgb
 SP.color.top = [0.5 0.5 0.5] ; %rgb
 SP.k.ax = 5e7 ; % N*m/deg
