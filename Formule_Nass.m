@@ -7,7 +7,7 @@ z_axis = [0 0 1];
 % of the base plate
 pos_base = [];
 pos_top = [];
-alpha_b = 90*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
+alpha_b = BP.leg.ang*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
 alpha_t = -30*deg2rad; % +- offset angle from 120 degree spacing on top
 height = 0.10; % 2 meter height in home configuration
 radius_b = 0.130; % rayon emplacement support base
