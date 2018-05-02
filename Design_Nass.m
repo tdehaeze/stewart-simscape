@@ -23,7 +23,7 @@ TP.color = [0.5 0.5 0.5] ; %rgb
 
 %% Leg 
 Leg = struct();
-Leg.rad.bottom = 10 ; %mm
+Leg.rad.bottom = 8 ; %mm
 Leg.rad.top = 8 ; %mm
 Leg.sphere.bottom = 10 ; % mm 
 Leg.sphere.top = 10 ; % mm
@@ -44,7 +44,7 @@ SP.thickness.top = 1 ; %mm
 SP.rad.bottom = Leg.sphere.bottom ; %mm
 SP.rad.top = Leg.sphere.top ; %mm
 SP.height.bottom = 10 ; %mm
-SP.height.top = 5 ; %mm
+SP.height.top = 10 ; %mm
 SP.density.bottom = 8000 ; %kg/m^3
 SP.density.top = 8000 ; %kg/m^3
 SP.m = SP.density.bottom*2*pi*((SP.rad.bottom)^2)*(SP.height.bottom); %kg
