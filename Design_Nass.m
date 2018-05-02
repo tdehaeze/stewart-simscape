@@ -6,8 +6,8 @@ BP = struct();
 BP.rad.int = 105 ; %mm
 BP.rad.ext = 152.5 ; %mm
 BP.thickness = 20; % mm
-BP.leg.rad = 140 ; %mm
-BP.leg.ang = 15 ; %deg
+BP.leg.rad = 142 ; %mm
+BP.leg.ang = 5 ; %deg
 BP.density = 8000 ; %kg/m^3
 BP.color = [0.5 0.5 0.5] ; %rgb
 
@@ -16,7 +16,7 @@ TP = struct();
 TP.rad.int = 0 ;%mm
 TP.rad.ext = 150 ; %mm
 TP.thickness = 20; % mm
-TP.leg.rad = 140 ; %mm
+TP.leg.rad = 130 ; %mm
 TP.leg.ang = 5 ; %deg
 TP.density = 8000 ; %kg/m^3
 TP.color = [0.5 0.5 0.5] ; %rgb
@@ -24,16 +24,16 @@ TP.color = [0.5 0.5 0.5] ; %rgb
 %% Leg 
 Leg = struct();
 Leg.rad.bottom = 8 ; %mm
-Leg.rad.top = 8 ; %mm
+Leg.rad.top = 5 ; %mm
 Leg.sphere.bottom = 10 ; % mm 
-Leg.sphere.top = 10 ; % mm
+Leg.sphere.top = 8 ; % mm
 Leg.density = 8000 ; %kg/m^3
-Leg.lenght = 0.8*Nass.h; % mm (approximate)
+Leg.lenght = Nass.h; % mm (approximate)
 Leg.m = Leg.density*2*pi*((Leg.rad.bottom)^2)*(Leg.lenght); %kg
 Leg.color.bottom = [0.5 0.5 0.5] ; %rgb
 Leg.color.top = [0.5 0.5 0.5] ; %rgb
-Leg.k.ax = 5e7; % N/m
-Leg.ksi.ax = 10 ; 
+Leg.k.ax = 0; % N/m
+Leg.ksi.ax = 00 ; 
 Leg = updateDamping(Leg);
 
 
@@ -50,7 +50,7 @@ SP.density.top = 8000 ; %kg/m^3
 SP.m = SP.density.bottom*2*pi*((SP.rad.bottom)^2)*(SP.height.bottom); %kg
 SP.color.bottom = [0.5 0.5 0.5] ; %rgb
 SP.color.top = [0.5 0.5 0.5] ; %rgb
-SP.k.ax = 1e4 ; % N*m/deg
+SP.k.ax = 0 ; % N*m/deg
 SP.ksi.ax = 10 ; 
 SP = updateDamping(SP);
 

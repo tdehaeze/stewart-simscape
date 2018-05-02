@@ -17,9 +17,9 @@ pos_base = [];
 pos_top = [];
 alpha_b = BP.leg.ang*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
 alpha_t = TP.leg.ang*deg2rad; % +- offset angle from 120 degree spacing on top
-height = 0.10; % 2 meter height in home configuration
-radius_b = 0.130; % rayon emplacement support base
-radius_t = 0.100; % top radius in meters
+height = (Nass.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001 ; % 2 meter height in home configuration
+radius_b = BP.leg.rad*0.001; % rayon emplacement support base
+radius_t = TP.leg.rad*0.001; % top radius in meters
 for i = 1:3,
   % base points
   angle_m_b = (2*pi/3)* (i-1) - alpha_b;
