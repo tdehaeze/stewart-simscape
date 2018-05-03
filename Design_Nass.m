@@ -51,7 +51,7 @@ SP.m = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); 
 SP.color.bottom = [0.5 0.5 0.5] ; %rgb
 SP.color.top = [0.5 0.5 0.5] ; %rgb
 SP.k.ax = 0 ; % N*m/deg
-SP.ksi.ax = 5 ; 
+SP.ksi.ax = 1 ; 
 SP = updateDamping(SP);
 
 %%
