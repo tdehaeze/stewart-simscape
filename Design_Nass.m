@@ -23,11 +23,11 @@ TP.leg.ang = 5 ; %deg
 TP.density = 8000 ; %kg/m^3
 TP.color = [0.5 0.5 0.5] ; %rgb
 
-%% Leg 
+%% Leg
 Leg = struct();
 Leg.rad.bottom = 8 ; %mm
 Leg.rad.top = 5 ; %mm
-Leg.sphere.bottom = 10 ; % mm 
+Leg.sphere.bottom = 10 ; % mm
 Leg.sphere.top = 8 ; % mm
 Leg.density = 8000 ; %kg/m^3
 Leg.lenght = Nass.h; % mm (approximate)
@@ -35,7 +35,7 @@ Leg.m = Leg.density*2*pi*((Leg.rad.bottom*1e-3)^2)*(Leg.lenght*1e-3); %kg
 Leg.color.bottom = [0.5 0.5 0.5] ; %rgb
 Leg.color.top = [0.5 0.5 0.5] ; %rgb
 Leg.k.ax = 5e7; % N/m
-Leg.ksi.ax = 10 ; 
+Leg.ksi.ax = 10 ;
 Leg = updateDamping(Leg);
 
 
@@ -53,7 +53,7 @@ SP.m = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); 
 SP.color.bottom = [0.5 0.5 0.5] ; %rgb
 SP.color.top = [0.5 0.5 0.5] ; %rgb
 SP.k.ax = 0 ; % N*m/deg
-SP.ksi.ax = 1 ; 
+SP.ksi.ax = 1 ;
 SP = updateDamping(SP);
 
 %%
@@ -63,4 +63,3 @@ function element = updateDamping(element)
         element.c.(field{i}) = 1/element.ksi.(field{i})*sqrt(element.k.(field{i})/element.m);
     end
 end
-

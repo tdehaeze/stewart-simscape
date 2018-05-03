@@ -28,7 +28,7 @@ for i = 1:3
 
   % top points
   % Top points are 60 degrees offset
-  angle_m_t = (2*pi/3)* (i-1) - alpha_t + 2*pi/6; 
+  angle_m_t = (2*pi/3)* (i-1) - alpha_t + 2*pi/6;
   angle_p_t = (2*pi/3)* (i-1) + alpha_t + 2*pi/6;
   pos_top(2*i-1,:) = [radius_t*cos(angle_m_t), radius_t*sin(angle_m_t), height];
   pos_top(2*i,:) = [radius_t*cos(angle_p_t), radius_t*sin(angle_p_t), height];
