@@ -1,7 +1,6 @@
 %%
 clear;
 clc;
-
 %%
 run Design_Nass.m
 
@@ -20,7 +19,7 @@ alpha_t = TP.leg.ang*deg2rad; % +- offset angle from 120 degree spacing on top
 height = (Nass.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001 ; % 2 meter height in home configuration
 radius_b = BP.leg.rad*0.001; % rayon emplacement support base
 radius_t = TP.leg.rad*0.001; % top radius in meters
-for i = 1:3,
+for i = 1:3
   % base points
   angle_m_b = (2*pi/3)* (i-1) - alpha_b;
   angle_p_b = (2*pi/3)* (i-1) + alpha_b;
@@ -44,7 +43,7 @@ body_pts = pos_top' - height*[zeros(2,6);ones(1,6)];
 legs = pos_top - pos_base;
 leg_length = [ ];
 leg_vectors = [ ];
-for i = 1:6,
+for i = 1:6
   leg_length(i) = norm(legs(i,:));
   leg_vectors(i,:)  = legs(i,:) / leg_length(i);
 end
@@ -52,7 +51,7 @@ end
 Leg.lenght = 1000*leg_length(1)/1.5;
 
 % Calculate revolute and cylindrical axes
-for i = 1:6,
+for i = 1:6
   rev1(i,:) = cross(leg_vectors(i,:), z_axis);
   rev1(i,:) = rev1(i,:) / norm(rev1(i,:));
   rev2(i,:) = - cross(rev1(i,:), leg_vectors(i,:));
@@ -67,11 +66,14 @@ end
 lower_leg = struct('origin', [0 0 0], 'rotation', eye(3), 'end_point', [0 0 0]);
 upper_leg = struct('origin', [0 0 0], 'rotation', eye(3), 'end_point', [0 0 0]);
 
-for i = 1:6,
-  lower_leg(i).origin = pos_base(i,:) + (3/8)*legs(i,:);  
-  lower_leg(i).end_point = pos_base(i,:) +  (3/4)*legs(i,:);  
+for i = 1:6
+  lower_leg(i).origin = pos_base(i,:) + (3/8)*legs(i,:);
+  lower_leg(i).end_point = pos_base(i,:) +  (3/4)*legs(i,:);
   lower_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
   upper_leg(i).origin = pos_base(i,:) + (1-3/8)*legs(i,:);
-  upper_leg(i).end_point = pos_base(i,:) +  (1/4)*legs(i,:);  
+  upper_leg(i).end_point = pos_base(i,:) +  (1/4)*legs(i,:);
   upper_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
 end
+
+%%
+run JacobianMatrix.m

@@ -1,5 +1,7 @@
 %% Nass height
-Nass.h = 90 ; %mm
+Nass = struct();
+Nass.h = 90; %mm
+Nass.jacobian = 174.5; %mm
 
 %% Bottom Plate
 BP = struct();
