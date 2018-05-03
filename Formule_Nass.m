@@ -49,6 +49,8 @@ for i = 1:6,
   leg_vectors(i,:)  = legs(i,:) / leg_length(i);
 end
 
+Leg.lenght = 1000*leg_length(1)/1.5;
+
 % Calculate revolute and cylindrical axes
 for i = 1:6,
   rev1(i,:) = cross(leg_vectors(i,:), z_axis);
