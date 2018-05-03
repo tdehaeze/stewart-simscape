@@ -1,11 +1,3 @@
-%%
-clear;
-close all;
-clc;
-
-%%
-run stewart_parameters.m
-
 %% Define some constant values
 deg2rad = pi/180;
 x_axis = [1 0 0];
@@ -19,7 +11,7 @@ pos_top = zeros(6, 3);
 alpha_b = BP.leg.ang*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
 alpha_t = TP.leg.ang*deg2rad; % +- offset angle from 120 degree spacing on top
 
-height = (stewart.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001 ; % 2 meter height in home configuration
+height = (stewart.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001; % 2 meter height in home configuration
 
 radius_b = BP.leg.rad*0.001; % rayon emplacement support base
 radius_t = TP.leg.rad*0.001; % top radius in meters

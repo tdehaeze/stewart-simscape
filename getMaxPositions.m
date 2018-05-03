@@ -1,4 +1,4 @@
-function [X, Y, Z] = getMaxPositions(lmax, J)
+function [X, Y, Z] = getMaxPositions(Leg, J)
     theta = linspace(0, 2*pi, 100);
     phi = linspace(-pi/2 , pi/2, 100);
     dmax = zeros(length(theta), length(phi));
@@ -6,7 +6,7 @@ function [X, Y, Z] = getMaxPositions(lmax, J)
     for i = 1:length(theta)
         for j = 1:length(phi)
             L = J*[cos(phi(j))*cos(theta(i)) cos(phi(j))*sin(theta(i)) sin(phi(j)) 0 0 0]';
-            dmax(i, j) = lmax/max(abs(L));
+            dmax(i, j) = Leg.stroke/max(abs(L));
         end
     end
 
