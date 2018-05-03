@@ -1,7 +1,7 @@
 %% Nass height
-Nass = struct();
-Nass.h = 90; %mm
-Nass.jacobian = 174.5; %mm
+stewart = struct();
+stewart.h = 90; %mm
+stewart.jacobian = 174.5; %mm
 
 %% Bottom Plate
 BP = struct();
@@ -30,7 +30,7 @@ Leg.rad.top = 5 ; %mm
 Leg.sphere.bottom = 10 ; % mm
 Leg.sphere.top = 8 ; % mm
 Leg.density = 8000 ; %kg/m^3
-Leg.lenght = Nass.h; % mm (approximate)
+Leg.lenght = stewart.h; % mm (approximate)
 Leg.m = Leg.density*2*pi*((Leg.rad.bottom*1e-3)^2)*(Leg.lenght*1e-3); %kg
 Leg.color.bottom = [0.5 0.5 0.5] ; %rgb
 Leg.color.top = [0.5 0.5 0.5] ; %rgb

@@ -1,8 +1,10 @@
 %%
 clear;
+close all;
 clc;
+
 %%
-run Design_Nass.m
+run stewart_parameters.m
 
 %%
 deg2rad = pi/180;
@@ -16,7 +18,7 @@ pos_base = [];
 pos_top = [];
 alpha_b = BP.leg.ang*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
 alpha_t = TP.leg.ang*deg2rad; % +- offset angle from 120 degree spacing on top
-height = (Nass.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001 ; % 2 meter height in home configuration
+height = (stewart.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001 ; % 2 meter height in home configuration
 radius_b = BP.leg.rad*0.001; % rayon emplacement support base
 radius_t = TP.leg.rad*0.001; % top radius in meters
 for i = 1:3
@@ -75,5 +77,9 @@ for i = 1:6
   upper_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
 end
 
-%%
-run JacobianMatrix.m
+% Position Matrix
+M_pos_base = pos_base + (height+(TP.thickness+Leg.sphere.top+SP.thickness.top+stewart.jacobian)*1e-3)*[zeros(6, 2),ones(6, 1)];
+
+% Compute Jacobian Matrix
+J  = getJacobianMatrix(leg_vectors, M_pos_base);
+
