@@ -5,10 +5,10 @@ stewart.jacobian = 174.5; %mm
 
 %% Bottom Plate
 BP = struct();
-BP.rad.int = 105; %mm
-BP.rad.ext = 152.5; %mm
-BP.thickness = 8; % mm
-BP.leg.rad = 142; %mm
+BP.rad.int = 0; %mm
+BP.rad.ext = 150; %mm
+BP.thickness = 10; % mm
+BP.leg.rad = 140; %mm
 BP.leg.ang = 5; %deg
 BP.density = 8000; %kg/m^3
 BP.color = [0.5 0.5 0.5]; %rgb
@@ -16,9 +16,9 @@ BP.color = [0.5 0.5 0.5]; %rgb
 %% TOP Plate
 TP = struct();
 TP.rad.int = 0;%mm
-TP.rad.ext = 120; %mm
-TP.thickness = 8; % mm
-TP.leg.rad = 100; %mm
+TP.rad.ext = 150; %mm
+TP.thickness = 10; % mm
+TP.leg.rad = 120; %mm
 TP.leg.ang = 5; %deg
 TP.density = 8000; %kg/m^3
 TP.color = [0.5 0.5 0.5]; %rgb

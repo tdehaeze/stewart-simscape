@@ -8,5 +8,6 @@ run stewart_init.m
 figure;
 hold on;
 mesh(X, Y, Z);
+grid on;
 colorbar;
 hold off;
