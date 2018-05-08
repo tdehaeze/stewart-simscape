@@ -1,5 +1,5 @@
 run study_architecture.m
-format short
+format shortEnG
 %% tx
 tx=[leg_radius', max_disp(:, 1)]';
 tx1=find(tx(2,:)==max(tx(2,:)));

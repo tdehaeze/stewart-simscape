@@ -18,7 +18,7 @@ TP = struct();
 TP.rad.int = 0;%mm
 TP.rad.ext = 150; %mm
 TP.thickness = 10; % mm
-TP.leg.rad = 120; %mm
+TP.leg.rad = 100; %mm
 TP.leg.ang = 5; %deg
 TP.density = 8000; %kg/m^3
 TP.color = [0.5 0.5 0.5]; %rgb
@@ -54,7 +54,7 @@ SP.m = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); 
 SP.color.bottom = [0.5 0.5 0.5]; %rgb
 SP.color.top = [0.5 0.5 0.5]; %rgb
 SP.k.ax = 0; % N*m/deg
-SP.ksi.ax = 1;
+SP.ksi.ax = 10;
 SP = updateDamping(SP);
 
 %%
