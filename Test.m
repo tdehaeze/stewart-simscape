@@ -1,13 +1,13 @@
-%% paramétres variables
+%% Variable parameters
 BP_leg_radius = 100:10:150;
 TP_leg_radius = 50:10:100;
 BP_leg_ang = 0:1:30;
 TP_leg_ang = 0:1:30;
 
-%% intervalle 
-intervalle1=10e-6; 
+%% 
+intervalle1=10e-6;
 intervalle2=10e-3;
-% variation=1e-3;        
+% variation=1e-3;
 
 %% Study the effect of the radius of the top platform position of the legs
 max_disp   = zeros(length(BP_leg_radius),length(TP_leg_radius),length(BP_leg_ang),length(TP_leg_ang), 6);
@@ -30,10 +30,10 @@ for Blri = 1:length(BP_leg_radius)
 end
 
 %%
-M = min(min(stiffness(:, : , :, :, 4, 4), stiffness(:, : , :, :, 5, 5)), stiffness(:, : , :, :, 6, 6));
+M = min(max_disp(:, : , :, :, 1), max_disp(:, : , :, :, 2));
 [C,I] = max(M(:));
 
-[I1,I2,I3,I4] = ind2sub(size(stiffness(:, : , :, :, 3, 3)),I);
+[I1,I2,I3,I4] = ind2sub(size(max_disp(:, : , :, :, 3)),I);
 BP_leg_radius(I1)
 TP_leg_radius(I2)
 BP_leg_ang(I3)
@@ -56,4 +56,4 @@ TP_leg_ang(I4)
 %         end
 %     end
 % end
-% 
+%
