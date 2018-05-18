@@ -1,0 +1,2 @@
+* Stewart Platform using Simscape
+
