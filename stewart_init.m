@@ -48,6 +48,7 @@ for i = 1:6
 end
 
 Leg.lenght = 1000*leg_length(1)/1.5;
+Leg.shape.bot = [0 0; Leg.rad.bottom 0; Leg.rad.bottom Leg.lenght; Leg.rad.top Leg.lenght; Leg.rad.top 0.2*Leg.lenght; 0 0.2*Leg.lenght];
 
 %% Calculate revolute and cylindrical axes
 rev1 = zeros(6, 3);

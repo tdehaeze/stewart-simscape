@@ -1,60 +1,68 @@
 %% Nass height
 stewart = struct();
-stewart.h = 90; %mm
-stewart.jacobian = 174.5; %mm
+
+stewart.h        = 350; % Total height of the platform [mm]
+stewart.jacobian = 174.5; % Point where the Jacobian is computed => Center of rotation [mm]
 
 %% Bottom Plate
 BP = struct();
-BP.rad.int = 0; %mm
-BP.rad.ext = 150; %mm
-BP.thickness = 10; % mm
-BP.leg.rad = 100; %mm
-BP.leg.ang = 5; %deg
-BP.density = 8000; %kg/m^3
-BP.color = [0.5 0.5 0.5]; %rgb
 
-%% TOP Plate
+BP.rad.int   = 110; % Internal Radius [mm]
+BP.rad.ext   = 207.5; % External Radius [mm]
+BP.thickness = 26; % Thickness [mm]
+BP.leg.rad   = 175.5; % Radius where the legs articulations are positionned [mm]
+BP.leg.ang   = 9.5; % Angle Offset [deg]
+BP.density   = 8000; % Density of the material [kg/m^3]
+BP.color     = [0.5 0.5 0.5]; % Color [rgb]
+
+%% Top Plate
 TP = struct();
-TP.rad.int = 0;%mm
-TP.rad.ext = 100; %mm
-TP.thickness = 10; % mm
-TP.leg.rad = 90; %mm
-TP.leg.ang = 5; %deg
-TP.density = 8000; %kg/m^3
-TP.color = [0.5 0.5 0.5]; %rgb
+
+TP.rad.int   = 82; % Internal Radius [mm]
+TP.rad.ext   = 150; % Internal Radius [mm]
+TP.thickness = 26; % Thickness [mm]
+TP.leg.rad   = 118; % Radius where the legs articulations are positionned [mm]
+TP.leg.ang   = 12.1; % Angle Offset [deg]
+TP.density   = 8000; % Density of the material [kg/m^3]
+TP.color     = [0.5 0.5 0.5]; % Color [rgb]
 
 %% Leg
-Leg = struct();
-Leg.stroke = 80e-6; % m
-Leg.rad.bottom = 8; %mm
-Leg.rad.top = 5; %mm
-Leg.sphere.bottom = 10; % mm
-Leg.sphere.top = 8; % mm
-Leg.density = 8000; %kg/m^3
-Leg.lenght = stewart.h; % mm (approximate)
-Leg.m = Leg.density*2*pi*((Leg.rad.bottom*1e-3)^2)*(Leg.lenght*1e-3); %kg
-Leg.color.bottom = [0.5 0.5 0.5]; %rgb
-Leg.color.top = [0.5 0.5 0.5]; %rgb
-Leg.k.ax = 5e7; % N/m
-Leg.ksi.ax = 10;
+Leg = struct(); 
+
+Leg.stroke     = 10e-3; % Maximum Stroke of each leg [m]
+Leg.k.ax       = 5e7; % Stiffness of each leg [N/m]
+Leg.ksi.ax     = 10; % Maximum amplification at resonance []
+Leg.rad.bottom = 25; % Radius of the cylinder of the bottom part [mm]
+Leg.rad.top    = 17; % Radius of the cylinder of the top part [mm]
+Leg.density    = 8000; % Density of the material [kg/m^3]
+Leg.color.bottom  = [0.5 0.5 0.5]; % Color [rgb]
+Leg.color.top     = [0.5 0.5 0.5]; % Color [rgb]
+
+Leg.sphere.bottom = Leg.rad.bottom; % Size of the sphere at the end of the leg [mm]
+Leg.sphere.top    = Leg.rad.top; % Size of the sphere at the end of the leg [mm]
+Leg.m             = TP.density*((2*pi*TP.rad.ext/1000)*(TP.thickness/1000)-(2*pi*TP.rad.int/1000)*(TP.thickness/1000))/6; % TODO [kg/m^3]
+
 Leg = updateDamping(Leg);
 
 
 %% Sphere
 SP = struct();
-SP.thickness.bottom = 1; %mm
-SP.thickness.top = 1; %mm
-SP.rad.bottom = Leg.sphere.bottom; %mm
-SP.rad.top = Leg.sphere.top; %mm
-SP.height.bottom = 5; %mm
-SP.height.top = 5; %mm
-SP.density.bottom = 8000; %kg/m^3
-SP.density.top = 8000; %kg/m^3
-SP.m = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); %kg
-SP.color.bottom = [0.5 0.5 0.5]; %rgb
-SP.color.top = [0.5 0.5 0.5]; %rgb
-SP.k.ax = 1e2; % N*m/deg
-SP.ksi.ax = 10;
+
+SP.height.bottom  = 27; % [mm]
+SP.height.top     = 27; % [mm]
+SP.density.bottom = 8000; % [kg/m^3]
+SP.density.top    = 8000; % [kg/m^3]
+SP.color.bottom   = [0.5 0.5 0.5]; % [rgb]
+SP.color.top      = [0.5 0.5 0.5]; % [rgb]
+SP.k.ax           = 0; % [N*m/deg]
+SP.ksi.ax         = 10;
+
+SP.thickness.bottom = SP.height.bottom-Leg.sphere.bottom; % [mm]
+SP.thickness.top    = SP.height.top-Leg.sphere.top; % [mm]
+SP.rad.bottom       = Leg.sphere.bottom; % [mm]
+SP.rad.top          = Leg.sphere.top; % [mm]
+SP.m                = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); % [kg]
+
 SP = updateDamping(SP);
 
 %%
