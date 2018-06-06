@@ -11,7 +11,7 @@ pos_top = zeros(6, 3);
 alpha_b = BP.leg.ang*deg2rad; % angle de décalage par rapport à 120 deg (pour positionner les supports bases)
 alpha_t = TP.leg.ang*deg2rad; % +- offset angle from 120 degree spacing on top
 
-height = (stewart.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001; % 2 meter height in home configuration
+height = (stewart.h-BP.thickness-TP.thickness-Leg.sphere.bottom-Leg.sphere.top-SP.thickness.bottom-SP.thickness.top)*0.001; % TODO
 
 radius_b = BP.leg.rad*0.001; % rayon emplacement support base
 radius_t = TP.leg.rad*0.001; % top radius in meters
@@ -86,5 +86,6 @@ end
 M_pos_base = pos_base + (height+(TP.thickness+Leg.sphere.top+SP.thickness.top+stewart.jacobian)*1e-3)*[zeros(6, 2),ones(6, 1)];
 
 %% Compute Jacobian Matrix
-J  = getJacobianMatrix(leg_vectors, M_pos_base);
+aa = pos_top_tranform + (stewart.jacobian - TP.thickness - SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
+J  = getJacobianMatrix(leg_vectors', aa');
 

@@ -2,7 +2,7 @@
 stewart = struct();
 
 stewart.h        = 350; % Total height of the platform [mm]
-stewart.jacobian = 174.5; % Point where the Jacobian is computed => Center of rotation [mm]
+stewart.jacobian = 0; % Point where the Jacobian is computed => Center of rotation [mm]
 
 %% Bottom Plate
 BP = struct();
@@ -40,7 +40,7 @@ Leg.color.top     = [0.5 0.5 0.5]; % Color [rgb]
 
 Leg.sphere.bottom = Leg.rad.bottom; % Size of the sphere at the end of the leg [mm]
 Leg.sphere.top    = Leg.rad.top; % Size of the sphere at the end of the leg [mm]
-Leg.m             = TP.density*((2*pi*TP.rad.ext/1000)*(TP.thickness/1000)-(2*pi*TP.rad.int/1000)*(TP.thickness/1000))/6; % TODO [kg/m^3]
+Leg.m             = TP.density*((pi*(TP.rad.ext/1000)^2)*(TP.thickness/1000)-(pi*(TP.rad.int/1000^2))*(TP.thickness/1000))/6; % TODO [kg]
 
 Leg = updateDamping(Leg);
 
@@ -61,7 +61,7 @@ SP.thickness.bottom = SP.height.bottom-Leg.sphere.bottom; % [mm]
 SP.thickness.top    = SP.height.top-Leg.sphere.top; % [mm]
 SP.rad.bottom       = Leg.sphere.bottom; % [mm]
 SP.rad.top          = Leg.sphere.top; % [mm]
-SP.m                = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); % [kg]
+SP.m                = SP.density.bottom*2*pi*((SP.rad.bottom*1e-3)^2)*(SP.height.bottom*1e-3); % TODO [kg]
 
 SP = updateDamping(SP);
 
