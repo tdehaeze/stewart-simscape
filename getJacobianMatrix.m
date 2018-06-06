@@ -1,18 +1,7 @@
 function J  = getJacobianMatrix(RM,M_pos_base)
+    % RM: [3x6] unit vector of each leg in the fixed frame
+    % M_pos_base: [3x6] vector of the leg connection at the top platform location in the fixed frame
     J = zeros(6);
-
-    J(:, 1:3) = RM;
-    for i = 1:6
-        J(i, 4:6) = -RM(i, :)*getCrossProductMatrix(M_pos_base(i, :));
-    end
-
-    function M = getCrossProductMatrix(v)
-        M = zeros(3);
-        M(1, 2) = -v(3);
-        M(1, 3) =  v(2);
-        M(2, 3) = -v(1);
-        M(2, 1) = -M(1, 2);
-        M(3, 1) = -M(1, 3);
-        M(3, 2) = -M(2, 3);
-    end
+    J(:, 1:3) = RM';
+    J(:, 4:6) = cross(M_pos_base, RM)';
 end
