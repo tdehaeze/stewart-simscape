@@ -4,7 +4,7 @@ clear; close all; clc;
 %% Stewart Object
 stewart = struct();
 stewart.h        = 350; % Total height of the platform [mm]
-stewart.jacobian = 0;   % Point where the Jacobian is computed => Center of rotation [mm]
+stewart.jacobian = 435; % Point where the Jacobian is computed => Center of rotation [mm]
 
 %% Bottom Plate
 BP = struct();
