@@ -1,3 +1,5 @@
+%% TODO - rewrite this script
+
 %%
 run stewart_parameters.m
 format shortE
