@@ -1,6 +1,3 @@
-%%
-clear; close all; clc;
-
 %% Stewart Object
 stewart = struct();
 stewart.h        = 90; % Total height of the platform [mm]
