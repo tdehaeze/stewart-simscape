@@ -55,7 +55,7 @@ SP.density.top    = 8000; % [kg/m^3]
 SP.color.bottom   = [0.7 0.7 0.7]; % [rgb]
 SP.color.top      = [0.7 0.7 0.7]; % [rgb]
 SP.k.ax           = 0; % [N*m/deg]
-SP.ksi.ax         = 10;
+SP.ksi.ax         = 3;
 
 SP.thickness.bottom = SP.height.bottom-Leg.sphere.bottom; % [mm]
 SP.thickness.top    = SP.height.top-Leg.sphere.top; % [mm]
