@@ -11,17 +11,17 @@ initializeNanoHexapod();
 %%
 initializeSample(struct('mass', 0));
 
-G_cart_0 = getPlantCart();
+G_cart_0 = identifyPlantCart();
 
 %%
 initializeSample(struct('mass', 10));
 
-G_cart_10 = getPlantCart();
+G_cart_10 = identifyPlantCart();
 
 %%
 initializeSample(struct('mass', 50));
 
-G_cart_50 = getPlantCart();
+G_cart_50 = identifyPlantCart();
 
 %%
 freqs = logspace(1, 4, 1000);
@@ -54,30 +54,3 @@ exportFig('hexapod_cart_coupling', 'normal-normal')
 
 %% Save identify transfer functions
 save('./mat/G_cart.mat', 'G_cart_0', 'G_cart_10', 'G_cart_50');
-
-%% Centralized control (Cartesian coordinates)
-% Input/Output definition
-io(1) = linio([mdl, '/F_legs'],1,'input');
-io(2) = linio([mdl, '/Stewart_Platform'],2,'output');
-
-% Run the linearization
-G_legs_raw = linearize(mdl,io, 0);
-
-G_legs = preprocessIdTf(G_legs_raw, 10, 10000);
-
-% Input/Output names
-G_legs.InputName  = {'F1', 'F2', 'F3', 'M4', 'M5', 'M6'};
-G_legs.OutputName = {'D1', 'D2', 'D3', 'R4', 'R5', 'R6'};
-
-% Bode Plot of the linearized function
-freqs = logspace(2, 4, 1000);
-
-bodeFig({G_legs(1, 1)}, freqs, struct('phase', true))
-legend({'$F_i \rightarrow D_i$'})
-exportFig('hexapod_legs', 'normal-normal')
-
-bodeFig({G_legs(1, 1), G_legs(2, 1)}, freqs, struct('phase', true))
-legend({'$F_i \rightarrow D_i$', '$F_i \rightarrow D_j$'})
-exportFig('hexapod_legs_coupling', 'normal-normal')
-
-save('mat/G_legs.mat', 'G_legs');

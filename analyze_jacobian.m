@@ -1,3 +1,6 @@
+%% Script Description
+% 
+
 figure;
 plot(d_meas.Time, d.Data-d_meas.Data)
 

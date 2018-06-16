@@ -1,10 +1,16 @@
-%%
-run stewart_parameters.m
-run stewart_init.m
+%% Script Description
+% 
 
 %%
-[X, Y, Z] = getMaxPositions(Leg, J);
+clear; close all; clc;
 
+%%
+init_simulink;
+
+%%
+[X, Y, Z] = getMaxPositions(stewart);
+
+%%
 figure;
 hold on;
 mesh(X, Y, Z);

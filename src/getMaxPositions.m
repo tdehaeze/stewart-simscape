@@ -1,4 +1,6 @@
-function [X, Y, Z] = getMaxPositions(Leg, J)
+function [X, Y, Z] = getMaxPositions(stewart)
+    Leg = stewart.Leg;
+    J = stewart.J;
     theta = linspace(0, 2*pi, 100);
     phi = linspace(-pi/2 , pi/2, 100);
     dmax = zeros(length(theta), length(phi));

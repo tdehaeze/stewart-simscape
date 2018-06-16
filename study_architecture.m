@@ -1,4 +1,8 @@
-%% TODO - rewrite this script
+%% Script Description
+% 
+
+%%
+clear; close all; clc;
 
 %%
 run stewart_parameters.m
