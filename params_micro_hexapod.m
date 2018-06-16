@@ -31,11 +31,11 @@ TP.shape     = [TP.rad.int TP.thickness; TP.rad.int 0; TP.rad.ext 0; TP.rad.ext 
 Leg = struct(); 
 
 Leg.stroke     = 10e-3; % Maximum Stroke of each leg [m]
-Leg.k.ax       = 5e7; % Stiffness of each leg [N/m]
-Leg.ksi.ax     = 3; % Maximum amplification at resonance []
-Leg.rad.bottom = 25; % Radius of the cylinder of the bottom part [mm]
-Leg.rad.top    = 17; % Radius of the cylinder of the top part [mm]
-Leg.density    = 8000; % Density of the material [kg/m^3]
+Leg.k.ax       = 5e7;   % Stiffness of each leg [N/m]
+Leg.ksi.ax     = 3;     % Maximum amplification at resonance []
+Leg.rad.bottom = 25;    % Radius of the cylinder of the bottom part [mm]
+Leg.rad.top    = 17;    % Radius of the cylinder of the top part [mm]
+Leg.density    = 8000;  % Density of the material [kg/m^3]
 Leg.color.bottom  = [0.5 0.5 0.5]; % Color [rgb]
 Leg.color.top     = [0.5 0.5 0.5]; % Color [rgb]
 

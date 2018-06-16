@@ -1,17 +1,17 @@
 %% Stewart Object
 stewart = struct();
-stewart.h        = 90; % Total height of the platform [mm]
-stewart.jacobian = 174.5;   % Point where the Jacobian is computed => Center of rotation [mm]
+stewart.h        = 90;    % Total height of the platform [mm]
+stewart.jacobian = 174.5; % Point where the Jacobian is computed => Center of rotation [mm]
 
 %% Bottom Plate
 BP = struct();
 
 BP.rad.int   = 0;   % Internal Radius [mm]
 BP.rad.ext   = 150; % External Radius [mm]
-BP.thickness = 10;    % Thickness [mm]
+BP.thickness = 10;  % Thickness [mm]
 BP.leg.rad   = 100; % Radius where the legs articulations are positionned [mm]
 BP.leg.ang   = 5;   % Angle Offset [deg]
-BP.density   = 8000;  % Density of the material [kg/m^3]
+BP.density   = 8000;% Density of the material [kg/m^3]
 BP.color     = [0.7 0.7 0.7]; % Color [rgb]
 BP.shape     = [BP.rad.int BP.thickness; BP.rad.int 0; BP.rad.ext 0; BP.rad.ext BP.thickness];
 
@@ -19,11 +19,11 @@ BP.shape     = [BP.rad.int BP.thickness; BP.rad.int 0; BP.rad.ext 0; BP.rad.ext 
 TP = struct();
 
 TP.rad.int   = 0;   % Internal Radius [mm]
-TP.rad.ext   = 100;  % Internal Radius [mm]
-TP.thickness = 10;   % Thickness [mm]
+TP.rad.ext   = 100; % Internal Radius [mm]
+TP.thickness = 10;  % Thickness [mm]
 TP.leg.rad   = 90;  % Radius where the legs articulations are positionned [mm]
-TP.leg.ang   = 5; % Angle Offset [deg]
-TP.density   = 8000; % Density of the material [kg/m^3]
+TP.leg.ang   = 5;   % Angle Offset [deg]
+TP.density   = 8000;% Density of the material [kg/m^3]
 TP.color     = [0.7 0.7 0.7]; % Color [rgb]
 TP.shape     = [TP.rad.int TP.thickness; TP.rad.int 0; TP.rad.ext 0; TP.rad.ext TP.thickness];
 
@@ -31,11 +31,11 @@ TP.shape     = [TP.rad.int TP.thickness; TP.rad.int 0; TP.rad.ext 0; TP.rad.ext 
 Leg = struct(); 
 
 Leg.stroke     = 80e-6; % Maximum Stroke of each leg [m]
-Leg.k.ax       = 5e7; % Stiffness of each leg [N/m]
-Leg.ksi.ax     = 10; % Maximum amplification at resonance []
-Leg.rad.bottom = 12; % Radius of the cylinder of the bottom part [mm]
-Leg.rad.top    = 10; % Radius of the cylinder of the top part [mm]
-Leg.density    = 8000; % Density of the material [kg/m^3]
+Leg.k.ax       = 5e7;   % Stiffness of each leg [N/m]
+Leg.ksi.ax     = 10;    % Maximum amplification at resonance []
+Leg.rad.bottom = 12;    % Radius of the cylinder of the bottom part [mm]
+Leg.rad.top    = 10;    % Radius of the cylinder of the top part [mm]
+Leg.density    = 8000;  % Density of the material [kg/m^3]
 Leg.color.bottom  = [0.5 0.5 0.5]; % Color [rgb]
 Leg.color.top     = [0.5 0.5 0.5]; % Color [rgb]
 
