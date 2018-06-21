@@ -1,5 +1,6 @@
-* Stewart Platform using Simscape
+#+TITLE: Stewart Platform using Simscape
 
-* TODO Add functions to identify transmissibility and sensitivity
-* TODO Rewrite the script to study the effect of various parameters on the stiffness/stroke/...
-* TODO Rewrite the function to study the jacobian, or delete it.
+* TODOS
+** TODO Add functions to identify transmissibility and sensitivity
+** TODO Rewrite the script to study the effect of various parameters on the stiffness/stroke/...
+** TODO Rewrite the function to study the jacobian, or delete it.
