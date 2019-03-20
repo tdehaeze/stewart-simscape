@@ -1,6 +1,7 @@
 %% Script Description
-% 
+%
 
+%%
 figure;
 plot(d_meas.Time, d.Data-d_meas.Data)
 
@@ -46,4 +47,3 @@ plot(jacobian.Time, squeeze(K_change(5, 5, :)));
 plot(jacobian.Time, squeeze(K_change(6, 6, :)));
 legend({'Kxx', 'Kyy', 'Kzz', 'Kmx', 'Kmy', 'Kmz'})
 hold off;
-

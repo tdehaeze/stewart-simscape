@@ -1,12 +1,8 @@
-%% Script Description
-% 
-
 %%
 clear; close all; clc;
 
 %%
 run stewart_parameters.m
-format shortE
 
 %% Study the effect of the radius of the top platform position of the legs
 leg_radius = 50:1:120;
