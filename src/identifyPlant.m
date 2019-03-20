@@ -1,5 +1,5 @@
 function [sys] = identifyPlant(opts_param)
-    %% Default values for opts
+%% Default values for opts
     opts = struct();
 
     %% Populate opts with input parameters

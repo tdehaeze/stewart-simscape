@@ -1,11 +1,11 @@
 function [stewart] = initializeHexapod(opts_param)
-    %% Default values for opts
+%% Default values for opts
     opts = struct(...
         'height',   90,       ... % Height of the platform [mm]
         'jacobian', 150,      ... % Jacobian offset [mm]
         'density',  8000,     ... % Density of hexapod [mm]
         'name',     'stewart' ... % Name of the file
-    );
+        );
 
     %% Populate opts with input parameters
     if exist('opts_param','var')
@@ -54,10 +54,10 @@ function [stewart] = initializeHexapod(opts_param)
     elseif strcmp(opts.actuator, 'lorentz')
         Leg.k.ax = 1e4; % Stiffness of each leg [N/m]
         Leg.c.ax = 200; % [N/(m/s)]
-   elseif isnumeric(opts.actuator)
+    elseif isnumeric(opts.actuator)
         Leg.k.ax = opts.actuator; % Stiffness of each leg [N/m]
         Leg.c.ax = 100;           % [N/(m/s)]
-   else
+    else
         error('opts.actuator should be piezo or lorentz or numeric value');
     end
     Leg.rad.bottom = 12;   % Radius of the cylinder of the bottom part [mm]
@@ -109,7 +109,7 @@ function [stewart] = initializeHexapod(opts_param)
 
     %% Initialize Parameters
     function [stewart] = initializeParameters(stewart)
-        %% Connection points on base and top plate w.r.t. World frame at the center of the base plate
+    %% Connection points on base and top plate w.r.t. World frame at the center of the base plate
         stewart.pos_base = zeros(6, 3);
         stewart.pos_top = zeros(6, 3);
 
@@ -188,18 +188,18 @@ function [stewart] = initializeHexapod(opts_param)
 
         %% Compute Jacobian Matrix
         % TODO
-%         aa = stewart.pos_top_tranform + (stewart.jacobian - stewart.TP.thickness - stewart.SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
+        %         aa = stewart.pos_top_tranform + (stewart.jacobian - stewart.TP.thickness - stewart.SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
         bb = stewart.pos_top_tranform - (stewart.TP.thickness + stewart.SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
         bb = bb - stewart.jacobian*1e-3*[zeros(6, 2),ones(6, 1)];
         stewart.J = getJacobianMatrix(leg_vectors', bb');
-        
+
         stewart.K = stewart.Leg.k.ax*stewart.J'*stewart.J;
     end
 
     %% Compute the Jacobian Matrix
     function J  = getJacobianMatrix(RM, M_pos_base)
-        % RM         - [3x6] unit vector of each leg in the fixed frame
-        % M_pos_base - [3x6] vector of the leg connection at the top platform location in the fixed frame
+    % RM         - [3x6] unit vector of each leg in the fixed frame
+    % M_pos_base - [3x6] vector of the leg connection at the top platform location in the fixed frame
         J = zeros(6);
 
         J(:, 1:3) = RM';

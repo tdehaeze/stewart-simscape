@@ -1,5 +1,5 @@
 function [] = initializeSample(opts_param)
-    %% Default values for opts
+%% Default values for opts
     sample = struct( ...
         'radius',     100, ... % radius of the cylinder [mm]
         'height',     300, ... % height of the cylinder [mm]
@@ -7,7 +7,7 @@ function [] = initializeSample(opts_param)
         'measheight', 150, ... % measurement point z-offset [mm]
         'offset',     [0, 0, 0],   ... % offset position of the sample [mm]
         'color',      [0.9 0.1 0.1] ...
-    );
+        );
 
     %% Populate opts with input parameters
     if exist('opts_param','var')
