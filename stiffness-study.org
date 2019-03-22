@@ -1,0 +1,20 @@
+#+TITLE: Stiffness of the Stewart Platform
+
+* Functions
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :exports code
+  :HEADER-ARGS:matlab+: :comments no
+  :HEADER-ARGS:matlab+: :mkdir yes
+  :HEADER-ARGS:matlab+: :eval no
+  :END:
+** getStiffnessMatrix
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :tangle src/getStiffnessMatrix.m
+  :END:
+#+begin_src matlab
+  function [K] = getStiffnessMatrix(k, J)
+  % k - leg stiffness
+  % J - Jacobian matrix
+      K = k*(J'*J);
+  end
+#+end_src

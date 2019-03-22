@@ -1,0 +1,242 @@
+#+TITLE: Identification of the Stewart Platform using Simscape
+:DRAWER:
+#+STARTUP: overview
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
+#+HTML_HEAD: <script src="js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="js/readtheorg.js"></script>
+
+#+LATEX_CLASS: cleanreport
+#+LaTeX_CLASS_OPTIONS: [tocnp, secbreak, minted]
+#+LaTeX_HEADER: \usepackage{svg}
+#+LaTeX_HEADER: \newcommand{\authorFirstName}{Thomas}
+#+LaTeX_HEADER: \newcommand{\authorLastName}{Dehaeze}
+#+LaTeX_HEADER: \newcommand{\authorEmail}{dehaeze.thomas@gmail.com}
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :output-dir figs
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+:END:
+
+* Identification
+#+begin_src matlab :results none :exports none
+  <<matlab-init>>
+  addpath('src');
+  addpath('library');
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  open stewart
+#+end_src
+
+The hexapod structure and Sample structure are initialized.
+#+begin_src matlab :results none
+  initializeHexapod();
+  initializeSample();
+#+end_src
+
+#+begin_src matlab :results none
+  G = identifyPlant();
+#+end_src
+
+* Cartesian Plot
+From a force applied in the Cartesian frame to a displacement in the Cartesian frame.
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_cart(1, 1));
+  bode(G.G_cart(3, 3));
+  hold off;
+#+end_src
+
+* From a force to force sensor
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_forc(1, 1));
+  bode(G.G_forc(2, 2));
+  bode(G.G_forc(3, 3));
+  bode(G.G_forc(4, 4));
+  bode(G.G_forc(5, 5));
+  bode(G.G_forc(6, 6));
+  hold off;
+#+end_src
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_forc(1, 1));
+  bode(G.G_forc(1, 2));
+  bode(G.G_forc(1, 3));
+  bode(G.G_forc(1, 4));
+  bode(G.G_forc(1, 5));
+  bode(G.G_forc(1, 6));
+  hold off;
+#+end_src
+
+* From a force applied in the leg to the displacement of the leg
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_legs(1, 1));
+  bode(G.G_legs(2, 2));
+  bode(G.G_legs(3, 3));
+  bode(G.G_legs(4, 4));
+  bode(G.G_legs(5, 5));
+  bode(G.G_legs(6, 6));
+  hold off;
+#+end_src
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_legs(1, 1));
+  bode(G.G_legs(1, 2));
+  bode(G.G_legs(1, 3));
+  bode(G.G_legs(1, 4));
+  bode(G.G_legs(1, 5));
+  bode(G.G_legs(1, 6));
+  hold off;
+#+end_src
+
+* Transmissibility
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_tran(1, 1));
+  bode(G.G_tran(2, 2));
+  bode(G.G_tran(3, 3));
+  hold off;
+#+end_src
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_tran(4, 4));
+  bode(G.G_tran(5, 5));
+  bode(G.G_tran(6, 6));
+  hold off;
+#+end_src
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_tran(1, 1));
+  bode(G.G_tran(2, 1));
+  bode(G.G_tran(3, 1));
+  hold off;
+#+end_src
+
+* Compliance
+From a force applied in the Cartesian frame to a relative displacement of the mobile platform with respect to the base.
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_comp(1, 1));
+  bode(G.G_comp(2, 2));
+  bode(G.G_comp(3, 3));
+  hold off;
+#+end_src
+
+* Inertial
+From a force applied on the Cartesian frame to the absolute displacement of the mobile platform.
+
+#+begin_src matlab :results none
+  figure;
+  hold on;
+  bode(G.G_iner(1, 1));
+  bode(G.G_iner(2, 2));
+  bode(G.G_iner(3, 3));
+  hold off;
+#+end_src
+
+* identifyPlant
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :exports code
+  :HEADER-ARGS:matlab+: :comments yes
+  :HEADER-ARGS:matlab+: :eval no
+  :HEADER-ARGS:matlab+: :tangle src/identifyPlant.m
+  :END:
+
+#+begin_src matlab
+  function [sys] = identifyPlant(opts_param)
+#+end_src
+
+We use this code block to pass optional parameters.
+#+begin_src matlab
+  %% Default values for opts
+  opts = struct();
+
+  %% Populate opts with input parameters
+  if exist('opts_param','var')
+      for opt = fieldnames(opts_param)'
+          opts.(opt{1}) = opts_param.(opt{1});
+      end
+  end
+#+end_src
+
+We defined the options for the =linearize= command.
+Here, we just identify the system at time $t = 0$.
+#+begin_src matlab
+  options = linearizeOptions;
+  options.SampleTime = 0;
+#+end_src
+
+We define the name of the Simulink File used to identification.
+#+begin_src matlab
+  mdl = 'stewart';
+#+end_src
+
+Then we defined the input/output of the transfer function we want to identify.
+#+begin_src matlab
+  %% Inputs
+  io(1) = linio([mdl, '/F'],  1, 'input'); % Cartesian forces
+  io(2) = linio([mdl, '/Fl'], 1, 'input'); % Leg forces
+  io(3) = linio([mdl, '/Fd'], 1, 'input'); % Direct forces
+  io(4) = linio([mdl, '/Dw'], 1, 'input'); % Base motion
+
+  %% Outputs
+  io(5) = linio([mdl, '/Dm'],  1, 'output'); % Relative Motion
+  io(6) = linio([mdl, '/Dlm'], 1, 'output'); % Displacement of each leg
+  io(7) = linio([mdl, '/Flm'], 1, 'output'); % Force sensor in each leg
+  io(8) = linio([mdl, '/Xm'],  1, 'output'); % Absolute motion of platform
+#+end_src
+
+The linearization is run.
+#+begin_src matlab
+  G = linearize(mdl, io, 0);
+#+end_src
+
+We defined all the Input/Output names of the identified transfer function.
+#+begin_src matlab
+  G.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz', ...
+                  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', ...
+                  'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz', ...
+                  'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'};
+  G.OutputName = {'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm', ...
+                  'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m', ...
+                  'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m', ...
+                  'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'};
+#+end_src
+
+We split the transfer function into sub transfer functions and we compute their minimum realization.
+#+begin_src matlab
+  sys.G_cart = minreal(G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'}));
+  sys.G_forc = minreal(G({'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
+  sys.G_legs = minreal(G({'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
+  sys.G_tran = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'}));
+  sys.G_comp = minreal(G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
+  sys.G_iner = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
+  % sys.G_all  = minreal(G);
+#+end_src
+
+#+begin_src matlab
+  end
+#+end_src

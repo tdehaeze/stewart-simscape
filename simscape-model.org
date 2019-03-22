@@ -1,0 +1,503 @@
+#+TITLE: Stewart Platform - Simscape Model
+:DRAWER:
+#+STARTUP: overview
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
+#+HTML_HEAD: <script src="js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="js/readtheorg.js"></script>
+
+#+LATEX_CLASS: cleanreport
+#+LaTeX_CLASS_OPTIONS: [tocnp, secbreak, minted]
+#+LaTeX_HEADER: \usepackage{svg}
+#+LaTeX_HEADER: \newcommand{\authorFirstName}{Thomas}
+#+LaTeX_HEADER: \newcommand{\authorLastName}{Dehaeze}
+#+LaTeX_HEADER: \newcommand{\authorEmail}{dehaeze.thomas@gmail.com}
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments no
+#+PROPERTY: header-args:matlab+ :exports bode
+#+PROPERTY: header-args:matlab+ :eval no
+#+PROPERTY: header-args:matlab+ :output-dir figs
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :tangle src/initializeHexapod.m
+:END:
+
+* Function description and arguments
+The =initializeHexapod= function takes one structure that contains configurations for the hexapod and returns one structure representing the hexapod.
+#+begin_src matlab
+  function [stewart] = initializeHexapod(opts_param)
+#+end_src
+
+Default values for opts.
+#+begin_src matlab
+  opts = struct(...
+      'height',  90,    ... % Height of the platform [mm]
+      'density', 8000,  ... % Density of the material used for the hexapod [kg/m3]
+      'k_ax',    1e8,   ... % Stiffness of each actuator [N/m]
+      'c_ax',    1000,   ... % Damping of each actuator [N/(m/s)]
+      'stroke',  50e-6, ... % Maximum stroke of each actuator [m]
+      'name',    'stewart' ... % Name of the file
+      );
+#+end_src
+
+Populate opts with input parameters
+#+begin_src matlab
+  if exist('opts_param','var')
+      for opt = fieldnames(opts_param)'
+          opts.(opt{1}) = opts_param.(opt{1});
+      end
+  end
+#+end_src
+
+* Initialization of the stewart structure
+We initialize the Stewart structure
+#+begin_src matlab
+  stewart = struct();
+#+end_src
+
+And we defined its total height.
+#+begin_src matlab
+  stewart.H = opts.height; % [mm]
+#+end_src
+
+* Bottom Plate
+#+name: fig:stewart_bottom_plate
+#+caption: Schematic of the bottom plates with all the parameters
+[[file:./figs/stewart_bottom_plate.png]]
+
+
+The bottom plate structure is initialized.
+#+begin_src matlab
+  BP = struct();
+#+end_src
+
+We defined its internal radius (if there is a hole in the bottom plate) and its outer radius.
+#+begin_src matlab
+  BP.Rint = 0;   % Internal Radius [mm]
+  BP.Rext = 150; % External Radius [mm]
+#+end_src
+
+We define its thickness.
+#+begin_src matlab
+  BP.H = 10; % Thickness of the Bottom Plate [mm]
+#+end_src
+
+At which radius legs will be fixed and with that angle offset.
+#+begin_src matlab
+  BP.Rleg  = 100; % Radius where the legs articulations are positionned [mm]
+  BP.alpha = 10;  % Angle Offset [deg]
+#+end_src
+
+We defined the density of the material of the bottom plate.
+#+begin_src matlab
+  BP.density = opts.density; % Density of the material [kg/m3]
+#+end_src
+
+And its color.
+#+begin_src matlab
+  BP.color = [0.7 0.7 0.7]; % Color [RGB]
+#+end_src
+
+Then the profile of the bottom plate is computed and will be used by Simscape
+#+begin_src matlab
+  BP.shape = [BP.Rint BP.H; BP.Rint 0; BP.Rext 0; BP.Rext BP.H]; % [mm]
+#+end_src
+
+The structure is added to the stewart structure
+#+begin_src matlab
+  stewart.BP = BP;
+#+end_src
+
+* Top Plate
+The top plate structure is initialized.
+#+begin_src matlab
+  TP = struct();
+#+end_src
+
+We defined the internal and external radius of the top plate.
+#+begin_src matlab
+  TP.Rint = 0;   % [mm]
+  TP.Rext = 100; % [mm]
+#+end_src
+
+The thickness of the top plate.
+#+begin_src matlab
+  TP.H = 10; % [mm]
+#+end_src
+
+At which radius and angle are fixed the legs.
+#+begin_src matlab
+  TP.Rleg   = 100; % Radius where the legs articulations are positionned [mm]
+  TP.alpha  = 20; % Angle [deg]
+  TP.dalpha = 0; % Angle Offset from 0 position [deg]
+#+end_src
+
+The density of its material.
+#+begin_src matlab
+  TP.density = opts.density; % Density of the material [kg/m3]
+#+end_src
+
+Its color.
+#+begin_src matlab
+  TP.color = [0.7 0.7 0.7]; % Color [RGB]
+#+end_src
+
+Then the shape of the top plate is computed
+#+begin_src matlab
+  TP.shape = [TP.Rint TP.H; TP.Rint 0; TP.Rext 0; TP.Rext TP.H];
+#+end_src
+
+The structure is added to the stewart structure
+#+begin_src matlab
+  stewart.TP  = TP;
+#+end_src
+
+* Legs
+#+name: fig:stewart_legs
+#+caption: Schematic for the legs of the Stewart platform
+[[file:./figs/stewart_legs.png]]
+
+
+The leg structure is initialized.
+#+begin_src matlab
+  Leg = struct();
+#+end_src
+
+The maximum Stroke of each leg is defined.
+#+begin_src matlab
+  Leg.stroke = opts.stroke; % [m]
+#+end_src
+
+The stiffness and damping of each leg are defined
+#+begin_src matlab
+  Leg.k_ax = opts.k_ax; % Stiffness of each leg [N/m]
+  Leg.c_ax = opts.c_ax; % Damping of each leg [N/(m/s)]
+#+end_src
+
+The radius of the legs are defined
+#+begin_src matlab
+  Leg.Rtop = 10; % Radius of the cylinder of the top part of the leg[mm]
+  Leg.Rbot = 12; % Radius of the cylinder of the bottom part of the leg [mm]
+#+end_src
+
+The density of its material.
+#+begin_src matlab
+  Leg.density = opts.density; % Density of the material used for the legs [kg/m3]
+#+end_src
+
+Its color.
+#+begin_src matlab
+  Leg.color = [0.5 0.5 0.5]; % Color of the top part of the leg [RGB]
+#+end_src
+
+The radius of spheres representing the ball joints are defined.
+#+begin_src matlab
+  Leg.R = 1.3*Leg.Rbot; % Size of the sphere at the extremity of the leg [mm]
+#+end_src
+
+The structure is added to the stewart structure
+#+begin_src matlab
+  stewart.Leg = Leg;
+#+end_src
+
+* Ball Joints
+#+name: fig:stewart_ball_joints
+#+caption: Schematic of the support for the ball joints
+[[file:./figs/stewart_ball_joints.png]]
+
+=SP= is the structure representing the support for the ball joints at the extremity of each leg.
+
+The =SP= structure is initialized.
+#+begin_src matlab
+  SP = struct();
+#+end_src
+
+We can define its rotational stiffness and damping. For now, we use perfect joints.
+#+begin_src matlab
+  SP.k = 0; % [N*m/deg]
+  SP.c = 0; % [N*m/deg]
+#+end_src
+
+Its height is defined
+#+begin_src matlab
+  SP.H = 15; % [mm]
+#+end_src
+
+Its radius is based on the radius on the sphere at the end of the legs.
+#+begin_src matlab
+  SP.R = Leg.R; % [mm]
+#+end_src
+
+#+begin_src matlab
+  SP.section = [0    SP.H-SP.R;
+                0    0;
+                SP.R 0;
+                SP.R SP.H];
+#+end_src
+
+The density of its material is defined.
+#+begin_src matlab
+  SP.density = opts.density; % [kg/m^3]
+#+end_src
+
+Its color is defined.
+#+begin_src matlab
+  SP.color = [0.7 0.7 0.7]; % [RGB]
+#+end_src
+
+The structure is added to the Hexapod structure
+#+begin_src matlab
+  stewart.SP  = SP;
+#+end_src
+
+* More parameters are initialized
+#+begin_src matlab
+  stewart = initializeParameters(stewart);
+#+end_src
+
+* Save the Stewart Structure
+#+begin_src matlab
+  save('./mat/stewart.mat', 'stewart')
+#+end_src
+
+* initializeParameters Function                                    :noexport:
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :tangle no
+  :END:
+#+begin_src matlab
+  function [stewart] = initializeParameters(stewart)
+#+end_src
+
+Computation of the position of the connection points on the base and moving platform
+We first initialize =pos_base= corresponding to $[a_1, a_2, a_3, a_4, a_5, a_6]^T$ and =pos_top= corresponding to $[b_1, b_2, b_3, b_4, b_5, b_6]^T$.
+#+begin_src matlab
+  stewart.pos_base = zeros(6, 3);
+  stewart.pos_top = zeros(6, 3);
+#+end_src
+
+We estimate the height between the ball joints of the bottom platform and of the top platform.
+#+begin_src matlab
+  height = stewart.H - stewart.BP.H - stewart.TP.H - 2*stewart.SP.H; % [mm]
+#+end_src
+
+#+begin_src matlab
+      for i = 1:3
+          % base points
+          angle_m_b = 120*(i-1) - stewart.BP.alpha;
+          angle_p_b = 120*(i-1) + stewart.BP.alpha;
+
+          stewart.pos_base(2*i-1,:) = [stewart.BP.Rleg*cos(angle_m_b), stewart.BP.Rleg*sin(angle_m_b), 0.0];
+          stewart.pos_base(2*i,:)   = [stewart.BP.Rleg*cos(angle_p_b), stewart.BP.Rleg*sin(angle_p_b), 0.0];
+
+          % top points
+          angle_m_t = 120*(i-1) - stewart.TP.alpha + stewart.TP.dalpha;
+          angle_p_t = 120*(i-1) + stewart.TP.alpha + stewart.TP.dalpha;
+
+          stewart.pos_top(2*i-1,:) = [stewart.TP.Rleg*cos(angle_m_t), stewart.TP.Rleg*sin(angle_m_t), height];
+          stewart.pos_top(2*i,:) = [stewart.TP.Rleg*cos(angle_p_t), stewart.TP.Rleg*sin(angle_p_t), height];
+      end
+
+      % permute pos_top points so that legs are end points of base and top points
+      stewart.pos_top = [stewart.pos_top(6,:); stewart.pos_top(1:5,:)]; %6th point on top connects to 1st on bottom
+      stewart.pos_top_tranform = stewart.pos_top - height*[zeros(6, 2),ones(6, 1)];
+#+end_src
+
+leg vectors
+#+begin_src matlab
+      legs = stewart.pos_top - stewart.pos_base;
+      leg_length = zeros(6, 1);
+      leg_vectors = zeros(6, 3);
+      for i = 1:6
+          leg_length(i) = norm(legs(i,:));
+          leg_vectors(i,:)  = legs(i,:) / leg_length(i);
+      end
+
+      stewart.Leg.lenght = 1000*leg_length(1)/1.5;
+      stewart.Leg.shape.bot = [0 0; ...
+                          stewart.Leg.rad.bottom 0; ...
+                          stewart.Leg.rad.bottom stewart.Leg.lenght; ...
+                          stewart.Leg.rad.top stewart.Leg.lenght; ...
+                          stewart.Leg.rad.top 0.2*stewart.Leg.lenght; ...
+                          0 0.2*stewart.Leg.lenght];
+#+end_src
+
+Calculate revolute and cylindrical axes
+#+begin_src matlab
+      rev1 = zeros(6, 3);
+      rev2 = zeros(6, 3);
+      cyl1 = zeros(6, 3);
+      for i = 1:6
+          rev1(i,:) = cross(leg_vectors(i,:), [0 0 1]);
+          rev1(i,:) = rev1(i,:) / norm(rev1(i,:));
+
+          rev2(i,:) = - cross(rev1(i,:), leg_vectors(i,:));
+          rev2(i,:) = rev2(i,:) / norm(rev2(i,:));
+
+          cyl1(i,:) = leg_vectors(i,:);
+      end
+#+end_src
+
+Coordinate systems
+#+begin_src matlab
+      stewart.lower_leg = struct('rotation', eye(3));
+      stewart.upper_leg = struct('rotation', eye(3));
+
+      for i = 1:6
+          stewart.lower_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
+          stewart.upper_leg(i).rotation = [rev1(i,:)', rev2(i,:)', cyl1(i,:)'];
+      end
+#+end_src
+
+Position Matrix
+#+begin_src matlab
+      stewart.M_pos_base = stewart.pos_base + (height+(stewart.TP.h+stewart.Leg.sphere.top+stewart.SP.h.top+stewart.jacobian)*1e-3)*[zeros(6, 2),ones(6, 1)];
+#+end_src
+
+Compute Jacobian Matrix
+#+begin_src matlab
+      %         aa = stewart.pos_top_tranform + (stewart.jacobian - stewart.TP.h - stewart.SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
+      bb = stewart.pos_top_tranform - (stewart.TP.h + stewart.SP.height.top)*1e-3*[zeros(6, 2),ones(6, 1)];
+      bb = bb - stewart.jacobian*1e-3*[zeros(6, 2),ones(6, 1)];
+      stewart.J = getJacobianMatrix(leg_vectors', bb');
+
+      stewart.K = stewart.Leg.k.ax*stewart.J'*stewart.J;
+  end
+#+end_src
+
+* initializeParameters Function
+#+begin_src matlab
+  function [stewart] = initializeParameters(stewart)
+#+end_src
+
+We first compute $[a_1, a_2, a_3, a_4, a_5, a_6]^T$ and $[b_1, b_2, b_3, b_4, b_5, b_6]^T$.
+#+begin_src matlab
+  stewart.Aa = zeros(6, 3); % [mm]
+  stewart.Ab = zeros(6, 3); % [mm]
+  stewart.Bb = zeros(6, 3); % [mm]
+#+end_src
+
+#+begin_src matlab
+  for i = 1:3
+      stewart.Aa(2*i-1,:) = [stewart.BP.Rleg*cos( pi/180*(120*(i-1) - stewart.BP.alpha) ), ...
+                             stewart.BP.Rleg*sin( pi/180*(120*(i-1) - stewart.BP.alpha) ), ...
+                             stewart.BP.H+stewart.SP.H];
+      stewart.Aa(2*i,:)   = [stewart.BP.Rleg*cos( pi/180*(120*(i-1) + stewart.BP.alpha) ), ...
+                             stewart.BP.Rleg*sin( pi/180*(120*(i-1) + stewart.BP.alpha) ), ...
+                             stewart.BP.H+stewart.SP.H];
+
+      stewart.Ab(2*i-1,:) = [stewart.TP.Rleg*cos( pi/180*(120*(i-1) + stewart.TP.dalpha - stewart.TP.alpha) ), ...
+                             stewart.TP.Rleg*sin( pi/180*(120*(i-1) + stewart.TP.dalpha - stewart.TP.alpha) ), ...
+                             stewart.H - stewart.TP.H - stewart.SP.H];
+      stewart.Ab(2*i,:)   = [stewart.TP.Rleg*cos( pi/180*(120*(i-1) + stewart.TP.dalpha + stewart.TP.alpha) ), ...
+                             stewart.TP.Rleg*sin( pi/180*(120*(i-1) + stewart.TP.dalpha + stewart.TP.alpha) ), ...
+                             stewart.H - stewart.TP.H - stewart.SP.H];
+  end
+  stewart.Bb = stewart.Ab - stewart.H*[0,0,1];
+#+end_src
+
+Now, we compute the leg vectors $\hat{s}_i$ and leg position $l_i$:
+\[ b_i - a_i = l_i \hat{s}_i \]
+
+We initialize $l_i$ and $\hat{s}_i$
+#+begin_src matlab
+  leg_length = zeros(6, 1); % [mm]
+  leg_vectors = zeros(6, 3);
+#+end_src
+
+We compute $b_i - a_i$, and then:
+\begin{align*}
+  l_i       &= \left|b_i - a_i\right| \\
+  \hat{s}_i &= \frac{b_i - a_i}{l_i}
+\end{align*}
+
+#+begin_src matlab
+  legs = stewart.Ab - stewart.Aa;
+
+  for i = 1:6
+      leg_length(i) = norm(legs(i,:));
+      leg_vectors(i,:) = legs(i,:) / leg_length(i);
+  end
+#+end_src
+
+Then the shape of the bottom leg is estimated
+#+begin_src matlab
+  stewart.Leg.lenght = leg_length(1)/1.5;
+  stewart.Leg.shape.bot = ...
+      [0                0; ...
+       stewart.Leg.Rbot 0; ...
+       stewart.Leg.Rbot stewart.Leg.lenght; ...
+       stewart.Leg.Rtop stewart.Leg.lenght; ...
+       stewart.Leg.Rtop 0.2*stewart.Leg.lenght; ...
+       0                0.2*stewart.Leg.lenght];
+#+end_src
+
+We compute rotation matrices to have the orientation of the legs.
+The rotation matrix transforms the $z$ axis to the axis of the leg. The other axis are not important here.
+#+begin_src matlab
+  stewart.Rm = struct('R', eye(3));
+
+  for i = 1:6
+    sx = cross(leg_vectors(i,:), [1 0 0]);
+    sx = sx/norm(sx);
+
+    sy = -cross(sx, leg_vectors(i,:));
+    sy = sy/norm(sy);
+
+    sz = leg_vectors(i,:);
+    sz = sz/norm(sz);
+
+    stewart.Rm(i).R = [sx', sy', sz'];
+  end
+#+end_src
+
+Compute Jacobian Matrix
+#+begin_src matlab
+  J = zeros(6);
+
+  for i = 1:6
+    J(i, 1:3) = leg_vectors(i, :);
+    J(i, 4:6) = cross(0.001*(stewart.Ab(i, :)- stewart.H*[0,0,1]), leg_vectors(i, :));
+  end
+
+  stewart.J = J;
+  stewart.Jinv = inv(J);
+#+end_src
+
+#+begin_src matlab
+  stewart.K = stewart.Leg.k_ax*stewart.J'*stewart.J;
+#+end_src
+
+#+begin_src matlab
+    end
+  end
+#+end_src
+* initializeSample
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :tangle src/initializeSample.m
+  :END:
+#+begin_src matlab
+  function [] = initializeSample(opts_param)
+  %% Default values for opts
+      sample = struct( ...
+          'radius',     100, ... % radius of the cylinder [mm]
+          'height',     100, ... % height of the cylinder [mm]
+          'mass',       10,  ... % mass of the cylinder [kg]
+          'measheight', 50, ... % measurement point z-offset [mm]
+          'offset',     [0, 0, 0],   ... % offset position of the sample [mm]
+          'color',      [0.9 0.1 0.1] ...
+          );
+
+      %% Populate opts with input parameters
+      if exist('opts_param','var')
+          for opt = fieldnames(opts_param)'
+              sample.(opt{1}) = opts_param.(opt{1});
+          end
+      end
+
+      %% Save
+      save('./mat/sample.mat', 'sample');
+  end
+#+end_src
