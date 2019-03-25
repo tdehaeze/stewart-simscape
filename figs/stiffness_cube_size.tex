@@ -1,0 +1,54 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=3.23in,
+height=1.99in,
+at={(0.528in,0.42in)},
+scale only axis,
+separate axis lines,
+every outer x axis line/.append style={black},
+every x tick label/.append style={font=\color{black}},
+every x tick/.append style={black},
+xmin=250,
+xmax=350,
+xlabel={Cube Size [mm]},
+every outer y axis line/.append style={black},
+every y tick label/.append style={font=\color{black}},
+every y tick/.append style={black},
+ymin=0,
+ymax=0.0816666666666492,
+ylabel={Rotational stiffnes [normalized]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.6,2.222)}, anchor=south west, legend cell align=left, align=left, draw=black}
+]
+\addplot [color=mycolor1, line width=1.5pt]
+  table[row sep=crcr]{%
+250	0.0106166666666923\\
+270	0.0123500000000263\\
+290	0.0142166666666412\\
+310	0.0162166666666508\\
+330	0.0183499999999981\\
+350	0.0206166666666832\\
+};
+\addlegendentry{$k_{\theta_x}$}
+
+\addplot [color=mycolor2, line width=1.5pt]
+  table[row sep=crcr]{%
+250	0.0416666666666856\\
+270	0.0486000000000217\\
+290	0.0560666666666521\\
+310	0.0640666666666903\\
+330	0.0726000000000226\\
+350	0.0816666666666492\\
+};
+\addlegendentry{$k_{\theta_z}$}
+
+\end{axis}
+\end{tikzpicture}%

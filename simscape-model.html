@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-22 ven. 12:03 -->
+<!-- 2019-03-25 lun. 11:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -275,42 +275,136 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9a10766">1. Function description and arguments</a></li>
-<li><a href="#orgb6911a1">2. Initialization of the stewart structure</a></li>
-<li><a href="#org030aed6">3. Bottom Plate</a></li>
-<li><a href="#orged8012a">4. Top Plate</a></li>
-<li><a href="#orgc74617a">5. Legs</a></li>
-<li><a href="#org7cd2aa5">6. Ball Joints</a></li>
-<li><a href="#org1d76ed9">7. More parameters are initialized</a></li>
-<li><a href="#orge9faa26">8. Save the Stewart Structure</a></li>
-<li><a href="#orga207d03">9. initializeParameters Function</a></li>
-<li><a href="#org724c1a1">10. initializeSample</a></li>
+<li><a href="#org527cc13">1. initializeGeneralConfiguration</a>
+<ul>
+<li><a href="#orgea5f8f5">1.1. Function description</a></li>
+<li><a href="#org2db42cb">1.2. Optional Parameters</a></li>
+<li><a href="#org2f9279a">1.3. Geometry Description</a></li>
+<li><a href="#org1409cf0">1.4. Compute Aa and Ab</a></li>
+<li><a href="#orgb91c416">1.5. Returns Stewart Structure</a></li>
+</ul>
+</li>
+<li><a href="#orgc3aa910">2. computeGeometricalProperties</a>
+<ul>
+<li><a href="#org180196f">2.1. Function description</a></li>
+<li><a href="#org12cee4f">2.2. Optional Parameters</a></li>
+<li><a href="#org0010af5">2.3. Rotation matrices</a></li>
+<li><a href="#org98f4bad">2.4. Jacobian matrices</a></li>
+</ul>
+</li>
+<li><a href="#orgb3e53d1">3. initializeMechanicalElements</a>
+<ul>
+<li><a href="#orge7f185e">3.1. Function description</a></li>
+<li><a href="#org6bd219d">3.2. Optional Parameters</a></li>
+<li><a href="#org8d0d9c0">3.3. Bottom Plate</a></li>
+<li><a href="#org23fd88c">3.4. Top Plate</a></li>
+<li><a href="#org96d7dab">3.5. Legs</a></li>
+<li><a href="#org66df86f">3.6. Ball Joints</a></li>
+</ul>
+</li>
+<li><a href="#orgf3c4474">4. initializeSample</a>
+<ul>
+<li><a href="#org1ec4152">4.1. Function description</a></li>
+<li><a href="#orgcd3268d">4.2. Optional Parameters</a></li>
+<li><a href="#org29ee9ed">4.3. Save the Sample structure</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9a10766" class="outline-2">
-<h2 id="org9a10766"><span class="section-number-2">1</span> Function description and arguments</h2>
-<div class="outline-text-2" id="text-1">
 <p>
-The <code>initializeHexapod</code> function takes one structure that contains configurations for the hexapod and returns one structure representing the hexapod.
+Stewart platforms are generated in multiple steps.
 </p>
-<div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeHexapod</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
-</pre>
+
+<p>
+First, geometrical parameters are defined:
+</p>
+<ul class="org-ul">
+<li>\({}^Aa_i\) - Position of the joints fixed to the fixed base w.r.t \(\{A\}\)</li>
+<li>\({}^Ab_i\) - Position of the joints fixed to the mobile platform w.r.t \(\{A\}\)</li>
+<li>\({}^Bb_i\) - Position of the joints fixed to the mobile platform w.r.t \(\{B\}\)</li>
+<li>\(H\) - Total height of the mobile platform</li>
+</ul>
+
+<p>
+These parameter are enough to determine all the kinematic properties of the platform like the Jacobian, stroke, stiffness, &#x2026;
+These geometrical parameters can be generated using different functions: <code>initializeCubicConfiguration</code> for cubic configuration or <code>initializeGeneralConfiguration</code> for more general configuration.
+</p>
+
+<p>
+A function <code>computeGeometricalProperties</code> is then used to compute:
+</p>
+<ul class="org-ul">
+<li>\(J_f\) - Jacobian matrix for the force location</li>
+<li>\(J_d\) - Jacobian matrix for displacement estimation</li>
+<li>\(R_m\) - Rotation matrices to position the leg vectors</li>
+</ul>
+
+<p>
+Then, geometrical parameters are computed for all the mechanical elements with the function <code>initializeMechanicalElements</code>:
+</p>
+<ul class="org-ul">
+<li>Shape of the platforms
+<ul class="org-ul">
+<li>External Radius</li>
+<li>Internal Radius</li>
+<li>Density</li>
+<li>Thickness</li>
+</ul></li>
+<li>Shape of the Legs
+<ul class="org-ul">
+<li>Radius</li>
+<li>Size of ball joint</li>
+<li>Density</li>
+</ul></li>
+</ul>
+
+<p>
+Other Parameters are defined for the Simscape simulation:
+</p>
+<ul class="org-ul">
+<li>Sample mass, volume and position (<code>initializeSample</code> function)</li>
+<li>Location of the inertial sensor</li>
+<li>Location of the point for the differential measurements</li>
+<li>Location of the Jacobian point for velocity/displacement computation</li>
+</ul>
+
+<div id="outline-container-org527cc13" class="outline-2">
+<h2 id="org527cc13"><span class="section-number-2">1</span> initializeGeneralConfiguration</h2>
+<div class="outline-text-2" id="text-1">
 </div>
 
+<div id="outline-container-orgea5f8f5" class="outline-3">
+<h3 id="orgea5f8f5"><span class="section-number-3">1.1</span> Function description</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The <code>initializeGeneralConfiguration</code> function takes one structure that contains configurations for the hexapod and returns one structure representing the Hexapod.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeGeneralConfiguration</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2db42cb" class="outline-3">
+<h3 id="org2db42cb"><span class="section-number-3">1.2</span> Optional Parameters</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'height'</span>,  <span style="color: #BFEBBF;">90</span>,    <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height of the platform [mm]</span>
-    <span style="color: #CC9393;">'density'</span>, <span style="color: #BFEBBF;">8000</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Density of the material used for the hexapod [kg/m3]</span>
-    <span style="color: #CC9393;">'k_ax'</span>,    <span style="color: #BFEBBF;">1e8</span>,   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Stiffness of each actuator [N/m]</span>
-    <span style="color: #CC9393;">'c_ax'</span>,    <span style="color: #BFEBBF;">1000</span>,   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Damping of each actuator [N/(m/s)]</span>
-    <span style="color: #CC9393;">'stroke'</span>,  <span style="color: #BFEBBF;">50e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Maximum stroke of each actuator [m]</span>
-    <span style="color: #CC9393;">'name',    'stewart'</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Name of the file</span>
+    <span style="color: #CC9393;">'H_tot'</span>,   <span style="color: #BFEBBF;">90</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height of the platform [mm]</span>
+    <span style="color: #CC9393;">'H_joint'</span>, <span style="color: #BFEBBF;">15</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height of the joints [mm]</span>
+    <span style="color: #CC9393;">'H_plate'</span>, <span style="color: #BFEBBF;">10</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Thickness of the fixed and mobile platforms [mm]</span>
+    <span style="color: #CC9393;">'R_bot'</span>,  <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
+    <span style="color: #CC9393;">'R_top'</span>,  <span style="color: #BFEBBF;">80</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
+    <span style="color: #CC9393;">'a_bot'</span>,  <span style="color: #BFEBBF;">10</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Angle Offset [deg]</span>
+    <span style="color: #CC9393;">'a_top'</span>,  <span style="color: #BFEBBF;">40</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Angle Offset [deg]</span>
+    <span style="color: #CC9393;">'da_top'</span>, <span style="color: #BFEBBF;">0</span>    <span style="text-decoration: underline;">...</span> % Angle Offset from <span style="color: #BFEBBF;">0</span> position [deg]
     <span style="color: #DCDCCC;">)</span>;
 </pre>
 </div>
@@ -329,37 +423,263 @@ Populate opts with input parameters
 </div>
 </div>
 
-<div id="outline-container-orgb6911a1" class="outline-2">
-<h2 id="orgb6911a1"><span class="section-number-2">2</span> Initialization of the stewart structure</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-We initialize the Stewart structure
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">stewart = struct<span style="color: #DCDCCC;">()</span>;
-</pre>
-</div>
+<div id="outline-container-org2f9279a" class="outline-3">
+<h3 id="org2f9279a"><span class="section-number-3">1.3</span> Geometry Description</h3>
+<div class="outline-text-3" id="text-1-3">
 
-<p>
-And we defined its total height.
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">stewart.H = opts.height; <span style="color: #7F9F7F;">% [mm]</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org030aed6" class="outline-2">
-<h2 id="org030aed6"><span class="section-number-2">3</span> Bottom Plate</h2>
-<div class="outline-text-2" id="text-3">
-
-<div id="org3d7fe71" class="figure">
+<div id="orgc30ce24" class="figure">
 <p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Schematic of the bottom plates with all the parameters</p>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org1409cf0" class="outline-3">
+<h3 id="org1409cf0"><span class="section-number-3">1.4</span> Compute Aa and Ab</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+We compute \([a_1, a_2, a_3, a_4, a_5, a_6]^T\) and \([b_1, b_2, b_3, b_4, b_5, b_6]^T\).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Aa = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
+Ab = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
+Bb = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">3</span>
+    Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>opts.R_bot<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.R_bot<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.H_plate<span style="color: #7CB8BB;">+</span>opts.H_joint<span style="color: #DCDCCC;">]</span>;
+    Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>opts.R_bot<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.R_bot<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.H_plate<span style="color: #7CB8BB;">+</span>opts.H_joint<span style="color: #DCDCCC;">]</span>;
+
+    Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>opts.R_top<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">-</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.R_top<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">-</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.H_tot <span style="color: #7CB8BB;">-</span> opts.H_plate <span style="color: #7CB8BB;">-</span> opts.H_joint<span style="color: #DCDCCC;">]</span>;
+    Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>opts.R_top<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">+</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.R_top<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">+</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
+                   opts.H_tot <span style="color: #7CB8BB;">-</span> opts.H_plate <span style="color: #7CB8BB;">-</span> opts.H_joint<span style="color: #DCDCCC;">]</span>;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+Bb = Ab <span style="color: #7CB8BB;">-</span> opts.H_tot<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb91c416" class="outline-3">
+<h3 id="orgb91c416"><span class="section-number-3">1.5</span> Returns Stewart Structure</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-matlab">  stewart = struct<span style="color: #DCDCCC;">()</span>;
+  stewart.Aa = Aa;
+  stewart.Ab = Ab;
+  stewart.Bb = Bb;
+  stewart.H_tot = opts.H_tot;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc3aa910" class="outline-2">
+<h2 id="orgc3aa910"><span class="section-number-2">2</span> computeGeometricalProperties</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+
+<div id="outline-container-org180196f" class="outline-3">
+<h3 id="org180196f"><span class="section-number-3">2.1</span> Function description</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">computeGeometricalProperties</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span>, <span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org12cee4f" class="outline-3">
+<h3 id="org12cee4f"><span class="section-number-3">2.2</span> Optional Parameters</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Default values for opts.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">30</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">30</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<p>
+Populate opts with input parameters
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
+        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0010af5" class="outline-3">
+<h3 id="org0010af5"><span class="section-number-3">2.3</span> Rotation matrices</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+We initialize \(l_i\) and \(\hat{s}_i\)
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">leg_length = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
+leg_vectors = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<p>
+We compute \(b_i - a_i\), and then:
+</p>
+\begin{align*}
+  l_i       &= \left|b_i - a_i\right| \\
+  \hat{s}_i &= \frac{b_i - a_i}{l_i}
+\end{align*}
+
+<div class="org-src-container">
+<pre class="src src-matlab">legs = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.Aa;
+
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
+    leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span> = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+    leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">/</span> leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+
+<p>
+We compute rotation matrices to have the orientation of the legs.
+The rotation matrix transforms the \(z\) axis to the axis of the leg. The other axis are not important here.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart.Rm = struct<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'R'</span>, eye<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
+  sx = cross<span style="color: #DCDCCC;">(</span>leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
+  sx = sx<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sx<span style="color: #DCDCCC;">)</span>;
+
+  sy = <span style="color: #7CB8BB;">-</span>cross<span style="color: #DCDCCC;">(</span>sx, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+  sy = sy<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sy<span style="color: #DCDCCC;">)</span>;
+
+  sz = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
+  sz = sz<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sz<span style="color: #DCDCCC;">)</span>;
+
+  stewart.Rm<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>.R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDCCC;">]</span>;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org98f4bad" class="outline-3">
+<h3 id="org98f4bad"><span class="section-number-3">2.4</span> Jacobian matrices</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Compute Jacobian Matrix
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Jd = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span>;
+
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
+  Jd<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
+  Jd<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">4</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">001</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">(</span>stewart.Bb<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span> <span style="color: #7CB8BB;">-</span> opts.Jd_pos<span style="color: #BFEBBF;">)</span>, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+stewart.Jd = Jd;
+stewart.Jd_inv = inv<span style="color: #DCDCCC;">(</span>Jd<span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Jf = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span>;
+
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
+  Jf<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
+  Jf<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">4</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">001</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">(</span>stewart.Bb<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span> <span style="color: #7CB8BB;">-</span> opts.Jf_pos<span style="color: #BFEBBF;">)</span>, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+stewart.Jf = Jf;
+stewart.Jf_inv = inv<span style="color: #DCDCCC;">(</span>Jf<span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb3e53d1" class="outline-2">
+<h2 id="orgb3e53d1"><span class="section-number-2">3</span> initializeMechanicalElements</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+
+<div id="outline-container-orge7f185e" class="outline-3">
+<h3 id="orge7f185e"><span class="section-number-3">3.1</span> Function description</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeMechanicalElements</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span>, <span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6bd219d" class="outline-3">
+<h3 id="org6bd219d"><span class="section-number-3">3.2</span> Optional Parameters</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Default values for opts.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'thickness'</span>, <span style="color: #BFEBBF;">10</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Thickness of the base and platform [mm]</span>
+    <span style="color: #CC9393;">'density'</span>,   <span style="color: #BFEBBF;">1000</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Density of the material used for the hexapod [kg/m3]</span>
+    <span style="color: #CC9393;">'k_ax'</span>,      <span style="color: #BFEBBF;">1e8</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Stiffness of each actuator [N/m]</span>
+    <span style="color: #CC9393;">'c_ax'</span>,      <span style="color: #BFEBBF;">1000</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Damping of each actuator [N/(m/s)]</span>
+    <span style="color: #CC9393;">'stroke'</span>,    <span style="color: #BFEBBF;">50e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Maximum stroke of each actuator [m]</span>
+    <span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<p>
+Populate opts with input parameters
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
+        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8d0d9c0" class="outline-3">
+<h3 id="org8d0d9c0"><span class="section-number-3">3.3</span> Bottom Plate</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<div id="org38598b1" class="figure">
+<p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Schematic of the bottom plates with all the parameters</p>
+</div>
 
 <p>
 The bottom plate structure is initialized.
@@ -382,16 +702,7 @@ BP.Rext = <span style="color: #BFEBBF;">150</span>; <span style="color: #7F9F7F;
 We define its thickness.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.H = <span style="color: #BFEBBF;">10</span>; <span style="color: #7F9F7F;">% Thickness of the Bottom Plate [mm]</span>
-</pre>
-</div>
-
-<p>
-At which radius legs will be fixed and with that angle offset.
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">BP.Rleg  = <span style="color: #BFEBBF;">100</span>; <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
-BP.alpha = <span style="color: #BFEBBF;">10</span>;  <span style="color: #7F9F7F;">% Angle Offset [deg]</span>
+<pre class="src src-matlab">BP.H = opts.thickness; <span style="color: #7F9F7F;">% Thickness of the Bottom Plate [mm]</span>
 </pre>
 </div>
 
@@ -429,9 +740,9 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-orged8012a" class="outline-2">
-<h2 id="orged8012a"><span class="section-number-2">4</span> Top Plate</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org23fd88c" class="outline-3">
+<h3 id="org23fd88c"><span class="section-number-3">3.4</span> Top Plate</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 The top plate structure is initialized.
 </p>
@@ -454,16 +765,6 @@ The thickness of the top plate.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">TP.H = <span style="color: #BFEBBF;">10</span>; <span style="color: #7F9F7F;">% [mm]</span>
-</pre>
-</div>
-
-<p>
-At which radius and angle are fixed the legs.
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">TP.Rleg   = <span style="color: #BFEBBF;">100</span>; <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
-TP.alpha  = <span style="color: #BFEBBF;">20</span>; <span style="color: #7F9F7F;">% Angle [deg]</span>
-TP.dalpha = <span style="color: #BFEBBF;">0</span>; % Angle Offset from <span style="color: #BFEBBF;">0</span> position [deg]
 </pre>
 </div>
 
@@ -501,16 +802,15 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-orgc74617a" class="outline-2">
-<h2 id="orgc74617a"><span class="section-number-2">5</span> Legs</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org96d7dab" class="outline-3">
+<h3 id="org96d7dab"><span class="section-number-3">3.5</span> Legs</h3>
+<div class="outline-text-3" id="text-3-5">
 
-<div id="orgc225133" class="figure">
+<div id="orga9ade83" class="figure">
 <p><img src="./figs/stewart_legs.png" alt="stewart_legs.png" />
 </p>
-<p><span class="figure-number">Figure 2: </span>Schematic for the legs of the Stewart platform</p>
+<p><span class="figure-number">Figure 3: </span>Schematic for the legs of the Stewart platform</p>
 </div>
-
 
 <p>
 The leg structure is initialized.
@@ -571,6 +871,29 @@ The radius of spheres representing the ball joints are defined.
 </div>
 
 <p>
+We estimate the length of the legs.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">legs = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.Aa;
+Leg.lenght = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">1</span>.<span style="color: #BFEBBF;">5</span>;
+</pre>
+</div>
+
+<p>
+Then the shape of the bottom leg is estimated
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Leg.shape.bot = <span style="text-decoration: underline;">...</span>
+    <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>        <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
+     Leg.Rbot <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
+     Leg.Rbot Leg.lenght; <span style="text-decoration: underline;">...</span>
+     Leg.Rtop Leg.lenght; <span style="text-decoration: underline;">...</span>
+     Leg.Rtop <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>Leg.lenght; <span style="text-decoration: underline;">...</span>
+     <span style="color: #BFEBBF;">0</span>        <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>Leg.lenght<span style="color: #DCDCCC;">]</span>;
+</pre>
+</div>
+
+<p>
 The structure is added to the stewart structure
 </p>
 <div class="org-src-container">
@@ -580,14 +903,14 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-org7cd2aa5" class="outline-2">
-<h2 id="org7cd2aa5"><span class="section-number-2">6</span> Ball Joints</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org66df86f" class="outline-3">
+<h3 id="org66df86f"><span class="section-number-3">3.6</span> Ball Joints</h3>
+<div class="outline-text-3" id="text-3-6">
 
-<div id="org7b92b11" class="figure">
+<div id="org250b20b" class="figure">
 <p><img src="./figs/stewart_ball_joints.png" alt="stewart_ball_joints.png" />
 </p>
-<p><span class="figure-number">Figure 3: </span>Schematic of the support for the ball joints</p>
+<p><span class="figure-number">Figure 4: </span>Schematic of the support for the ball joints</p>
 </div>
 
 <p>
@@ -615,7 +938,7 @@ SP.c = <span style="color: #BFEBBF;">0</span>; <span style="color: #7F9F7F;">% [
 Its height is defined
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.H = <span style="color: #BFEBBF;">15</span>; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">SP.H = stewart.Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> BP.H; <span style="color: #7F9F7F;">% [mm]</span>
 </pre>
 </div>
 
@@ -660,195 +983,74 @@ The structure is added to the Hexapod structure
 </div>
 </div>
 </div>
-
-<div id="outline-container-org1d76ed9" class="outline-2">
-<h2 id="org1d76ed9"><span class="section-number-2">7</span> More parameters are initialized</h2>
-<div class="outline-text-2" id="text-7">
-<div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeParameters<span style="color: #DCDCCC;">(</span>stewart<span style="color: #DCDCCC;">)</span>;
-</pre>
-</div>
-</div>
 </div>
 
-<div id="outline-container-orge9faa26" class="outline-2">
-<h2 id="orge9faa26"><span class="section-number-2">8</span> Save the Stewart Structure</h2>
-<div class="outline-text-2" id="text-8">
-<div class="org-src-container">
-<pre class="src src-matlab">save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/stewart.mat', 'stewart'</span><span style="color: #DCDCCC;">)</span>
-</pre>
-</div>
-</div>
+<div id="outline-container-orgf3c4474" class="outline-2">
+<h2 id="orgf3c4474"><span class="section-number-2">4</span> initializeSample</h2>
+<div class="outline-text-2" id="text-4">
 </div>
 
-<div id="outline-container-orga207d03" class="outline-2">
-<h2 id="orga207d03"><span class="section-number-2">9</span> initializeParameters Function</h2>
-<div class="outline-text-2" id="text-9">
-<div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeParameters</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">)</span>
-</pre>
-</div>
-
-<p>
-We first compute \([a_1, a_2, a_3, a_4, a_5, a_6]^T\) and \([b_1, b_2, b_3, b_4, b_5, b_6]^T\).
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">stewart.Aa = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-stewart.Ab = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-stewart.Bb = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">3</span>
-    stewart.Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>stewart.BP.Rleg<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> stewart.BP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.BP.Rleg<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> stewart.BP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.BP.H<span style="color: #7CB8BB;">+</span>stewart.SP.H<span style="color: #DCDCCC;">]</span>;
-    stewart.Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>stewart.BP.Rleg<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.BP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.BP.Rleg<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.BP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.BP.H<span style="color: #7CB8BB;">+</span>stewart.SP.H<span style="color: #DCDCCC;">]</span>;
-
-    stewart.Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>stewart.TP.Rleg<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.TP.dalpha <span style="color: #7CB8BB;">-</span> stewart.TP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.TP.Rleg<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.TP.dalpha <span style="color: #7CB8BB;">-</span> stewart.TP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.H <span style="color: #7CB8BB;">-</span> stewart.TP.H <span style="color: #7CB8BB;">-</span> stewart.SP.H<span style="color: #DCDCCC;">]</span>;
-    stewart.Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>stewart.TP.Rleg<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.TP.dalpha <span style="color: #7CB8BB;">+</span> stewart.TP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.TP.Rleg<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> stewart.TP.dalpha <span style="color: #7CB8BB;">+</span> stewart.TP.alpha<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                           stewart.H <span style="color: #7CB8BB;">-</span> stewart.TP.H <span style="color: #7CB8BB;">-</span> stewart.SP.H<span style="color: #DCDCCC;">]</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
-stewart.Bb = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.H<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
-</pre>
-</div>
-
-<p>
-Now, we compute the leg vectors \(\hat{s}_i\) and leg position \(l_i\):
-\[ b_i - a_i = l_i \hat{s}_i \]
-</p>
-
-<p>
-We initialize \(l_i\) and \(\hat{s}_i\)
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">leg_length = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-leg_vectors = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-</pre>
-</div>
-
-<p>
-We compute \(b_i - a_i\), and then:
-</p>
-\begin{align*}
-  l_i       &= \left|b_i - a_i\right| \\
-  \hat{s}_i &= \frac{b_i - a_i}{l_i}
-\end{align*}
-
-<div class="org-src-container">
-<pre class="src src-matlab">legs = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.Aa;
-
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-    leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span> = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-    leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">/</span> leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
-</pre>
-</div>
-
-<p>
-Then the shape of the bottom leg is estimated
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">stewart.Leg.lenght = leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">1</span>.<span style="color: #BFEBBF;">5</span>;
-stewart.Leg.shape.bot = <span style="text-decoration: underline;">...</span>
-    <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>                <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-     stewart.Leg.Rbot <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-     stewart.Leg.Rbot stewart.Leg.lenght; <span style="text-decoration: underline;">...</span>
-     stewart.Leg.Rtop stewart.Leg.lenght; <span style="text-decoration: underline;">...</span>
-     stewart.Leg.Rtop <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>stewart.Leg.lenght; <span style="text-decoration: underline;">...</span>
-     <span style="color: #BFEBBF;">0</span>                <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>stewart.Leg.lenght<span style="color: #DCDCCC;">]</span>;
-</pre>
-</div>
-
-<p>
-We compute rotation matrices to have the orientation of the legs.
-The rotation matrix transforms the \(z\) axis to the axis of the leg. The other axis are not important here.
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">stewart.Rm = struct<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'R'</span>, eye<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  sx = cross<span style="color: #DCDCCC;">(</span>leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-  sx = sx<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sx<span style="color: #DCDCCC;">)</span>;
-
-  sy = <span style="color: #7CB8BB;">-</span>cross<span style="color: #DCDCCC;">(</span>sx, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  sy = sy<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sy<span style="color: #DCDCCC;">)</span>;
-
-  sz = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  sz = sz<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sz<span style="color: #DCDCCC;">)</span>;
-
-  stewart.Rm<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>.R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDCCC;">]</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
-</pre>
-</div>
-
-<p>
-Compute Jacobian Matrix
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">J = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span>;
-
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  J<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  J<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">4</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">001</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">(</span>stewart.Ab<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span><span style="color: #7CB8BB;">-</span> stewart.H<span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">[</span><span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">1</span><span style="color: #D0BF8F;">]</span><span style="color: #BFEBBF;">)</span>, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
-
-stewart.J = J;
-stewart.Jinv = inv<span style="color: #DCDCCC;">(</span>J<span style="color: #DCDCCC;">)</span>;
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">stewart.K = stewart.Leg.k_ax<span style="color: #7CB8BB;">*</span>stewart.J'<span style="color: #7CB8BB;">*</span>stewart.J;
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">  <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org724c1a1" class="outline-2">
-<h2 id="org724c1a1"><span class="section-number-2">10</span> initializeSample</h2>
-<div class="outline-text-2" id="text-10">
+<div id="outline-container-org1ec4152" class="outline-3">
+<h3 id="org1ec4152"><span class="section-number-3">4.1</span> Function description</h3>
+<div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[]</span> = <span style="color: #93E0E3;">initializeSample</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
-<span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Default values for opts</span>
-    sample = struct<span style="color: #DCDCCC;">(</span> <span style="text-decoration: underline;">...</span>
-        <span style="color: #CC9393;">'radius'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% radius of the cylinder [mm]</span>
-        <span style="color: #CC9393;">'height'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% height of the cylinder [mm]</span>
-        <span style="color: #CC9393;">'mass'</span>,       <span style="color: #BFEBBF;">10</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% mass of the cylinder [kg]</span>
-        <span style="color: #CC9393;">'measheight'</span>, <span style="color: #BFEBBF;">50</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% measurement point z-offset [mm]</span>
-        <span style="color: #CC9393;">'offset'</span>,     <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>,   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% offset position of the sample [mm]</span>
-        <span style="color: #CC9393;">'color'</span>,      <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">9</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span> <span style="text-decoration: underline;">...</span>
-        <span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+</div>
+</div>
 
-    <span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Populate opts with input parameters</span>
-    <span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-        <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-            sample.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-        <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<div id="outline-container-orgcd3268d" class="outline-3">
+<h3 id="orgcd3268d"><span class="section-number-3">4.2</span> Optional Parameters</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Default values for opts.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">sample = struct<span style="color: #DCDCCC;">(</span> <span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'radius'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% radius of the cylinder [mm]</span>
+    <span style="color: #CC9393;">'height'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% height of the cylinder [mm]</span>
+    <span style="color: #CC9393;">'mass'</span>,       <span style="color: #BFEBBF;">10</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% mass of the cylinder [kg]</span>
+    <span style="color: #CC9393;">'measheight'</span>, <span style="color: #BFEBBF;">50</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% measurement point z-offset [mm]</span>
+    <span style="color: #CC9393;">'offset'</span>,     <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>,   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% offset position of the sample [mm]</span>
+    <span style="color: #CC9393;">'color'</span>,      <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">9</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span> <span style="text-decoration: underline;">...</span>
+    <span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<p>
+Populate opts with input parameters
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
+        sample.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
     <span style="color: #F0DFAF; font-weight: bold;">end</span>
-
-    <span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Save</span>
-    save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/sample.mat', 'sample'</span><span style="color: #DCDCCC;">)</span>;
 <span style="color: #F0DFAF; font-weight: bold;">end</span>
 </pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org29ee9ed" class="outline-3">
+<h3 id="org29ee9ed"><span class="section-number-3">4.3</span> Save the Sample structure</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-matlab">save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/sample.mat', 'sample'</span><span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-03-22 ven. 12:03</p>
+<p class="date">Created: 2019-03-25 lun. 11:18</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -25,7 +25,7 @@
 :END:
 
 * Identification
-#+begin_src matlab :results none :exports none
+#+begin_src matlab :results none :exports none :noweb yes
   <<matlab-init>>
   addpath('src');
   addpath('library');
@@ -37,7 +37,11 @@
 
 The hexapod structure and Sample structure are initialized.
 #+begin_src matlab :results none
-  initializeHexapod();
+  stewart = initializeGeneralConfiguration();
+  stewart = computeGeometricalProperties(stewart);
+  stewart = initializeMechanicalElements(stewart);
+  save('./mat/stewart.mat', 'stewart');
+
   initializeSample();
 #+end_src
 
@@ -45,92 +49,111 @@ The hexapod structure and Sample structure are initialized.
   G = identifyPlant();
 #+end_src
 
+#+begin_src matlab :results none
+  freqs = logspace(2, 4, 1000);
+#+end_src
+
 * Cartesian Plot
 From a force applied in the Cartesian frame to a displacement in the Cartesian frame.
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_cart(1, 1));
-  bode(G.G_cart(3, 3));
+  plot(freqs, abs(squeeze(freqresp(G.G_cart(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_cart(2, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_cart(3, 1), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude');
+#+end_src
+
+#+begin_src matlab :results none
+  figure;
+  bode(G.G_cart, freqs);
 #+end_src
 
 * From a force to force sensor
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_forc(1, 1));
-  bode(G.G_forc(2, 2));
-  bode(G.G_forc(3, 3));
-  bode(G.G_forc(4, 4));
-  bode(G.G_forc(5, 5));
-  bode(G.G_forc(6, 6));
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(1, 1), freqs, 'Hz'))), 'k-', 'DisplayName', '$F_{m_i}/F_{i}$');
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [N/N]');
+  legend('location', 'southeast');
 #+end_src
 
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_forc(1, 1));
-  bode(G.G_forc(1, 2));
-  bode(G.G_forc(1, 3));
-  bode(G.G_forc(1, 4));
-  bode(G.G_forc(1, 5));
-  bode(G.G_forc(1, 6));
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(1, 1), freqs, 'Hz'))), 'k-', 'DisplayName', '$F_{m_i}/F_{i}$');
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(2, 1), freqs, 'Hz'))), 'k--', 'DisplayName', '$F_{m_j}/F_{i}$');
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(3, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(4, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(5, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_forc(6, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [N/N]');
+  legend('location', 'southeast');
 #+end_src
 
 * From a force applied in the leg to the displacement of the leg
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_legs(1, 1));
-  bode(G.G_legs(2, 2));
-  bode(G.G_legs(3, 3));
-  bode(G.G_legs(4, 4));
-  bode(G.G_legs(5, 5));
-  bode(G.G_legs(6, 6));
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(1, 1), freqs, 'Hz'))), 'k-', 'DisplayName', '$D_{i}/F_{i}$');
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/N]');
 #+end_src
 
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_legs(1, 1));
-  bode(G.G_legs(1, 2));
-  bode(G.G_legs(1, 3));
-  bode(G.G_legs(1, 4));
-  bode(G.G_legs(1, 5));
-  bode(G.G_legs(1, 6));
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(1, 1), freqs, 'Hz'))), 'k-', 'DisplayName', '$D_{i}/F_{i}$');
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(2, 1), freqs, 'Hz'))), 'k--', 'DisplayName', '$D_{j}/F_{i}$');
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(3, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(4, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(5, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
+  plot(freqs, abs(squeeze(freqresp(G.G_legs(6, 1), freqs, 'Hz'))), 'k--', 'HandleVisibility', 'off');
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/N]');
+  legend('location', 'northeast');
 #+end_src
 
 * Transmissibility
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_tran(1, 1));
-  bode(G.G_tran(2, 2));
-  bode(G.G_tran(3, 3));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(2, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(3, 3), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/m]');
 #+end_src
 
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_tran(4, 4));
-  bode(G.G_tran(5, 5));
-  bode(G.G_tran(6, 6));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(4, 4), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(5, 5), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(6, 6), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [$\frac{rad/s}{rad/s}$]');
 #+end_src
 
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_tran(1, 1));
-  bode(G.G_tran(2, 1));
-  bode(G.G_tran(3, 1));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 3), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/m]');
 #+end_src
 
 * Compliance
@@ -139,10 +162,12 @@ From a force applied in the Cartesian frame to a relative displacement of the mo
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_comp(1, 1));
-  bode(G.G_comp(2, 2));
-  bode(G.G_comp(3, 3));
+  plot(freqs, abs(squeeze(freqresp(G.G_comp(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_comp(2, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_comp(3, 3), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/N]');
 #+end_src
 
 * Inertial
@@ -151,10 +176,12 @@ From a force applied on the Cartesian frame to the absolute displacement of the 
 #+begin_src matlab :results none
   figure;
   hold on;
-  bode(G.G_iner(1, 1));
-  bode(G.G_iner(2, 2));
-  bode(G.G_iner(3, 3));
+  plot(freqs, abs(squeeze(freqresp(G.G_iner(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_iner(2, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(G.G_iner(3, 3), freqs, 'Hz'))));
   hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]'); ylabel('Amplitude [m/N]');
 #+end_src
 
 * identifyPlant
@@ -228,11 +255,11 @@ We defined all the Input/Output names of the identified transfer function.
 
 We split the transfer function into sub transfer functions and we compute their minimum realization.
 #+begin_src matlab
-  sys.G_cart = minreal(G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'}));
-  sys.G_forc = minreal(G({'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
-  sys.G_legs = minreal(G({'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
+  sys.G_cart = minreal(G({'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'},  {'Fx',  'Fy',  'Fz',  'Mx',  'My',  'Mz'}));
+  sys.G_forc = minreal(G({'F1m',  'F2m',  'F3m',  'F4m',  'F5m',  'F6m'},  {'F1',  'F2',  'F3',  'F4',  'F5',  'F6'}));
+  sys.G_legs = minreal(G({'D1m',  'D2m',  'D3m',  'D4m',  'D5m',  'D6m'},  {'F1',  'F2',  'F3',  'F4',  'F5',  'F6'}));
   sys.G_tran = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'}));
-  sys.G_comp = minreal(G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
+  sys.G_comp = minreal(G({'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'},  {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
   sys.G_iner = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
   % sys.G_all  = minreal(G);
 #+end_src

@@ -53,7 +53,7 @@ G.OutputName = {'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm', ...
 % identifyPlant:7 ends here
 
 % [[file:~/MEGA/These/Matlab/Simscape/stewart-simscape/identification.org::*identifyPlant][identifyPlant:8]]
-sys.G_cart = minreal(G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'}));
+sys.G_cart = G({'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'}, {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'});
 sys.G_forc = minreal(G({'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
 sys.G_legs = minreal(G({'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}));
 sys.G_tran = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'}));

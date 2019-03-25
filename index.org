@@ -26,12 +26,13 @@
 
 * Simscape Model
 - [[file:simscape-model.org][Model of the Stewart Platform]]
-- [[file:identification.org][Identification]]
+- [[file:identification.org][Identification of the Simscape Model]]
 
 * Architecture Study
 - [[file:kinematic-study.org][Kinematic Study]]
 - [[file:stiffness-study.org][Stiffness Matrix Study]]
 - Jacobian Study
+- [[file:cubic-configuration.org][Cubic Architecture]]
 
 * Motion Control
 - Active Damping
