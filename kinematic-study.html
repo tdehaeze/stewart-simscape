@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-22 ven. 12:03 -->
+<!-- 2019-03-26 mar. 09:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kinematic Study of the Stewart Platform</title>
@@ -193,6 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -247,27 +253,170 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc1c40d5">1. Functions</a>
+<li><a href="#org2e1bd58">1. Needed Actuator Stroke</a>
 <ul>
-<li><a href="#org3d6cf9e">1.1. getMaxPositions</a></li>
-<li><a href="#orge3ee3ac">1.2. getMaxPureDisplacement</a></li>
+<li><a href="#org16d1370">1.1. Stewart architecture definition</a></li>
+<li><a href="#orgaf07b82">1.2. Wanted translations and rotations</a></li>
+<li><a href="#org920b62b">1.3. Needed stroke for "pure" rotations or translations</a></li>
+<li><a href="#org27bf97e">1.4. Needed stroke for combined translations and rotations</a></li>
+</ul>
+</li>
+<li><a href="#orgaebf111">2. Maximum Stroke</a></li>
+<li><a href="#orgfb8a1e7">3. Functions</a>
+<ul>
+<li><a href="#org465746a">3.1. getMaxPositions</a></li>
+<li><a href="#org527f7ca">3.2. getMaxPureDisplacement</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc1c40d5" class="outline-2">
-<h2 id="orgc1c40d5"><span class="section-number-2">1</span> Functions</h2>
+<div id="outline-container-org2e1bd58" class="outline-2">
+<h2 id="org2e1bd58"><span class="section-number-2">1</span> Needed Actuator Stroke</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+The goal is to determine the needed stroke of the actuators to obtain wanted translations and rotations.
+</p>
 </div>
-<div id="outline-container-org3d6cf9e" class="outline-3">
-<h3 id="org3d6cf9e"><span class="section-number-3">1.1</span> getMaxPositions</h3>
+
+<div id="outline-container-org16d1370" class="outline-3">
+<h3 id="org16d1370"><span class="section-number-3">1.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-1-1">
+<p>
+We use a cubic architecture.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">90</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
+    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
+    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">60</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
+    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">60</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span style="color: #DCDCCC;">)</span>;
+stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
+opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">100</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">50</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span style="color: #DCDCCC;">)</span>;
+stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
+    <span style="color: #CC9393;">'stroke'</span>, <span style="color: #BFEBBF;">50e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Maximum stroke of each actuator [m]</span>
+    <span style="color: #DCDCCC;">)</span>;
+stewart = initializeMechanicalElements<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+
+save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/stewart.mat', 'stewart'</span><span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf07b82" class="outline-3">
+<h3 id="orgaf07b82"><span class="section-number-3">1.2</span> Wanted translations and rotations</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+We define wanted translations and rotations
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Tx_max = <span style="color: #BFEBBF;">15e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>; <span style="color: #7F9F7F;">% Translation [m]</span>
+Ty_max = <span style="color: #BFEBBF;">15e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>; <span style="color: #7F9F7F;">% Translation [m]</span>
+Tz_max = <span style="color: #BFEBBF;">15e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>; <span style="color: #7F9F7F;">% Translation [m]</span>
+Rx_max = <span style="color: #BFEBBF;">30e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>; <span style="color: #7F9F7F;">% Rotation [rad]</span>
+Ry_max = <span style="color: #BFEBBF;">30e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>; <span style="color: #7F9F7F;">% Rotation [rad]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org920b62b" class="outline-3">
+<h3 id="org920b62b"><span class="section-number-3">1.3</span> Needed stroke for "pure" rotations or translations</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+First, we estimate the needed actuator stroke for "pure" rotations and translation.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">LTx = stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span>Tx_max <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>';
+LTy = stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span> Ty_max <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>';
+LTz = stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> Tz_max <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>';
+LRx = stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> Rx_max <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>';
+LRy = stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span> Ry_max <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>';
+</pre>
+</div>
+
+<pre class="example">
+1.0607e-05
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org27bf97e" class="outline-3">
+<h3 id="org27bf97e"><span class="section-number-3">1.4</span> Needed stroke for combined translations and rotations</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Now, we combine translations and rotations, and we try to find the worst case (that we suppose to happen at the border).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Lmax = <span style="color: #BFEBBF;">0</span>;
+pos = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">]</span>;
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">Tx</span> = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">-Tx_max</span>,Tx_max<span style="color: #DCDCCC;">]</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">Ty</span> = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">-Ty_max</span>,Ty_max<span style="color: #DCDCCC;">]</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">Tz</span> = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">-Tz_max</span>,Tz_max<span style="color: #DCDCCC;">]</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">Rx</span> = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">-Rx_max</span>,Rx_max<span style="color: #DCDCCC;">]</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">Ry</span> = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">-Ry_max</span>,Ry_max<span style="color: #DCDCCC;">]</span>
+    L = max<span style="color: #DCDCCC;">(</span>stewart.Jd<span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">[</span>Tx Ty Tz Rx Ry <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>'<span style="color: #DCDCCC;">)</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> L <span style="color: #7CB8BB;">&gt;</span> Lmax
+        Lmax = L;
+        pos = <span style="color: #DCDCCC;">[</span>Tx Ty Tz Rx Ry<span style="color: #DCDCCC;">]</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+
+<p>
+We obtain a needed stroke shown below (almost two times the needed stroke for "pure" rotations and translations).
+</p>
+<pre class="example">
+3.0927e-05
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaebf111" class="outline-2">
+<h2 id="orgaebf111"><span class="section-number-2">2</span> Maximum Stroke</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+From a specified actuator stroke, we try to estimate the available maneuverability of the Stewart platform.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #DCDCCC;">[</span>X, Y, Z<span style="color: #DCDCCC;">]</span> = getMaxPositions<span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+plot3<span style="color: #DCDCCC;">(</span>X, Y, Z, <span style="color: #CC9393;">'k-'</span><span style="color: #DCDCCC;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfb8a1e7" class="outline-2">
+<h2 id="orgfb8a1e7"><span class="section-number-2">3</span> Functions</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org465746a" class="outline-3">
+<h3 id="org465746a"><span class="section-number-3">3.1</span> getMaxPositions</h3>
+<div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">X, Y, Z</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">getMaxPositions</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">)</span>
     Leg = stewart.Leg;
-    J = stewart.J;
+    J = stewart.Jd;
     theta = linspace<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">pi</span>, <span style="color: #BFEBBF;">100</span><span style="color: #DCDCCC;">)</span>;
     phi = linspace<span style="color: #DCDCCC;">(</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> , <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">100</span><span style="color: #DCDCCC;">)</span>;
     dmax = zeros<span style="color: #DCDCCC;">(</span>length<span style="color: #BFEBBF;">(</span>theta<span style="color: #BFEBBF;">)</span>, length<span style="color: #BFEBBF;">(</span>phi<span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
@@ -288,9 +437,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orge3ee3ac" class="outline-3">
-<h3 id="orge3ee3ac"><span class="section-number-3">1.2</span> getMaxPureDisplacement</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org527f7ca" class="outline-3">
+<h3 id="org527f7ca"><span class="section-number-3">3.2</span> getMaxPureDisplacement</h3>
+<div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">max_disp</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">getMaxPureDisplacement</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">Leg</span>, <span style="color: #DFAF8F;">J</span><span style="color: #DCDCCC;">)</span>
     max_disp = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>;
@@ -309,7 +458,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-03-22 ven. 12:03</p>
+<p class="date">Created: 2019-03-26 mar. 09:24</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

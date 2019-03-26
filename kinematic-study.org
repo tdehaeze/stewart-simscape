@@ -24,6 +24,108 @@
 #+PROPERTY: header-args:matlab+ :mkdirp yes
 :END:
 
+#+begin_src matlab :results none :exports none :noweb yes
+  <<matlab-init>>
+  addpath('src');
+  addpath('library');
+#+end_src
+
+* Needed Actuator Stroke
+The goal is to determine the needed stroke of the actuators to obtain wanted translations and rotations.
+
+** Stewart architecture definition
+We use a cubic architecture.
+
+#+begin_src matlab :results silent
+  opts = struct(...
+      'H_tot', 90, ... % Total height of the Hexapod [mm]
+      'L',     180/sqrt(3), ... % Size of the Cube [mm]
+      'H',     60, ... % Height between base joints and platform joints [mm]
+      'H0',    180/2-60/2 ... % Height between the corner of the cube and the plane containing the base joints [mm]
+      );
+  stewart = initializeCubicConfiguration(opts);
+  opts = struct(...
+      'Jd_pos', [0, 0, 100], ... % Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]
+      'Jf_pos', [0, 0, -50]  ... % Position of the Jacobian for force location from the top of the mobile platform [mm]
+      );
+  stewart = computeGeometricalProperties(stewart, opts);
+  opts = struct(...
+      'stroke', 50e-6 ... % Maximum stroke of each actuator [m]
+      );
+  stewart = initializeMechanicalElements(stewart, opts);
+
+  save('./mat/stewart.mat', 'stewart');
+#+end_src
+
+** Wanted translations and rotations
+We define wanted translations and rotations
+#+begin_src matlab :results silent
+  Tx_max = 15e-6; % Translation [m]
+  Ty_max = 15e-6; % Translation [m]
+  Tz_max = 15e-6; % Translation [m]
+  Rx_max = 30e-6; % Rotation [rad]
+  Ry_max = 30e-6; % Rotation [rad]
+#+end_src
+
+** Needed stroke for "pure" rotations or translations
+First, we estimate the needed actuator stroke for "pure" rotations and translation.
+#+begin_src matlab :results silent
+  LTx = stewart.Jd*[Tx_max 0 0 0 0 0]';
+  LTy = stewart.Jd*[0 Ty_max 0 0 0 0]';
+  LTz = stewart.Jd*[0 0 Tz_max 0 0 0]';
+  LRx = stewart.Jd*[0 0 0 Rx_max 0 0]';
+  LRy = stewart.Jd*[0 0 0 0 Ry_max 0]';
+#+end_src
+
+#+begin_src matlab :results value :exports results
+  ans = max(max([LTx, LTy, LTz, LRx, LRy]))
+#+end_src
+
+#+RESULTS:
+: 1.0607e-05
+
+** Needed stroke for combined translations and rotations
+Now, we combine translations and rotations, and we try to find the worst case (that we suppose to happen at the border).
+#+begin_src matlab :results none
+  Lmax = 0;
+  pos = [0, 0, 0, 0, 0];
+  for Tx = [-Tx_max,Tx_max]
+  for Ty = [-Ty_max,Ty_max]
+  for Tz = [-Tz_max,Tz_max]
+  for Rx = [-Rx_max,Rx_max]
+  for Ry = [-Ry_max,Ry_max]
+      L = max(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
+      if L > Lmax
+          Lmax = L;
+          pos = [Tx Ty Tz Rx Ry];
+      end
+  end
+  end
+  end
+  end
+  end
+#+end_src
+
+We obtain a needed stroke shown below (almost two times the needed stroke for "pure" rotations and translations).
+#+begin_src matlab :results value :exports results
+  ans = Lmax
+#+end_src
+
+#+RESULTS:
+: 3.0927e-05
+
+* Maximum Stroke
+From a specified actuator stroke, we try to estimate the available maneuverability of the Stewart platform.
+
+#+begin_src matlab :results silent
+  [X, Y, Z] = getMaxPositions(stewart);
+#+end_src
+
+#+begin_src matlab :results silent
+  figure;
+  plot3(X, Y, Z, 'k-')
+#+end_src
+
 * Functions
   :PROPERTIES:
   :HEADER-ARGS:matlab+: :exports code
@@ -38,7 +140,7 @@
 #+begin_src matlab
   function [X, Y, Z] = getMaxPositions(stewart)
       Leg = stewart.Leg;
-      J = stewart.J;
+      J = stewart.Jd;
       theta = linspace(0, 2*pi, 100);
       phi = linspace(-pi/2 , pi/2, 100);
       dmax = zeros(length(theta), length(phi));
