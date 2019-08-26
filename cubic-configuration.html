@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-26 mar. 08:47 -->
+<!-- 2019-08-26 lun. 11:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -193,12 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.stickytableheaders.min.js"></script>
+<script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -269,39 +269,43 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
 <h1 class="title">Cubic configuration for the Stewart Platform</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org43e3f4a">1. Questions we wish to answer with this analysis</a></li>
-<li><a href="#org9890470">2. Configuration Analysis - Stiffness Matrix</a>
+<li><a href="#org1bafc26">1. Questions we wish to answer with this analysis</a></li>
+<li><a href="#orga5361fc">2. Configuration Analysis - Stiffness Matrix</a>
 <ul>
-<li><a href="#org5d80bd3">2.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#orga5ac347">2.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
-<li><a href="#org47743ef">2.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#orgd0daf23">2.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org6729b53">2.5. Conclusion</a></li>
+<li><a href="#orge00f8a7">2.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#org575d55b">2.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
+<li><a href="#orgcda0ff4">2.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#org06f7f99">2.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
+<li><a href="#org42ac83d">2.5. Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#org0969b06">3. Cubic size analysis</a></li>
-<li><a href="#org0f56064">4. initializeCubicConfiguration</a>
+<li><a href="#orgb37e81b">3. Cubic size analysis</a></li>
+<li><a href="#org2b0a41e">4. initializeCubicConfiguration</a>
 <ul>
-<li><a href="#orge3f31b8">4.1. Function description</a></li>
-<li><a href="#org2580fde">4.2. Optional Parameters</a></li>
-<li><a href="#org230a253">4.3. Cube Creation</a></li>
-<li><a href="#orgd1a04ef">4.4. Vectors of each leg</a></li>
-<li><a href="#orgfec0778">4.5. Verification of Height of the Stewart Platform</a></li>
-<li><a href="#orgc3cd1d1">4.6. Determinate the location of the joints</a></li>
-<li><a href="#org9063896">4.7. Returns Stewart Structure</a></li>
+<li><a href="#orgfb743ea">4.1. Function description</a></li>
+<li><a href="#orgcc92353">4.2. Optional Parameters</a></li>
+<li><a href="#org384ec97">4.3. Cube Creation</a></li>
+<li><a href="#orgefa2328">4.4. Vectors of each leg</a></li>
+<li><a href="#orgf6960ff">4.5. Verification of Height of the Stewart Platform</a></li>
+<li><a href="#orgd7e65db">4.6. Determinate the location of the joints</a></li>
+<li><a href="#org38f602f">4.7. Returns Stewart Structure</a></li>
 </ul>
 </li>
-<li><a href="#org5807740">5. Tests</a>
+<li><a href="#org243b392">5. Tests</a>
 <ul>
-<li><a href="#org8809c47">5.1. First attempt to parametrisation</a></li>
-<li><a href="#org71c64bc">5.2. Second attempt</a></li>
-<li><a href="#orgc132128">5.3. Generate the Stewart platform for a Cubic configuration</a></li>
+<li><a href="#org86fb4aa">5.1. First attempt to parametrisation</a></li>
+<li><a href="#orgcc2eaf4">5.2. Second attempt</a></li>
+<li><a href="#org7824b39">5.3. Generate the Stewart platform for a Cubic configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -323,11 +327,11 @@ The specificity of the Cubic configuration is that each actuator is orthogonal w
 </p>
 
 <p>
-To generate and study the Cubic configuration, <code>initializeCubicConfiguration</code> is used (description in section <a href="#org7e73a4b">4</a>).
+To generate and study the Cubic configuration, <code>initializeCubicConfiguration</code> is used (description in section <a href="#org7faef27">4</a>).
 </p>
 
-<div id="outline-container-org43e3f4a" class="outline-2">
-<h2 id="org43e3f4a"><span class="section-number-2">1</span> Questions we wish to answer with this analysis</h2>
+<div id="outline-container-org1bafc26" class="outline-2">
+<h2 id="org1bafc26"><span class="section-number-2">1</span> Questions we wish to answer with this analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The goal is to study the benefits of using a cubic configuration:
@@ -340,45 +344,45 @@ The goal is to study the benefits of using a cubic configuration:
 </div>
 </div>
 
-<div id="outline-container-org9890470" class="outline-2">
-<h2 id="org9890470"><span class="section-number-2">2</span> Configuration Analysis - Stiffness Matrix</h2>
+<div id="outline-container-orga5361fc" class="outline-2">
+<h2 id="orga5361fc"><span class="section-number-2">2</span> Configuration Analysis - Stiffness Matrix</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5d80bd3" class="outline-3">
-<h3 id="org5d80bd3"><span class="section-number-3">2.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
+<div id="outline-container-orge00f8a7" class="outline-3">
+<h3 id="orge00f8a7"><span class="section-number-3">2.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-We create a cubic Stewart platform (figure <a href="#org813c22d">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
+We create a cubic Stewart platform (figure <a href="#orgb095247">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
 </p>
 
 
-<div id="org813c22d" class="figure">
+<div id="orgb095247" class="figure">
 <p><img src="./figs/3d-cubic-stewart-aligned.png" alt="3d-cubic-stewart-aligned.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Centered cubic configuration</p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">200</span><span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">60</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">200</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">60</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
-opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">50</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">50</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">60</span>, <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span><span class="org-highlight-numbers-number">60</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">50</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">50</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/stewart.mat', 'stewart'</span><span style="color: #DCDCCC;">)</span>;
+save<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'./mat/stewart.mat', 'stewart'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">K = stewart.Jd'<span style="color: #7CB8BB;">*</span>stewart.Jd;
+<pre class="src src-matlab">K = stewart.Jf'<span class="org-type">*</span>stewart.Jf;
 </pre>
 </div>
 
@@ -457,32 +461,32 @@ save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/s
 </div>
 </div>
 
-<div id="outline-container-orga5ac347" class="outline-3">
-<h3 id="orga5ac347"><span class="section-number-3">2.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
+<div id="outline-container-org575d55b" class="outline-3">
+<h3 id="org575d55b"><span class="section-number-3">2.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org813c22d">1</a>).
+We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#orgb095247">1</a>).
 The Jacobian matrix is not estimated at the location of the center of the cube.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">200</span><span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">60</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">200</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">60</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
-opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">60</span>, <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span><span class="org-highlight-numbers-number">60</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">K = stewart.Jd'<span style="color: #7CB8BB;">*</span>stewart.Jd;
+<pre class="src src-matlab">K = stewart.Jf'<span class="org-type">*</span>stewart.Jf;
 </pre>
 </div>
 
@@ -561,16 +565,16 @@ stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stew
 </div>
 </div>
 
-<div id="outline-container-org47743ef" class="outline-3">
-<h3 id="org47743ef"><span class="section-number-3">2.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
+<div id="outline-container-orgcda0ff4" class="outline-3">
+<h3 id="orgcda0ff4"><span class="section-number-3">2.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-Here, the "center" of the Stewart platform is not at the cube center (figure <a href="#org8a2bd4c">2</a>).
+Here, the "center" of the Stewart platform is not at the cube center (figure <a href="#org741ffe8">2</a>).
 The Jacobian is estimated at the cube center.
 </p>
 
 
-<div id="org8a2bd4c" class="figure">
+<div id="org741ffe8" class="figure">
 <p><img src="./figs/3d-cubic-stewart-misaligned.png" alt="3d-cubic-stewart-misaligned.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Not centered cubic configuration</p>
@@ -584,23 +588,23 @@ The center of the cube from the top platform is at \(z = 110 - 175 = -65\).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">100</span>,         <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">220</span><span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">60</span>,          <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">75</span>           <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
-opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">65</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">65</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">100</span>,         <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">220</span><span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">60</span>,          <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">75</span>           <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">65</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">65</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">K = stewart.Jd'<span style="color: #7CB8BB;">*</span>stewart.Jd;
+<pre class="src src-matlab">K = stewart.Jf'<span class="org-type">*</span>stewart.Jf;
 </pre>
 </div>
 
@@ -683,8 +687,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-orgd0daf23" class="outline-3">
-<h3 id="orgd0daf23"><span class="section-number-3">2.4</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
+<div id="outline-container-org06f7f99" class="outline-3">
+<h3 id="org06f7f99"><span class="section-number-3">2.4</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Here, the "center" of the Stewart platform is not at the cube center.
@@ -699,23 +703,23 @@ The center of the cube from the top platform is at \(z = 110 - 175 = -65\).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">220</span><span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">60</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">75</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
-opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">60</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">60</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
-stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">220</span><span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">60</span>, <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">75</span> <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">60</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">60</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">K = stewart.Jd'<span style="color: #7CB8BB;">*</span>stewart.Jd;
+<pre class="src src-matlab">K = stewart.Jf'<span class="org-type">*</span>stewart.Jf;
 </pre>
 </div>
 
@@ -798,8 +802,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-org6729b53" class="outline-3">
-<h3 id="org6729b53"><span class="section-number-3">2.5</span> Conclusion</h3>
+<div id="outline-container-org42ac83d" class="outline-3">
+<h3 id="org42ac83d"><span class="section-number-3">2.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="important">
 <ul class="org-ul">
@@ -812,8 +816,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-org0969b06" class="outline-2">
-<h2 id="org0969b06"><span class="section-number-2">3</span> Cubic size analysis</h2>
+<div id="outline-container-orgb37e81b" class="outline-2">
+<h2 id="orgb37e81b"><span class="section-number-2">3</span> Cubic size analysis</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 We here study the effect of the size of the cube used for the Stewart configuration.
@@ -828,32 +832,32 @@ We only vary the size of the cube.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">H_cubes = <span style="color: #BFEBBF;">250</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">20</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">350</span>;
-stewarts = <span style="color: #DCDCCC;">{</span>zeros<span style="color: #BFEBBF;">(</span>length<span style="color: #D0BF8F;">(</span>H_cubes<span style="color: #D0BF8F;">)</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">}</span>;
+<pre class="src src-matlab">H_cubes = <span class="org-highlight-numbers-number">250</span><span class="org-type">:</span><span class="org-highlight-numbers-number">20</span><span class="org-type">:</span><span class="org-highlight-numbers-number">350</span>;
+stewarts = <span class="org-rainbow-delimiters-depth-1">{</span>zeros<span class="org-rainbow-delimiters-depth-2">(</span>length<span class="org-rainbow-delimiters-depth-3">(</span>H_cubes<span class="org-rainbow-delimiters-depth-3">)</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">}</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:length</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">H_cubes</span><span style="color: #DCDCCC;">)</span>
-  H_cube = H_cubes<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>;
-  H_tot = <span style="color: #BFEBBF;">100</span>;
-  H = <span style="color: #BFEBBF;">80</span>;
+<pre class="src src-matlab"><span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:length</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">H_cubes</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
+  H_cube = H_cubes<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  H_tot = <span class="org-highlight-numbers-number">100</span>;
+  H = <span class="org-highlight-numbers-number">80</span>;
 
-  opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-      <span style="color: #CC9393;">'H_tot'</span>, H_tot, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-      <span style="color: #CC9393;">'L'</span>,     H_cube<span style="color: #7CB8BB;">/</span>sqrt<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-      <span style="color: #CC9393;">'H'</span>,     H, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-      <span style="color: #CC9393;">'H0'</span>,    H_cube<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span>H<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-      <span style="color: #DCDCCC;">)</span>;
-  stewart = initializeCubicConfiguration<span style="color: #DCDCCC;">(</span>opts<span style="color: #DCDCCC;">)</span>;
+  opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+      <span class="org-string">'H_tot'</span>, H_tot, <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+      <span class="org-string">'L'</span>,     H_cube<span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+      <span class="org-string">'H'</span>,     H, <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+      <span class="org-string">'H0'</span>,    H_cube<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span>H<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+      <span class="org-rainbow-delimiters-depth-1">)</span>;
+  stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-  opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-      <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, H_cube<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span>opts.H0<span style="color: #7CB8BB;">-</span>opts.H_tot<span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-      <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, H_cube<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">-</span>opts.H0<span style="color: #7CB8BB;">-</span>opts.H_tot<span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-      <span style="color: #DCDCCC;">)</span>;
-  stewart = computeGeometricalProperties<span style="color: #DCDCCC;">(</span>stewart, opts<span style="color: #DCDCCC;">)</span>;
-  stewarts<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">{</span>stewart<span style="color: #DCDCCC;">}</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+  opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+      <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, H_cube<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span>opts.H0<span class="org-type">-</span>opts.H_tot<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+      <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, H_cube<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span>opts.H0<span class="org-type">-</span>opts.H_tot<span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+      <span class="org-rainbow-delimiters-depth-1">)</span>;
+  stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+  stewarts<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span> = <span class="org-rainbow-delimiters-depth-1">{</span>stewart<span class="org-rainbow-delimiters-depth-1">}</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -862,10 +866,10 @@ stewarts = <span style="color: #DCDCCC;">{</span>zeros<span style="color: #BFEBB
 The Stiffness matrix is computed for all generated Stewart platforms.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ks = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">6</span>, length<span style="color: #BFEBBF;">(</span>H_cube<span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:length</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">H_cubes</span><span style="color: #DCDCCC;">)</span>
-  Ks<span style="color: #DCDCCC;">(</span><span style="color: #7CB8BB;">:</span>, <span style="color: #7CB8BB;">:</span>, <span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span> = stewarts<span style="color: #DCDCCC;">{</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">}</span>.Jd'<span style="color: #7CB8BB;">*</span>stewarts<span style="color: #DCDCCC;">{</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">}</span>.Jd;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Ks = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">6</span>, length<span class="org-rainbow-delimiters-depth-2">(</span>H_cube<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:length</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">H_cubes</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
+  Ks<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">:</span>, <span class="org-type">:</span>, <span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span> = stewarts<span class="org-rainbow-delimiters-depth-1">{</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">}</span>.Jd'<span class="org-type">*</span>stewarts<span class="org-rainbow-delimiters-depth-1">{</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">}</span>.Jd;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -877,18 +881,18 @@ The only elements of \(K\) that vary are \(k_{\theta_x} = k_{\theta_y}\) and \(k
 Finally, we plot \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\)
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-plot<span style="color: #DCDCCC;">(</span>H_cubes, squeeze<span style="color: #BFEBBF;">(</span>Ks<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">4</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'DisplayName', '</span>$k_<span style="color: #BFEBBF;">{</span><span style="color: #7CB8BB;">\</span>theta_x<span style="color: #BFEBBF;">}</span>$'<span style="color: #DCDCCC;">)</span>;
-plot<span style="color: #DCDCCC;">(</span>H_cubes, squeeze<span style="color: #BFEBBF;">(</span>Ks<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">6</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'DisplayName', '</span>$k_<span style="color: #BFEBBF;">{</span><span style="color: #7CB8BB;">\</span>theta_z<span style="color: #BFEBBF;">}</span>$'<span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>H_cubes, squeeze<span class="org-rainbow-delimiters-depth-2">(</span>Ks<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">4</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'DisplayName', '</span>$k_<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-type">\</span>theta_x<span class="org-rainbow-delimiters-depth-2">}</span>$'<span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>H_cubes, squeeze<span class="org-rainbow-delimiters-depth-2">(</span>Ks<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">6</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'DisplayName', '</span>$k_<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-type">\</span>theta_z<span class="org-rainbow-delimiters-depth-2">}</span>$'<span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
-legend<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'location', 'northwest'</span><span style="color: #DCDCCC;">)</span>;
-xlabel<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'Cube Size </span><span style="color: #BFEBBF;">[</span><span style="color: #CC9393;">mm</span><span style="color: #BFEBBF;">]</span><span style="color: #CC9393;">'</span><span style="color: #DCDCCC;">)</span><span style="color: #CC9393;">; ylabel</span><span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'Rotational stiffnes </span><span style="color: #BFEBBF;">[</span><span style="color: #CC9393;">normalized</span><span style="color: #BFEBBF;">]</span><span style="color: #CC9393;">'</span><span style="color: #DCDCCC;">)</span>;
+legend<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'location', 'northwest'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Cube Size </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">mm</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Rotational stiffnes </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">normalized</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 
-<div id="orgad7fc21" class="figure">
+<div id="org5647f41" class="figure">
 <p><img src="figs/stiffness_cube_size.png" alt="stiffness_cube_size.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>\(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) function of the size of the cube</p>
@@ -909,37 +913,37 @@ In that case, the legs will the further separated. Size of the cube is then limi
 </div>
 </div>
 
-<div id="outline-container-org0f56064" class="outline-2">
-<h2 id="org0f56064"><span class="section-number-2">4</span> initializeCubicConfiguration</h2>
+<div id="outline-container-org2b0a41e" class="outline-2">
+<h2 id="org2b0a41e"><span class="section-number-2">4</span> initializeCubicConfiguration</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="org7e73a4b"></a>
+<a id="org7faef27"></a>
 </p>
 </div>
 
-<div id="outline-container-orge3f31b8" class="outline-3">
-<h3 id="orge3f31b8"><span class="section-number-3">4.1</span> Function description</h3>
+<div id="outline-container-orgfb743ea" class="outline-3">
+<h3 id="orgfb743ea"><span class="section-number-3">4.1</span> Function description</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeCubicConfiguration</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">stewart</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">initializeCubicConfiguration</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2580fde" class="outline-3">
-<h3 id="org2580fde"><span class="section-number-3">4.2</span> Optional Parameters</h3>
+<div id="outline-container-orgcc92353" class="outline-3">
+<h3 id="orgcc92353"><span class="section-number-3">4.2</span> Optional Parameters</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>, <span style="color: #BFEBBF;">90</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Total height of the Hexapod [mm]</span>
-    <span style="color: #CC9393;">'L'</span>,     <span style="color: #BFEBBF;">110</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Size of the Cube [mm]</span>
-    <span style="color: #CC9393;">'H'</span>,     <span style="color: #BFEBBF;">40</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between base joints and platform joints [mm]</span>
-    <span style="color: #CC9393;">'H0'</span>,    <span style="color: #BFEBBF;">75</span>   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">90</span>,  <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">110</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">40</span>,  <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">75</span>   <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -947,29 +951,29 @@ Default values for opts.
 Populate opts with input parameters
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        opts.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org230a253" class="outline-3">
-<h3 id="org230a253"><span class="section-number-3">4.3</span> Cube Creation</h3>
+<div id="outline-container-org384ec97" class="outline-3">
+<h3 id="org384ec97"><span class="section-number-3">4.3</span> Cube Creation</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
-<pre class="src src-matlab">points = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
-points = opts.L<span style="color: #7CB8BB;">*</span>points;
+<pre class="src src-matlab">points = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
+points = opts.L<span class="org-type">*</span>points;
 </pre>
 </div>
 
@@ -977,16 +981,16 @@ points = opts.L<span style="color: #7CB8BB;">*</span>points;
 We create the rotation matrix to rotate the cube
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">sx = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-sx = sx<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sx<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">sx = cross<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sx = sx<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sx<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-sy = <span style="color: #7CB8BB;">-</span>cross<span style="color: #DCDCCC;">(</span>sx, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-sy = sy<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sy<span style="color: #DCDCCC;">)</span>;
+sy = <span class="org-type">-</span>cross<span class="org-rainbow-delimiters-depth-1">(</span>sx, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sy = sy<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sy<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-sz = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
-sz = sz<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sz<span style="color: #DCDCCC;">)</span>;
+sz = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
+sz = sz<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sz<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDCCC;">]</span>';
+R = <span class="org-rainbow-delimiters-depth-1">[</span>sx', sy', sz'<span class="org-rainbow-delimiters-depth-1">]</span>';
 </pre>
 </div>
 
@@ -994,25 +998,25 @@ R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDC
 We use to rotation matrix to rotate the cube
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">cube = zeros<span style="color: #DCDCCC;">(</span>size<span style="color: #BFEBBF;">(</span>points<span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:size</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">points, </span><span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>
-  cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = R <span style="color: #7CB8BB;">*</span> points<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>';
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">cube = zeros<span class="org-rainbow-delimiters-depth-1">(</span>size<span class="org-rainbow-delimiters-depth-2">(</span>points<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:size</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">points, </span><span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
+  cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = R <span class="org-type">*</span> points<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>';
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd1a04ef" class="outline-3">
-<h3 id="orgd1a04ef"><span class="section-number-3">4.4</span> Vectors of each leg</h3>
+<div id="outline-container-orgefa2328" class="outline-3">
+<h3 id="orgefa2328"><span class="section-number-3">4.4</span> Vectors of each leg</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
-<pre class="src src-matlab">leg_indices = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">4</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">4</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">6</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">6</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">7</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">leg_indices = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">4</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">6</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">7</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
@@ -1020,51 +1024,51 @@ We use to rotation matrix to rotate the cube
 Vectors are:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">legs = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-legs_start = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">legs = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+legs_start = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">-</span> cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgfec0778" class="outline-3">
-<h3 id="orgfec0778"><span class="section-number-3">4.5</span> Verification of Height of the Stewart Platform</h3>
+<div id="outline-container-orgf6960ff" class="outline-3">
+<h3 id="orgf6960ff"><span class="section-number-3">4.5</span> Verification of Height of the Stewart Platform</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 If the Stewart platform is not contained in the cube, throw an error.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Hmax = cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">if</span> opts.H0 <span style="color: #7CB8BB;">&lt;</span> cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>
-  error<span style="color: #DCDCCC;">(</span>sprintf<span style="color: #BFEBBF;">(</span>'H0 is not high enought. Minimum H0 = %.<span style="color: #BFEBBF;">1f</span>', cube(<span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">3</span>)));
-<span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span> opts.H0 <span style="color: #7CB8BB;">+</span> opts.H <span style="color: #7CB8BB;">&gt;</span> cube<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">3</span><span style="color: #D0BF8F;">)</span>
-  error<span style="color: #D0BF8F;">(</span>sprintf<span style="color: #93E0E3;">(</span>'H0<span style="color: #7CB8BB;">+</span>H is too high. Maximum H0<span style="color: #7CB8BB;">+</span>H = %.<span style="color: #BFEBBF;">1f</span>', cube(<span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">3</span>)));
-  error<span style="color: #9FC59F;">(</span><span style="color: #CC9393;">'H0+H is too high'</span><span style="color: #9FC59F;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Hmax = cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">-</span> cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">if</span> opts.H0 <span class="org-type">&lt;</span> cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>
+  error<span class="org-rainbow-delimiters-depth-1">(</span>sprintf<span class="org-rainbow-delimiters-depth-2">(</span>'H0 is not high enought. Minimum H0 = %.<span class="org-highlight-numbers-number">1f</span>', cube(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>)));
+<span class="org-keyword">else</span> <span class="org-keyword">if</span> opts.H0 <span class="org-type">+</span> opts.H <span class="org-type">&gt;</span> cube<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-3">)</span>
+  error<span class="org-rainbow-delimiters-depth-3">(</span>sprintf<span class="org-rainbow-delimiters-depth-4">(</span>'H0<span class="org-type">+</span>H is too high. Maximum H0<span class="org-type">+</span>H = %.<span class="org-highlight-numbers-number">1f</span>', cube(<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>)));
+  error<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-string">'H0+H is too high'</span><span class="org-rainbow-delimiters-depth-5">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc3cd1d1" class="outline-3">
-<h3 id="orgc3cd1d1"><span class="section-number-3">4.6</span> Determinate the location of the joints</h3>
+<div id="outline-container-orgd7e65db" class="outline-3">
+<h3 id="orgd7e65db"><span class="section-number-3">4.6</span> Determinate the location of the joints</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 We now determine the location of the joints on the fixed platform w.r.t the fixed frame \(\{A\}\).
 \(\{A\}\) is fixed to the bottom of the base.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Aa = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  t = <span style="color: #DCDCCC;">(</span>opts.H0<span style="color: #7CB8BB;">-</span>legs_start<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">+</span> t<span style="color: #7CB8BB;">*</span>legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Aa = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  t = <span class="org-rainbow-delimiters-depth-1">(</span>opts.H0<span class="org-type">-</span>legs_start<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Aa<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">+</span> t<span class="org-type">*</span>legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -1072,11 +1076,11 @@ We now determine the location of the joints on the fixed platform w.r.t the fixe
 And the location of the joints on the mobile platform with respect to \(\{A\}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ab = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  t = <span style="color: #DCDCCC;">(</span>opts.H0<span style="color: #7CB8BB;">+</span>opts.H<span style="color: #7CB8BB;">-</span>legs_start<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">+</span> t<span style="color: #7CB8BB;">*</span>legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Ab = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  t = <span class="org-rainbow-delimiters-depth-1">(</span>opts.H0<span class="org-type">+</span>opts.H<span class="org-type">-</span>legs_start<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Ab<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">+</span> t<span class="org-type">*</span>legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -1084,45 +1088,45 @@ And the location of the joints on the mobile platform with respect to \(\{A\}\).
 And the location of the joints on the mobile platform with respect to \(\{B\}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Bb = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-Bb = Ab <span style="color: #7CB8BB;">-</span> <span style="color: #DCDCCC;">(</span>opts.H0 <span style="color: #7CB8BB;">+</span> opts.H_tot<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="color: #7CB8BB;">+</span> opts.H<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">Bb = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+Bb = Ab <span class="org-type">-</span> <span class="org-rainbow-delimiters-depth-1">(</span>opts.H0 <span class="org-type">+</span> opts.H_tot<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-type">+</span> opts.H<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">h = opts.H0 <span style="color: #7CB8BB;">+</span> opts.H<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span> <span style="color: #7CB8BB;">-</span> opts.H_tot<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span>;
-Aa = Aa <span style="color: #7CB8BB;">-</span> h<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
-Ab = Ab <span style="color: #7CB8BB;">-</span> h<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">h = opts.H0 <span class="org-type">+</span> opts.H<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-type">-</span> opts.H_tot<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span>;
+Aa = Aa <span class="org-type">-</span> h<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
+Ab = Ab <span class="org-type">-</span> h<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9063896" class="outline-3">
-<h3 id="org9063896"><span class="section-number-3">4.7</span> Returns Stewart Structure</h3>
+<div id="outline-container-org38f602f" class="outline-3">
+<h3 id="org38f602f"><span class="section-number-3">4.7</span> Returns Stewart Structure</h3>
 <div class="outline-text-3" id="text-4-7">
 <div class="org-src-container">
-<pre class="src src-matlab">  stewart = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">  stewart = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
   stewart.Aa = Aa;
   stewart.Ab = Ab;
   stewart.Bb = Bb;
   stewart.H_tot = opts.H_tot;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5807740" class="outline-2">
-<h2 id="org5807740"><span class="section-number-2">5</span> Tests</h2>
+<div id="outline-container-org243b392" class="outline-2">
+<h2 id="org243b392"><span class="section-number-2">5</span> Tests</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org8809c47" class="outline-3">
-<h3 id="org8809c47"><span class="section-number-3">5.1</span> First attempt to parametrisation</h3>
+<div id="outline-container-org86fb4aa" class="outline-3">
+<h3 id="org86fb4aa"><span class="section-number-3">5.1</span> First attempt to parametrisation</h3>
 <div class="outline-text-3" id="text-5-1">
 
-<div id="org520c5d6" class="figure">
+<div id="org10fe09c" class="figure">
 <p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Schematic of the bottom plates with all the parameters</p>
@@ -1157,8 +1161,8 @@ Lets express \(a_i\), \(b_i\) and \(a_j\):
 </div>
 </div>
 
-<div id="outline-container-org71c64bc" class="outline-3">
-<h3 id="org71c64bc"><span class="section-number-3">5.2</span> Second attempt</h3>
+<div id="outline-container-orgcc2eaf4" class="outline-3">
+<h3 id="orgcc2eaf4"><span class="section-number-3">5.2</span> Second attempt</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 We start with the point of a cube in space:
@@ -1177,50 +1181,50 @@ Then we have the direction of all the vectors expressed in the frame of the hexa
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">points = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">1</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-          <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">points = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+          <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
-plot3<span style="color: #DCDCCC;">(</span>points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'ko'</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-type">figure</span>;
+plot3<span class="org-rainbow-delimiters-depth-1">(</span>points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'ko'</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">sx = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-sx = sx<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sx<span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">sx = cross<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sx = sx<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sx<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-sy = <span style="color: #7CB8BB;">-</span>cross<span style="color: #DCDCCC;">(</span>sx, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-sy = sy<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sy<span style="color: #DCDCCC;">)</span>;
+sy = <span class="org-type">-</span>cross<span class="org-rainbow-delimiters-depth-1">(</span>sx, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sy = sy<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sy<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-sz = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
-sz = sz<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sz<span style="color: #DCDCCC;">)</span>;
+sz = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
+sz = sz<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sz<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDCCC;">]</span>';
+R = <span class="org-rainbow-delimiters-depth-1">[</span>sx', sy', sz'<span class="org-rainbow-delimiters-depth-1">]</span>';
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">cube = zeros<span style="color: #DCDCCC;">(</span>size<span style="color: #BFEBBF;">(</span>points<span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:size</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">points, </span><span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>
-  cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = R <span style="color: #7CB8BB;">*</span> points<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>';
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">cube = zeros<span class="org-rainbow-delimiters-depth-1">(</span>size<span class="org-rainbow-delimiters-depth-2">(</span>points<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:size</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">points, </span><span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
+  cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = R <span class="org-type">*</span> points<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>';
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-plot3<span style="color: #DCDCCC;">(</span>points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, points<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'ko'</span><span style="color: #DCDCCC;">)</span>;
-plot3<span style="color: #DCDCCC;">(</span>cube<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, cube<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, cube<span style="color: #BFEBBF;">(</span><span style="color: #7CB8BB;">:</span>,<span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'ro'</span><span style="color: #DCDCCC;">)</span>;
+plot3<span class="org-rainbow-delimiters-depth-1">(</span>points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, points<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'ko'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot3<span class="org-rainbow-delimiters-depth-1">(</span>cube<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, cube<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, cube<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">:</span>,<span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'ro'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
 </pre>
 </div>
@@ -1229,18 +1233,18 @@ hold off;
 Now we plot the legs of the hexapod.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">leg_indices = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">4</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">4</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">6</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">6</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">7</span>; <span style="text-decoration: underline;">...</span>
-               <span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">]</span>
+<pre class="src src-matlab">leg_indices = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">4</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">6</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">7</span>; <span class="org-underline">...</span>
+               <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">]</span>
 
-<span style="color: #7CB8BB;">figure</span>;
+<span class="org-type">figure</span>;
 hold on;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  plot3<span style="color: #DCDCCC;">(</span>cube<span style="color: #BFEBBF;">(</span>leg_indices<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span>,<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, cube<span style="color: #BFEBBF;">(</span>leg_indices<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span>,<span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, cube<span style="color: #BFEBBF;">(</span>leg_indices<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span>,<span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span>, <span style="color: #CC9393;">'-'</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  plot3<span class="org-rainbow-delimiters-depth-1">(</span>cube<span class="org-rainbow-delimiters-depth-2">(</span>leg_indices<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, cube<span class="org-rainbow-delimiters-depth-2">(</span>leg_indices<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, cube<span class="org-rainbow-delimiters-depth-2">(</span>leg_indices<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-string">'-'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 hold off;
 </pre>
 </div>
@@ -1249,13 +1253,13 @@ hold off;
 Vectors are:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">legs = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-legs_start = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">legs = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+legs_start = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = cube<span style="color: #DCDCCC;">(</span>leg_indices<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">-</span> cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = cube<span class="org-rainbow-delimiters-depth-1">(</span>leg_indices<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -1271,7 +1275,7 @@ We here want to see if the position of the "slice" changes something.
 Let's first estimate the maximum height of the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Hmax = cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">Hmax = cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">-</span> cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -1279,26 +1283,26 @@ Let's first estimate the maximum height of the Stewart platform.
 Let's then estimate the middle position of the platform
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Hmid = cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">8</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span>;
+<pre class="src src-matlab">Hmid = cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc132128" class="outline-3">
-<h3 id="orgc132128"><span class="section-number-3">5.3</span> Generate the Stewart platform for a Cubic configuration</h3>
+<div id="outline-container-org7824b39" class="outline-3">
+<h3 id="org7824b39"><span class="section-number-3">5.3</span> Generate the Stewart platform for a Cubic configuration</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 First we defined the height of the Hexapod.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">H = Hmax<span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">2</span>;
+<pre class="src src-matlab">H = Hmax<span class="org-type">/</span><span class="org-highlight-numbers-number">2</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Zs = <span style="color: #BFEBBF;">1</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>cube<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Height of the fixed platform</span>
-Ze = Zs <span style="color: #7CB8BB;">+</span> H; <span style="color: #7F9F7F;">% Height of the mobile platform</span>
+<pre class="src src-matlab">Zs = <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span><span class="org-type">*</span>cube<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Height of the fixed platform</span>
+Ze = Zs <span class="org-type">+</span> H; <span class="org-comment">% Height of the mobile platform</span>
 </pre>
 </div>
 
@@ -1306,11 +1310,11 @@ Ze = Zs <span style="color: #7CB8BB;">+</span> H; <span style="color: #7F9F7F;">
 We now determine the location of the joints on the fixed platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Aa = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  t = <span style="color: #DCDCCC;">(</span>Zs<span style="color: #7CB8BB;">-</span>legs_start<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">+</span> t<span style="color: #7CB8BB;">*</span>legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Aa = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  t = <span class="org-rainbow-delimiters-depth-1">(</span>Zs<span class="org-type">-</span>legs_start<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Aa<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">+</span> t<span class="org-type">*</span>legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -1318,11 +1322,11 @@ We now determine the location of the joints on the fixed platform.
 And the location of the joints on the mobile platform
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ab = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  t = <span style="color: #DCDCCC;">(</span>Ze<span style="color: #7CB8BB;">-</span>legs_start<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs_start<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">+</span> t<span style="color: #7CB8BB;">*</span>legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab">Ab = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  t = <span class="org-rainbow-delimiters-depth-1">(</span>Ze<span class="org-type">-</span>legs_start<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Ab<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = legs_start<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">+</span> t<span class="org-type">*</span>legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -1330,15 +1334,15 @@ And the location of the joints on the mobile platform
 And we plot the legs.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  plot3<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>Ab<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #D0BF8F;">)</span>,Aa<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">[</span>Ab<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">2</span><span style="color: #D0BF8F;">)</span>,Aa<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">2</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">[</span>Ab<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #D0BF8F;">)</span>,Aa<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">3</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">]</span>, <span style="color: #CC9393;">'k-'</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  plot3<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>Ab<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-3">)</span>,Aa<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-rainbow-delimiters-depth-2">[</span>Ab<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-3">)</span>,Aa<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-rainbow-delimiters-depth-2">[</span>Ab<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-3">)</span>,Aa<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-string">'k-'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 hold off;
-xlim<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-ylim<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-zlim<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
+xlim<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+ylim<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+zlim<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
@@ -1356,7 +1360,7 @@ zlim<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-03-26 mar. 08:47</p>
+<p class="date">Created: 2019-08-26 lun. 11:58</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

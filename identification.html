@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-22 ven. 12:03 -->
+<!-- 2019-08-26 lun. 11:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -193,12 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.stickytableheaders.min.js"></script>
+<script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -269,200 +269,233 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
 <h1 class="title">Identification of the Stewart Platform using Simscape</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0c15748">1. Identification</a></li>
-<li><a href="#orgb51bebd">2. Cartesian Plot</a></li>
-<li><a href="#org8822347">3. From a force to force sensor</a></li>
-<li><a href="#orgb3f97c3">4. From a force applied in the leg to the displacement of the leg</a></li>
-<li><a href="#org4f7f749">5. Transmissibility</a></li>
-<li><a href="#orgc027ff6">6. Compliance</a></li>
-<li><a href="#orgeb43267">7. Inertial</a></li>
-<li><a href="#org702dc6c">8. identifyPlant</a></li>
+<li><a href="#org5e5b5f3">1. Identification</a></li>
+<li><a href="#orge4ddae7">2. Cartesian Plot</a></li>
+<li><a href="#orgc3f5223">3. From a force to force sensor</a></li>
+<li><a href="#org1795f38">4. From a force applied in the leg to the displacement of the leg</a></li>
+<li><a href="#org3e4873e">5. Transmissibility</a></li>
+<li><a href="#org1ab2176">6. Compliance</a></li>
+<li><a href="#orgf18ed8c">7. Inertial</a></li>
+<li><a href="#org9ed65c5">8. identifyPlant</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0c15748" class="outline-2">
-<h2 id="org0c15748"><span class="section-number-2">1</span> Identification</h2>
+<div id="outline-container-org5e5b5f3" class="outline-2">
+<h2 id="org5e5b5f3"><span class="section-number-2">1</span> Identification</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The hexapod structure and Sample structure are initialized.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">initializeHexapod<span style="color: #DCDCCC;">()</span>;
-initializeSample<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">stewart = initializeGeneralConfiguration<span class="org-rainbow-delimiters-depth-1">()</span>;
+stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart<span class="org-rainbow-delimiters-depth-1">)</span>;
+stewart = initializeMechanicalElements<span class="org-rainbow-delimiters-depth-1">(</span>stewart<span class="org-rainbow-delimiters-depth-1">)</span>;
+save<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'./mat/stewart.mat', 'stewart'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+
+initializeSample<span class="org-rainbow-delimiters-depth-1">()</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G = identifyPlant<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">G = identifyPlant<span class="org-rainbow-delimiters-depth-1">()</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">1000</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb51bebd" class="outline-2">
-<h2 id="orgb51bebd"><span class="section-number-2">2</span> Cartesian Plot</h2>
+<div id="outline-container-orge4ddae7" class="outline-2">
+<h2 id="orge4ddae7"><span class="section-number-2">2</span> Cartesian Plot</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 From a force applied in the Cartesian frame to a displacement in the Cartesian frame.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_cart<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_cart<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_cart<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_cart<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_cart<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-type">figure</span>;
+bode<span class="org-rainbow-delimiters-depth-1">(</span>G.G_cart, freqs<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8822347" class="outline-2">
-<h2 id="org8822347"><span class="section-number-2">3</span> From a force to force sensor</h2>
+<div id="outline-container-orgc3f5223" class="outline-2">
+<h2 id="orgc3f5223"><span class="section-number-2">3</span> From a force to force sensor</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">4</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">5</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">6</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k-', 'DisplayName', '$F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">m_i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">N/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+legend<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'location', 'southeast'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">4</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">5</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_forc<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">6</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k-', 'DisplayName', '$F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">m_i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'DisplayName', '$F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">m_j</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_forc<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">N/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+legend<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'location', 'southeast'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb3f97c3" class="outline-2">
-<h2 id="orgb3f97c3"><span class="section-number-2">4</span> From a force applied in the leg to the displacement of the leg</h2>
+<div id="outline-container-org1795f38" class="outline-2">
+<h2 id="org1795f38"><span class="section-number-2">4</span> From a force applied in the leg to the displacement of the leg</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">4</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">5</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">6</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k-', 'DisplayName', '$D_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">4</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">5</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">6</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k-', 'DisplayName', '$D_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'DisplayName', '$D_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">j</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">/F_</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">{</span></span><span class="org-string">i</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">}</span></span><span class="org-string">$'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_legs<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-4">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">)</span></span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">)</span></span><span class="org-string">, 'k--', 'HandleVisibility', 'off'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+legend<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'location', 'northeast'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4f7f749" class="outline-2">
-<h2 id="org4f7f749"><span class="section-number-2">5</span> Transmissibility</h2>
+<div id="outline-container-org3e4873e" class="outline-2">
+<h2 id="org3e4873e"><span class="section-number-2">5</span> Transmissibility</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/m</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">4</span>, <span style="color: #BFEBBF;">4</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">5</span>, <span style="color: #BFEBBF;">5</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">6</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">4</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">5</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'</span>Amplitude <span class="org-rainbow-delimiters-depth-2">[</span>$<span class="org-type">\</span>frac<span class="org-rainbow-delimiters-depth-3">{</span>rad<span class="org-type">/</span>s<span class="org-rainbow-delimiters-depth-3">}{</span>rad<span class="org-type">/</span>s<span class="org-rainbow-delimiters-depth-3">}</span>$<span class="org-rainbow-delimiters-depth-2">]</span>'<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_tran<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_tran<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/m</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc027ff6" class="outline-2">
-<h2 id="orgc027ff6"><span class="section-number-2">6</span> Compliance</h2>
+<div id="outline-container-org1ab2176" class="outline-2">
+<h2 id="org1ab2176"><span class="section-number-2">6</span> Compliance</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 From a force applied in the Cartesian frame to a relative displacement of the mobile platform with respect to the base.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_comp<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_comp<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_comp<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_comp<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_comp<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_comp<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgeb43267" class="outline-2">
-<h2 id="orgeb43267"><span class="section-number-2">7</span> Inertial</h2>
+<div id="outline-container-orgf18ed8c" class="outline-2">
+<h2 id="orgf18ed8c"><span class="section-number-2">7</span> Inertial</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 From a force applied on the Cartesian frame to the absolute displacement of the mobile platform.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7CB8BB;">figure</span>;
+<pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
-bode<span style="color: #DCDCCC;">(</span>G.G_iner<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_iner<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">2</span>, <span style="color: #BFEBBF;">2</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-bode<span style="color: #DCDCCC;">(</span>G.G_iner<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span>, <span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_iner<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_iner<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+plot<span class="org-rainbow-delimiters-depth-1">(</span>freqs, abs<span class="org-rainbow-delimiters-depth-2">(</span>squeeze<span class="org-rainbow-delimiters-depth-3">(</span>freqresp<span class="org-rainbow-delimiters-depth-4">(</span>G.G_iner<span class="org-rainbow-delimiters-depth-5">(</span><span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-5">)</span>, freqs, <span class="org-string">'Hz'</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 hold off;
+<span class="org-type">set</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">gca</span>, <span class="org-string">'XScale', 'log'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; set</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">gca, 'YScale', 'log'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+xlabel<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'Frequency </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">Hz</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-string">; ylabel</span><span class="org-string"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-string">'Amplitude </span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">[</span></span><span class="org-string">m/N</span><span class="org-string"><span class="org-rainbow-delimiters-depth-2">]</span></span><span class="org-string">'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org702dc6c" class="outline-2">
-<h2 id="org702dc6c"><span class="section-number-2">8</span> identifyPlant</h2>
+<div id="outline-container-org9ed65c5" class="outline-2">
+<h2 id="org9ed65c5"><span class="section-number-2">8</span> identifyPlant</h2>
 <div class="outline-text-2" id="text-8">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">sys</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">identifyPlant</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">sys</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">identifyPlant</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 
@@ -470,15 +503,15 @@ hold off;
 We use this code block to pass optional parameters.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Default values for opts</span>
-opts = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Default values for opts</span></span>
+opts = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
 
-<span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Populate opts with input parameters</span>
-<span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Populate opts with input parameters</span></span>
+<span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        opts.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -488,7 +521,7 @@ Here, we just identify the system at time \(t = 0\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">options = linearizeOptions;
-options.SampleTime = <span style="color: #BFEBBF;">0</span>;
+options.SampleTime = <span class="org-highlight-numbers-number">0</span>;
 </pre>
 </div>
 
@@ -496,7 +529,7 @@ options.SampleTime = <span style="color: #BFEBBF;">0</span>;
 We define the name of the Simulink File used to identification.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">mdl = <span style="color: #CC9393;">'stewart'</span>;
+<pre class="src src-matlab">mdl = <span class="org-string">'stewart'</span>;
 </pre>
 </div>
 
@@ -504,17 +537,17 @@ We define the name of the Simulink File used to identification.
 Then we defined the input/output of the transfer function we want to identify.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Inputs</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>F'<span style="color: #BFEBBF;">]</span>,  <span style="color: #BFEBBF;">1</span>, 'input'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Cartesian forces</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Fl'<span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">1</span>, 'input'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Leg forces</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Fd'<span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">1</span>, 'input'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Direct forces</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">4</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Dw'<span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">1</span>, 'input'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Base motion</span>
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Inputs</span></span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>F'<span class="org-rainbow-delimiters-depth-2">]</span>,  <span class="org-highlight-numbers-number">1</span>, 'input'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Cartesian forces</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Fl'<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-highlight-numbers-number">1</span>, 'input'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Leg forces</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Fd'<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-highlight-numbers-number">1</span>, 'input'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Direct forces</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">4</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Dw'<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-highlight-numbers-number">1</span>, 'input'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Base motion</span>
 
-<span style="color: #7F9F7F; font-weight: bold; text-decoration: overline;">%% Outputs</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">5</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Dm'<span style="color: #BFEBBF;">]</span>,  <span style="color: #BFEBBF;">1</span>, 'output'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Relative Motion</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Dlm'<span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">1</span>, 'output'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Displacement of each leg</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Flm'<span style="color: #BFEBBF;">]</span>, <span style="color: #BFEBBF;">1</span>, 'output'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Force sensor in each leg</span>
-io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">8</span><span style="color: #DCDCCC;">)</span> = linio<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">[</span>mdl, '<span style="color: #7CB8BB;">/</span>Xm'<span style="color: #BFEBBF;">]</span>,  <span style="color: #BFEBBF;">1</span>, 'output'<span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% Absolute motion of platform</span>
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Outputs</span></span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">5</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Dm'<span class="org-rainbow-delimiters-depth-2">]</span>,  <span class="org-highlight-numbers-number">1</span>, 'output'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Relative Motion</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Dlm'<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-highlight-numbers-number">1</span>, 'output'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Displacement of each leg</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Flm'<span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-highlight-numbers-number">1</span>, 'output'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Force sensor in each leg</span>
+io<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">8</span><span class="org-rainbow-delimiters-depth-1">)</span> = linio<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">[</span>mdl, '<span class="org-type">/</span>Xm'<span class="org-rainbow-delimiters-depth-2">]</span>,  <span class="org-highlight-numbers-number">1</span>, 'output'<span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% Absolute motion of platform</span>
 </pre>
 </div>
 
@@ -522,7 +555,7 @@ io<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">8</span><s
 The linearization is run.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">G = linearize<span style="color: #DCDCCC;">(</span>mdl, io, <span style="color: #BFEBBF;">0</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">G = linearize<span class="org-rainbow-delimiters-depth-1">(</span>mdl, io, <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -530,14 +563,14 @@ The linearization is run.
 We defined all the Input/Output names of the identified transfer function.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">G.InputName  = <span style="color: #DCDCCC;">{</span><span style="color: #CC9393;">'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'F1', 'F2', 'F3', 'F4', 'F5', 'F6'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'</span><span style="color: #DCDCCC;">}</span>;
-G.OutputName = <span style="color: #DCDCCC;">{</span><span style="color: #CC9393;">'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'</span>, <span style="text-decoration: underline;">...</span>
-                <span style="color: #CC9393;">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span style="color: #DCDCCC;">}</span>;
+<pre class="src src-matlab">G.InputName  = <span class="org-rainbow-delimiters-depth-1">{</span><span class="org-string">'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'F1', 'F2', 'F3', 'F4', 'F5', 'F6'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'</span><span class="org-rainbow-delimiters-depth-1">}</span>;
+G.OutputName = <span class="org-rainbow-delimiters-depth-1">{</span><span class="org-string">'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'</span>, <span class="org-underline">...</span>
+                <span class="org-string">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span class="org-rainbow-delimiters-depth-1">}</span>;
 </pre>
 </div>
 
@@ -545,18 +578,18 @@ G.OutputName = <span style="color: #DCDCCC;">{</span><span style="color: #CC9393
 We split the transfer function into sub transfer functions and we compute their minimum realization.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">sys.G_cart = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-sys.G_forc = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'F1', 'F2', 'F3', 'F4', 'F5', 'F6'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-sys.G_legs = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'F1', 'F2', 'F3', 'F4', 'F5', 'F6'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-sys.G_tran = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-sys.G_comp = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-sys.G_iner = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #BFEBBF;">(</span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span style="color: #D0BF8F;">}</span><span style="color: #CC9393;">, </span><span style="color: #D0BF8F;">{</span><span style="color: #CC9393;">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span><span style="color: #D0BF8F;">}</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #7F9F7F;">% sys.G_all  = minreal(G);</span>
+<pre class="src src-matlab">sys.G_cart = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">,  </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'Fx',  'Fy',  'Fz',  'Mx',  'My',  'Mz'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sys.G_forc = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'F1m',  'F2m',  'F3m',  'F4m',  'F5m',  'F6m'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">,  </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'F1',  'F2',  'F3',  'F4',  'F5',  'F6'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sys.G_legs = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'D1m',  'D2m',  'D3m',  'D4m',  'D5m',  'D6m'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">,  </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'F1',  'F2',  'F3',  'F4',  'F5',  'F6'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sys.G_tran = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">, </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sys.G_comp = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">,  </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+sys.G_iner = minreal<span class="org-rainbow-delimiters-depth-1">(</span>G<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'</span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">}</span></span><span class="org-string">, </span><span class="org-string"><span class="org-rainbow-delimiters-depth-3">{</span></span><span class="org-string">'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-comment">% sys.G_all  = minreal(G);</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
@@ -564,7 +597,7 @@ sys.G_iner = minreal<span style="color: #DCDCCC;">(</span>G<span style="color: #
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-03-22 ven. 12:03</p>
+<p class="date">Created: 2019-08-26 lun. 11:55</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-25 lun. 11:18 -->
+<!-- 2019-08-26 lun. 11:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -193,12 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.stickytableheaders.min.js"></script>
+<script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -269,44 +269,48 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
 <h1 class="title">Stewart Platform - Simscape Model</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org527cc13">1. initializeGeneralConfiguration</a>
+<li><a href="#orge1bdaa4">1. initializeGeneralConfiguration</a>
 <ul>
-<li><a href="#orgea5f8f5">1.1. Function description</a></li>
-<li><a href="#org2db42cb">1.2. Optional Parameters</a></li>
-<li><a href="#org2f9279a">1.3. Geometry Description</a></li>
-<li><a href="#org1409cf0">1.4. Compute Aa and Ab</a></li>
-<li><a href="#orgb91c416">1.5. Returns Stewart Structure</a></li>
+<li><a href="#orgb189499">1.1. Function description</a></li>
+<li><a href="#org26f683d">1.2. Optional Parameters</a></li>
+<li><a href="#org22df53a">1.3. Geometry Description</a></li>
+<li><a href="#orgcf32e31">1.4. Compute Aa and Ab</a></li>
+<li><a href="#org4931162">1.5. Returns Stewart Structure</a></li>
 </ul>
 </li>
-<li><a href="#orgc3aa910">2. computeGeometricalProperties</a>
+<li><a href="#orgc4f14da">2. computeGeometricalProperties</a>
 <ul>
-<li><a href="#org180196f">2.1. Function description</a></li>
-<li><a href="#org12cee4f">2.2. Optional Parameters</a></li>
-<li><a href="#org0010af5">2.3. Rotation matrices</a></li>
-<li><a href="#org98f4bad">2.4. Jacobian matrices</a></li>
+<li><a href="#org7550562">2.1. Function description</a></li>
+<li><a href="#org0ec8d5e">2.2. Optional Parameters</a></li>
+<li><a href="#orgdc858fe">2.3. Rotation matrices</a></li>
+<li><a href="#orgc0b0116">2.4. Jacobian matrices</a></li>
 </ul>
 </li>
-<li><a href="#orgb3e53d1">3. initializeMechanicalElements</a>
+<li><a href="#org35cb27a">3. initializeMechanicalElements</a>
 <ul>
-<li><a href="#orge7f185e">3.1. Function description</a></li>
-<li><a href="#org6bd219d">3.2. Optional Parameters</a></li>
-<li><a href="#org8d0d9c0">3.3. Bottom Plate</a></li>
-<li><a href="#org23fd88c">3.4. Top Plate</a></li>
-<li><a href="#org96d7dab">3.5. Legs</a></li>
-<li><a href="#org66df86f">3.6. Ball Joints</a></li>
+<li><a href="#orgeeb3d2f">3.1. Function description</a></li>
+<li><a href="#org02f8d24">3.2. Optional Parameters</a></li>
+<li><a href="#orga56f635">3.3. Bottom Plate</a></li>
+<li><a href="#orge8a195c">3.4. Top Plate</a></li>
+<li><a href="#org8725a51">3.5. Legs</a></li>
+<li><a href="#org722b78f">3.6. Ball Joints</a></li>
 </ul>
 </li>
-<li><a href="#orgf3c4474">4. initializeSample</a>
+<li><a href="#org5ba95d3">4. initializeSample</a>
 <ul>
-<li><a href="#org1ec4152">4.1. Function description</a></li>
-<li><a href="#orgcd3268d">4.2. Optional Parameters</a></li>
-<li><a href="#org29ee9ed">4.3. Save the Sample structure</a></li>
+<li><a href="#org2dd34bb">4.1. Function description</a></li>
+<li><a href="#org2aa1dac">4.2. Optional Parameters</a></li>
+<li><a href="#orgea68e95">4.3. Save the Sample structure</a></li>
 </ul>
 </li>
 </ul>
@@ -370,42 +374,42 @@ Other Parameters are defined for the Simscape simulation:
 <li>Location of the Jacobian point for velocity/displacement computation</li>
 </ul>
 
-<div id="outline-container-org527cc13" class="outline-2">
-<h2 id="org527cc13"><span class="section-number-2">1</span> initializeGeneralConfiguration</h2>
+<div id="outline-container-orge1bdaa4" class="outline-2">
+<h2 id="orge1bdaa4"><span class="section-number-2">1</span> initializeGeneralConfiguration</h2>
 <div class="outline-text-2" id="text-1">
 </div>
 
-<div id="outline-container-orgea5f8f5" class="outline-3">
-<h3 id="orgea5f8f5"><span class="section-number-3">1.1</span> Function description</h3>
+<div id="outline-container-orgb189499" class="outline-3">
+<h3 id="orgb189499"><span class="section-number-3">1.1</span> Function description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The <code>initializeGeneralConfiguration</code> function takes one structure that contains configurations for the hexapod and returns one structure representing the Hexapod.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeGeneralConfiguration</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">stewart</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">initializeGeneralConfiguration</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2db42cb" class="outline-3">
-<h3 id="org2db42cb"><span class="section-number-3">1.2</span> Optional Parameters</h3>
+<div id="outline-container-org26f683d" class="outline-3">
+<h3 id="org26f683d"><span class="section-number-3">1.2</span> Optional Parameters</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'H_tot'</span>,   <span style="color: #BFEBBF;">90</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height of the platform [mm]</span>
-    <span style="color: #CC9393;">'H_joint'</span>, <span style="color: #BFEBBF;">15</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Height of the joints [mm]</span>
-    <span style="color: #CC9393;">'H_plate'</span>, <span style="color: #BFEBBF;">10</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Thickness of the fixed and mobile platforms [mm]</span>
-    <span style="color: #CC9393;">'R_bot'</span>,  <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
-    <span style="color: #CC9393;">'R_top'</span>,  <span style="color: #BFEBBF;">80</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Radius where the legs articulations are positionned [mm]</span>
-    <span style="color: #CC9393;">'a_bot'</span>,  <span style="color: #BFEBBF;">10</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Angle Offset [deg]</span>
-    <span style="color: #CC9393;">'a_top'</span>,  <span style="color: #BFEBBF;">40</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Angle Offset [deg]</span>
-    <span style="color: #CC9393;">'da_top'</span>, <span style="color: #BFEBBF;">0</span>    <span style="text-decoration: underline;">...</span> % Angle Offset from <span style="color: #BFEBBF;">0</span> position [deg]
-    <span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'H_tot'</span>,   <span class="org-highlight-numbers-number">90</span>, <span class="org-underline">...</span> <span class="org-comment">% Height of the platform [mm]</span>
+    <span class="org-string">'H_joint'</span>, <span class="org-highlight-numbers-number">15</span>, <span class="org-underline">...</span> <span class="org-comment">% Height of the joints [mm]</span>
+    <span class="org-string">'H_plate'</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-underline">...</span> <span class="org-comment">% Thickness of the fixed and mobile platforms [mm]</span>
+    <span class="org-string">'R_bot'</span>,  <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% Radius where the legs articulations are positionned [mm]</span>
+    <span class="org-string">'R_top'</span>,  <span class="org-highlight-numbers-number">80</span>,  <span class="org-underline">...</span> <span class="org-comment">% Radius where the legs articulations are positionned [mm]</span>
+    <span class="org-string">'a_bot'</span>,  <span class="org-highlight-numbers-number">10</span>,  <span class="org-underline">...</span> <span class="org-comment">% Angle Offset [deg]</span>
+    <span class="org-string">'a_top'</span>,  <span class="org-highlight-numbers-number">40</span>,  <span class="org-underline">...</span> <span class="org-comment">% Angle Offset [deg]</span>
+    <span class="org-string">'da_top'</span>, <span class="org-highlight-numbers-number">0</span>    <span class="org-underline">...</span> % Angle Offset from <span class="org-highlight-numbers-number">0</span> position [deg]
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -413,21 +417,21 @@ Default values for opts.
 Populate opts with input parameters
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        opts.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2f9279a" class="outline-3">
-<h3 id="org2f9279a"><span class="section-number-3">1.3</span> Geometry Description</h3>
+<div id="outline-container-org22df53a" class="outline-3">
+<h3 id="org22df53a"><span class="section-number-3">1.3</span> Geometry Description</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<div id="orgc30ce24" class="figure">
+<div id="orgeb6375e" class="figure">
 <p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Schematic of the bottom plates with all the parameters</p>
@@ -435,85 +439,85 @@ Populate opts with input parameters
 </div>
 </div>
 
-<div id="outline-container-org1409cf0" class="outline-3">
-<h3 id="org1409cf0"><span class="section-number-3">1.4</span> Compute Aa and Ab</h3>
+<div id="outline-container-orgcf32e31" class="outline-3">
+<h3 id="orgcf32e31"><span class="section-number-3">1.4</span> Compute Aa and Ab</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 We compute \([a_1, a_2, a_3, a_4, a_5, a_6]^T\) and \([b_1, b_2, b_3, b_4, b_5, b_6]^T\).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Aa = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-Ab = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-Bb = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">Aa = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% [mm]</span>
+Ab = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% [mm]</span>
+Bb = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">3</span>
-    Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>opts.R_bot<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.R_bot<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">-</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.H_plate<span style="color: #7CB8BB;">+</span>opts.H_joint<span style="color: #DCDCCC;">]</span>;
-    Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>opts.R_bot<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.R_bot<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.a_bot<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.H_plate<span style="color: #7CB8BB;">+</span>opts.H_joint<span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab"><span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">3</span></span>
+    Aa<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-type">*</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = <span class="org-rainbow-delimiters-depth-1">[</span>opts.R_bot<span class="org-type">*</span>cos<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">-</span> opts.a_bot<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.R_bot<span class="org-type">*</span>sin<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">-</span> opts.a_bot<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.H_plate<span class="org-type">+</span>opts.H_joint<span class="org-rainbow-delimiters-depth-1">]</span>;
+    Aa<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-type">*</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>   = <span class="org-rainbow-delimiters-depth-1">[</span>opts.R_bot<span class="org-type">*</span>cos<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.a_bot<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.R_bot<span class="org-type">*</span>sin<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.a_bot<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.H_plate<span class="org-type">+</span>opts.H_joint<span class="org-rainbow-delimiters-depth-1">]</span>;
 
-    Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = <span style="color: #DCDCCC;">[</span>opts.R_top<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">-</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.R_top<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">-</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.H_tot <span style="color: #7CB8BB;">-</span> opts.H_plate <span style="color: #7CB8BB;">-</span> opts.H_joint<span style="color: #DCDCCC;">]</span>;
-    Ab<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>   = <span style="color: #DCDCCC;">[</span>opts.R_top<span style="color: #7CB8BB;">*</span>cos<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">+</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.R_top<span style="color: #7CB8BB;">*</span>sin<span style="color: #BFEBBF;">(</span> <span style="color: #BFEBBF;">pi</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">180</span><span style="color: #7CB8BB;">*</span><span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">120</span><span style="color: #7CB8BB;">*</span><span style="color: #93E0E3;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">1</span><span style="color: #93E0E3;">)</span> <span style="color: #7CB8BB;">+</span> opts.da_top <span style="color: #7CB8BB;">+</span> opts.a_top<span style="color: #D0BF8F;">)</span> <span style="color: #BFEBBF;">)</span>, <span style="text-decoration: underline;">...</span>
-                   opts.H_tot <span style="color: #7CB8BB;">-</span> opts.H_plate <span style="color: #7CB8BB;">-</span> opts.H_joint<span style="color: #DCDCCC;">]</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+    Ab<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-type">*</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = <span class="org-rainbow-delimiters-depth-1">[</span>opts.R_top<span class="org-type">*</span>cos<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.da_top <span class="org-type">-</span> opts.a_top<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.R_top<span class="org-type">*</span>sin<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.da_top <span class="org-type">-</span> opts.a_top<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.H_tot <span class="org-type">-</span> opts.H_plate <span class="org-type">-</span> opts.H_joint<span class="org-rainbow-delimiters-depth-1">]</span>;
+    Ab<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-type">*</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>   = <span class="org-rainbow-delimiters-depth-1">[</span>opts.R_top<span class="org-type">*</span>cos<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.da_top <span class="org-type">+</span> opts.a_top<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.R_top<span class="org-type">*</span>sin<span class="org-rainbow-delimiters-depth-2">(</span> <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">180</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-highlight-numbers-number">120</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">i</span><span class="org-type">-</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-type">+</span> opts.da_top <span class="org-type">+</span> opts.a_top<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span>
+                   opts.H_tot <span class="org-type">-</span> opts.H_plate <span class="org-type">-</span> opts.H_joint<span class="org-rainbow-delimiters-depth-1">]</span>;
+<span class="org-keyword">end</span>
 
-Bb = Ab <span style="color: #7CB8BB;">-</span> opts.H_tot<span style="color: #7CB8BB;">*</span><span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">0</span>,<span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">]</span>;
+Bb = Ab <span class="org-type">-</span> opts.H_tot<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb91c416" class="outline-3">
-<h3 id="orgb91c416"><span class="section-number-3">1.5</span> Returns Stewart Structure</h3>
+<div id="outline-container-org4931162" class="outline-3">
+<h3 id="org4931162"><span class="section-number-3">1.5</span> Returns Stewart Structure</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="org-src-container">
-<pre class="src src-matlab">  stewart = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">  stewart = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
   stewart.Aa = Aa;
   stewart.Ab = Ab;
   stewart.Bb = Bb;
   stewart.H_tot = opts.H_tot;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc3aa910" class="outline-2">
-<h2 id="orgc3aa910"><span class="section-number-2">2</span> computeGeometricalProperties</h2>
+<div id="outline-container-orgc4f14da" class="outline-2">
+<h2 id="orgc4f14da"><span class="section-number-2">2</span> computeGeometricalProperties</h2>
 <div class="outline-text-2" id="text-2">
 </div>
 
-<div id="outline-container-org180196f" class="outline-3">
-<h3 id="org180196f"><span class="section-number-3">2.1</span> Function description</h3>
+<div id="outline-container-org7550562" class="outline-3">
+<h3 id="org7550562"><span class="section-number-3">2.1</span> Function description</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">computeGeometricalProperties</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span>, <span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">stewart</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">computeGeometricalProperties</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">stewart</span>, <span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org12cee4f" class="outline-3">
-<h3 id="org12cee4f"><span class="section-number-3">2.2</span> Optional Parameters</h3>
+<div id="outline-container-org0ec8d5e" class="outline-3">
+<h3 id="org0ec8d5e"><span class="section-number-3">2.2</span> Optional Parameters</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'Jd_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">30</span><span style="color: #BFEBBF;">]</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span style="color: #CC9393;">'Jf_pos'</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">30</span><span style="color: #BFEBBF;">]</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">30</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">30</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -521,25 +525,25 @@ Default values for opts.
 Populate opts with input parameters
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        opts.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0010af5" class="outline-3">
-<h3 id="org0010af5"><span class="section-number-3">2.3</span> Rotation matrices</h3>
+<div id="outline-container-orgdc858fe" class="outline-3">
+<h3 id="orgdc858fe"><span class="section-number-3">2.3</span> Rotation matrices</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 We initialize \(l_i\) and \(\hat{s}_i\)
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">leg_length = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">1</span><span style="color: #DCDCCC;">)</span>; <span style="color: #7F9F7F;">% [mm]</span>
-leg_vectors = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">leg_length = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">)</span>; <span class="org-comment">% [mm]</span>
+leg_vectors = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -552,12 +556,12 @@ We compute \(b_i - a_i\), and then:
 \end{align*}
 
 <div class="org-src-container">
-<pre class="src src-matlab">legs = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.Aa;
+<pre class="src src-matlab">legs = stewart.Ab <span class="org-type">-</span> stewart.Aa;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-    leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span> = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-    leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> = legs<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">/</span> leg_length<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+    leg_length<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span> = norm<span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    leg_vectors<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> = legs<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">/</span> leg_length<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -566,94 +570,94 @@ We compute rotation matrices to have the orientation of the legs.
 The rotation matrix transforms the \(z\) axis to the axis of the leg. The other axis are not important here.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart.Rm = struct<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'R'</span>, eye<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">3</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">stewart.Rm = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'R'</span>, eye<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  sx = cross<span style="color: #DCDCCC;">(</span>leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span>, <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span> <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span><span style="color: #DCDCCC;">)</span>;
-  sx = sx<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sx<span style="color: #DCDCCC;">)</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  sx = cross<span class="org-rainbow-delimiters-depth-1">(</span>leg_vectors<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  sx = sx<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sx<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-  sy = <span style="color: #7CB8BB;">-</span>cross<span style="color: #DCDCCC;">(</span>sx, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-  sy = sy<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sy<span style="color: #DCDCCC;">)</span>;
+  sy = <span class="org-type">-</span>cross<span class="org-rainbow-delimiters-depth-1">(</span>sx, leg_vectors<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  sy = sy<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sy<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-  sz = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>,<span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  sz = sz<span style="color: #7CB8BB;">/</span>norm<span style="color: #DCDCCC;">(</span>sz<span style="color: #DCDCCC;">)</span>;
+  sz = leg_vectors<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  sz = sz<span class="org-type">/</span>norm<span class="org-rainbow-delimiters-depth-1">(</span>sz<span class="org-rainbow-delimiters-depth-1">)</span>;
 
-  stewart.Rm<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span><span style="color: #DCDCCC;">)</span>.R = <span style="color: #DCDCCC;">[</span>sx', sy', sz'<span style="color: #DCDCCC;">]</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+  stewart.Rm<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-1">)</span>.R = <span class="org-rainbow-delimiters-depth-1">[</span>sx', sy', sz'<span class="org-rainbow-delimiters-depth-1">]</span>;
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org98f4bad" class="outline-3">
-<h3 id="org98f4bad"><span class="section-number-3">2.4</span> Jacobian matrices</h3>
+<div id="outline-container-orgc0b0116" class="outline-3">
+<h3 id="orgc0b0116"><span class="section-number-3">2.4</span> Jacobian matrices</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Compute Jacobian Matrix
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Jd = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">Jd = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  Jd<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  Jd<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">4</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">001</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">(</span>stewart.Bb<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span> <span style="color: #7CB8BB;">-</span> opts.Jd_pos<span style="color: #BFEBBF;">)</span>, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  Jd<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-type">:</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> = leg_vectors<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Jd<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">4</span><span class="org-type">:</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span> = cross<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">001</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-2">(</span>stewart.Bb<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-type">-</span> opts.Jd_pos<span class="org-rainbow-delimiters-depth-2">)</span>, leg_vectors<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 
 stewart.Jd = Jd;
-stewart.Jd_inv = inv<span style="color: #DCDCCC;">(</span>Jd<span style="color: #DCDCCC;">)</span>;
+stewart.Jd_inv = inv<span class="org-rainbow-delimiters-depth-1">(</span>Jd<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Jf = zeros<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">Jf = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 
-<span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">i</span> = <span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">:</span><span style="color: #BFEBBF;">6</span>
-  Jf<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">1</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> = leg_vectors<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #DCDCCC;">)</span>;
-  Jf<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #BFEBBF;">4</span><span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">6</span><span style="color: #DCDCCC;">)</span> = cross<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">001</span><span style="color: #7CB8BB;">*</span><span style="color: #BFEBBF;">(</span>stewart.Bb<span style="color: #D0BF8F;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #D0BF8F;">)</span> <span style="color: #7CB8BB;">-</span> opts.Jf_pos<span style="color: #BFEBBF;">)</span>, leg_vectors<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">i</span>, <span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>;
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:</span><span class="org-constant"><span class="org-highlight-numbers-number">6</span></span>
+  Jf<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">1</span><span class="org-type">:</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> = leg_vectors<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+  Jf<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-highlight-numbers-number">4</span><span class="org-type">:</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span> = cross<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">001</span><span class="org-type">*</span><span class="org-rainbow-delimiters-depth-2">(</span>stewart.Bb<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-type">-</span> opts.Jf_pos<span class="org-rainbow-delimiters-depth-2">)</span>, leg_vectors<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">i</span>, <span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<span class="org-keyword">end</span>
 
 stewart.Jf = Jf;
-stewart.Jf_inv = inv<span style="color: #DCDCCC;">(</span>Jf<span style="color: #DCDCCC;">)</span>;
+stewart.Jf_inv = inv<span class="org-rainbow-delimiters-depth-1">(</span>Jf<span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb3e53d1" class="outline-2">
-<h2 id="orgb3e53d1"><span class="section-number-2">3</span> initializeMechanicalElements</h2>
+<div id="outline-container-org35cb27a" class="outline-2">
+<h2 id="org35cb27a"><span class="section-number-2">3</span> initializeMechanicalElements</h2>
 <div class="outline-text-2" id="text-3">
 </div>
 
-<div id="outline-container-orge7f185e" class="outline-3">
-<h3 id="orge7f185e"><span class="section-number-3">3.1</span> Function description</h3>
+<div id="outline-container-orgeeb3d2f" class="outline-3">
+<h3 id="orgeeb3d2f"><span class="section-number-3">3.1</span> Function description</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[</span><span style="color: #DFAF8F;">stewart</span><span style="color: #DCDCCC;">]</span> = <span style="color: #93E0E3;">initializeMechanicalElements</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">stewart</span>, <span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">stewart</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">initializeMechanicalElements</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">stewart</span>, <span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6bd219d" class="outline-3">
-<h3 id="org6bd219d"><span class="section-number-3">3.2</span> Optional Parameters</h3>
+<div id="outline-container-org02f8d24" class="outline-3">
+<h3 id="org02f8d24"><span class="section-number-3">3.2</span> Optional Parameters</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span style="color: #DCDCCC;">(</span><span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'thickness'</span>, <span style="color: #BFEBBF;">10</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Thickness of the base and platform [mm]</span>
-    <span style="color: #CC9393;">'density'</span>,   <span style="color: #BFEBBF;">1000</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Density of the material used for the hexapod [kg/m3]</span>
-    <span style="color: #CC9393;">'k_ax'</span>,      <span style="color: #BFEBBF;">1e8</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Stiffness of each actuator [N/m]</span>
-    <span style="color: #CC9393;">'c_ax'</span>,      <span style="color: #BFEBBF;">1000</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Damping of each actuator [N/(m/s)]</span>
-    <span style="color: #CC9393;">'stroke'</span>,    <span style="color: #BFEBBF;">50e</span><span style="color: #7CB8BB;">-</span><span style="color: #BFEBBF;">6</span>  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% Maximum stroke of each actuator [m]</span>
-    <span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
+    <span class="org-string">'thickness'</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-underline">...</span> <span class="org-comment">% Thickness of the base and platform [mm]</span>
+    <span class="org-string">'density'</span>,   <span class="org-highlight-numbers-number">1000</span>, <span class="org-underline">...</span> <span class="org-comment">% Density of the material used for the hexapod [kg/m3]</span>
+    <span class="org-string">'k_ax'</span>,      <span class="org-highlight-numbers-number">1e8</span>, <span class="org-underline">...</span> <span class="org-comment">% Stiffness of each actuator [N/m]</span>
+    <span class="org-string">'c_ax'</span>,      <span class="org-highlight-numbers-number">1000</span>, <span class="org-underline">...</span> <span class="org-comment">% Damping of each actuator [N/(m/s)]</span>
+    <span class="org-string">'stroke'</span>,    <span class="org-highlight-numbers-number">50e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>  <span class="org-underline">...</span> <span class="org-comment">% Maximum stroke of each actuator [m]</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -661,21 +665,21 @@ Default values for opts.
 Populate opts with input parameters
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        opts.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        opts.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8d0d9c0" class="outline-3">
-<h3 id="org8d0d9c0"><span class="section-number-3">3.3</span> Bottom Plate</h3>
+<div id="outline-container-orga56f635" class="outline-3">
+<h3 id="orga56f635"><span class="section-number-3">3.3</span> Bottom Plate</h3>
 <div class="outline-text-3" id="text-3-3">
 
-<div id="org38598b1" class="figure">
+<div id="org61c842c" class="figure">
 <p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Schematic of the bottom plates with all the parameters</p>
@@ -685,7 +689,7 @@ Populate opts with input parameters
 The bottom plate structure is initialized.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">BP = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
 </pre>
 </div>
 
@@ -693,8 +697,8 @@ The bottom plate structure is initialized.
 We defined its internal radius (if there is a hole in the bottom plate) and its outer radius.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.Rint = <span style="color: #BFEBBF;">0</span>;   <span style="color: #7F9F7F;">% Internal Radius [mm]</span>
-BP.Rext = <span style="color: #BFEBBF;">150</span>; <span style="color: #7F9F7F;">% External Radius [mm]</span>
+<pre class="src src-matlab">BP.Rint = <span class="org-highlight-numbers-number">0</span>;   <span class="org-comment">% Internal Radius [mm]</span>
+BP.Rext = <span class="org-highlight-numbers-number">150</span>; <span class="org-comment">% External Radius [mm]</span>
 </pre>
 </div>
 
@@ -702,7 +706,7 @@ BP.Rext = <span style="color: #BFEBBF;">150</span>; <span style="color: #7F9F7F;
 We define its thickness.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.H = opts.thickness; <span style="color: #7F9F7F;">% Thickness of the Bottom Plate [mm]</span>
+<pre class="src src-matlab">BP.H = opts.thickness; <span class="org-comment">% Thickness of the Bottom Plate [mm]</span>
 </pre>
 </div>
 
@@ -710,7 +714,7 @@ We define its thickness.
 We defined the density of the material of the bottom plate.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.density = opts.density; <span style="color: #7F9F7F;">% Density of the material [kg/m3]</span>
+<pre class="src src-matlab">BP.density = opts.density; <span class="org-comment">% Density of the material [kg/m3]</span>
 </pre>
 </div>
 
@@ -718,7 +722,7 @@ We defined the density of the material of the bottom plate.
 And its color.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.color = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">]</span>; <span style="color: #7F9F7F;">% Color [RGB]</span>
+<pre class="src src-matlab">BP.color = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">]</span>; <span class="org-comment">% Color [RGB]</span>
 </pre>
 </div>
 
@@ -726,7 +730,7 @@ And its color.
 Then the profile of the bottom plate is computed and will be used by Simscape
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">BP.shape = <span style="color: #DCDCCC;">[</span>BP.Rint BP.H; BP.Rint <span style="color: #BFEBBF;">0</span>; BP.Rext <span style="color: #BFEBBF;">0</span>; BP.Rext BP.H<span style="color: #DCDCCC;">]</span>; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">BP.shape = <span class="org-rainbow-delimiters-depth-1">[</span>BP.Rint BP.H; BP.Rint <span class="org-highlight-numbers-number">0</span>; BP.Rext <span class="org-highlight-numbers-number">0</span>; BP.Rext BP.H<span class="org-rainbow-delimiters-depth-1">]</span>; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
@@ -740,14 +744,14 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-org23fd88c" class="outline-3">
-<h3 id="org23fd88c"><span class="section-number-3">3.4</span> Top Plate</h3>
+<div id="outline-container-orge8a195c" class="outline-3">
+<h3 id="orge8a195c"><span class="section-number-3">3.4</span> Top Plate</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The top plate structure is initialized.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">TP = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
 </pre>
 </div>
 
@@ -755,8 +759,8 @@ The top plate structure is initialized.
 We defined the internal and external radius of the top plate.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP.Rint = <span style="color: #BFEBBF;">0</span>;   <span style="color: #7F9F7F;">% [mm]</span>
-TP.Rext = <span style="color: #BFEBBF;">100</span>; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">TP.Rint = <span class="org-highlight-numbers-number">0</span>;   <span class="org-comment">% [mm]</span>
+TP.Rext = <span class="org-highlight-numbers-number">100</span>; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
@@ -764,7 +768,7 @@ TP.Rext = <span style="color: #BFEBBF;">100</span>; <span style="color: #7F9F7F;
 The thickness of the top plate.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP.H = <span style="color: #BFEBBF;">10</span>; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">TP.H = <span class="org-highlight-numbers-number">10</span>; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
@@ -772,7 +776,7 @@ The thickness of the top plate.
 The density of its material.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP.density = opts.density; <span style="color: #7F9F7F;">% Density of the material [kg/m3]</span>
+<pre class="src src-matlab">TP.density = opts.density; <span class="org-comment">% Density of the material [kg/m3]</span>
 </pre>
 </div>
 
@@ -780,7 +784,7 @@ The density of its material.
 Its color.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP.color = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">]</span>; <span style="color: #7F9F7F;">% Color [RGB]</span>
+<pre class="src src-matlab">TP.color = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">]</span>; <span class="org-comment">% Color [RGB]</span>
 </pre>
 </div>
 
@@ -788,7 +792,7 @@ Its color.
 Then the shape of the top plate is computed
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">TP.shape = <span style="color: #DCDCCC;">[</span>TP.Rint TP.H; TP.Rint <span style="color: #BFEBBF;">0</span>; TP.Rext <span style="color: #BFEBBF;">0</span>; TP.Rext TP.H<span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">TP.shape = <span class="org-rainbow-delimiters-depth-1">[</span>TP.Rint TP.H; TP.Rint <span class="org-highlight-numbers-number">0</span>; TP.Rext <span class="org-highlight-numbers-number">0</span>; TP.Rext TP.H<span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
@@ -802,11 +806,11 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-org96d7dab" class="outline-3">
-<h3 id="org96d7dab"><span class="section-number-3">3.5</span> Legs</h3>
+<div id="outline-container-org8725a51" class="outline-3">
+<h3 id="org8725a51"><span class="section-number-3">3.5</span> Legs</h3>
 <div class="outline-text-3" id="text-3-5">
 
-<div id="orga9ade83" class="figure">
+<div id="org50ef74c" class="figure">
 <p><img src="./figs/stewart_legs.png" alt="stewart_legs.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Schematic for the legs of the Stewart platform</p>
@@ -816,7 +820,7 @@ The structure is added to the stewart structure
 The leg structure is initialized.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">Leg = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
 </pre>
 </div>
 
@@ -824,7 +828,7 @@ The leg structure is initialized.
 The maximum Stroke of each leg is defined.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.stroke = opts.stroke; <span style="color: #7F9F7F;">% [m]</span>
+<pre class="src src-matlab">Leg.stroke = opts.stroke; <span class="org-comment">% [m]</span>
 </pre>
 </div>
 
@@ -832,8 +836,8 @@ The maximum Stroke of each leg is defined.
 The stiffness and damping of each leg are defined
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.k_ax = opts.k_ax; <span style="color: #7F9F7F;">% Stiffness of each leg [N/m]</span>
-Leg.c_ax = opts.c_ax; <span style="color: #7F9F7F;">% Damping of each leg [N/(m/s)]</span>
+<pre class="src src-matlab">Leg.k_ax = opts.k_ax; <span class="org-comment">% Stiffness of each leg [N/m]</span>
+Leg.c_ax = opts.c_ax; <span class="org-comment">% Damping of each leg [N/(m/s)]</span>
 </pre>
 </div>
 
@@ -841,8 +845,8 @@ Leg.c_ax = opts.c_ax; <span style="color: #7F9F7F;">% Damping of each leg [N/(m/
 The radius of the legs are defined
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.Rtop = <span style="color: #BFEBBF;">10</span>; <span style="color: #7F9F7F;">% Radius of the cylinder of the top part of the leg[mm]</span>
-Leg.Rbot = <span style="color: #BFEBBF;">12</span>; <span style="color: #7F9F7F;">% Radius of the cylinder of the bottom part of the leg [mm]</span>
+<pre class="src src-matlab">Leg.Rtop = <span class="org-highlight-numbers-number">10</span>; <span class="org-comment">% Radius of the cylinder of the top part of the leg[mm]</span>
+Leg.Rbot = <span class="org-highlight-numbers-number">12</span>; <span class="org-comment">% Radius of the cylinder of the bottom part of the leg [mm]</span>
 </pre>
 </div>
 
@@ -850,7 +854,7 @@ Leg.Rbot = <span style="color: #BFEBBF;">12</span>; <span style="color: #7F9F7F;
 The density of its material.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.density = opts.density; <span style="color: #7F9F7F;">% Density of the material used for the legs [kg/m3]</span>
+<pre class="src src-matlab">Leg.density = opts.density; <span class="org-comment">% Density of the material used for the legs [kg/m3]</span>
 </pre>
 </div>
 
@@ -858,7 +862,7 @@ The density of its material.
 Its color.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.color = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">5</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">5</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">5</span><span style="color: #DCDCCC;">]</span>; <span style="color: #7F9F7F;">% Color of the top part of the leg [RGB]</span>
+<pre class="src src-matlab">Leg.color = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span><span class="org-rainbow-delimiters-depth-1">]</span>; <span class="org-comment">% Color of the top part of the leg [RGB]</span>
 </pre>
 </div>
 
@@ -866,7 +870,7 @@ Its color.
 The radius of spheres representing the ball joints are defined.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.R = <span style="color: #BFEBBF;">1</span>.<span style="color: #BFEBBF;">3</span><span style="color: #7CB8BB;">*</span>Leg.Rbot; <span style="color: #7F9F7F;">% Size of the sphere at the extremity of the leg [mm]</span>
+<pre class="src src-matlab">Leg.R = <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">3</span><span class="org-type">*</span>Leg.Rbot; <span class="org-comment">% Size of the sphere at the extremity of the leg [mm]</span>
 </pre>
 </div>
 
@@ -874,8 +878,8 @@ The radius of spheres representing the ball joints are defined.
 We estimate the length of the legs.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">legs = stewart.Ab <span style="color: #7CB8BB;">-</span> stewart.Aa;
-Leg.lenght = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #BFEBBF;">(</span><span style="color: #BFEBBF;">1</span>,<span style="color: #7CB8BB;">:</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span><span style="color: #7CB8BB;">/</span><span style="color: #BFEBBF;">1</span>.<span style="color: #BFEBBF;">5</span>;
+<pre class="src src-matlab">legs = stewart.Ab <span class="org-type">-</span> stewart.Aa;
+Leg.lenght = norm<span class="org-rainbow-delimiters-depth-1">(</span>legs<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">1</span>,<span class="org-type">:</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">/</span><span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">5</span>;
 </pre>
 </div>
 
@@ -883,13 +887,13 @@ Leg.lenght = norm<span style="color: #DCDCCC;">(</span>legs<span style="color: #
 Then the shape of the bottom leg is estimated
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Leg.shape.bot = <span style="text-decoration: underline;">...</span>
-    <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>        <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-     Leg.Rbot <span style="color: #BFEBBF;">0</span>; <span style="text-decoration: underline;">...</span>
-     Leg.Rbot Leg.lenght; <span style="text-decoration: underline;">...</span>
-     Leg.Rtop Leg.lenght; <span style="text-decoration: underline;">...</span>
-     Leg.Rtop <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>Leg.lenght; <span style="text-decoration: underline;">...</span>
-     <span style="color: #BFEBBF;">0</span>        <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">2</span><span style="color: #7CB8BB;">*</span>Leg.lenght<span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">Leg.shape.bot = <span class="org-underline">...</span>
+    <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>        <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+     Leg.Rbot <span class="org-highlight-numbers-number">0</span>; <span class="org-underline">...</span>
+     Leg.Rbot Leg.lenght; <span class="org-underline">...</span>
+     Leg.Rtop Leg.lenght; <span class="org-underline">...</span>
+     Leg.Rtop <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span><span class="org-type">*</span>Leg.lenght; <span class="org-underline">...</span>
+     <span class="org-highlight-numbers-number">0</span>        <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span><span class="org-type">*</span>Leg.lenght<span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
@@ -903,11 +907,11 @@ The structure is added to the stewart structure
 </div>
 </div>
 
-<div id="outline-container-org66df86f" class="outline-3">
-<h3 id="org66df86f"><span class="section-number-3">3.6</span> Ball Joints</h3>
+<div id="outline-container-org722b78f" class="outline-3">
+<h3 id="org722b78f"><span class="section-number-3">3.6</span> Ball Joints</h3>
 <div class="outline-text-3" id="text-3-6">
 
-<div id="org250b20b" class="figure">
+<div id="org38b2e38" class="figure">
 <p><img src="./figs/stewart_ball_joints.png" alt="stewart_ball_joints.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Schematic of the support for the ball joints</p>
@@ -921,7 +925,7 @@ The structure is added to the stewart structure
 The <code>SP</code> structure is initialized.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP = struct<span style="color: #DCDCCC;">()</span>;
+<pre class="src src-matlab">SP = struct<span class="org-rainbow-delimiters-depth-1">()</span>;
 </pre>
 </div>
 
@@ -929,8 +933,8 @@ The <code>SP</code> structure is initialized.
 We can define its rotational stiffness and damping. For now, we use perfect joints.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.k = <span style="color: #BFEBBF;">0</span>; <span style="color: #7F9F7F;">% [N*m/deg]</span>
-SP.c = <span style="color: #BFEBBF;">0</span>; <span style="color: #7F9F7F;">% [N*m/deg]</span>
+<pre class="src src-matlab">SP.k = <span class="org-highlight-numbers-number">0</span>; <span class="org-comment">% [N*m/deg]</span>
+SP.c = <span class="org-highlight-numbers-number">0</span>; <span class="org-comment">% [N*m/deg]</span>
 </pre>
 </div>
 
@@ -938,7 +942,7 @@ SP.c = <span style="color: #BFEBBF;">0</span>; <span style="color: #7F9F7F;">% [
 Its height is defined
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.H = stewart.Aa<span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">1</span>, <span style="color: #BFEBBF;">3</span><span style="color: #DCDCCC;">)</span> <span style="color: #7CB8BB;">-</span> BP.H; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">SP.H = stewart.Aa<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-type">-</span> BP.H; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
@@ -946,15 +950,15 @@ Its height is defined
 Its radius is based on the radius on the sphere at the end of the legs.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.R = Leg.R; <span style="color: #7F9F7F;">% [mm]</span>
+<pre class="src src-matlab">SP.R = Leg.R; <span class="org-comment">% [mm]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">SP.section = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>    SP.H<span style="color: #7CB8BB;">-</span>SP.R;
-              <span style="color: #BFEBBF;">0</span>    <span style="color: #BFEBBF;">0</span>;
-              SP.R <span style="color: #BFEBBF;">0</span>;
-              SP.R SP.H<span style="color: #DCDCCC;">]</span>;
+<pre class="src src-matlab">SP.section = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>    SP.H<span class="org-type">-</span>SP.R;
+              <span class="org-highlight-numbers-number">0</span>    <span class="org-highlight-numbers-number">0</span>;
+              SP.R <span class="org-highlight-numbers-number">0</span>;
+              SP.R SP.H<span class="org-rainbow-delimiters-depth-1">]</span>;
 </pre>
 </div>
 
@@ -962,7 +966,7 @@ Its radius is based on the radius on the sphere at the end of the legs.
 The density of its material is defined.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.density = opts.density; % [kg<span style="color: #7CB8BB;">/</span>m<span style="color: #7CB8BB;">^</span><span style="color: #BFEBBF;">3</span>]
+<pre class="src src-matlab">SP.density = opts.density; % [kg<span class="org-type">/</span>m<span class="org-type">^</span><span class="org-highlight-numbers-number">3</span>]
 </pre>
 </div>
 
@@ -970,7 +974,7 @@ The density of its material is defined.
 Its color is defined.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">SP.color = <span style="color: #DCDCCC;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">7</span><span style="color: #DCDCCC;">]</span>; <span style="color: #7F9F7F;">% [RGB]</span>
+<pre class="src src-matlab">SP.color = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span><span class="org-rainbow-delimiters-depth-1">]</span>; <span class="org-comment">% [RGB]</span>
 </pre>
 </div>
 
@@ -985,36 +989,36 @@ The structure is added to the Hexapod structure
 </div>
 </div>
 
-<div id="outline-container-orgf3c4474" class="outline-2">
-<h2 id="orgf3c4474"><span class="section-number-2">4</span> initializeSample</h2>
+<div id="outline-container-org5ba95d3" class="outline-2">
+<h2 id="org5ba95d3"><span class="section-number-2">4</span> initializeSample</h2>
 <div class="outline-text-2" id="text-4">
 </div>
 
-<div id="outline-container-org1ec4152" class="outline-3">
-<h3 id="org1ec4152"><span class="section-number-3">4.1</span> Function description</h3>
+<div id="outline-container-org2dd34bb" class="outline-3">
+<h3 id="org2dd34bb"><span class="section-number-3">4.1</span> Function description</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #DCDCCC;">[]</span> = <span style="color: #93E0E3;">initializeSample</span><span style="color: #DCDCCC;">(</span><span style="color: #DFAF8F;">opts_param</span><span style="color: #DCDCCC;">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[]</span></span> = <span class="org-function-name">initializeSample</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">opts_param</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcd3268d" class="outline-3">
-<h3 id="orgcd3268d"><span class="section-number-3">4.2</span> Optional Parameters</h3>
+<div id="outline-container-org2aa1dac" class="outline-3">
+<h3 id="org2aa1dac"><span class="section-number-3">4.2</span> Optional Parameters</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Default values for opts.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">sample = struct<span style="color: #DCDCCC;">(</span> <span style="text-decoration: underline;">...</span>
-    <span style="color: #CC9393;">'radius'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% radius of the cylinder [mm]</span>
-    <span style="color: #CC9393;">'height'</span>,     <span style="color: #BFEBBF;">100</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% height of the cylinder [mm]</span>
-    <span style="color: #CC9393;">'mass'</span>,       <span style="color: #BFEBBF;">10</span>,  <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% mass of the cylinder [kg]</span>
-    <span style="color: #CC9393;">'measheight'</span>, <span style="color: #BFEBBF;">50</span>, <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% measurement point z-offset [mm]</span>
-    <span style="color: #CC9393;">'offset'</span>,     <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span>, <span style="color: #BFEBBF;">0</span><span style="color: #BFEBBF;">]</span>,   <span style="text-decoration: underline;">...</span> <span style="color: #7F9F7F;">% offset position of the sample [mm]</span>
-    <span style="color: #CC9393;">'color'</span>,      <span style="color: #BFEBBF;">[</span><span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">9</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span> <span style="color: #BFEBBF;">0</span>.<span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">]</span> <span style="text-decoration: underline;">...</span>
-    <span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">sample = struct<span class="org-rainbow-delimiters-depth-1">(</span> <span class="org-underline">...</span>
+    <span class="org-string">'radius'</span>,     <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% radius of the cylinder [mm]</span>
+    <span class="org-string">'height'</span>,     <span class="org-highlight-numbers-number">100</span>, <span class="org-underline">...</span> <span class="org-comment">% height of the cylinder [mm]</span>
+    <span class="org-string">'mass'</span>,       <span class="org-highlight-numbers-number">10</span>,  <span class="org-underline">...</span> <span class="org-comment">% mass of the cylinder [kg]</span>
+    <span class="org-string">'measheight'</span>, <span class="org-highlight-numbers-number">50</span>, <span class="org-underline">...</span> <span class="org-comment">% measurement point z-offset [mm]</span>
+    <span class="org-string">'offset'</span>,     <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span>,   <span class="org-underline">...</span> <span class="org-comment">% offset position of the sample [mm]</span>
+    <span class="org-string">'color'</span>,      <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">9</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">]</span> <span class="org-underline">...</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
@@ -1022,26 +1026,26 @@ Default values for opts.
 Populate opts with input parameters
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">if</span> exist<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'opts_param','var'</span><span style="color: #DCDCCC;">)</span>
-    <span style="color: #F0DFAF; font-weight: bold;">for</span> <span style="color: #DFAF8F;">opt</span> = <span style="color: #BFEBBF;">fieldnames</span><span style="color: #DCDCCC;">(</span><span style="color: #BFEBBF;">opts_param</span><span style="color: #DCDCCC;">)</span><span style="color: #BFEBBF;">'</span>
-        sample.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span> = opts_param.<span style="color: #DCDCCC;">(</span>opt<span style="color: #BFEBBF;">{</span><span style="color: #BFEBBF;">1</span><span style="color: #BFEBBF;">}</span><span style="color: #DCDCCC;">)</span>;
-    <span style="color: #F0DFAF; font-weight: bold;">end</span>
-<span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">if</span> exist<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'opts_param','var'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">opt</span> = <span class="org-constant">fieldnames</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">opts_param</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span><span class="org-constant">'</span>
+        sample.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span> = opts_param.<span class="org-rainbow-delimiters-depth-1">(</span>opt<span class="org-rainbow-delimiters-depth-2">{</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org29ee9ed" class="outline-3">
-<h3 id="org29ee9ed"><span class="section-number-3">4.3</span> Save the Sample structure</h3>
+<div id="outline-container-orgea68e95" class="outline-3">
+<h3 id="orgea68e95"><span class="section-number-3">4.3</span> Save the Sample structure</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
-<pre class="src src-matlab">save<span style="color: #DCDCCC;">(</span><span style="color: #CC9393;">'./mat/sample.mat', 'sample'</span><span style="color: #DCDCCC;">)</span>;
+<pre class="src src-matlab">save<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'./mat/sample.mat', 'sample'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span style="color: #F0DFAF; font-weight: bold;">end</span>
+<pre class="src src-matlab"><span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
@@ -1050,7 +1054,7 @@ Populate opts with input parameters
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-03-25 lun. 11:18</p>
+<p class="date">Created: 2019-08-26 lun. 11:56</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

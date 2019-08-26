@@ -1,27 +1,14 @@
-#+TITLE: Stewart Platform Studies
+#+TITLE: Stewart Platforms
 :DRAWER:
-#+STARTUP: overview
+#+OPTIONS: toc:nil
+#+OPTIONS: html-postamble:nil
 
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
 #+HTML_HEAD: <script src="js/jquery.min.js"></script>
 #+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="js/readtheorg.js"></script>
-
-#+LATEX_CLASS: cleanreport
-#+LaTeX_CLASS_OPTIONS: [tocnp, secbreak, minted]
-#+LaTeX_HEADER: \usepackage{svg}
-#+LaTeX_HEADER: \newcommand{\authorFirstName}{Thomas}
-#+LaTeX_HEADER: \newcommand{\authorLastName}{Dehaeze}
-#+LaTeX_HEADER: \newcommand{\authorEmail}{dehaeze.thomas@gmail.com}
-
-#+PROPERTY: header-args:matlab  :session *MATLAB*
-#+PROPERTY: header-args:matlab+ :comments org
-#+PROPERTY: header-args:matlab+ :exports both
-#+PROPERTY: header-args:matlab+ :eval no-export
-#+PROPERTY: header-args:matlab+ :output-dir figs
-#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+HTML_HEAD: <script src="js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="js/readtheorg.js"></script>
 :END:
 
 * Simscape Model

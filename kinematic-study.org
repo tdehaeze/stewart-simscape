@@ -1,27 +1,24 @@
 #+TITLE: Kinematic Study of the Stewart Platform
 :DRAWER:
-#+STARTUP: overview
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-#+HTML_HEAD: <script src="js/jquery.min.js"></script>
-#+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="js/readtheorg.js"></script>
-
-#+LATEX_CLASS: cleanreport
-#+LaTeX_CLASS_OPTIONS: [tocnp, secbreak, minted]
-#+LaTeX_HEADER: \usepackage{svg}
-#+LaTeX_HEADER: \newcommand{\authorFirstName}{Thomas}
-#+LaTeX_HEADER: \newcommand{\authorLastName}{Dehaeze}
-#+LaTeX_HEADER: \newcommand{\authorEmail}{dehaeze.thomas@gmail.com}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
 #+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :tangle matlab/kinematic_study.m
 #+PROPERTY: header-args:matlab+ :comments org
 #+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
 #+PROPERTY: header-args:matlab+ :eval no-export
-#+PROPERTY: header-args:matlab+ :output-dir figs
+#+PROPERTY: header-args:matlab+ :noweb yes
 #+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
 #+begin_src matlab :results none :exports none :noweb yes
@@ -39,9 +36,9 @@ We use a cubic architecture.
 #+begin_src matlab :results silent
   opts = struct(...
       'H_tot', 90, ... % Total height of the Hexapod [mm]
-      'L',     180/sqrt(3), ... % Size of the Cube [mm]
+      'L',     200/sqrt(3), ... % Size of the Cube [mm]
       'H',     60, ... % Height between base joints and platform joints [mm]
-      'H0',    180/2-60/2 ... % Height between the corner of the cube and the plane containing the base joints [mm]
+      'H0',    200/2-60/2 ... % Height between the corner of the cube and the plane containing the base joints [mm]
       );
   stewart = initializeCubicConfiguration(opts);
   opts = struct(...
@@ -78,26 +75,31 @@ First, we estimate the needed actuator stroke for "pure" rotations and translati
 #+end_src
 
 #+begin_src matlab :results value :exports results
-  ans = max(max([LTx, LTy, LTz, LRx, LRy]))
+  ans = sprintf('From %.2g[m] to %.2g[m]: Total stroke = %.1f[um]', min(min([LTx,LTy,LTz,LRx,LRy])), max(max([LTx,LTy,LTz,LRx,LRy])), 1e6*(max(max([LTx,LTy,LTz,LRx,LRy]))-min(min([LTx,LTy,LTz,LRx,LRy]))))
 #+end_src
 
 #+RESULTS:
-: 1.0607e-05
+: From -1.2e-05[m] to 1.1e-05[m]: Total stroke = 22.9[um]
 
 ** Needed stroke for combined translations and rotations
 Now, we combine translations and rotations, and we try to find the worst case (that we suppose to happen at the border).
 #+begin_src matlab :results none
   Lmax = 0;
+  Lmin = 0;
   pos = [0, 0, 0, 0, 0];
   for Tx = [-Tx_max,Tx_max]
   for Ty = [-Ty_max,Ty_max]
   for Tz = [-Tz_max,Tz_max]
   for Rx = [-Rx_max,Rx_max]
   for Ry = [-Ry_max,Ry_max]
-      L = max(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
-      if L > Lmax
-          Lmax = L;
+      lmax = max(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
+      lmin = min(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
+      if lmax > Lmax
+          Lmax = lmax;
           pos = [Tx Ty Tz Rx Ry];
+      end
+      if lmin < Lmin
+          Lmin = lmin;
       end
   end
   end
@@ -108,11 +110,11 @@ Now, we combine translations and rotations, and we try to find the worst case (t
 
 We obtain a needed stroke shown below (almost two times the needed stroke for "pure" rotations and translations).
 #+begin_src matlab :results value :exports results
-  ans = Lmax
+  ans = sprintf('From %.2g[m] to %.2g[m]: Total stroke = %.1f[um]', Lmin, Lmax, 1e6*(Lmax-Lmin))
 #+end_src
 
 #+RESULTS:
-: 3.0927e-05
+: From -3.1e-05[m] to 3.1e-05[m]: Total stroke = 61.5[um]
 
 * Maximum Stroke
 From a specified actuator stroke, we try to estimate the available maneuverability of the Stewart platform.
