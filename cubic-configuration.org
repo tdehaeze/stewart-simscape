@@ -21,12 +21,7 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
-#+begin_src matlab :results none :exports none :noweb yes
-  <<matlab-init>>
-  addpath('src');
-  addpath('library');
-#+end_src
-
+* Introduction                                                       :ignore:
 The discovery of the Cubic configuration is done in citenum:geng94_six_degree_of_freed_activ.
 Further analysis is conducted in cite:jafari03_orthog_gough_stewar_platf_microm.
 
@@ -36,6 +31,22 @@ People using orthogonal/cubic configuration: cite:preumont07_six_axis_singl_stag
 The specificity of the Cubic configuration is that each actuator is orthogonal with the others.
 
 To generate and study the Cubic configuration, =initializeCubicConfiguration= is used (description in section [[sec:initializeCubicConfiguration]]).
+
+According to cite:preumont07_six_axis_singl_stage_activ, the cubic configuration provides a uniform stiffness in all directions and *minimizes the crosscoupling* from actuator to sensor of different legs (being orthogonal to each other).
+
+* Matlab Init                                               :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  addpath('src');
+  addpath('library');
+#+end_src
 
 * Questions we wish to answer with this analysis
 The goal is to study the benefits of using a cubic configuration:

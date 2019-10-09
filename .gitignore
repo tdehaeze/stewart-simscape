@@ -1,3 +1,5 @@
+figs/*.svg
+figs/*.pdf
 mat/
 figures/
 ltximg/

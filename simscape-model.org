@@ -20,6 +20,7 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+* Introduction                                                       :ignore:
 Stewart platforms are generated in multiple steps.
 
 First, geometrical parameters are defined:
