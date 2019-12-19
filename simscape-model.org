@@ -23,19 +23,109 @@
 * Introduction                                                       :ignore:
 Stewart platforms are generated in multiple steps.
 
+We define 4 important *frames*:
+- $\{F\}$: Frame fixed to the *Fixed* base and located at the center of its bottom surface.
+  This is used to fix the Stewart platform to some support.
+- $\{M\}$: Frame fixed to the *Moving* platform and located at the center of its top surface.
+  This is used to place things on top of the Stewart platform.
+- $\{A\}$: Frame fixed to the fixed base.
+  It defined the center of rotation of the moving platform.
+- $\{B\}$: Frame fixed to the moving platform.
+  The motion of the moving platforms and forces applied to it are defined with respect to this frame $\{B\}$.
+
+Then, we define the *location of the spherical joints*:
+- $\bm{a}_{i}$ are the position of the spherical joints fixed to the fixed base
+- $\bm{b}_{i}$ are the position of the spherical joints fixed to the moving platform
+
+We define the *rest position* of the Stewart platform:
+- For simplicity, we suppose that the fixed base and the moving platform are parallel and aligned with the vertical axis at their rest position.
+- Thus, to define the rest position of the Stewart platform, we just have to defined its total height $H$.
+  $H$ corresponds to the distance from the bottom of the fixed base to the top of the moving platform.
+
+From $\bm{a}_{i}$ and $\bm{b}_{i}$, we can determine the *length and orientation of each strut*:
+- $l_{i}$ is the length of the strut
+- ${}^{A}\hat{\bm{s}}_{i}$ is the unit vector align with the strut
+
+The position of the Spherical joints can be done using various methods:
+- Cubic configuration
+- Geometrical
+- Definition them by hand
+- These methods should be easily scriptable and corresponds to specific functions that returns ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$.
+  The input of these functions are the parameters corresponding to the wanted geometry.
+  We need also to know the height of the platform.
+
+For Simscape, we need:
+- The position of the frame $\{A\}$ with respect to the frame $\{F\}$: ${}^{F}\bm{O}_{A}$
+- The position of the frame $\{B\}$ with respect to the frame $\{M\}$: ${}^{M}\bm{O}_{B}$
+- The position and orientation of each spherical joint fixed to the fixed base: ${}^{F}\bm{a}_{i}$ and ${}^{F}\bm{R}_{a_{i}}$
+- The position and orientation of each spherical joint fixed to the moving platform: ${}^{M}\bm{b}_{i}$ and ${}^{M}\bm{R}_{b_{i}}$
+- The rest length of each strut: $l_{i}$
+- The stiffness and damping of each actuator: $k_{i}$ and $c_{i}$
+
+
+------
+
+The procedure is the following:
+1. Choose $H$
+2. Choose ${}^{F}\bm{O}_{A}$ and ${}^{M}\bm{O}_{B}$
+3. Choose $\bm{a}_{i}$ and $\bm{b}_{i}$, probably by specifying ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$
+4. Choose $k_{i}$ and $c_{i}$
+
+#+begin_src matlab
+  %% 1. Height of the platform. Location of {F} and {M}
+  H = 90e-3; % [m]
+  FO_M = [0; 0; H];
+
+  %% 2. Location of {A} and {B}
+  FO_A = [0; 0; 100e-3] + FO_M;% [m,m,m]
+  MO_B = [0; 0; 100e-3];% [m,m,m]
+
+  %% 3. Position and Orientation of ai and bi
+  Fa = zeros(3, 6); % Fa_i is the i'th vector of Fa
+  Mb = zeros(3, 6); % Mb_i is the i'th vector of Mb
+
+  Aa = Fa - repmat(FO_A, [1, 6]);
+  Bb = Mb - repmat(MO_B, [1, 6]);
+
+  Ab = Bb - repmat(-MO_B-FO_M+FO_A, [1, 6]);
+  Ba = Aa - repmat( MO_B+FO_M-FO_A, [1, 6]);
+
+  As = (Ab - Aa)./vecnorm(Ab - Aa); % As_i is the i'th vector of As
+  l = vecnorm(Ab - Aa);
+
+  Bs = (Bb - Ba)./vecnorm(Bb - Ba);
+
+  FRa = zeros(3,3,6);
+  MRb = zeros(3,3,6);
+
+  for i = 1:6
+    FRa(:,:,i) = [cross([0;1;0],As(:,i)) , cross(As(:,i), cross([0;1;0], As(:,i))) , As(:,i)];
+    FRa(:,:,i) = FRa(:,:,i)./vecnorm(FRa(:,:,i));
+
+    MRb(:,:,i) = [cross([0;1;0],Bs(:,i)) , cross(Bs(:,i), cross([0;1;0], Bs(:,i))) , Bs(:,i)];
+    MRb(:,:,i) = MRb(:,:,i)./vecnorm(MRb(:,:,i));
+  end
+
+  %% 4. Stiffness and Damping of each strut
+  Ki = 1e6*ones(6,1);
+  Ci = 1e2*ones(6,1);
+#+end_src
+
+------
+
 First, geometrical parameters are defined:
-- ${}^Aa_i$ - Position of the joints fixed to the fixed base w.r.t $\{A\}$
-- ${}^Ab_i$ - Position of the joints fixed to the mobile platform w.r.t $\{A\}$
-- ${}^Bb_i$ - Position of the joints fixed to the mobile platform w.r.t $\{B\}$
+- ${}^A\bm{a}_i$ - Position of the joints fixed to the fixed base w.r.t $\{A\}$
+- ${}^A\bm{b}_i$ - Position of the joints fixed to the mobile platform w.r.t $\{A\}$
+- ${}^B\bm{b}_i$ - Position of the joints fixed to the mobile platform w.r.t $\{B\}$
 - $H$ - Total height of the mobile platform
 
 These parameter are enough to determine all the kinematic properties of the platform like the Jacobian, stroke, stiffness, ...
 These geometrical parameters can be generated using different functions: =initializeCubicConfiguration= for cubic configuration or =initializeGeneralConfiguration= for more general configuration.
 
 A function =computeGeometricalProperties= is then used to compute:
-- $J_f$ - Jacobian matrix for the force location
-- $J_d$ - Jacobian matrix for displacement estimation
-- $R_m$ - Rotation matrices to position the leg vectors
+- $\bm{J}_f$ - Jacobian matrix for the force location
+- $\bm{J}_d$ - Jacobian matrix for displacement estimation
+- $\bm{R}_m$ - Rotation matrices to position the leg vectors
 
 Then, geometrical parameters are computed for all the mechanical elements with the function =initializeMechanicalElements=:
 - Shape of the platforms
@@ -55,12 +145,12 @@ Other Parameters are defined for the Simscape simulation:
 - Location of the Jacobian point for velocity/displacement computation
 
 * initializeGeneralConfiguration
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/initializeGeneralConfiguration.m
-  :END:
+:PROPERTIES:
+:HEADER-ARGS:matlab+: :exports code
+:HEADER-ARGS:matlab+: :comments no
+:HEADER-ARGS:matlab+: :eval no
+:HEADER-ARGS:matlab+: :tangle src/initializeGeneralConfiguration.m
+:END:
 
 ** Function description
 The =initializeGeneralConfiguration= function takes one structure that contains configurations for the hexapod and returns one structure representing the Hexapod.
@@ -138,12 +228,12 @@ end
 #+end_src
 
 * computeGeometricalProperties
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/computeGeometricalProperties.m
-  :END:
+:PROPERTIES:
+:HEADER-ARGS:matlab+: :exports code
+:HEADER-ARGS:matlab+: :comments no
+:HEADER-ARGS:matlab+: :eval no
+:HEADER-ARGS:matlab+: :tangle src/computeGeometricalProperties.m
+:END:
 
 ** Function description
 #+begin_src matlab
@@ -240,12 +330,12 @@ Compute Jacobian Matrix
 #+end_src
 
 * initializeMechanicalElements
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/initializeMechanicalElements.m
-  :END:
+:PROPERTIES:
+:HEADER-ARGS:matlab+: :exports code
+:HEADER-ARGS:matlab+: :comments no
+:HEADER-ARGS:matlab+: :eval no
+:HEADER-ARGS:matlab+: :tangle src/initializeMechanicalElements.m
+:END:
 
 ** Function description
 #+begin_src matlab
@@ -466,12 +556,12 @@ The structure is added to the Hexapod structure
 #+end_src
 
 * initializeSample
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/initializeSample.m
-  :END:
+:PROPERTIES:
+:HEADER-ARGS:matlab+: :exports code
+:HEADER-ARGS:matlab+: :comments no
+:HEADER-ARGS:matlab+: :eval no
+:HEADER-ARGS:matlab+: :tangle src/initializeSample.m
+:END:
 
 ** Function description
 #+begin_src matlab
