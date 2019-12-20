@@ -617,4 +617,4 @@ And we plot the legs.
 
 * Bibliography                                                      :ignore:
 bibliographystyle:unsrt
-bibliography:references.bib
+bibliography:ref.bib

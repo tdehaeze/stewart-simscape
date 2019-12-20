@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-10-09 mer. 11:07 -->
+<!-- 2019-12-19 jeu. 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platforms</title>
@@ -193,12 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.stickytableheaders.min.js"></script>
-<script src="js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.stickytableheaders.min.js"></script>
+<script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -261,7 +261,10 @@ for the JavaScript code in this tag.
         TeX: { equationNumbers: {autoNumber: "AMS"},
                MultLineWidth: "85%",
                TagSide: "right",
-               TagIndent: ".8em"
+               TagIndent: ".8em",
+               Macros: {
+                 bm: ["{\\boldsymbol #1}",1],
+               }
              }
 });
 </script>
@@ -272,8 +275,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">Stewart Platforms</h1>
 
-<div id="outline-container-orge672724" class="outline-2">
-<h2 id="orge672724"><span class="section-number-2">1</span> Simscape Model</h2>
+<p>
+<a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>
+</p>
+
+<div id="outline-container-org9cd44e0" class="outline-2">
+<h2 id="org9cd44e0"><span class="section-number-2">1</span> Simscape Model</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li><a href="simscape-model.html">Model of the Stewart Platform</a></li>
@@ -282,8 +289,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgfce4cb7" class="outline-2">
-<h2 id="orgfce4cb7"><span class="section-number-2">2</span> Architecture Study</h2>
+<div id="outline-container-org7a44762" class="outline-2">
+<h2 id="org7a44762"><span class="section-number-2">2</span> Architecture Study</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li><a href="kinematic-study.html">Kinematic Study</a></li>
@@ -294,8 +301,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org92e9216" class="outline-2">
-<h2 id="org92e9216"><span class="section-number-2">3</span> Motion Control</h2>
+<div id="outline-container-org77767cc" class="outline-2">
+<h2 id="org77767cc"><span class="section-number-2">3</span> Motion Control</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>Active Damping</li>
@@ -304,16 +311,16 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
-<div id="outline-container-org5ab21e2" class="outline-2">
-<h2 id="org5ab21e2"><span class="section-number-2">4</span> Notes about Stewart platforms</h2>
+<div id="outline-container-org9d06c58" class="outline-2">
+<h2 id="org9d06c58"><span class="section-number-2">4</span> Notes about Stewart platforms</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgf0627f0" class="outline-3">
-<h3 id="orgf0627f0"><span class="section-number-3">4.1</span> Jacobian</h3>
+<div id="outline-container-orgffe6651" class="outline-3">
+<h3 id="orgffe6651"><span class="section-number-3">4.1</span> Jacobian</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-orge3fb927" class="outline-4">
-<h4 id="orge3fb927"><span class="section-number-4">4.1.1</span> Relation to platform parameters</h4>
+<div id="outline-container-org6b92660" class="outline-4">
+<h4 id="org6b92660"><span class="section-number-4">4.1.1</span> Relation to platform parameters</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 A Jacobian is defined by:
@@ -329,8 +336,8 @@ Then, the choice of \(O_B\) changes the Jacobian.
 </div>
 </div>
 
-<div id="outline-container-org99049d5" class="outline-4">
-<h4 id="org99049d5"><span class="section-number-4">4.1.2</span> Jacobian for displacement</h4>
+<div id="outline-container-orgcec2e05" class="outline-4">
+<h4 id="orgcec2e05"><span class="section-number-4">4.1.2</span> Jacobian for displacement</h4>
 <div class="outline-text-4" id="text-4-1-2">
 <p>
 \[ \dot{q} = J \dot{X} \]
@@ -347,8 +354,8 @@ For very small displacements \(\delta q\) and \(\delta X\), we have \(\delta q =
 </div>
 </div>
 
-<div id="outline-container-orgb7963ed" class="outline-4">
-<h4 id="orgb7963ed"><span class="section-number-4">4.1.3</span> Jacobian for forces</h4>
+<div id="outline-container-orgbf33a4e" class="outline-4">
+<h4 id="orgbf33a4e"><span class="section-number-4">4.1.3</span> Jacobian for forces</h4>
 <div class="outline-text-4" id="text-4-1-3">
 <p>
 \[ F = J^T \tau \]
@@ -362,8 +369,8 @@ With:
 </div>
 </div>
 
-<div id="outline-container-org9fcd675" class="outline-3">
-<h3 id="org9fcd675"><span class="section-number-3">4.2</span> Stiffness matrix \(K\)</h3>
+<div id="outline-container-org3710914" class="outline-3">
+<h3 id="org3710914"><span class="section-number-3">4.2</span> Stiffness matrix \(K\)</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 \[ K = J^T \text{diag}(k_i) J \]
@@ -396,8 +403,8 @@ The compliance element \(C_{ij}\) is then the stiffness
 </div>
 </div>
 
-<div id="outline-container-orge5eb09a" class="outline-3">
-<h3 id="orge5eb09a"><span class="section-number-3">4.3</span> Coupling</h3>
+<div id="outline-container-orgd5d2c08" class="outline-3">
+<h3 id="orgd5d2c08"><span class="section-number-3">4.3</span> Coupling</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 What causes the coupling from \(F_i\) to \(X_i\) ?
@@ -418,7 +425,7 @@ What causes the coupling from \(F_i\) to \(X_i\) ?
 </div>
 
 
-<div id="org064c4c6" class="figure">
+<div id="orgc118680" class="figure">
 <p><img src="figs/coupling.png" alt="coupling.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Block diagram to control an hexapod</p>
@@ -441,7 +448,9 @@ Thus, the system is uncoupled if \(G\) and \(K\) are diagonal.
 
 <p>
 
-<a href="references.bib">references.bib</a>
+<h1 class='org-ref-bib-h1'>Bibliography</h1>
+<ul class='org-ref-bib'><li><a id="preumont07_six_axis_singl_stage_activ">[preumont07_six_axis_singl_stage_activ]</a> <a name="preumont07_six_axis_singl_stage_activ"></a>Preumont, Horodinca, Romanescu, de, Marneffe, Avraam, Deraemaeker, Bossens, & Abu Hanieh, A Six-Axis Single-Stage Active Vibration Isolator Based on  Stewart Platform, <i>Journal of Sound and Vibration</i>, <b>300(3-5)</b>, 644-661 (2007). <a href="https://doi.org/10.1016/j.jsv.2006.07.050">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2006.07.050">doi</a>.</li>
+</ul>
 </p>
 </div>
 </body>

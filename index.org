@@ -3,12 +3,12 @@
 #+OPTIONS: toc:nil
 #+OPTIONS: html-postamble:nil
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
-#+HTML_HEAD: <script src="js/jquery.min.js"></script>
-#+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script src="js/jquery.stickytableheaders.min.js"></script>
-#+HTML_HEAD: <script src="js/readtheorg.js"></script>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
 #+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
@@ -21,7 +21,10 @@
 #+PROPERTY: header-args:latex+ :output-dir figs
 :END:
 
-* Simscape Model
+* Introduction                                                       :ignore:
+The goal here is to
+
+* Simscape Model of the Stewart Platform
 - [[file:simscape-model.org][Model of the Stewart Platform]]
 - [[file:identification.org][Identification of the Simscape Model]]
 
@@ -35,7 +38,8 @@
 - Active Damping
 - Inertial Control
 - Decentralized Control
-* Notes about Stewart platforms
+
+* Notes about Stewart platforms                                    :noexport:
 ** Jacobian
 *** Relation to platform parameters
 A Jacobian is defined by:
@@ -102,6 +106,6 @@ If $G$ is diagonal (cubic configuration), then $J^{-1} G J^{-T} = G J^{-1} J^{-T
 
 Thus, the system is uncoupled if $G$ and $K$ are diagonal.
 
-* Bibliography                                                      :ignore:
+* Bibliography                                                       :ignore:
 bibliographystyle:unsrt
-bibliography:references.bib
+bibliography:ref.bib
