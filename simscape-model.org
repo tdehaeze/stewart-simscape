@@ -187,7 +187,7 @@ To do so, we specify the following parameters:
 We define the parameters
 #+begin_src matlab
   Hc = 60e-3; % [m]
-  FOc = 30e-3; % [m]
+  FOc = 50e-3; % [m]
   FHa = 15e-3; % [m]
   MHb = 15e-3; % [m]
 #+end_src
@@ -221,8 +221,8 @@ We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
 #+end_src
 
 #+begin_src matlab
-  Fa = CCf + (FHa./CSi(3,:)).*CSi + [0; 0; FOc];
-  Mb = CCf + ((H-MHb)./CSi(3,:)).*CSi + [0; 0; FOc-H];
+  Fa = CCf + [0; 0; FOc] + ((FHa-(FOc-Hc/2))./CSi(3,:)).*CSi;
+  Mb = CCf + [0; 0; FOc-H] + ((H-MHb-(FOc-Hc/2))./CSi(3,:)).*CSi; % TODO
 #+end_src
 
 * initializeCubicConfiguration
