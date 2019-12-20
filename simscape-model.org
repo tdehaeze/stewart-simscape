@@ -63,27 +63,50 @@ For Simscape, we need:
 - The stiffness and damping of each actuator: $k_{i}$ and $c_{i}$
 
 
-------
-
+* Procedure
 The procedure is the following:
 1. Choose $H$
 2. Choose ${}^{F}\bm{O}_{A}$ and ${}^{M}\bm{O}_{B}$
 3. Choose $\bm{a}_{i}$ and $\bm{b}_{i}$, probably by specifying ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$
 4. Choose $k_{i}$ and $c_{i}$
 
+* Matlab Code
+** Matlab Init                                             :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+** Simscape Model
+#+begin_src matlab
+  open('stewart_platform.slx')
+#+end_src
+
+** Define the Height of the Platform
 #+begin_src matlab
   %% 1. Height of the platform. Location of {F} and {M}
   H = 90e-3; % [m]
   FO_M = [0; 0; H];
+#+end_src
 
+** Define the location of {A} and {B}
+#+begin_src matlab
   %% 2. Location of {A} and {B}
   FO_A = [0; 0; 100e-3] + FO_M;% [m,m,m]
   MO_B = [0; 0; 100e-3];% [m,m,m]
+#+end_src
 
-  %% 3. Position and Orientation of ai and bi
+** Define the position of $a_{i}$ and $b_{i}$
+#+begin_src matlab
+  %% 3. Position of ai and bi
   Fa = zeros(3, 6); % Fa_i is the i'th vector of Fa
   Mb = zeros(3, 6); % Mb_i is the i'th vector of Mb
+#+end_src
 
+#+begin_src matlab
   Aa = Fa - repmat(FO_A, [1, 6]);
   Bb = Mb - repmat(MO_B, [1, 6]);
 
@@ -105,13 +128,16 @@ The procedure is the following:
     MRb(:,:,i) = [cross([0;1;0],Bs(:,i)) , cross(Bs(:,i), cross([0;1;0], Bs(:,i))) , Bs(:,i)];
     MRb(:,:,i) = MRb(:,:,i)./vecnorm(MRb(:,:,i));
   end
+#+end_src
 
+** Define the dynamical properties of each strut
+#+begin_src matlab
   %% 4. Stiffness and Damping of each strut
   Ki = 1e6*ones(6,1);
   Ci = 1e2*ones(6,1);
 #+end_src
 
-------
+** Old Introduction                                                 :ignore:
 
 First, geometrical parameters are defined:
 - ${}^A\bm{a}_i$ - Position of the joints fixed to the fixed base w.r.t $\{A\}$
@@ -143,6 +169,206 @@ Other Parameters are defined for the Simscape simulation:
 - Location of the inertial sensor
 - Location of the point for the differential measurements
 - Location of the Jacobian point for velocity/displacement computation
+
+
+** Cubic Configuration
+To define the cubic configuration, we need to define 4 parameters:
+- The size of the cube
+- The location of the cube
+- The position of the plane joint the points $a_{i}$
+- The position of the plane joint the points $b_{i}$
+
+To do so, we specify the following parameters:
+- $H_{C}$ the height of the useful part of the cube
+- ${}^{F}O_{C}$ the position of the center of the cube with respect to $\{F\}$
+- ${}^{F}H_{A}$: the height of the plane joining the points $a_{i}$ with respect to the frame $\{F\}$
+- ${}^{M}H_{B}$: the height of the plane joining the points $b_{i}$ with respect to the frame $\{B\}$
+
+We define the parameters
+#+begin_src matlab
+  Hc = 60e-3; % [m]
+  FOc = 30e-3; % [m]
+  FHa = 15e-3; % [m]
+  MHb = 15e-3; % [m]
+#+end_src
+
+We define the useful points of the cube with respect to the Cube's center.
+${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is located at the center of the cube and aligned with {F} and {M}.
+#+begin_src matlab
+  sx = [ 2; -1; -1];
+  sy = [ 0;  1; -1];
+  sz = [ 1;  1;  1];
+
+  R = [sx, sy, sz]./vecnorm([sx, sy, sz]);
+
+  L = Hc*sqrt(3);
+
+  Cc = R'*[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] - [0;0;1.5*Hc];
+
+  CCf = [Cc(:,1), Cc(:,3), Cc(:,3), Cc(:,5), Cc(:,5), Cc(:,1)]; % CCf(:,i) corresponds to the bottom cube's vertice corresponding to the i'th leg
+  CCm = [Cc(:,2), Cc(:,2), Cc(:,4), Cc(:,4), Cc(:,6), Cc(:,6)]; % CCm(:,i) corresponds to the top cube's vertice corresponding to the i'th leg
+#+end_src
+
+We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from ${}^{C}C_{f}$ to ${}^{C}C_{m}$).
+#+begin_src matlab
+  CSi = (CCm - CCf)./vecnorm(CCm - CCf);
+#+end_src
+
+We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
+#+begin_src matlab
+  Fa = zeros(3, 6); % Fa_i is the i'th vector of Fa
+  Mb = zeros(3, 6); % Mb_i is the i'th vector of Mb
+#+end_src
+
+#+begin_src matlab
+  Fa = CCf + (FHa./CSi(3,:)).*CSi + [0; 0; FOc];
+  Mb = CCf + ((H-MHb)./CSi(3,:)).*CSi + [0; 0; FOc-H];
+#+end_src
+
+* initializeCubicConfiguration
+  :PROPERTIES:
+  :HEADER-ARGS:matlab+: :exports code
+  :HEADER-ARGS:matlab+: :comments no
+  :HEADER-ARGS:matlab+: :eval no
+  :HEADER-ARGS:matlab+: :tangle src/initializeCubicConfiguration.m
+  :END:
+  <<sec:initializeCubicConfiguration>>
+
+** Function description
+#+begin_src matlab
+  function [stewart] = initializeCubicConfiguration(opts_param)
+#+end_src
+
+** Optional Parameters
+Default values for opts.
+#+begin_src matlab
+  opts = struct(...
+      'H_tot', 90,  ... % Total height of the Hexapod [mm]
+      'L',     110, ... % Size of the Cube [mm]
+      'H',     40,  ... % Height between base joints and platform joints [mm]
+      'H0',    75   ... % Height between the corner of the cube and the plane containing the base joints [mm]
+      );
+#+end_src
+
+Populate opts with input parameters
+#+begin_src matlab
+  if exist('opts_param','var')
+      for opt = fieldnames(opts_param)'
+          opts.(opt{1}) = opts_param.(opt{1});
+      end
+  end
+#+end_src
+
+** Cube Creation
+#+begin_src matlab :results none
+  points = [0, 0, 0; ...
+            0, 0, 1; ...
+            0, 1, 0; ...
+            0, 1, 1; ...
+            1, 0, 0; ...
+            1, 0, 1; ...
+            1, 1, 0; ...
+            1, 1, 1];
+  points = opts.L*points;
+#+end_src
+
+We create the rotation matrix to rotate the cube
+#+begin_src matlab :results none
+  sx = cross([1, 1, 1], [1 0 0]);
+  sx = sx/norm(sx);
+
+  sy = -cross(sx, [1, 1, 1]);
+  sy = sy/norm(sy);
+
+  sz = [1, 1, 1];
+  sz = sz/norm(sz);
+
+  R = [sx', sy', sz']';
+#+end_src
+
+We use to rotation matrix to rotate the cube
+#+begin_src matlab :results none
+  cube = zeros(size(points));
+  for i = 1:size(points, 1)
+    cube(i, :) = R * points(i, :)';
+  end
+#+end_src
+
+** Vectors of each leg
+#+begin_src matlab :results none
+  leg_indices = [3, 4; ...
+                 2, 4; ...
+                 2, 6; ...
+                 5, 6; ...
+                 5, 7; ...
+                 3, 7];
+#+end_src
+
+Vectors are:
+#+begin_src matlab :results none
+  legs = zeros(6, 3);
+  legs_start = zeros(6, 3);
+
+  for i = 1:6
+    legs(i, :) = cube(leg_indices(i, 2), :) - cube(leg_indices(i, 1), :);
+    legs_start(i, :) = cube(leg_indices(i, 1), :);
+  end
+#+end_src
+
+** Verification of Height of the Stewart Platform
+If the Stewart platform is not contained in the cube, throw an error.
+
+#+begin_src matlab :results none
+  Hmax = cube(4, 3) - cube(2, 3);
+  if opts.H0 < cube(2, 3)
+    error(sprintf('H0 is not high enought. Minimum H0 = %.1f', cube(2, 3)));
+  else if opts.H0 + opts.H > cube(4, 3)
+    error(sprintf('H0+H is too high. Maximum H0+H = %.1f', cube(4, 3)));
+    error('H0+H is too high');
+  end
+#+end_src
+
+** Determinate the location of the joints
+We now determine the location of the joints on the fixed platform w.r.t the fixed frame $\{A\}$.
+$\{A\}$ is fixed to the bottom of the base.
+#+begin_src matlab :results none
+  Aa = zeros(6, 3);
+  for i = 1:6
+    t = (opts.H0-legs_start(i, 3))/(legs(i, 3));
+    Aa(i, :) = legs_start(i, :) + t*legs(i, :);
+  end
+#+end_src
+
+And the location of the joints on the mobile platform with respect to $\{A\}$.
+#+begin_src matlab :results none
+  Ab = zeros(6, 3);
+  for i = 1:6
+    t = (opts.H0+opts.H-legs_start(i, 3))/(legs(i, 3));
+    Ab(i, :) = legs_start(i, :) + t*legs(i, :);
+  end
+#+end_src
+
+And the location of the joints on the mobile platform with respect to $\{B\}$.
+#+begin_src matlab :results none
+  Bb = zeros(6, 3);
+  Bb = Ab - (opts.H0 + opts.H_tot/2 + opts.H/2)*[0, 0, 1];
+#+end_src
+
+#+begin_src matlab :results none
+  h = opts.H0 + opts.H/2 - opts.H_tot/2;
+  Aa = Aa - h*[0, 0, 1];
+  Ab = Ab - h*[0, 0, 1];
+#+end_src
+
+** Returns Stewart Structure
+#+begin_src matlab :results none
+  stewart = struct();
+  stewart.Aa = Aa;
+  stewart.Ab = Ab;
+  stewart.Bb = Bb;
+  stewart.H_tot = opts.H_tot;
+end
+#+end_src
 
 * initializeGeneralConfiguration
 :PROPERTIES:
