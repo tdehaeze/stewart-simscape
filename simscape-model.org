@@ -20,7 +20,7 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
-* Introduction                                                       :ignore:
+* Introduction                                                          :ignore:
 Stewart platforms are generated in multiple steps.
 
 We define 4 important *frames*:
@@ -80,13 +80,17 @@ The procedure to define the Stewart platform is the following:
 By following this procedure, we obtain a Matlab structure =stewart= that contains all the information for the Simscape model and for further analysis.
 
 * Matlab Code
-** Matlab Init                                             :noexport:ignore:
+** Matlab Init                                                :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
 
 #+begin_src matlab :exports none :results silent :noweb yes
   <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./src/')
 #+end_src
 
 ** Simscape Model
@@ -96,10 +100,10 @@ By following this procedure, we obtain a Matlab structure =stewart= that contain
 
 ** Test the functions
 #+begin_src matlab
-  stewart = initializeFramesPositions(struct('H', 90e-3, 'MO_B', 50e-3));
-  stewart = generateCubicConfiguration(stewart, struct('Hc', 60e-3, 'FOc', 50e-3, 'FHa', 15e-3, 'MHb', 15e-3));
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 50e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 50e-3, 'FHa', 15e-3, 'MHb', 15e-3);
   stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart, struct('Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1)));
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
 #+end_src
 
 * =initializeFramesPositions=: Initialize the positions of frames {A}, {B}, {F} and {M}
@@ -113,13 +117,13 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
 
 ** Function description
 #+begin_src matlab
-  function [stewart] = initializeFramesPositions(opts_param)
+  function [stewart] = initializeFramesPositions(args)
   % initializeFramesPositions - Initialize the positions of frames {A}, {B}, {F} and {M}
   %
-  % Syntax: [stewart] = initializeFramesPositions(H, MO_B)
+  % Syntax: [stewart] = initializeFramesPositions(args)
   %
   % Inputs:
-  %    - opts_param - Structure with the following fields:
+  %    - args - Can have the following fields:
   %        - H    [1x1] - Total Height of the Stewart Platform [m]
   %        - MO_B [1x1] - Height of the frame {B} with respect to {M} [m]
   %
@@ -132,20 +136,10 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
 #+end_src
 
 ** Optional Parameters
-Default values for opts.
 #+begin_src matlab
-  opts = struct(   ...
-    'H',    90e-3, ... % [m]
-    'MO_B', 50e-3  ... % [m]
-    );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
+  arguments
+      args.H    (1,1) double {mustBeNumeric, mustBePositive} = 90e-3
+      args.MO_B (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
   end
 #+end_src
 
@@ -156,11 +150,11 @@ Populate opts with input parameters
 
 ** Compute the position of each frame
 #+begin_src matlab
-  stewart.H = opts.H; % Total Height of the Stewart Platform [m]
+  stewart.H = args.H; % Total Height of the Stewart Platform [m]
 
   stewart.FO_M = [0; 0; stewart.H]; % Position of {M} with respect to {F} [m]
 
-  stewart.MO_B = [0; 0; opts.MO_B]; % Position of {B} with respect to {M} [m]
+  stewart.MO_B = [0; 0; args.MO_B]; % Position of {B} with respect to {M} [m]
 
   stewart.FO_A = stewart.MO_B + stewart.FO_M; % Position of {A} with respect to {F} [m]
 #+end_src
@@ -176,15 +170,15 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
 
 ** Function description
 #+begin_src matlab
-  function [stewart] = generateCubicConfiguration(stewart, opts_param)
+  function [stewart] = generateCubicConfiguration(stewart, args)
   % generateCubicConfiguration - Generate a Cubic Configuration
   %
-  % Syntax: [stewart] = generateCubicConfiguration(stewart, opts_param)
+  % Syntax: [stewart] = generateCubicConfiguration(stewart, args)
   %
   % Inputs:
   %    - stewart - A structure with the following fields
   %        - H   [1x1] - Total height of the platform [m]
-  %    - opts_param - Structure with the following fields:
+  %    - args - Can have the following fields:
   %        - Hc  [1x1] - Height of the "useful" part of the cube [m]
   %        - FOc [1x1] - Height of the center of the cute with respect to {F} [m]
   %        - FHa [1x1] - Height of the plane joining the points ai with respect to the frame {F} [m]
@@ -197,22 +191,13 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
 #+end_src
 
 ** Optional Parameters
-Default values for opts.
 #+begin_src matlab
-  opts = struct(  ...
-    'Hc',  60e-3, ... % [m]
-    'FOc', 50e-3, ... % [m]
-    'FHa', 15e-3, ... % [m]
-    'MHb', 15e-3  ... % [m]
-    );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
+  arguments
+      stewart
+      args.Hc  (1,1) double {mustBeNumeric, mustBePositive} = 60e-3
+      args.FOc (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
+      args.FHa (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
+      args.MHb (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
   end
 #+end_src
 
@@ -226,9 +211,9 @@ ${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is loca
 
   R = [sx, sy, sz]./vecnorm([sx, sy, sz]);
 
-  L = opts.Hc*sqrt(3);
+  L = args.Hc*sqrt(3);
 
-  Cc = R'*[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] - [0;0;1.5*opts.Hc];
+  Cc = R'*[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] - [0;0;1.5*args.Hc];
 
   CCf = [Cc(:,1), Cc(:,3), Cc(:,3), Cc(:,5), Cc(:,5), Cc(:,1)]; % CCf(:,i) corresponds to the bottom cube's vertice corresponding to the i'th leg
   CCm = [Cc(:,2), Cc(:,2), Cc(:,4), Cc(:,4), Cc(:,6), Cc(:,6)]; % CCm(:,i) corresponds to the top cube's vertice corresponding to the i'th leg
@@ -242,8 +227,8 @@ We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from
 
 We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
 #+begin_src matlab
-  stewart.Fa = CCf + [0; 0; opts.FOc] + ((opts.FHa-(opts.FOc-opts.Hc/2))./CSi(3,:)).*CSi;
-  stewart.Mb = CCf + [0; 0; opts.FOc-stewart.H] + ((stewart.H-opts.MHb-(opts.FOc-opts.Hc/2))./CSi(3,:)).*CSi;
+  stewart.Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+  stewart.Mb = CCf + [0; 0; args.FOc-stewart.H] + ((stewart.H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
 #+end_src
 
 * =computeJointsPose=: Compute the Pose of the Joints
@@ -326,13 +311,13 @@ This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 
 ** Function description
 #+begin_src matlab
-  function [stewart] = initializeStrutDynamics(stewart, opts_param)
+  function [stewart] = initializeStrutDynamics(stewart, args)
   % initializeStrutDynamics - Add Stiffness and Damping properties of each strut
   %
-  % Syntax: [stewart] = initializeStrutDynamics(opts_param)
+  % Syntax: [stewart] = initializeStrutDynamics(args)
   %
   % Inputs:
-  %    - opts_param - Structure with the following fields:
+  %    - args - Structure with the following fields:
   %        - Ki [6x1] - Stiffness of each strut [N/m]
   %        - Ci [6x1] - Damping of each strut [N/(m/s)]
   %
@@ -343,27 +328,18 @@ This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 #+end_src
 
 ** Optional Parameters
-Default values for opts.
 #+begin_src matlab
-  opts = struct(  ...
-    'Ki', 1e6*ones(6,1), ... % [N/m]
-    'Ci', 1e2*ones(6,1)  ... % [N/(m/s)]
-    );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
+  arguments
+      stewart
+      args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
+      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e2*ones(6,1)
   end
 #+end_src
 
 ** Add Stiffness and Damping properties of each strut
 #+begin_src matlab
-  stewart.Ki = opts.Ki;
-  stewart.Ci = opts.Ci;
+  stewart.Ki = args.Ki;
+  stewart.Ci = args.Ci;
 #+end_src
 
 * OLD                                                              :noexport:

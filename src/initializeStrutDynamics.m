@@ -1,10 +1,10 @@
-function [stewart] = initializeStrutDynamics(stewart, opts_param)
+function [stewart] = initializeStrutDynamics(stewart, args)
 % initializeStrutDynamics - Add Stiffness and Damping properties of each strut
 %
-% Syntax: [stewart] = initializeStrutDynamics(opts_param)
+% Syntax: [stewart] = initializeStrutDynamics(args)
 %
 % Inputs:
-%    - opts_param - Structure with the following fields:
+%    - args - Structure with the following fields:
 %        - Ki [6x1] - Stiffness of each strut [N/m]
 %        - Ci [6x1] - Damping of each strut [N/(m/s)]
 %
@@ -13,16 +13,11 @@ function [stewart] = initializeStrutDynamics(stewart, opts_param)
 %        - Ki [6x1] - Stiffness of each strut [N/m]
 %        - Ci [6x1] - Damping of each strut [N/(m/s)]
 
-opts = struct(  ...
-  'Ki', 1e6*ones(6,1), ... % [N/m]
-  'Ci', 1e2*ones(6,1)  ... % [N/(m/s)]
-  );
-
-if exist('opts_param','var')
-    for opt = fieldnames(opts_param)'
-        opts.(opt{1}) = opts_param.(opt{1});
-    end
+arguments
+    stewart
+    args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
+    args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e2*ones(6,1)
 end
 
-stewart.Ki = opts.Ki;
-stewart.Ci = opts.Ci;
+stewart.Ki = args.Ki;
+stewart.Ci = args.Ci;
