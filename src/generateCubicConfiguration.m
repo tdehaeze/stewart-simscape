@@ -8,7 +8,7 @@ function [stewart] = generateCubicConfiguration(stewart, args)
 %        - H   [1x1] - Total height of the platform [m]
 %    - args - Can have the following fields:
 %        - Hc  [1x1] - Height of the "useful" part of the cube [m]
-%        - FOc [1x1] - Height of the center of the cute with respect to {F} [m]
+%        - FOc [1x1] - Height of the center of the cube with respect to {F} [m]
 %        - FHa [1x1] - Height of the plane joining the points ai with respect to the frame {F} [m]
 %        - MHb [1x1] - Height of the plane joining the points bi with respect to the frame {M} [m]
 %
@@ -20,7 +20,7 @@ function [stewart] = generateCubicConfiguration(stewart, args)
 arguments
     stewart
     args.Hc  (1,1) double {mustBeNumeric, mustBePositive} = 60e-3
-    args.FOc (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
+    args.FOc (1,1) double {mustBeNumeric} = 50e-3
     args.FHa (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
     args.MHb (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
 end
