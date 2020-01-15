@@ -1,0 +1,92 @@
+#+TITLE: Stewart Platform - Active Damping
+:DRAWER:
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+:END:
+
+* Inertial Control
+** Matlab Init                                             :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./src/')
+#+end_src
+
+** Simscape Model
+#+begin_src matlab
+  open('simulink/stewart_active_damping.slx')
+#+end_src
+
+** Initialize the Stewart model
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 40e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = computeJacobian(stewart);
+#+end_src
+
+** Identification of the Dynamics
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/WVB'], 1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz', ...
+                  'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
+#+end_src
+
+** Analysis
+#+begin_src matlab
+  freqs = 2*pi*logspace(1, 4, 1000);
+
+  figure;
+  bode(G({'D1', 'D2', 'D3', 'D4', 'D5', 'D6'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
+
+  figure;
+  bode(stewart.J*G({'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
+#+end_src
+
+#+begin_src matlab
+  figure;
+  bode(G({'D1', 'D2', 'D3', 'D4', 'D5', 'D6'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), stewart.J*G({'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
+#+end_src
+
+** Conclusion
+It is similar to use:
+- one 6dof inertial sensor and the Jacobian the have the velocity of each lim
+- 6 1dof inertial sensor in each top part of the limbs
