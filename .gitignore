@@ -1,9 +1,4 @@
 figs/*.svg
-figs/*.pdf
-mat/
-figures/
-ltximg/
-slprj/
 *.autosave
 *.original
 old/
