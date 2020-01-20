@@ -1,0 +1,285 @@
+#+TITLE: Stewart Platform - Dynamics Study
+:DRAWER:
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+:END:
+
+* Some tests
+** Matlab Init                                                :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./src/')
+#+end_src
+
+** Simscape Model
+#+begin_src matlab
+  open('stewart_platform_dynamics.slx')
+#+end_src
+
+** test
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = computeJacobian(stewart);
+#+end_src
+
+Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$:
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'], 1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+  G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/J-T'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],   1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+#+begin_src matlab
+  G_cart = minreal(G*inv(stewart.J'));
+  G_cart.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
+#+end_src
+
+#+begin_src matlab
+  figure; bode(G, G_cart)
+#+end_src
+
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fext'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],    1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  Gd = linearize(mdl, io, options);
+  Gd.InputName  = {'Fex', 'Fey', 'Fez', 'Mex', 'Mey', 'Mez'};
+  Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+#+begin_src matlab
+  freqs = logspace(0, 3, 1000);
+
+  figure;
+  bode(Gd, G)
+#+end_src
+
+** Compare external forces and forces applied by the actuators
+Initialization of the Stewart platform.
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = computeJacobian(stewart);
+#+end_src
+
+Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$:
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'], 1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+  G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+Estimation of the transfer function from $\mathcal{\bm{F}}_{d}$ to $\mathcal{\bm{X}}$:
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fext'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],    1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  Gd = linearize(mdl, io, options);
+  Gd.InputName  = {'Fex', 'Fey', 'Fez', 'Mex', 'Mey', 'Mez'};
+  Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+Comparison of the two transfer function matrices.
+#+begin_src matlab
+  freqs = logspace(0, 4, 1000);
+
+  figure;
+  bode(Gd, G, freqs)
+#+end_src
+
+#+begin_important
+Seems quite similar.
+#+end_important
+
+** Comparison of the static transfer function and the Compliance matrix
+Initialization of the Stewart platform.
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = computeJacobian(stewart);
+#+end_src
+
+Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$:
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'], 1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+  G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
+#+end_src
+
+Let's first look at the low frequency transfer function matrix from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$.
+#+begin_src matlab :exports results :results value table replace :tangle no
+data2orgtable(real(freqresp(G, 0.1)), {}, {}, ' %.1e ');
+#+end_src
+
+#+RESULTS:
+|  2.0e-06 | -9.1e-19 | -5.3e-12 |  7.3e-18 |  1.7e-05 |  1.3e-18 |
+| -1.7e-18 |  2.0e-06 |  8.6e-19 | -1.7e-05 | -1.5e-17 |  6.7e-12 |
+|  3.6e-13 |  3.2e-19 |  5.0e-07 | -2.5e-18 |  8.1e-12 | -1.5e-19 |
+|  1.0e-17 | -1.7e-05 | -5.0e-18 |  1.9e-04 |  9.1e-17 | -3.5e-11 |
+|  1.7e-05 | -6.9e-19 | -5.3e-11 |  6.9e-18 |  1.9e-04 |  4.8e-18 |
+| -3.5e-18 | -4.5e-12 |  1.5e-18 |  7.1e-11 | -3.4e-17 |  4.6e-05 |
+
+And now at the Compliance matrix.
+#+begin_src matlab :exports results :results value table replace :tangle no
+data2orgtable(stewart.C, {}, {}, ' %.1e ');
+#+end_src
+
+#+RESULTS:
+|  2.0e-06 |  2.9e-22 |  2.8e-22 | -3.2e-21 |  1.7e-05 |  1.5e-37 |
+| -2.1e-22 |  2.0e-06 | -1.8e-23 | -1.7e-05 | -2.3e-21 |  1.1e-22 |
+|  3.1e-22 | -1.6e-23 |  5.0e-07 |  1.7e-22 |  2.2e-21 | -8.1e-39 |
+|  2.1e-21 | -1.7e-05 |  2.0e-22 |  1.9e-04 |  2.3e-20 | -8.7e-21 |
+|  1.7e-05 |  2.5e-21 |  2.0e-21 | -2.8e-20 |  1.9e-04 |  1.3e-36 |
+|  3.7e-23 |  3.1e-22 | -6.0e-39 | -1.0e-20 |  3.1e-22 |  4.6e-05 |
+
+#+begin_important
+The low frequency transfer function matrix from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$ corresponds to the compliance matrix of the Stewart platform.
+#+end_important
+
+** Transfer function from forces applied in the legs to the displacement of the legs
+Initialization of the Stewart platform.
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = computeJacobian(stewart);
+#+end_src
+
+Estimation of the transfer function from $\bm{\tau}$ to $\bm{L}$:
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_dynamics';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/J-T'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/L'], 1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+#+end_src
+
+#+begin_src matlab
+  freqs = logspace(1, 3, 1000);
+  figure; bode(G, 2*pi*freqs)
+#+end_src
+
+#+begin_src matlab
+  bodeFig({G(1,1), G(1,2)}, freqs, struct('phase', true));
+#+end_src

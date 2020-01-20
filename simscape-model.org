@@ -61,6 +61,7 @@ For Simscape, we need:
 - The position of the frame $\{A\}$ with respect to the frame $\{F\}$: ${}^{F}\bm{O}_{A}$
 - The position of the frame $\{B\}$ with respect to the frame $\{M\}$: ${}^{M}\bm{O}_{B}$
 
+
 * Procedure
 The procedure to define the Stewart platform is the following:
 1. Define the initial position of frames {A}, {B}, {F} and {M}.
@@ -285,6 +286,7 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
 #+end_src
 
 ** Documentation
+
 #+name: fig:stewart-struts
 #+caption: Position and orientation of the struts
 [[file:figs/stewart-struts.png]]
@@ -355,7 +357,7 @@ This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
   arguments
       stewart
       args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
-      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e2*ones(6,1)
+      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e3*ones(6,1)
   end
 #+end_src
 
