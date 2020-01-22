@@ -22,12 +22,20 @@
 :END:
 
 * Identification
-#+begin_src matlab :results none :exports none :noweb yes
-  <<matlab-init>>
-  addpath('src');
-  addpath('library');
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
 #+end_src
 
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('./');
+#+end_src
+
+** Script
 #+begin_src matlab :results none :exports none
   open stewart
 #+end_src

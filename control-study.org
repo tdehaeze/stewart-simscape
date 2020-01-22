@@ -43,8 +43,7 @@
 #+end_src
 
 #+begin_src matlab
-  addpath('./src/')
-  addpath('./simulink/')
+  simulinkproject('./');
 #+end_src
 
 ** Control Schematic

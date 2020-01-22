@@ -1,0 +1,85 @@
+#+TITLE: Simulink Project for the Stewart Simscape folder
+:DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/zenburn.css"/>
+#+HTML_HEAD: <script type="text/javascript" src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="./js/readtheorg.js"></script>
+
+#+HTML_MATHJAX: align: center tagside: right font: TeX
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :output-dir figs
+#+PROPERTY: header-args:matlab+ :tangle no
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+
+#+PROPERTY: header-args:shell  :eval no-export
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results raw replace :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports both
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+:END:
+
+Simulink Project is used for the study of the NASS using Simscape.
+
+From the [[https://mathworks.com/products/simulink/projects.html][Simulink project]] mathworks page:
+#+begin_quote
+  Simulink® and Simulink Projects provide a collaborative, scalable environment that enables teams to manage their files and data in one place.
+
+  With Simulink Projects, you can:
+  - *Collaborate*: Enforce companywide standards such as company tools, libraries, and standard startup and shutdown scripts. Share your work with rich sharing options including MATLAB® toolboxes, email, and archives.
+  - *Automate*: Set up your project environment correctly every time by automating steps such as loading the data, managing the path, and opening the models.
+  - *Integrate with source control*: Enable easy integration with source control and configuration management tools.
+#+end_quote
+
+The project can be opened using the =simulinkproject= function:
+
+#+begin_src matlab
+  simulinkproject('./');
+#+end_src
+
+When the project opens, a startup script is ran.
+The startup script is defined below and is exported to the =project_startup.m= script.
+#+begin_src matlab :eval no :tangle ./src/project_startup.m
+  project = simulinkproject;
+  projectRoot = project.RootFolder;
+
+  myCacheFolder = fullfile(projectRoot, '.SimulinkCache');
+  myCodeFolder = fullfile(projectRoot, '.SimulinkCode');
+
+  Simulink.fileGenControl('set',...
+      'CacheFolder', myCacheFolder,...
+      'CodeGenFolder', myCodeFolder,...
+      'createDir', true);
+
+  %% Load the Simscape Configuration
+  load('mat/conf_simscape.mat');
+#+end_src
+
+When the project closes, it runs the =project_shutdown.m= script defined below.
+#+begin_src matlab :eval no :tangle ./src/project_shutdown.m
+  Simulink.fileGenControl('reset');
+#+end_src
+
+The project also permits to automatically add defined folder to the path when the project is opened.

@@ -44,8 +44,7 @@ According to cite:preumont07_six_axis_singl_stage_activ, the cubic configuration
 #+end_src
 
 #+begin_src matlab :results none :exports none
-  addpath('src');
-  addpath('library');
+  simulinkproject('./');
 #+end_src
 
 * Questions we wish to answer with this analysis

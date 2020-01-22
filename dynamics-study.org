@@ -31,7 +31,7 @@
 #+end_src
 
 #+begin_src matlab
-  addpath('./src/')
+  simulinkproject('./');
 #+end_src
 
 ** Simscape Model
