@@ -26,12 +26,12 @@ function [stewart] = initializeCylindricalStruts(stewart, args)
 
 arguments
     stewart
-    args.Fsm (6,1) double {mustBeNumeric, mustBePositive} = 0.1
-    args.Fsh (6,1) double {mustBeNumeric, mustBePositive} = 50e-3
-    args.Fsr (6,1) double {mustBeNumeric, mustBePositive} = 5e-3
-    args.Msm (6,1) double {mustBeNumeric, mustBePositive} = 0.1
-    args.Msh (6,1) double {mustBeNumeric, mustBePositive} = 50e-3
-    args.Msr (6,1) double {mustBeNumeric, mustBePositive} = 5e-3
+    args.Fsm (1,1) double {mustBeNumeric, mustBePositive} = 0.1
+    args.Fsh (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
+    args.Fsr (1,1) double {mustBeNumeric, mustBePositive} = 5e-3
+    args.Msm (1,1) double {mustBeNumeric, mustBePositive} = 0.1
+    args.Msh (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
+    args.Msr (1,1) double {mustBeNumeric, mustBePositive} = 5e-3
 end
 
 struts = struct();
