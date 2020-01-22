@@ -764,6 +764,70 @@ We then compute the corresponding rotation matrix.
        s(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];
 #+end_src
 
+* Other Elements
+** Z-Axis Geophone
+:PROPERTIES:
+:header-args:matlab+: :tangle ./src/initializeZAxisGeophone.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeZAxisGeophone>>
+
+This Matlab function is accessible [[file:../src/initializeZAxisGeophone.m][here]].
+
+#+begin_src matlab
+  function [geophone] = initializeZAxisGeophone(args)
+      arguments
+          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 1    % [Hz]
+      end
+
+      %%
+      geophone.m = args.mass;
+
+      %% The Stiffness is set to have the damping resonance frequency
+      geophone.k = geophone.m * (2*pi*args.freq)^2;
+
+      %% We set the damping value to have critical damping
+      geophone.c = 2*sqrt(geophone.m * geophone.k);
+
+      %% Save
+      save('./mat/geophone_z_axis.mat', 'geophone');
+  end
+#+end_src
+
+** Z-Axis Accelerometer
+:PROPERTIES:
+:header-args:matlab+: :tangle ./src/initializeZAxisAccelerometer.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeZAxisAccelerometer>>
+
+This Matlab function is accessible [[file:../src/initializeZAxisAccelerometer.m][here]].
+
+#+begin_src matlab
+  function [accelerometer] = initializeZAxisAccelerometer(args)
+      arguments
+          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  % [Hz]
+      end
+
+      %%
+      accelerometer.m = args.mass;
+
+      %% The Stiffness is set to have the damping resonance frequency
+      accelerometer.k = accelerometer.m * (2*pi*args.freq)^2;
+
+      %% We set the damping value to have critical damping
+      accelerometer.c = 2*sqrt(accelerometer.m * accelerometer.k);
+
+      %% Gain correction of the accelerometer to have a unity gain until the resonance
+      accelerometer.gain = -accelerometer.k/accelerometer.m;
+
+      %% Save
+      save('./mat/accelerometer_z_axis.mat', 'accelerometer');
+  end
+#+end_src
+
 * OLD                                                                 :noexport:
 ** Define the Height of the Platform                              :noexport:
 #+begin_src matlab
