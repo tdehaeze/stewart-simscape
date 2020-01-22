@@ -45,7 +45,10 @@
   stewart = generateCubicConfiguration(stewart, 'Hc', 40e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
 #+end_src
 
 ** Identification of the Dynamics

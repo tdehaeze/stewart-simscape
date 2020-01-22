@@ -106,8 +106,11 @@ By following this procedure, we obtain a Matlab structure =stewart= that contain
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart, 'AP', [0;0;0.01], 'ARB', eye(3));
+
   [Li, dLi] = inverseKinematics(stewart, 'AP', [0;0;0.00001], 'ARB', eye(3));
   [P, R] = forwardKinematicsApprox(stewart, 'dL', dLi);
 #+end_src
@@ -268,8 +271,6 @@ This Matlab function is accessible [[file:src/generateGeneralConfiguration.m][he
   % Syntax: [stewart] = generateGeneralConfiguration(stewart, args)
   %
   % Inputs:
-  %    - stewart - A structure with the following fields
-  %        - H   [1x1] - Total height of the platform [m]
   %    - args - Can have the following fields:
   %        - FH  [1x1] - Height of the position of the fixed joints with respect to the frame {F} [m]
   %        - FR  [1x1] - Radius of the position of the fixed joints in the X-Y [m]
@@ -477,6 +478,81 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
 #+end_src
 
 * Initialize the Geometry of the Mechanical Elements
+** =initializeCylindricalPlatforms=: Initialize the geometry of the Fixed and Mobile Platforms
+:PROPERTIES:
+:header-args:matlab+: :tangle src/initializeCylindricalPlatforms.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeCylindricalPlatforms>>
+
+This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][here]].
+
+*** Function description
+#+begin_src matlab
+  function [stewart] = initializeCylindricalPlatforms(stewart, args)
+  % initializeCylindricalPlatforms - Initialize the geometry of the Fixed and Mobile Platforms
+  %
+  % Syntax: [stewart] = initializeCylindricalPlatforms(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - Fpm [1x1] - Fixed Platform Mass [kg]
+  %        - Fph [1x1] - Fixed Platform Height [m]
+  %        - Fpr [1x1] - Fixed Platform Radius [m]
+  %        - Mpm [1x1] - Mobile Platform Mass [kg]
+  %        - Mph [1x1] - Mobile Platform Height [m]
+  %        - Mpr [1x1] - Mobile Platform Radius [m]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+  %      - platforms [struct] - structure with the following fields:
+  %        - Fpm [1x1] - Fixed Platform Mass [kg]
+  %        - Msi [3x3] - Mobile Platform Inertia matrix [kg*m^2]
+  %        - Fph [1x1] - Fixed Platform Height [m]
+  %        - Fpr [1x1] - Fixed Platform Radius [m]
+  %        - Mpm [1x1] - Mobile Platform Mass [kg]
+  %        - Fsi [3x3] - Fixed Platform Inertia matrix [kg*m^2]
+  %        - Mph [1x1] - Mobile Platform Height [m]
+  %        - Mpr [1x1] - Mobile Platform Radius [m]
+#+end_src
+
+*** Optional Parameters
+#+begin_src matlab
+  arguments
+      stewart
+      args.Fpm (1,1) double {mustBeNumeric, mustBePositive} = 1
+      args.Fph (1,1) double {mustBeNumeric, mustBePositive} = 10e-3
+      args.Fpr (1,1) double {mustBeNumeric, mustBePositive} = 125e-3
+      args.Mpm (1,1) double {mustBeNumeric, mustBePositive} = 1
+      args.Mph (1,1) double {mustBeNumeric, mustBePositive} = 10e-3
+      args.Mpr (1,1) double {mustBeNumeric, mustBePositive} = 100e-3
+  end
+#+end_src
+
+*** Create the =platforms= struct
+#+begin_src matlab
+  platforms = struct();
+
+  platforms.Fpm = args.Fpm;
+  platforms.Fph = args.Fph;
+  platforms.Fpr = args.Fpr;
+  platforms.Fpi = diag([1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
+                        1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
+                        1/2  * platforms.Fpm * platforms.Fpr^2]);
+
+  platforms.Mpm = args.Mpm;
+  platforms.Mph = args.Mph;
+  platforms.Mpr = args.Mpr;
+  platforms.Mpi = diag([1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
+                        1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
+                        1/2  * platforms.Mpm * platforms.Mpr^2]);
+#+end_src
+
+*** Save the =platforms= struct
+#+begin_src matlab
+  stewart.platforms = platforms;
+#+end_src
+
 ** =initializeCylindricalStruts=: Define the mass and moment of inertia of cylindrical struts
 :PROPERTIES:
 :header-args:matlab+: :tangle src/initializeCylindricalStruts.m
@@ -556,79 +632,50 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
   stewart.struts = struts;
 #+end_src
 
-** =initializeCylindricalPlatforms=: Initialize the geometry of the Fixed and Mobile Platforms
+* =initializeStewartPose=: Determine the initial stroke in each leg to have the wanted pose
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeCylindricalPlatforms.m
+:header-args:matlab+: :tangle src/initializeStewartPose.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
-<<sec:initializeCylindricalPlatforms>>
+<<sec:initializeStewartPose>>
 
-This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][here]].
+This Matlab function is accessible [[file:src/initializeStewartPose.m][here]].
 
-*** Function description
+** Function description
 #+begin_src matlab
-  function [stewart] = initializeCylindricalPlatforms(stewart, args)
-  % initializeCylindricalPlatforms - Initialize the geometry of the Fixed and Mobile Platforms
+  function [stewart] = initializeStewartPose(stewart, args)
+  % initializeStewartPose - Determine the initial stroke in each leg to have the wanted pose
+  %                         It uses the inverse kinematic
   %
-  % Syntax: [stewart] = initializeCylindricalPlatforms(args)
+  % Syntax: [stewart] = initializeStewartPose(stewart, args)
   %
   % Inputs:
-  %    - args - Structure with the following fields:
-  %        - Fpm [1x1] - Fixed Platform Mass [kg]
-  %        - Fph [1x1] - Fixed Platform Height [m]
-  %        - Fpr [1x1] - Fixed Platform Radius [m]
-  %        - Mpm [1x1] - Mobile Platform Mass [kg]
-  %        - Mph [1x1] - Mobile Platform Height [m]
-  %        - Mpr [1x1] - Mobile Platform Radius [m]
+  %    - stewart - A structure with the following fields
+  %        - Aa   [3x6] - The positions ai expressed in {A}
+  %        - Bb   [3x6] - The positions bi expressed in {B}
+  %    - args - Can have the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %      - platforms [struct] - structure with the following fields:
-  %        - Fpm [1x1] - Fixed Platform Mass [kg]
-  %        - Msi [3x3] - Mobile Platform Inertia matrix [kg*m^2]
-  %        - Fph [1x1] - Fixed Platform Height [m]
-  %        - Fpr [1x1] - Fixed Platform Radius [m]
-  %        - Mpm [1x1] - Mobile Platform Mass [kg]
-  %        - Fsi [3x3] - Fixed Platform Inertia matrix [kg*m^2]
-  %        - Mph [1x1] - Mobile Platform Height [m]
-  %        - Mpr [1x1] - Mobile Platform Radius [m]
+  %      - dLi[6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
 #+end_src
 
-*** Optional Parameters
+** Optional Parameters
 #+begin_src matlab
   arguments
       stewart
-      args.Fpm (1,1) double {mustBeNumeric, mustBePositive} = 1
-      args.Fph (1,1) double {mustBeNumeric, mustBePositive} = 10e-3
-      args.Fpr (1,1) double {mustBeNumeric, mustBePositive} = 125e-3
-      args.Mpm (1,1) double {mustBeNumeric, mustBePositive} = 1
-      args.Mph (1,1) double {mustBeNumeric, mustBePositive} = 10e-3
-      args.Mpr (1,1) double {mustBeNumeric, mustBePositive} = 100e-3
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
   end
 #+end_src
 
-*** Create the =platforms= struct
+** Use the Inverse Kinematic function
 #+begin_src matlab
-  platforms = struct();
+  [Li, dLi] = inverseKinematics(stewart, 'AP', args.AP, 'ARB', args.ARB);
 
-  platforms.Fpm = args.Fpm;
-  platforms.Fph = args.Fph;
-  platforms.Fpr = args.Fpr;
-  platforms.Fpi = diag([1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
-                        1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
-                        1/2  * platforms.Fpm * platforms.Fpr^2]);
-
-  platforms.Mpm = args.Mpm;
-  platforms.Mph = args.Mph;
-  platforms.Mpr = args.Mpr;
-  platforms.Mpi = diag([1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
-                        1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
-                        1/2  * platforms.Mpm * platforms.Mpr^2]);
-#+end_src
-
-*** Save the =platforms= struct
-#+begin_src matlab
-  stewart.platforms = platforms;
+  stewart.dLi = dLi;
 #+end_src
 
 * Utility Functions

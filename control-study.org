@@ -69,17 +69,14 @@
 
 ** Initialize the Stewart platform
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
-  % stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = initializeFramesPositions();
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
-#+end_src
-
-** Initialize the Simulation
-#+begin_src matlab
-  load('mat/conf_simscape.mat');
+  stewart = initializeStewartPose(stewart);
 #+end_src
 
 ** Identification of the plant

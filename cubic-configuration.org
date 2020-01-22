@@ -53,7 +53,7 @@ The goal is to study the benefits of using a cubic configuration:
 - No coupling between the actuators?
 - Is the center of the cube an important point?
 
-* Configuration Analysis - Stiffness Matrix
+* TODO Configuration Analysis - Stiffness Matrix
 ** Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center
 We create a cubic Stewart platform (figure [[fig:3d-cubic-stewart-aligned]]) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
@@ -228,7 +228,7 @@ We obtain $k_x = k_y = k_z$ and $k_{\theta_x} = k_{\theta_y}$, but the Stiffness
   - The stiffness matrix $K$ is diagonal for the cubic configuration if the Stewart platform and the cube are centered *and* the Jacobian is estimated at the cube center
 #+end_important
 
-* Cubic size analysis
+* TODO Cubic size analysis
 We here study the effect of the size of the cube used for the Stewart configuration.
 
 We fix the height of the Stewart platform, the center of the cube is at the center of the Stewart platform.
@@ -304,14 +304,14 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
   In that case, the legs will the further separated. Size of the cube is then limited by allowed space.
 #+end_important
 
-* initializeCubicConfiguration
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/initializeCubicConfiguration.m
-  :END:
-  <<sec:initializeCubicConfiguration>>
+* TODO initializeCubicConfiguration
+:PROPERTIES:
+:HEADER-ARGS:matlab+: :exports code
+:HEADER-ARGS:matlab+: :comments no
+:HEADER-ARGS:matlab+: :eval no
+:HEADER-ARGS:matlab+: :tangle src/initializeCubicConfiguration.m
+:END:
+<<sec:initializeCubicConfiguration>>
 
 ** Function description
 #+begin_src matlab
@@ -449,7 +449,7 @@ And the location of the joints on the mobile platform with respect to $\{B\}$.
 end
 #+end_src
 
-* Tests
+* TODO Tests
 ** First attempt to parametrisation
 #+name: fig:stewart_bottom_plate
 #+caption: Schematic of the bottom plates with all the parameters
