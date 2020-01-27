@@ -1,0 +1,87 @@
+#+TITLE: Stewart Platform - Static Analysis
+:DRAWER:
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+:END:
+
+* Jacobian
+** Relation to platform parameters
+A Jacobian is defined by:
+- the orientations of the struts $\hat{s}_i$ expressed in a frame $\{A\}$ linked to the fixed platform.
+- the vectors from $O_B$ to $b_i$ expressed in the frame $\{A\}$
+
+Then, the choice of $O_B$ changes the Jacobian.
+
+** Jacobian for displacement
+\[ \dot{q} = J \dot{X} \]
+With:
+- $q = [q_1\ q_2\ q_3\ q_4\ q_5\ q_6]$ vector of linear displacement of actuated joints
+- $X = [x\ y\ z\ \theta_x\ \theta_y\ \theta_z]$ position and orientation of $O_B$ expressed in the frame $\{A\}$
+
+For very small displacements $\delta q$ and $\delta X$, we have $\delta q = J \delta X$.
+
+** Jacobian for forces
+\[ F = J^T \tau \]
+With:
+- $\tau = [\tau_1\ \tau_2\ \tau_3\ \tau_4\ \tau_5\ \tau_6]$ vector of actuator forces
+- $F = [f_x\ f_y\ f_z\ n_x\ n_y\ n_z]$ force and torque acting on point $O_B$
+
+* Stiffness matrix $K$
+
+\[ K = J^T \text{diag}(k_i) J \]
+
+If all the struts have the same stiffness $k$, then $K = k J^T J$
+
+$K$ only depends of the geometry of the stewart platform: it depends on the Jacobian, that is on the orientations of the struts, position of the joints and choice of frame $\{B\}$.
+
+\[ F = K X \]
+
+With $F$ forces and torques applied to the moving platform at the origin of $\{B\}$ and $X$ the translations and rotations of $\{B\}$ with respect to $\{A\}$.
+
+\[ C = K^{-1} \]
+
+The compliance element $C_{ij}$ is then the stiffness
+\[ X_i = C_{ij} F_j \]
+
+* Coupling
+What causes the coupling from $F_i$ to $X_i$ ?
+
+#+begin_src latex :file coupling.pdf :post pdf2svg(file=*this*, ext="png") :exports both
+  \begin{tikzpicture}
+    \node[block] (Jt) at (0, 0) {$J^{-T}$};
+    \node[block, right= of Jt] (G) {$G$};
+    \node[block, right= of G] (J) {$J^{-1}$};
+
+    \draw[->] ($(Jt.west)+(-0.8, 0)$) -- (Jt.west) node[above left]{$F_i$};
+    \draw[->] (Jt.east) -- (G.west) node[above left]{$\tau_i$};
+    \draw[->] (G.east) -- (J.west) node[above left]{$q_i$};
+    \draw[->] (J.east) -- ++(0.8, 0) node[above left]{$X_i$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:block_diag_coupling
+#+caption: Block diagram to control an hexapod
+#+RESULTS:
+[[file:figs/coupling.png]]
+
+There is no coupling from $F_i$ to $X_j$ if $J^{-1} G J^{-T}$ is diagonal.
+
+If $G$ is diagonal (cubic configuration), then $J^{-1} G J^{-T} = G J^{-1} J^{-T} = G (J^{T} J)^{-1} = G K^{-1}$
+
+Thus, the system is uncoupled if $G$ and $K$ are diagonal.

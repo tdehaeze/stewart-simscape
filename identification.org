@@ -21,6 +21,32 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+* Introduction                                                        :ignore:
+We would like to extract a state space model of the Stewart Platform from the Simscape model.
+
+The inputs are:
+| Symbol                 | Meaning                                          |
+|------------------------+--------------------------------------------------|
+| $\bm{\mathcal{F}}_{d}$ | External forces applied in {B}                   |
+| $\bm{\tau}$            | Joint forces                                     |
+| $\bm{\mathcal{F}}$     | Cartesian forces applied by the Joints           |
+| $\bm{D}_{w}$           | Fixed Based translation and rotations around {A} |
+
+The outputs are:
+| Symbol             | Meaning                                                                   |
+|--------------------+---------------------------------------------------------------------------|
+| $\bm{\mathcal{X}}$ | Relative Motion of {B} with respect to {A}                                |
+| $\bm{\mathcal{L}}$ | Joint Displacement                                                        |
+| $\bm{F}_{m}$       | Force Sensors in each strut                                               |
+| $\bm{v}_{m}$       | Inertial Sensors located at $b_i$ measuring in the direction of the strut |
+
+
+#+begin_quote
+An important difference from basic Simulink models is that the states in a physical network are not independent in general, because some states have dependencies on other states through constraints.
+#+end_quote
+
+
+
 * Identification
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -35,27 +61,358 @@
   simulinkproject('./');
 #+end_src
 
-** Script
+** Simscape Model
+
+** Initialize the Stewart Platform
+#+begin_src matlab
+  stewart = initializeFramesPositions();
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+** Identification
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_identification';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/tau'],  1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fext'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],    1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Vm'],   1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Taum'], 1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Lm'],   1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'tau1', 'tau2', 'tau3', 'tau4', 'tau5', 'tau6', ...
+                  'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+
+  G.OutputName = {'Xdx', 'Xdy', 'Xdz', 'Xrx', 'Xry', 'Xrz', ...
+                  'Vm1', 'Vm2', 'Vm3', 'Vm4', 'Vm5', 'Vm6', ...
+                  'taum1', 'taum2', 'taum3', 'taum4', 'taum5', 'taum6', ...
+                  'Lm1', 'Lm2', 'Lm3', 'Lm4', 'Lm5', 'Lm6'};
+#+end_src
+
+* States as the motion of the mobile platform
+** Initialize the Stewart Platform
+#+begin_src matlab
+  stewart = initializeFramesPositions();
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+** Identification
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_identification_simple';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/tau'],  1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],    1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Xdot'], 1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io);
+  % G.InputName  = {'tau1', 'tau2', 'tau3', 'tau4', 'tau5', 'tau6'};
+  % G.OutputName = {'Xdx', 'Xdy', 'Xdz', 'Xrx', 'Xry', 'Xrz', 'Vdx', 'Vdy', 'Vdz', 'Vrx', 'Vry', 'Vrz'};
+#+end_src
+
+Let's check the size of =G=:
+#+begin_src matlab :results replace output
+  size(G)
+#+end_src
+
+#+RESULTS:
+: size(G)
+: State-space model with 12 outputs, 6 inputs, and 18 states.
+
+We expect to have only 12 states (corresponding to the 6dof of the mobile platform).
+#+begin_src matlab :results replace output
+  Gm = minreal(G);
+#+end_src
+
+#+RESULTS:
+: Gm = minreal(G);
+: 6 states removed.
+
+And indeed, we obtain 12 states.
+
+** Coordinate transformation
+We can perform the following transformation using the =ss2ss= command.
+#+begin_src matlab
+  Gt = ss2ss(Gm, Gm.C);
+#+end_src
+
+Then, the =C= matrix of =Gt= is the unity matrix which means that the states of the state space model are equal to the measurements $\bm{Y}$.
+
+The measurements are the 6 displacement and 6 velocities of mobile platform with respect to $\{B\}$.
+
+We could perform the transformation by hand:
+#+begin_src matlab
+  At = Gm.C*Gm.A*pinv(Gm.C);
+
+  Bt = Gm.C*Gm.B;
+
+  Ct = eye(12);
+  Dt = zeros(12, 6);
+
+  Gt = ss(At, Bt, Ct, Dt);
+#+end_src
+
+** Analysis
+#+begin_src matlab
+  [V,D] = eig(Gt.A);
+#+end_src
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  ws = imag(diag(D))/2/pi;
+  [ws,I] = sort(ws)
+
+  xi = 100*real(diag(D))./imag(diag(D));
+  xi = xi(I);
+
+  data2orgtable([[1:length(ws(ws>0))]', ws(ws>0), xi(xi>0)], {}, {'Mode Number', 'Resonance Frequency [Hz]', 'Damping Ratio [%]'}, ' %.1f ');
+#+end_src
+
+#+RESULTS:
+| Mode Number | Resonance Frequency [Hz] | Damping Ratio [%] |
+|-------------+--------------------------+-------------------|
+|         1.0 |                    174.5 |               0.9 |
+|         2.0 |                    174.5 |               0.7 |
+|         3.0 |                    202.1 |               0.7 |
+|         4.0 |                    237.3 |               0.6 |
+|         5.0 |                    237.3 |               0.5 |
+|         6.0 |                    283.8 |               0.5 |
+
+** Visualizing the modes
+To visualize the i'th mode, we may excite the system using the inputs $U_i$ such that $B U_i$ is co-linear to $\xi_i$ (the mode we want to excite).
+
+\[ U(t) = e^{\alpha t} (  ) \]
+
+Let's first sort the modes and just take the modes corresponding to a eigenvalue with a positive imaginary part.
+#+begin_src matlab
+  ws = imag(diag(D));
+  [ws,I] = sort(ws)
+  ws = ws(7:end); I = I(7:end);
+#+end_src
+
+#+begin_src matlab
+  for i = 1:length(ws)
+#+end_src
+
+#+begin_src matlab
+  i_mode = I(i); % the argument is the i'th mode
+#+end_src
+
+#+begin_src matlab
+  lambda_i = D(i_mode, i_mode);
+  xi_i = V(:,i_mode);
+
+  a_i = real(lambda_i);
+  b_i = imag(lambda_i);
+#+end_src
+
+Let do 10 periods of the mode.
+#+begin_src matlab
+  t = linspace(0, 10/(imag(lambda_i)/2/pi), 1000);
+  U_i = pinv(Gt.B) * real(xi_i * lambda_i * (cos(b_i * t) + 1i*sin(b_i * t)));
+#+end_src
+
+#+begin_src matlab
+  U = timeseries(U_i, t);
+#+end_src
+
+Simulation:
+#+begin_src matlab
+  load('mat/conf_simscape.mat');
+  set_param(conf_simscape, 'StopTime', num2str(t(end)));
+  sim(mdl);
+#+end_src
+
+Save the movie of the mode shape.
+#+begin_src matlab
+  smwritevideo(mdl, sprintf('figs/mode%i', i), ...
+               'PlaybackSpeedRatio', 1/(b_i/2/pi), ...
+               'FrameRate', 30, ...
+               'FrameSize', [800, 400]);
+#+end_src
+
+#+begin_src matlab
+  end
+#+end_src
+
+** Identification
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_identification';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/tau'],  1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Lm'],    1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  % G.InputName  = {'tau1', 'tau2', 'tau3', 'tau4', 'tau5', 'tau6'};
+  % G.OutputName = {'Xdx', 'Xdy', 'Xdz', 'Xrx', 'Xry', 'Xrz', 'Vdx', 'Vdy', 'Vdz', 'Vrx', 'Vry', 'Vrz'};
+#+end_src
+
+#+begin_src matlab
+  size(G)
+#+end_src
+
+** Change of states
+#+begin_src matlab
+  At = G.C*G.A*pinv(G.C);
+
+  Bt = G.C*G.B;
+
+  Ct = eye(12);
+  Dt = zeros(12, 6);
+#+end_src
+
+#+begin_src matlab
+  Gt = ss(At, Bt, Ct, Dt);
+#+end_src
+
+#+begin_src matlab
+  size(Gt)
+#+end_src
+
+* Simple Model without any sensor
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
 #+begin_src matlab :results none :exports none
-  open stewart
+  simulinkproject('./');
 #+end_src
 
-The hexapod structure and Sample structure are initialized.
-#+begin_src matlab :results none
-  stewart = initializeGeneralConfiguration();
-  stewart = computeGeometricalProperties(stewart);
-  stewart = initializeMechanicalElements(stewart);
-  save('./mat/stewart.mat', 'stewart');
-
-  initializeSample();
+** Simscape Model
+#+begin_src matlab
+  open 'stewart_identification_simple.slx'
 #+end_src
 
-#+begin_src matlab :results none
-  G = identifyPlant();
+
+** Initialize the Stewart Platform
+#+begin_src matlab
+  stewart = initializeFramesPositions();
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
 #+end_src
 
-#+begin_src matlab :results none
-  freqs = logspace(2, 4, 1000);
+** Identification
+#+begin_src matlab
+  stateorder = {...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_1_1_1',...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_2_1_1',...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_3_1_1',...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_4_1_1',...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_5_1_1',...
+      'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_6_1_1',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Rz.q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Pz.p',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Rz.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Pz.v',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.spherical_joint_F.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_F.S.w',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_M.S.Q',...
+      'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_M.S.w'};
+#+end_src
+
+
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_identification_simple';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/tau'],  1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/X'],     1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Xdot'],  1, 'openoutput'); io_i = io_i + 1;
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'tau1', 'tau2', 'tau3', 'tau4', 'tau5', 'tau6'};
+
+  G.OutputName = {'Xdx', 'Xdy', 'Xdz', 'Xrx', 'Xry', 'Xrz', 'Vdx', 'Vdy', 'Vdz', 'Vrx', 'Vry', 'Vrz'};
+#+end_src
+
+#+begin_src matlab
+  size(G)
+#+end_src
+
+#+begin_src matlab
+  G.StateName
 #+end_src
 
 * Cartesian Plot
@@ -189,86 +546,3 @@ From a force applied on the Cartesian frame to the absolute displacement of the 
   xlabel('Frequency [Hz]'); ylabel('Amplitude [m/N]');
 #+end_src
 
-* identifyPlant
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments yes
-  :HEADER-ARGS:matlab+: :eval no
-  :HEADER-ARGS:matlab+: :tangle src/identifyPlant.m
-  :END:
-
-#+begin_src matlab
-  function [sys] = identifyPlant(opts_param)
-#+end_src
-
-We use this code block to pass optional parameters.
-#+begin_src matlab
-  %% Default values for opts
-  opts = struct();
-
-  %% Populate opts with input parameters
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
-  end
-#+end_src
-
-We defined the options for the =linearize= command.
-Here, we just identify the system at time $t = 0$.
-#+begin_src matlab
-  options = linearizeOptions;
-  options.SampleTime = 0;
-#+end_src
-
-We define the name of the Simulink File used to identification.
-#+begin_src matlab
-  mdl = 'stewart';
-#+end_src
-
-Then we defined the input/output of the transfer function we want to identify.
-#+begin_src matlab
-  %% Inputs
-  io(1) = linio([mdl, '/F'],  1, 'input'); % Cartesian forces
-  io(2) = linio([mdl, '/Fl'], 1, 'input'); % Leg forces
-  io(3) = linio([mdl, '/Fd'], 1, 'input'); % Direct forces
-  io(4) = linio([mdl, '/Dw'], 1, 'input'); % Base motion
-
-  %% Outputs
-  io(5) = linio([mdl, '/Dm'],  1, 'output'); % Relative Motion
-  io(6) = linio([mdl, '/Dlm'], 1, 'output'); % Displacement of each leg
-  io(7) = linio([mdl, '/Flm'], 1, 'output'); % Force sensor in each leg
-  io(8) = linio([mdl, '/Xm'],  1, 'output'); % Absolute motion of platform
-#+end_src
-
-The linearization is run.
-#+begin_src matlab
-  G = linearize(mdl, io, 0);
-#+end_src
-
-We defined all the Input/Output names of the identified transfer function.
-#+begin_src matlab
-  G.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz', ...
-                  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', ...
-                  'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz', ...
-                  'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'};
-  G.OutputName = {'Dxm', 'Dym', 'Dzm', 'Rxm', 'Rym', 'Rzm', ...
-                  'D1m', 'D2m', 'D3m', 'D4m', 'D5m', 'D6m', ...
-                  'F1m', 'F2m', 'F3m', 'F4m', 'F5m', 'F6m', ...
-                  'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'};
-#+end_src
-
-We split the transfer function into sub transfer functions and we compute their minimum realization.
-#+begin_src matlab
-  sys.G_cart = minreal(G({'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'},  {'Fx',  'Fy',  'Fz',  'Mx',  'My',  'Mz'}));
-  sys.G_forc = minreal(G({'F1m',  'F2m',  'F3m',  'F4m',  'F5m',  'F6m'},  {'F1',  'F2',  'F3',  'F4',  'F5',  'F6'}));
-  sys.G_legs = minreal(G({'D1m',  'D2m',  'D3m',  'D4m',  'D5m',  'D6m'},  {'F1',  'F2',  'F3',  'F4',  'F5',  'F6'}));
-  sys.G_tran = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Dwx', 'Dwy', 'Dwz', 'Rwx', 'Rwy', 'Rwz'}));
-  sys.G_comp = minreal(G({'Dxm',  'Dym',  'Dzm',  'Rxm',  'Rym',  'Rzm'},  {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
-  sys.G_iner = minreal(G({'Dxtm', 'Dytm', 'Dztm', 'Rxtm', 'Rytm', 'Rztm'}, {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'}));
-  % sys.G_all  = minreal(G);
-#+end_src
-
-#+begin_src matlab
-  end
-#+end_src

@@ -1,10 +1,12 @@
 function [stewart] = computeJointsPose(stewart)
 % computeJointsPose -
 %
-% Syntax: [stewart] = computeJointsPose(stewart, opts_param)
+% Syntax: [stewart] = computeJointsPose(stewart)
 %
 % Inputs:
 %    - stewart - A structure with the following fields
+%        - Fa   [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+%        - Mb   [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
 %        - FO_A [3x1] - Position of {A} with respect to {F}
 %        - MO_B [3x1] - Position of {B} with respect to {M}
 %        - FO_M [3x1] - Position of {M} with respect to {F}

@@ -4,8 +4,6 @@ function [stewart] = generateGeneralConfiguration(stewart, args)
 % Syntax: [stewart] = generateGeneralConfiguration(stewart, args)
 %
 % Inputs:
-%    - stewart - A structure with the following fields
-%        - H   [1x1] - Total height of the platform [m]
 %    - args - Can have the following fields:
 %        - FH  [1x1] - Height of the position of the fixed joints with respect to the frame {F} [m]
 %        - FR  [1x1] - Radius of the position of the fixed joints in the X-Y [m]
@@ -22,10 +20,10 @@ function [stewart] = generateGeneralConfiguration(stewart, args)
 arguments
     stewart
     args.FH  (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
-    args.FR  (1,1) double {mustBeNumeric, mustBePositive} = 90e-3;
+    args.FR  (1,1) double {mustBeNumeric, mustBePositive} = 115e-3;
     args.FTh (6,1) double {mustBeNumeric} = [-10, 10, 120-10, 120+10, 240-10, 240+10]*(pi/180);
     args.MH  (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
-    args.MR  (1,1) double {mustBeNumeric, mustBePositive} = 70e-3;
+    args.MR  (1,1) double {mustBeNumeric, mustBePositive} = 90e-3;
     args.MTh (6,1) double {mustBeNumeric} = [-60+10, 60-10, 60+10, 180-10, 180+10, -60-10]*(pi/180);
 end
 
