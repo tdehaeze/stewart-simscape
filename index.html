@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-27 lun. 17:40 -->
+<!-- 2020-01-28 mar. 13:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platforms</title>
@@ -252,72 +252,146 @@ for the JavaScript code in this tag.
 <h1 class="title">Stewart Platforms</h1>
 
 <p>
-The goal here is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
+The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
 </p>
-
-<div id="outline-container-orgf137e1a" class="outline-2">
-<h2 id="orgf137e1a"><span class="section-number-2">1</span> Simulink Project (<a href="simulink-project.html">link</a>)</h2>
-</div>
-
-<div id="outline-container-org67d7b56" class="outline-2">
-<h2 id="org67d7b56"><span class="section-number-2">2</span> Stewart Platform Architecture Definition (<a href="stewart-architecture.html">link</a>)</h2>
-</div>
-
-
-<div id="outline-container-org740c1af" class="outline-2">
-<h2 id="org740c1af"><span class="section-number-2">3</span> Simscape Model of the Stewart Platform (<a href="simscape-model.html">link</a>)</h2>
-</div>
-
-
-<div id="outline-container-orgde95161" class="outline-2">
-<h2 id="orgde95161"><span class="section-number-2">4</span> Kinematic Analysis (<a href="kinematic-study.html">link</a>)</h2>
-<div class="outline-text-2" id="text-4">
-<ul class="org-ul">
-<li>Jacobian Analysis</li>
-<li>Stiffness Analysis</li>
-<li>Static Forces</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orgeae2d7c" class="outline-2">
-<h2 id="orgeae2d7c"><span class="section-number-2">5</span> Identification of the Stewart Dynamics (<a href="identification.html">link</a>)</h2>
-<div class="outline-text-2" id="text-5">
-<ul class="org-ul">
-<li>Extraction of State Space models</li>
-<li>Resonant Frequencies and Modal Damping</li>
-<li>Mode Shapes</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org748e065" class="outline-2">
-<h2 id="org748e065"><span class="section-number-2">6</span> Active Damping (<a href="active-damping.html">link</a>)</h2>
-<div class="outline-text-2" id="text-6">
-<ul class="org-ul">
-<li>Inertial Sensor</li>
-<li>Force Sensor</li>
-<li>Relative Motion Sensor</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org905e69f" class="outline-2">
-<h2 id="org905e69f"><span class="section-number-2">7</span> Control of the Stewart Platform (<a href="control-study.html">link</a>)</h2>
-</div>
-
-<div id="outline-container-org57e9202" class="outline-2">
-<h2 id="org57e9202"><span class="section-number-2">8</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
-</div>
-
-<div id="outline-container-orgb6982d7" class="outline-2">
-<h2 id="orgb6982d7"><span class="section-number-2">9</span> Architecture Optimization</h2>
-</div>
 
 <p>
-
-<a href="ref.bib">ref.bib</a>
+The project is divided into several section listed below.
 </p>
+
+<div id="outline-container-org2246378" class="outline-2">
+<h2 id="org2246378"><span class="section-number-2">1</span> Simulink Project (<a href="simulink-project.html">link</a>)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The project is managed with a <b>Simulink Project</b>.
+Such project is briefly presented <a href="simulink-project.html">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org213a021" class="outline-2">
+<h2 id="org213a021"><span class="section-number-2">2</span> Stewart Platform Architecture Definition (<a href="stewart-architecture.html">link</a>)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The way the Stewart Platform is defined <a href="stewart-architecture.html">here</a>.
+</p>
+
+<p>
+All the geometrical parameters are defined including:
+</p>
+<ul class="org-ul">
+<li>Definition of the location of the frames</li>
+<li>Size of the platforms and the limbs</li>
+<li>Location/orientation of the limbs</li>
+</ul>
+
+<p>
+Other parameters are also defined such as:
+</p>
+<ul class="org-ul">
+<li>Stiffness and damping of the struts</li>
+<li>Inertia of the different elements</li>
+<li>Rest position of the Stewart platform</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org43ed1d4" class="outline-2">
+<h2 id="org43ed1d4"><span class="section-number-2">3</span> Simscape Model of the Stewart Platform (<a href="simscape-model.html">link</a>)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The Stewart Platform is then modeled using <a href="https://www.mathworks.com/products/simscape.html">Simscape</a>.
+</p>
+
+<p>
+The way to model is build and works is explained <a href="simscape-model.html">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5851cea" class="outline-2">
+<h2 id="org5851cea"><span class="section-number-2">4</span> Kinematic Analysis (<a href="kinematic-study.html">link</a>)</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+From the defined geometry of the Stewart platform, we can perform static analysis such as:
+</p>
+<ul class="org-ul">
+<li><b>Jacobian Analysis</b> that links the velocity of each limb to the velocity of the mobile platform</li>
+<li><b>Static Forces Analysis</b> that links the forces applied by each limb to the resulting force/torque applied to the mobile platform</li>
+</ul>
+
+<p>
+From the strut stiffness, we can also perform a <b>Stiffness Analysis</b> that consists of determining the Stiffness matrix and Compliance matrix of the Stewart platform from the geometry.
+</p>
+
+<p>
+All these analysis are described <a href="kinematic-study.html">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcc5dd70" class="outline-2">
+<h2 id="orgcc5dd70"><span class="section-number-2">5</span> Identification of the Stewart Dynamics (<a href="identification.html">link</a>)</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+The Dynamics of the Stewart platform can be identified using the Simscape model.
+</p>
+
+<p>
+It is possible to:
+</p>
+<ul class="org-ul">
+<li>Determine the dynamics from the actuators to the various sensors included in the Stewart platform</li>
+<li>Extract State Space models for further analysis / control synthesis</li>
+<li>Extract the Resonant Frequencies, Modal Damping, and associated Mode Shapes</li>
+</ul>
+
+<p>
+The code that is used for identification is explained <a href="identification.html">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org58fb0b9" class="outline-2">
+<h2 id="org58fb0b9"><span class="section-number-2">6</span> Active Damping (<a href="active-damping.html">link</a>)</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The use of different sensors are compared for active damping:
+</p>
+<ul class="org-ul">
+<li>Inertial Sensor in each strut</li>
+<li>Inertial Sensor fixed to the mobile platform</li>
+<li>Force Sensor in each strut</li>
+<li>Relative Motion Sensor in each strut</li>
+</ul>
+
+<p>
+The result of the analysis is accessible <a href="active-damping.html">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb149881" class="outline-2">
+<h2 id="orgb149881"><span class="section-number-2">7</span> Motion Control of the Stewart Platform (<a href="control-study.html">link</a>)</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Some control architecture for motion control of the Stewart platform are applied on the Simscape model and compared in <a href="control-study.html">this</a> document.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6bf9b4a" class="outline-2">
+<h2 id="org6bf9b4a"><span class="section-number-2">8</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+The cubic configuration is a special class of Stewart platform that has interesting properties.
+</p>
+
+<p>
+These properties are studied in <a href="cubic-configuration.html">this</a> document.
+</p>
+</div>
+</div>
 </div>
 </body>
 </html>

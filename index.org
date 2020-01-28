@@ -22,37 +22,65 @@
 :END:
 
 * Introduction                                                       :ignore:
-The goal here is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
+The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
+
+The project is divided into several section listed below.
 
 * Simulink Project ([[file:simulink-project.org][link]])
+The project is managed with a *Simulink Project*.
+Such project is briefly presented [[file:simulink-project.org][here]].
 
 * Stewart Platform Architecture Definition ([[file:stewart-architecture.org][link]])
+The way the Stewart Platform is defined [[file:stewart-architecture.org][here]].
 
+All the geometrical parameters are defined including:
+- Definition of the location of the frames
+- Size of the platforms and the limbs
+- Location/orientation of the limbs
+
+Other parameters are also defined such as:
+- Stiffness and damping of the struts
+- Inertia of the different elements
+- Rest position of the Stewart platform
 
 * Simscape Model of the Stewart Platform ([[file:simscape-model.org][link]])
+The Stewart Platform is then modeled using [[https://www.mathworks.com/products/simscape.html][Simscape]].
 
+The way to model is build and works is explained [[file:simscape-model.org][here]].
 
 * Kinematic Analysis ([[file:kinematic-study.org][link]])
-- Jacobian Analysis
-- Stiffness Analysis
-- Static Forces
+From the defined geometry of the Stewart platform, we can perform static analysis such as:
+- *Jacobian Analysis* that links the velocity of each limb to the velocity of the mobile platform
+- *Static Forces Analysis* that links the forces applied by each limb to the resulting force/torque applied to the mobile platform
+
+From the strut stiffness, we can also perform a *Stiffness Analysis* that consists of determining the Stiffness matrix and Compliance matrix of the Stewart platform from the geometry.
+
+All these analysis are described [[file:kinematic-study.org][here]].
 
 * Identification of the Stewart Dynamics ([[file:identification.org][link]])
-- Extraction of State Space models
-- Resonant Frequencies and Modal Damping
-- Mode Shapes
+The Dynamics of the Stewart platform can be identified using the Simscape model.
 
+It is possible to:
+- Determine the dynamics from the actuators to the various sensors included in the Stewart platform
+- Extract State Space models for further analysis / control synthesis
+- Extract the Resonant Frequencies, Modal Damping, and associated Mode Shapes
+
+The code that is used for identification is explained [[file:identification.org][here]].
+ 
 * Active Damping ([[file:active-damping.org][link]])
-- Inertial Sensor
-- Force Sensor
-- Relative Motion Sensor
+The use of different sensors are compared for active damping:
+- Inertial Sensor in each strut
+- Inertial Sensor fixed to the mobile platform
+- Force Sensor in each strut
+- Relative Motion Sensor in each strut
 
-* Control of the Stewart Platform ([[file:control-study.org][link]])
+The result of the analysis is accessible [[file:active-damping.org][here]].
+
+* Motion Control of the Stewart Platform ([[file:control-study.org][link]])
+Some control architecture for motion control of the Stewart platform are applied on the Simscape model and compared in [[file:control-study.org][this]] document.
 
 * Cubic Configuration ([[file:cubic-configuration.org][link]])
+The cubic configuration is a special class of Stewart platform that has interesting properties.
 
-* Architecture Optimization
+These properties are studied in [[file:cubic-configuration.org][this]] document.
 
-* Bibliography                                                        :ignore:
-bibliographystyle:unsrt
-bibliography:ref.bib
