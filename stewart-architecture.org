@@ -108,8 +108,8 @@ This is done with the =computeJointsPose= function ([[sec:computeJointsPose][lin
 We may want to initialize the Stewart platform in some position and orientation that corresponds to its rest position.
 
 To do so, we choose:
-- the position of $O_B$ expressed in $\{A\}$ using ${}^AP$
-- the orientation of $\{B\}$ expressed in $\{A\}$ using a rotation matrix ${}^{A}R_{B}$
+- the position of $\bm{O}_B$ expressed in $\{A\}$ using ${}^A\bm{P}$
+- the orientation of $\{B\}$ expressed in $\{A\}$ using a rotation matrix ${}^{A}\bm{R}_{B}$
 
 Then, the function =initializeStewartPose= ([[sec:initializeStewartPose][link]]) compute the corresponding initial and rest position of each of the strut.
 
@@ -162,10 +162,10 @@ This is done with the =initializeJointDynamics= function ([[sec:initializeJointD
 <<sec:summary_initialization>>
 ** Introduction                                                      :ignore:
 The procedure to define the Stewart platform is the following:
-1. Define the initial position of frames {A}, {B}, {F} and {M}.
+1. Define the initial position of frames $\{A\}$, $\{B\}$, $\{F\}$ and $\{M\}$.
    We do that using the =initializeFramesPositions= function.
-   We have to specify the total height of the Stewart platform $H$ and the position ${}^{M}O_{B}$ of {B} with respect to {M}.
-2. Compute the positions of joints ${}^{F}a_{i}$ and ${}^{M}b_{i}$.
+   We have to specify the total height of the Stewart platform $H$ and the position ${}^{M}\bm{O}_{B}$ of $\{B\}$ with respect to $\{M\}$.
+2. Compute the positions of joints ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$.
    We can do that using various methods depending on the wanted architecture:
    - =generateCubicConfiguration= permits to generate a cubic configuration
 3. Compute the position and orientation of the joints with respect to the fixed base and the moving platform.
