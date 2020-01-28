@@ -9,6 +9,9 @@
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
+#+OPTIONS: toc:nil
+#+OPTIONS: html-postamble:nil
+
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/zenburn.css"/>
@@ -41,7 +44,7 @@
 #+PROPERTY: header-args:latex+ :output-dir figs
 :END:
 
-Simulink Project is used for the study of the NASS using Simscape.
+A Simulink Project is used for the study of Stewart platforms using Simscape.
 
 From the [[https://mathworks.com/products/simulink/projects.html][Simulink project]] mathworks page:
 #+begin_quote
