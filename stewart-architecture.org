@@ -21,48 +21,146 @@
 :END:
 
 * Introduction                                                          :ignore:
-Stewart platforms are generated in multiple steps.
+In this document is explained how the Stewart Platform architecture is defined.
 
-We define 4 important *frames*:
+Some efforts has been made such that the procedure for the definition of the Stewart Platform architecture is as logical and clear as possible.
+
+When possible, the notations are compatible with the one used in cite:taghirad13_paral.
+
+The definition of the Stewart platform is done in three main parts:
+- First, the geometry if defined (Section [[sec:definition_geometry]])
+- Then, the inertia of the mechanical elements are defined (Section [[sec:definition_inertia]])
+- Finally, the Stiffness and Damping characteristics of the elements are defined (Section [[sec:definition_dynamics]])
+
+In section [[sec:summary_initialization]], the procedure the initialize the Stewart platform is summarize and the associated Matlab code is shown.
+
+Finally, all the Matlab function used to initialize the Stewart platform are described in section [[sec:functions]].
+
+* Definition of the Stewart Platform Geometry
+<<sec:definition_geometry>>
+** Introduction                                                      :ignore:
+Stewart platforms are generated in multiple steps:
+- Definition of the frames
+- Definition of the location of the joints
+- Computation of the length and orientation of the struts
+- Choice of the rest position of the mobile platform
+
+This steps are detailed below.
+
+** Frames Definition
+We define 4 important *frames* (see Figure [[fig:frame_definition]]):
 - $\{F\}$: Frame fixed to the *Fixed* base and located at the center of its bottom surface.
   This is used to fix the Stewart platform to some support.
 - $\{M\}$: Frame fixed to the *Moving* platform and located at the center of its top surface.
   This is used to place things on top of the Stewart platform.
 - $\{A\}$: Frame fixed to the fixed base.
-  It defined the center of rotation of the moving platform.
 - $\{B\}$: Frame fixed to the moving platform.
-  The motion of the moving platforms and forces applied to it are defined with respect to this frame $\{B\}$.
 
-Then, we define the *location of the spherical joints*:
+Even though frames $\{A\}$ and $\{B\}$ don't usually correspond to physical elements, they are of primary importance.
+Firstly, they are used for the definition of the motion of the Mobile platform with respect to the fixed frame:
+- In position: ${}^A\bm{P}_{B}$ (read: Position of frame $\{B\}$ expressed in frame $\{A\}$)
+- In rotation: ${}^A\bm{R}_{B}$ (read: The rotation matrix that express the orientation of frame $\{B\}$ expressed in frame $\{A\}$)
+The frames $\{A\}$ and $\{B\}$ are used for all the kinematic analysis (Jacobian, Stiffness matrix, ...).
+
+Typical choice of $\{A\}$ and $\{B\}$ are:
+- Center of mass of the payload
+- Location where external forces are applied to the mobile platform (for instance when the mobile platform is in contact with a stiff environment)
+- Center of the cube for the cubic configuration
+
+The definition of the frames is done with the =initializeFramesPositions= function ([[sec:initializeFramesPositions][link]]);
+
+#+name: fig:frame_definition
+#+caption: Definition of the Frames for the Stewart Platform
+#+attr_html: :width 500px
+[[file:figs/frame_definition.png]]
+
+** Location of the Spherical Joints
+Then, we define the *location of the spherical joints* (see Figure [[fig:joint_location]]):
 - $\bm{a}_{i}$ are the position of the spherical joints fixed to the fixed base
 - $\bm{b}_{i}$ are the position of the spherical joints fixed to the moving platform
 
-We define the *rest position* of the Stewart platform:
-- For simplicity, we suppose that the fixed base and the moving platform are parallel and aligned with the vertical axis at their rest position.
-- Thus, to define the rest position of the Stewart platform, we just have to defined its total height $H$.
-  $H$ corresponds to the distance from the bottom of the fixed base to the top of the moving platform.
+The location of the joints will define the Geometry of the Stewart platform.
+Many characteristics of the platform depend on the location of the joints.
 
-From $\bm{a}_{i}$ and $\bm{b}_{i}$, we can determine the *length and orientation of each strut*:
-- $l_{i}$ is the length of the strut
-- ${}^{A}\hat{\bm{s}}_{i}$ is the unit vector align with the strut
+The location of the joints can be set to arbitrary positions (function =generateGeneralConfiguration= described [[sec:generateGeneralConfiguration][here]]) or can be computed to obtain specific configurations such as:
+- A cubic configuration: function =generateCubicConfiguration= ([[sec:generateCubicConfiguration][link]]).
+- A symmetrical configuration
 
-The position of the Spherical joints can be computed using various methods:
-- Cubic configuration
-- Circular configuration
-- Arbitrary position
-- These methods should be easily scriptable and corresponds to specific functions that returns ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$.
-  The input of these functions are the parameters corresponding to the wanted geometry.
+The location of the spherical joints are then given by ${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$.
 
-For Simscape, we need:
-- The position and orientation of each spherical joint fixed to the fixed base: ${}^{F}\bm{a}_{i}$ and ${}^{F}\bm{R}_{a_{i}}$
-- The position and orientation of each spherical joint fixed to the moving platform: ${}^{M}\bm{b}_{i}$ and ${}^{M}\bm{R}_{b_{i}}$
-- The rest length of each strut: $l_{i}$
-- The stiffness and damping of each actuator: $k_{i}$ and $c_{i}$
-- The position of the frame $\{A\}$ with respect to the frame $\{F\}$: ${}^{F}\bm{O}_{A}$
-- The position of the frame $\{B\}$ with respect to the frame $\{M\}$: ${}^{M}\bm{O}_{B}$
+#+name: fig:joint_location
+#+caption: Position of the Spherical/Universal joints for the Stewart Platform
+#+attr_html: :width 500px
+[[file:figs/joint_location.png]]
 
+** Length and orientation of the struts
+From the location of the joints (${}^{F}\bm{a}_{i}$ and ${}^{M}\bm{b}_{i}$), we compute the length $l_i$ and orientation of each strut $\hat{\bm{s}}_i$ (unit vector aligned with the strut).
+The length and orientation of each strut is represented in figure [[fig:length_orientation_struts]].
 
-* Procedure
+This is done with the =computeJointsPose= function ([[sec:computeJointsPose][link]]).
+
+#+name: fig:length_orientation_struts
+#+caption: Length $l_i$ and orientation $\hat{\bm{s}}_i$ of the Stewart platform struts
+#+attr_html: :width 500px
+[[file:figs/length_orientation_struts.png]]
+
+** Rest Position of the Stewart platform
+We may want to initialize the Stewart platform in some position and orientation that corresponds to its rest position.
+
+To do so, we choose:
+- the position of $O_B$ expressed in $\{A\}$ using ${}^AP$
+- the orientation of $\{B\}$ expressed in $\{A\}$ using a rotation matrix ${}^{A}R_{B}$
+
+Then, the function =initializeStewartPose= ([[sec:initializeStewartPose][link]]) compute the corresponding initial and rest position of each of the strut.
+
+* Definition of the Inertia and geometry of the Fixed base, Mobile platform and Struts
+<<sec:definition_inertia>>
+** Introduction                                                      :ignore:
+Now that the geometry of the Stewart platform has been defined, we have to choose the inertia of:
+- The Fixed base
+- The Mobile platform
+- The two parts of the struts
+
+The inertia of these elements will modify the dynamics of the systems.
+It is thus important to set them properly.
+
+** Inertia and Geometry of the Fixed and Mobile platforms
+In order to set the inertia of the fixed and mobile platforms, we can use the following function that assume that both platforms are cylindrical:
+- =initializeCylindricalPlatforms= ([[sec:initializeCylindricalPlatforms][link]]): by choosing the height, radius and mass of the platforms, it computes the inertia matrix that will be used for simulation
+
+** Inertia and Geometry of the struts
+Similarly for the struts, we suppose here that they have a cylindrical shape.
+They are initialize with the following function:
+- =initializeCylindricalStruts= ([[sec:initializeCylindricalStruts][link]]): the two parts of each strut are supposed to by cylindrical. We can set the mass and geometry of both strut parts.
+
+* Definition of the stiffness and damping of the joints
+<<sec:definition_dynamics>>
+
+** Introduction                                                      :ignore:
+The global stiffness and damping of the Stewart platform depends on its geometry but also on the stiffness and damping of:
+- the actuator because of the finite stiffness of the actuator / linear guide
+- the spherical joints
+
+** Stiffness and Damping of the Actuator
+Each Actuator is modeled by 3 elements in parallel (Figure [[fig:stewart_platform_actuator]]):
+- A spring with a stiffness $k_{i}$
+- A dashpot with a damping $c_{i}$
+- An ideal force actuator
+
+#+name: fig:stewart_platform_actuator
+#+caption: Model of the Stewart platform actuator
+[[file:figs/stewart_platform_actuator.png]]
+
+The initialization of the stiffness and damping properties of the actuators is done with the =initializeStrutDynamics= ([[sec:initializeStrutDynamics][link]]).
+
+** Stiffness and Damping of the Spherical Joints
+Even though we often suppose that the spherical joint are perfect in the sense that we neglect its stiffness and damping, we can set some rotation stiffness and damping of each of the spherical/universal joints.
+
+This is done with the =initializeJointDynamics= function ([[sec:initializeJointDynamics][link]]).
+
+* Summary of the Initialization Procedure and Matlab Example
+<<sec:summary_initialization>>
+** Introduction                                                      :ignore:
 The procedure to define the Stewart platform is the following:
 1. Define the initial position of frames {A}, {B}, {F} and {M}.
    We do that using the =initializeFramesPositions= function.
@@ -72,16 +170,13 @@ The procedure to define the Stewart platform is the following:
    - =generateCubicConfiguration= permits to generate a cubic configuration
 3. Compute the position and orientation of the joints with respect to the fixed base and the moving platform.
    This is done with the =computeJointsPose= function.
-4. Define the dynamical properties of the Stewart platform.
-   The output are the stiffness and damping of each strut $k_{i}$ and $c_{i}$.
-   This can be done we simply choosing directly the stiffness and damping of each strut.
-   The stiffness and damping of each actuator can also be determine from the wanted stiffness of the Stewart platform for instance.
-5. Define the mass and inertia of each element of the Stewart platform.
+   If wanted, compute the rest position of each strut to have the wanted pose of the mobile platform with the function =initializeStewartPose=.
+4. Define the mass and inertia of each element of the Stewart platform with the =initializeCylindricalPlatforms= and =initializeCylindricalStruts=
+5. Define the dynamical properties of the Stewart platform by setting the stiffness and damping of the actuators and joints.
 
 By following this procedure, we obtain a Matlab structure =stewart= that contains all the information for the Simscape model and for further analysis.
 
-* Matlab Code
-** Matlab Init                                                :noexport:ignore:
+** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
@@ -94,28 +189,32 @@ By following this procedure, we obtain a Matlab structure =stewart= that contain
   simulinkproject('./');
 #+end_src
 
-** Simscape Model
-#+begin_src matlab
-  open('stewart_platform.slx')
-#+end_src
-
-** Test the functions
+** Example of the initialization of a Stewart Platform
+Let's first define the Stewart Platform Geometry.
 #+begin_src matlab
   stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
-  % stewart = generateCubicConfiguration(stewart, 'Hc', 60e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
   stewart = initializeStewartPose(stewart, 'AP', [0;0;0.01], 'ARB', eye(3));
-
-  [Li, dLi] = inverseKinematics(stewart, 'AP', [0;0;0.00001], 'ARB', eye(3));
-  [P, R] = forwardKinematicsApprox(stewart, 'dL', dLi);
 #+end_src
 
-* =initializeFramesPositions=: Initialize the positions of frames {A}, {B}, {F} and {M}
+Then, define the inertia and geometry of the fixed base, mobile platform and struts.
+#+begin_src matlab
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+#+end_src
+
+Finally, initialize the strut stiffness and damping properties.
+#+begin_src matlab
+  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'Ksi', zeros(6,1), 'Csi', zeros(6,1));
+#+end_src
+
+The obtained =stewart= Matlab structure contains all the information for analysis of the Stewart platform and for simulations using Simscape.
+
+* Functions
+<<sec:functions>>
+** =initializeFramesPositions=: Initialize the positions of frames {A}, {B}, {F} and {M}
 :PROPERTIES:
 :header-args:matlab+: :tangle src/initializeFramesPositions.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -124,7 +223,10 @@ By following this procedure, we obtain a Matlab structure =stewart= that contain
 
 This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]].
 
-** Function description
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = initializeFramesPositions(args)
   % initializeFramesPositions - Initialize the positions of frames {A}, {B}, {F} and {M}
@@ -144,13 +246,19 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
   %        - FO_A [3x1] - Position of {A} with respect to {F} [m]
 #+end_src
 
-** Documentation
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 #+name: fig:stewart-frames-position
 #+caption: Definition of the position of the frames
 [[file:figs/stewart-frames-position.png]]
 
-** Optional Parameters
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       args.H    (1,1) double {mustBeNumeric, mustBePositive} = 90e-3
@@ -158,12 +266,18 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
   end
 #+end_src
 
-** Initialize the Stewart structure
+*** Initialize the Stewart structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart = struct();
 #+end_src
 
-** Compute the position of each frame
+*** Compute the position of each frame
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.H = args.H; % Total Height of the Stewart Platform [m]
 
@@ -174,7 +288,6 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
   stewart.FO_A = stewart.MO_B + stewart.FO_M; % Position of {A} with respect to {F} [m]
 #+end_src
 
-* Initialize the position of the Joints
 ** =generateCubicConfiguration=: Generate a Cubic Configuration
 :PROPERTIES:
 :header-args:matlab+: :tangle src/generateCubicConfiguration.m
@@ -185,6 +298,9 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
 This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here]].
 
 *** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = generateCubicConfiguration(stewart, args)
   % generateCubicConfiguration - Generate a Cubic Configuration
@@ -207,11 +323,17 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
 #+end_src
 
 *** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+name: fig:cubic-configuration-definition
 #+caption: Cubic Configuration
 [[file:figs/cubic-configuration-definition.png]]
 
 *** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
@@ -223,6 +345,9 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
 #+end_src
 
 *** Position of the Cube
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 We define the useful points of the cube with respect to the Cube's center.
 ${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is
 located at the center of the cube and aligned with {F} and {M}.
@@ -243,6 +368,9 @@ located at the center of the cube and aligned with {F} and {M}.
 #+end_src
 
 *** Compute the pose
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from ${}^{C}C_{f}$ to ${}^{C}C_{m}$).
 #+begin_src matlab
   CSi = (CCm - CCf)./vecnorm(CCm - CCf);
@@ -264,6 +392,9 @@ We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
 This Matlab function is accessible [[file:src/generateGeneralConfiguration.m][here]].
 
 *** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = generateGeneralConfiguration(stewart, args)
   % generateGeneralConfiguration - Generate a Very General Configuration
@@ -286,10 +417,16 @@ This Matlab function is accessible [[file:src/generateGeneralConfiguration.m][he
 #+end_src
 
 *** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 Joints are positions on a circle centered with the Z axis of {F} and {M} and at a chosen distance from {F} and {M}.
 The radius of the circles can be chosen as well as the angles where the joints are located.
 
 *** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
@@ -303,6 +440,9 @@ The radius of the circles can be chosen as well as the angles where the joints a
 #+end_src
 
 *** Compute the pose
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.Fa = zeros(3,6);
   stewart.Mb = zeros(3,6);
@@ -315,7 +455,7 @@ The radius of the circles can be chosen as well as the angles where the joints a
   end
 #+end_src
 
-* =computeJointsPose=: Compute the Pose of the Joints
+** =computeJointsPose=: Compute the Pose of the Joints
 :PROPERTIES:
 :header-args:matlab+: :tangle src/computeJointsPose.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -324,7 +464,10 @@ The radius of the circles can be chosen as well as the angles where the joints a
 
 This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
 
-** Function description
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = computeJointsPose(stewart)
   % computeJointsPose -
@@ -352,13 +495,19 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
   %        - MRb [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the top of the i'th strut from {M}
 #+end_src
 
-** Documentation
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 #+name: fig:stewart-struts
 #+caption: Position and orientation of the struts
 [[file:figs/stewart-struts.png]]
 
-** Compute the position of the Joints
+*** Compute the position of the Joints
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.Aa = stewart.Fa - repmat(stewart.FO_A, [1, 6]);
   stewart.Bb = stewart.Mb - repmat(stewart.MO_B, [1, 6]);
@@ -367,7 +516,10 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
   stewart.Ba = stewart.Aa - repmat( stewart.MO_B+stewart.FO_M-stewart.FO_A, [1, 6]);
 #+end_src
 
-** Compute the strut length and orientation
+*** Compute the strut length and orientation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.As = (stewart.Ab - stewart.Aa)./vecnorm(stewart.Ab - stewart.Aa); % As_i is the i'th vector of As
 
@@ -378,7 +530,10 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
   stewart.Bs = (stewart.Bb - stewart.Ba)./vecnorm(stewart.Bb - stewart.Ba);
 #+end_src
 
-** Compute the orientation of the Joints
+*** Compute the orientation of the Joints
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.FRa = zeros(3,3,6);
   stewart.MRb = zeros(3,3,6);
@@ -392,92 +547,61 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
   end
 #+end_src
 
-* =initializeStrutDynamics=: Add Stiffness and Damping properties of each strut
+** =initializeStewartPose=: Determine the initial stroke in each leg to have the wanted pose
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeStrutDynamics.m
+:header-args:matlab+: :tangle src/initializeStewartPose.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
-<<sec:initializeStrutDynamics>>
+<<sec:initializeStewartPose>>
 
-This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
+This Matlab function is accessible [[file:src/initializeStewartPose.m][here]].
 
-** Function description
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
-  function [stewart] = initializeStrutDynamics(stewart, args)
-  % initializeStrutDynamics - Add Stiffness and Damping properties of each strut
+  function [stewart] = initializeStewartPose(stewart, args)
+  % initializeStewartPose - Determine the initial stroke in each leg to have the wanted pose
+  %                         It uses the inverse kinematic
   %
-  % Syntax: [stewart] = initializeStrutDynamics(args)
+  % Syntax: [stewart] = initializeStewartPose(stewart, args)
   %
   % Inputs:
-  %    - args - Structure with the following fields:
-  %        - Ki [6x1] - Stiffness of each strut [N/m]
-  %        - Ci [6x1] - Damping of each strut [N/(m/s)]
+  %    - stewart - A structure with the following fields
+  %        - Aa   [3x6] - The positions ai expressed in {A}
+  %        - Bb   [3x6] - The positions bi expressed in {B}
+  %    - args - Can have the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %        - Ki [6x1] - Stiffness of each strut [N/m]
-  %        - Ci [6x1] - Damping of each strut [N/(m/s)]
+  %      - dLi[6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
 #+end_src
 
-** Optional Parameters
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
-      args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
-      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e1*ones(6,1)
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
   end
 #+end_src
 
-** Add Stiffness and Damping properties of each strut
-#+begin_src matlab
-  stewart.Ki = args.Ki;
-  stewart.Ci = args.Ci;
-#+end_src
-
-* =computeJacobian=: Compute the Jacobian Matrix
+*** Use the Inverse Kinematic function
 :PROPERTIES:
-:header-args:matlab+: :tangle src/computeJacobian.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
+:UNNUMBERED: t
 :END:
-<<sec:computeJacobian>>
-
-This Matlab function is accessible [[file:src/computeJacobian.m][here]].
-
-** Function description
 #+begin_src matlab
-  function [stewart] = computeJacobian(stewart)
-  % computeJacobian -
-  %
-  % Syntax: [stewart] = computeJacobian(stewart)
-  %
-  % Inputs:
-  %    - stewart - With at least the following fields:
-  %        - As [3x6] - The 6 unit vectors for each strut expressed in {A}
-  %        - Ab [3x6] - The 6 position of the joints bi expressed in {A}
-  %
-  % Outputs:
-  %    - stewart - With the 3 added field:
-  %        - J [6x6] - The Jacobian Matrix
-  %        - K [6x6] - The Stiffness Matrix
-  %        - C [6x6] - The Compliance Matrix
+  [Li, dLi] = inverseKinematics(stewart, 'AP', args.AP, 'ARB', args.ARB);
+
+  stewart.dLi = dLi;
 #+end_src
 
-** Compute Jacobian Matrix
-#+begin_src matlab
-  stewart.J = [stewart.As' , cross(stewart.Ab, stewart.As)'];
-#+end_src
-
-** Compute Stiffness Matrix
-#+begin_src matlab
-  stewart.K = stewart.J'*diag(stewart.Ki)*stewart.J;
-#+end_src
-
-** Compute Compliance Matrix
-#+begin_src matlab
-  stewart.C = inv(stewart.K);
-#+end_src
-
-* Initialize the Geometry of the Mechanical Elements
 ** =initializeCylindricalPlatforms=: Initialize the geometry of the Fixed and Mobile Platforms
 :PROPERTIES:
 :header-args:matlab+: :tangle src/initializeCylindricalPlatforms.m
@@ -488,6 +612,9 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
 This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][here]].
 
 *** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = initializeCylindricalPlatforms(stewart, args)
   % initializeCylindricalPlatforms - Initialize the geometry of the Fixed and Mobile Platforms
@@ -517,6 +644,9 @@ This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][
 #+end_src
 
 *** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
@@ -530,6 +660,9 @@ This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][
 #+end_src
 
 *** Create the =platforms= struct
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   platforms = struct();
 
@@ -549,11 +682,14 @@ This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][
 #+end_src
 
 *** Save the =platforms= struct
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   stewart.platforms = platforms;
 #+end_src
 
-** =initializeCylindricalStruts=: Define the mass and moment of inertia of cylindrical struts
+** =initializeCylindricalStruts=: Define the inertia of cylindrical struts
 :PROPERTIES:
 :header-args:matlab+: :tangle src/initializeCylindricalStruts.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -563,6 +699,9 @@ This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][
 This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][here]].
 
 *** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   function [stewart] = initializeCylindricalStruts(stewart, args)
   % initializeCylindricalStruts - Define the mass and moment of inertia of cylindrical struts
@@ -592,6 +731,9 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
 #+end_src
 
 *** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
@@ -605,6 +747,9 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
 #+end_src
 
 *** Create the =struts= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   struts = struct();
 
@@ -632,984 +777,108 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
   stewart.struts = struts;
 #+end_src
 
-* =initializeStewartPose=: Determine the initial stroke in each leg to have the wanted pose
+** =initializeStrutDynamics=: Add Stiffness and Damping properties of each strut
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeStewartPose.m
+:header-args:matlab+: :tangle src/initializeStrutDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
-<<sec:initializeStewartPose>>
+<<sec:initializeStrutDynamics>>
 
-This Matlab function is accessible [[file:src/initializeStewartPose.m][here]].
+This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 
-** Function description
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
-  function [stewart] = initializeStewartPose(stewart, args)
-  % initializeStewartPose - Determine the initial stroke in each leg to have the wanted pose
-  %                         It uses the inverse kinematic
+  function [stewart] = initializeStrutDynamics(stewart, args)
+  % initializeStrutDynamics - Add Stiffness and Damping properties of each strut
   %
-  % Syntax: [stewart] = initializeStewartPose(stewart, args)
+  % Syntax: [stewart] = initializeStrutDynamics(args)
   %
   % Inputs:
-  %    - stewart - A structure with the following fields
-  %        - Aa   [3x6] - The positions ai expressed in {A}
-  %        - Bb   [3x6] - The positions bi expressed in {B}
-  %    - args - Can have the following fields:
-  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
-  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %    - args - Structure with the following fields:
+  %        - Ki [6x1] - Stiffness of each strut [N/m]
+  %        - Ci [6x1] - Damping of each strut [N/(m/s)]
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %      - dLi[6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
+  %        - Ki [6x1] - Stiffness of each strut [N/m]
+  %        - Ci [6x1] - Damping of each strut [N/(m/s)]
 #+end_src
 
-** Optional Parameters
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
-      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
-      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+      args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
+      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e1*ones(6,1)
   end
 #+end_src
 
-** Use the Inverse Kinematic function
+*** Add Stiffness and Damping properties of each strut
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
-  [Li, dLi] = inverseKinematics(stewart, 'AP', args.AP, 'ARB', args.ARB);
-
-  stewart.dLi = dLi;
+  stewart.Ki = args.Ki;
+  stewart.Ci = args.Ci;
 #+end_src
 
-* Utility Functions
-** =inverseKinematics=: Compute Inverse Kinematics
+** =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints
 :PROPERTIES:
-:header-args:matlab+: :tangle src/inverseKinematics.m
+:header-args:matlab+: :tangle src/initializeJointDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
-<<sec:inverseKinematics>>
+<<sec:initializeJointDynamics>>
 
-This Matlab function is accessible [[file:src/inverseKinematics.m][here]].
+This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 
 *** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
-  function [Li, dLi] = inverseKinematics(stewart, args)
-  % inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
+  function [stewart] = initializeJointDynamics(stewart, args)
+  % initializeJointDynamics - Add Stiffness and Damping properties for the spherical joints
   %
-  % Syntax: [stewart] = inverseKinematics(stewart)
+  % Syntax: [stewart] = initializeJointDynamics(args)
   %
   % Inputs:
-  %    - stewart - A structure with the following fields
-  %        - Aa   [3x6] - The positions ai expressed in {A}
-  %        - Bb   [3x6] - The positions bi expressed in {B}
-  %    - args - Can have the following fields:
-  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
-  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %    - args - Structure with the following fields:
+  %        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
+  %        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
   %
   % Outputs:
-  %    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}
-  %    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
+  %    - stewart - updated Stewart structure with the added fields:
+  %        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
+  %        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
 #+end_src
 
 *** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+begin_src matlab
   arguments
       stewart
-      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
-      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+      args.Kri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
+      args.Cri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
   end
 #+end_src
 
-*** Theory
-For inverse kinematic analysis, it is assumed that the position ${}^A\bm{P}$ and orientation of the moving platform ${}^A\bm{R}_B$ are given and the problem is to obtain the joint variables, namely, $\bm{L} = [l_1, l_2, \dots, l_6]^T$.
-
-From the geometry of the manipulator, the loop closure for each limb, $i = 1, 2, \dots, 6$ can be written as
-\begin{align*}
-  l_i {}^A\hat{\bm{s}}_i &= {}^A\bm{A} + {}^A\bm{b}_i - {}^A\bm{a}_i \\
-                         &= {}^A\bm{A} + {}^A\bm{R}_b {}^B\bm{b}_i - {}^A\bm{a}_i
-\end{align*}
-
-To obtain the length of each actuator and eliminate $\hat{\bm{s}}_i$, it is sufficient to dot multiply each side by itself:
-\begin{equation}
-  l_i^2 \left[ {}^A\hat{\bm{s}}_i^T {}^A\hat{\bm{s}}_i \right] = \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]^T \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]
-\end{equation}
-
-Hence, for $i = 1, 2, \dots, 6$, each limb length can be uniquely determined by:
-\begin{equation}
-  l_i = \sqrt{{}^A\bm{P}^T {}^A\bm{P} + {}^B\bm{b}_i^T {}^B\bm{b}_i + {}^A\bm{a}_i^T {}^A\bm{a}_i - 2 {}^A\bm{P}^T {}^A\bm{a}_i + 2 {}^A\bm{P}^T \left[{}^A\bm{R}_B {}^B\bm{b}_i\right] - 2 \left[{}^A\bm{R}_B {}^B\bm{b}_i\right]^T {}^A\bm{a}_i}
-\end{equation}
-
-If the position and orientation of the moving platform lie in the feasible workspace of the manipulator, one unique solution to the limb length is determined by the above equation.
-Otherwise, when the limbs' lengths derived yield complex numbers, then the position or orientation of the moving platform is not reachable.
-
-*** Compute
-#+begin_src matlab
-  Li = sqrt(args.AP'*args.AP + diag(stewart.Bb'*stewart.Bb) + diag(stewart.Aa'*stewart.Aa) - (2*args.AP'*stewart.Aa)' + (2*args.AP'*(args.ARB*stewart.Bb))' - diag(2*(args.ARB*stewart.Bb)'*stewart.Aa));
-#+end_src
-
-#+begin_src matlab
-  dLi = Li-stewart.l;
-#+end_src
-
-** =forwardKinematicsApprox=: Compute the Forward Kinematics
+*** Add Stiffness and Damping properties of each strut
 :PROPERTIES:
-:header-args:matlab+: :tangle src/forwardKinematicsApprox.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
+:UNNUMBERED: t
 :END:
-<<sec:forwardKinematicsApprox>>
-
-This Matlab function is accessible [[file:src/forwardKinematicsApprox.m][here]].
-
-*** Function description
-#+begin_src matlab
-  function [P, R] = forwardKinematicsApprox(stewart, args)
-  % forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using
-  %                           the Jacobian Matrix
-  %
-  % Syntax: [P, R] = forwardKinematicsApprox(stewart, args)
-  %
-  % Inputs:
-  %    - stewart - A structure with the following fields
-  %        - J  [6x6] - The Jacobian Matrix
-  %    - args - Can have the following fields:
-  %        - dL [6x1] - Displacement of each strut [m]
-  %
-  % Outputs:
-  %    - P  [3x1] - The estimated position of {B} with respect to {A}
-  %    - R  [3x3] - The estimated rotation matrix that gives the orientation of {B} with respect to {A}
-#+end_src
-
-*** Optional Parameters
-#+begin_src matlab
-  arguments
-      stewart
-      args.dL (6,1) double {mustBeNumeric} = zeros(6,1)
-  end
-#+end_src
-
-*** Computation
-From a small displacement of each strut $d\bm{\mathcal{L}}$, we can compute the
-position and orientation of {B} with respect to {A} using the following formula:
-\[ d \bm{\mathcal{X}} = \bm{J}^{-1} d\bm{\mathcal{L}} \]
-#+begin_src matlab
-  X = stewart.J\args.dL;
-#+end_src
-
-The position vector corresponds to the first 3 elements.
-#+begin_src matlab
-  P = X(1:3);
-#+end_src
-
-The next 3 elements are the orientation of {B} with respect to {A} expressed
-using the screw axis.
-#+begin_src matlab
-  theta = norm(X(4:6));
-  s = X(4:6)/theta;
-#+end_src
-
-We then compute the corresponding rotation matrix.
-#+begin_src matlab
-  R = [s(1)^2*(1-cos(theta)) + cos(theta) ,        s(1)*s(2)*(1-cos(theta)) - s(3)*sin(theta), s(1)*s(3)*(1-cos(theta)) + s(2)*sin(theta);
-       s(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);
-       s(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];
-#+end_src
-
-* Other Elements
-** Z-Axis Geophone
-:PROPERTIES:
-:header-args:matlab+: :tangle ./src/initializeZAxisGeophone.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
-:END:
-<<sec:initializeZAxisGeophone>>
-
-This Matlab function is accessible [[file:../src/initializeZAxisGeophone.m][here]].
-
-#+begin_src matlab
-  function [geophone] = initializeZAxisGeophone(args)
-      arguments
-          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
-          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 1    % [Hz]
-      end
-
-      %%
-      geophone.m = args.mass;
-
-      %% The Stiffness is set to have the damping resonance frequency
-      geophone.k = geophone.m * (2*pi*args.freq)^2;
-
-      %% We set the damping value to have critical damping
-      geophone.c = 2*sqrt(geophone.m * geophone.k);
-
-      %% Save
-      save('./mat/geophone_z_axis.mat', 'geophone');
-  end
-#+end_src
-
-** Z-Axis Accelerometer
-:PROPERTIES:
-:header-args:matlab+: :tangle ./src/initializeZAxisAccelerometer.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
-:END:
-<<sec:initializeZAxisAccelerometer>>
-
-This Matlab function is accessible [[file:../src/initializeZAxisAccelerometer.m][here]].
-
-#+begin_src matlab
-  function [accelerometer] = initializeZAxisAccelerometer(args)
-      arguments
-          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
-          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  % [Hz]
-      end
-
-      %%
-      accelerometer.m = args.mass;
-
-      %% The Stiffness is set to have the damping resonance frequency
-      accelerometer.k = accelerometer.m * (2*pi*args.freq)^2;
-
-      %% We set the damping value to have critical damping
-      accelerometer.c = 2*sqrt(accelerometer.m * accelerometer.k);
-
-      %% Gain correction of the accelerometer to have a unity gain until the resonance
-      accelerometer.gain = -accelerometer.k/accelerometer.m;
-
-      %% Save
-      save('./mat/accelerometer_z_axis.mat', 'accelerometer');
-  end
-#+end_src
-
-* OLD                                                                 :noexport:
-** Define the Height of the Platform                              :noexport:
-#+begin_src matlab
-  %% 1. Height of the platform. Location of {F} and {M}
-  H = 90e-3; % [m]
-  FO_M = [0; 0; H];
-#+end_src
-
-** Define the location of {A} and {B}                             :noexport:
-#+begin_src matlab
-  %% 2. Location of {A} and {B}
-  FO_A = [0; 0; 100e-3] + FO_M;% [m,m,m]
-  MO_B = [0; 0; 100e-3];% [m,m,m]
-#+end_src
-
-** Define the position of $a_{i}$ and $b_{i}$                     :noexport:
-#+begin_src matlab
-  %% 3. Position of ai and bi
-  Fa = zeros(3, 6); % Fa_i is the i'th vector of Fa
-  Mb = zeros(3, 6); % Mb_i is the i'th vector of Mb
-#+end_src
-
-#+begin_src matlab
-  Aa = Fa - repmat(FO_A, [1, 6]);
-  Bb = Mb - repmat(MO_B, [1, 6]);
-
-  Ab = Bb - repmat(-MO_B-FO_M+FO_A, [1, 6]);
-  Ba = Aa - repmat( MO_B+FO_M-FO_A, [1, 6]);
-
-  As = (Ab - Aa)./vecnorm(Ab - Aa); % As_i is the i'th vector of As
-  l = vecnorm(Ab - Aa);
-
-  Bs = (Bb - Ba)./vecnorm(Bb - Ba);
-
-  FRa = zeros(3,3,6);
-  MRb = zeros(3,3,6);
-
-  for i = 1:6
-    FRa(:,:,i) = [cross([0;1;0],As(:,i)) , cross(As(:,i), cross([0;1;0], As(:,i))) , As(:,i)];
-    FRa(:,:,i) = FRa(:,:,i)./vecnorm(FRa(:,:,i));
-
-    MRb(:,:,i) = [cross([0;1;0],Bs(:,i)) , cross(Bs(:,i), cross([0;1;0], Bs(:,i))) , Bs(:,i)];
-    MRb(:,:,i) = MRb(:,:,i)./vecnorm(MRb(:,:,i));
-  end
-#+end_src
-
-** Define the dynamical properties of each strut                  :noexport:
-#+begin_src matlab
-  %% 4. Stiffness and Damping of each strut
-  Ki = 1e6*ones(6,1);
-  Ci = 1e2*ones(6,1);
-#+end_src
-
-** Old Introduction                                               :noexport:
-First, geometrical parameters are defined:
-- ${}^A\bm{a}_i$ - Position of the joints fixed to the fixed base w.r.t $\{A\}$
-- ${}^A\bm{b}_i$ - Position of the joints fixed to the mobile platform w.r.t $\{A\}$
-- ${}^B\bm{b}_i$ - Position of the joints fixed to the mobile platform w.r.t $\{B\}$
-- $H$ - Total height of the mobile platform
-
-These parameter are enough to determine all the kinematic properties of the platform like the Jacobian, stroke, stiffness, ...
-These geometrical parameters can be generated using different functions: =initializeCubicConfiguration= for cubic configuration or =initializeGeneralConfiguration= for more general configuration.
-
-A function =computeGeometricalProperties= is then used to compute:
-- $\bm{J}_f$ - Jacobian matrix for the force location
-- $\bm{J}_d$ - Jacobian matrix for displacement estimation
-- $\bm{R}_m$ - Rotation matrices to position the leg vectors
-
-Then, geometrical parameters are computed for all the mechanical elements with the function =initializeMechanicalElements=:
-- Shape of the platforms
-  - External Radius
-  - Internal Radius
-  - Density
-  - Thickness
-- Shape of the Legs
-  - Radius
-  - Size of ball joint
-  - Density
-
-Other Parameters are defined for the Simscape simulation:
-- Sample mass, volume and position (=initializeSample= function)
-- Location of the inertial sensor
-- Location of the point for the differential measurements
-- Location of the Jacobian point for velocity/displacement computation
-
-** Cubic Configuration                                            :noexport:
-To define the cubic configuration, we need to define 4 parameters:
-- The size of the cube
-- The location of the cube
-- The position of the plane joint the points $a_{i}$
-- The position of the plane joint the points $b_{i}$
-
-To do so, we specify the following parameters:
-- $H_{C}$ the height of the useful part of the cube
-- ${}^{F}O_{C}$ the position of the center of the cube with respect to $\{F\}$
-- ${}^{F}H_{A}$: the height of the plane joining the points $a_{i}$ with respect to the frame $\{F\}$
-- ${}^{M}H_{B}$: the height of the plane joining the points $b_{i}$ with respect to the frame $\{M\}$
-
-We define the parameters
-#+begin_src matlab
-  Hc = 60e-3; % [m]
-  FOc = 50e-3; % [m]
-  FHa = 15e-3; % [m]
-  MHb = 15e-3; % [m]
-#+end_src
-
-We define the useful points of the cube with respect to the Cube's center.
-${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is located at the center of the cube and aligned with {F} and {M}.
-#+begin_src matlab
-  sx = [ 2; -1; -1];
-  sy = [ 0;  1; -1];
-  sz = [ 1;  1;  1];
-
-  R = [sx, sy, sz]./vecnorm([sx, sy, sz]);
-
-  L = Hc*sqrt(3);
-
-  Cc = R'*[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] - [0;0;1.5*Hc];
-
-  CCf = [Cc(:,1), Cc(:,3), Cc(:,3), Cc(:,5), Cc(:,5), Cc(:,1)]; % CCf(:,i) corresponds to the bottom cube's vertice corresponding to the i'th leg
-  CCm = [Cc(:,2), Cc(:,2), Cc(:,4), Cc(:,4), Cc(:,6), Cc(:,6)]; % CCm(:,i) corresponds to the top cube's vertice corresponding to the i'th leg
-#+end_src
-
-We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from ${}^{C}C_{f}$ to ${}^{C}C_{m}$).
-#+begin_src matlab
-  CSi = (CCm - CCf)./vecnorm(CCm - CCf);
-#+end_src
-
-We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
-#+begin_src matlab
-  Fa = zeros(3, 6); % Fa_i is the i'th vector of Fa
-  Mb = zeros(3, 6); % Mb_i is the i'th vector of Mb
-#+end_src
-
-#+begin_src matlab
-  Fa = CCf + [0; 0; FOc] + ((FHa-(FOc-Hc/2))./CSi(3,:)).*CSi;
-  Mb = CCf + [0; 0; FOc-H] + ((H-MHb-(FOc-Hc/2))./CSi(3,:)).*CSi; % TODO
-#+end_src
-
-** initializeGeneralConfiguration                                 :noexport:
-:PROPERTIES:
-:HEADER-ARGS:matlab+: :exports code
-:HEADER-ARGS:matlab+: :comments no
-:HEADER-ARGS:matlab+: :eval no
-:HEADER-ARGS:matlab+: :tangle src/initializeGeneralConfiguration.m
-:END:
-
-*** Function description
-The =initializeGeneralConfiguration= function takes one structure that contains configurations for the hexapod and returns one structure representing the Hexapod.
-
-#+begin_src matlab
-  function [stewart] = initializeGeneralConfiguration(opts_param)
-#+end_src
-
-*** Optional Parameters
-Default values for opts.
-#+begin_src matlab
-  opts = struct(...
-      'H_tot',   90, ... % Height of the platform [mm]
-      'H_joint', 15, ... % Height of the joints [mm]
-      'H_plate', 10, ... % Thickness of the fixed and mobile platforms [mm]
-      'R_bot',  100, ... % Radius where the legs articulations are positionned [mm]
-      'R_top',  80,  ... % Radius where the legs articulations are positionned [mm]
-      'a_bot',  10,  ... % Angle Offset [deg]
-      'a_top',  40,  ... % Angle Offset [deg]
-      'da_top', 0    ... % Angle Offset from 0 position [deg]
-      );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
-  end
-#+end_src
-
-*** Geometry Description
-#+name: fig:stewart_bottom_plate
-#+caption: Schematic of the bottom plates with all the parameters
-[[file:./figs/stewart_bottom_plate.png]]
-
-*** Compute Aa and Ab
-We compute $[a_1, a_2, a_3, a_4, a_5, a_6]^T$ and $[b_1, b_2, b_3, b_4, b_5, b_6]^T$.
-
-#+begin_src matlab
-  Aa = zeros(6, 3); % [mm]
-  Ab = zeros(6, 3); % [mm]
-  Bb = zeros(6, 3); % [mm]
-#+end_src
-
-#+begin_src matlab
-  for i = 1:3
-      Aa(2*i-1,:) = [opts.R_bot*cos( pi/180*(120*(i-1) - opts.a_bot) ), ...
-                     opts.R_bot*sin( pi/180*(120*(i-1) - opts.a_bot) ), ...
-                     opts.H_plate+opts.H_joint];
-      Aa(2*i,:)   = [opts.R_bot*cos( pi/180*(120*(i-1) + opts.a_bot) ), ...
-                     opts.R_bot*sin( pi/180*(120*(i-1) + opts.a_bot) ), ...
-                     opts.H_plate+opts.H_joint];
-
-      Ab(2*i-1,:) = [opts.R_top*cos( pi/180*(120*(i-1) + opts.da_top - opts.a_top) ), ...
-                     opts.R_top*sin( pi/180*(120*(i-1) + opts.da_top - opts.a_top) ), ...
-                     opts.H_tot - opts.H_plate - opts.H_joint];
-      Ab(2*i,:)   = [opts.R_top*cos( pi/180*(120*(i-1) + opts.da_top + opts.a_top) ), ...
-                     opts.R_top*sin( pi/180*(120*(i-1) + opts.da_top + opts.a_top) ), ...
-                     opts.H_tot - opts.H_plate - opts.H_joint];
-  end
-
-  Bb = Ab - opts.H_tot*[0,0,1];
-#+end_src
-
-*** Returns Stewart Structure
-#+begin_src matlab :results none
-  stewart = struct();
-  stewart.Aa = Aa;
-  stewart.Ab = Ab;
-  stewart.Bb = Bb;
-  stewart.H_tot = opts.H_tot;
-end
-#+end_src
-
-** initializeCubicConfiguration                                   :noexport:
-:PROPERTIES:
-:HEADER-ARGS:matlab+: :exports code
-:HEADER-ARGS:matlab+: :comments no
-:HEADER-ARGS:matlab+: :eval no
-:HEADER-ARGS:matlab+: :tangle src/initializeCubicConfiguration.m
-:END:
-<<sec:initializeCubicConfiguration>>
-
-*** Function description
-#+begin_src matlab
-  function [stewart] = initializeCubicConfiguration(opts_param)
-#+end_src
-
-*** Optional Parameters
-Default values for opts.
-#+begin_src matlab
-  opts = struct(...
-      'H_tot', 90,  ... % Total height of the Hexapod [mm]
-      'L',     110, ... % Size of the Cube [mm]
-      'H',     40,  ... % Height between base joints and platform joints [mm]
-      'H0',    75   ... % Height between the corner of the cube and the plane containing the base joints [mm]
-      );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
-  end
-#+end_src
-
-*** Cube Creation
-#+begin_src matlab :results none
-  points = [0, 0, 0; ...
-            0, 0, 1; ...
-            0, 1, 0; ...
-            0, 1, 1; ...
-            1, 0, 0; ...
-            1, 0, 1; ...
-            1, 1, 0; ...
-            1, 1, 1];
-  points = opts.L*points;
-#+end_src
-
-We create the rotation matrix to rotate the cube
-#+begin_src matlab :results none
-  sx = cross([1, 1, 1], [1 0 0]);
-  sx = sx/norm(sx);
-
-  sy = -cross(sx, [1, 1, 1]);
-  sy = sy/norm(sy);
-
-  sz = [1, 1, 1];
-  sz = sz/norm(sz);
-
-  R = [sx', sy', sz']';
-#+end_src
-
-We use to rotation matrix to rotate the cube
-#+begin_src matlab :results none
-  cube = zeros(size(points));
-  for i = 1:size(points, 1)
-    cube(i, :) = R * points(i, :)';
-  end
-#+end_src
-
-*** Vectors of each leg
-#+begin_src matlab :results none
-  leg_indices = [3, 4; ...
-                 2, 4; ...
-                 2, 6; ...
-                 5, 6; ...
-                 5, 7; ...
-                 3, 7];
-#+end_src
-
-Vectors are:
-#+begin_src matlab :results none
-  legs = zeros(6, 3);
-  legs_start = zeros(6, 3);
-
-  for i = 1:6
-    legs(i, :) = cube(leg_indices(i, 2), :) - cube(leg_indices(i, 1), :);
-    legs_start(i, :) = cube(leg_indices(i, 1), :);
-  end
-#+end_src
-
-*** Verification of Height of the Stewart Platform
-If the Stewart platform is not contained in the cube, throw an error.
-
-#+begin_src matlab :results none
-  Hmax = cube(4, 3) - cube(2, 3);
-  if opts.H0 < cube(2, 3)
-    error(sprintf('H0 is not high enought. Minimum H0 = %.1f', cube(2, 3)));
-  else if opts.H0 + opts.H > cube(4, 3)
-    error(sprintf('H0+H is too high. Maximum H0+H = %.1f', cube(4, 3)));
-    error('H0+H is too high');
-  end
-#+end_src
-
-*** Determinate the location of the joints
-We now determine the location of the joints on the fixed platform w.r.t the fixed frame $\{A\}$.
-$\{A\}$ is fixed to the bottom of the base.
-#+begin_src matlab :results none
-  Aa = zeros(6, 3);
-  for i = 1:6
-    t = (opts.H0-legs_start(i, 3))/(legs(i, 3));
-    Aa(i, :) = legs_start(i, :) + t*legs(i, :);
-  end
-#+end_src
-
-And the location of the joints on the mobile platform with respect to $\{A\}$.
-#+begin_src matlab :results none
-  Ab = zeros(6, 3);
-  for i = 1:6
-    t = (opts.H0+opts.H-legs_start(i, 3))/(legs(i, 3));
-    Ab(i, :) = legs_start(i, :) + t*legs(i, :);
-  end
-#+end_src
-
-And the location of the joints on the mobile platform with respect to $\{B\}$.
-#+begin_src matlab :results none
-  Bb = zeros(6, 3);
-  Bb = Ab - (opts.H0 + opts.H_tot/2 + opts.H/2)*[0, 0, 1];
-#+end_src
-
-#+begin_src matlab :results none
-  h = opts.H0 + opts.H/2 - opts.H_tot/2;
-  Aa = Aa - h*[0, 0, 1];
-  Ab = Ab - h*[0, 0, 1];
-#+end_src
-
-*** Returns Stewart Structure
-#+begin_src matlab :results none
-  stewart = struct();
-  stewart.Aa = Aa;
-  stewart.Ab = Ab;
-  stewart.Bb = Bb;
-  stewart.H_tot = opts.H_tot;
-end
-#+end_src
-
-** computeGeometricalProperties                                   :noexport:
-:PROPERTIES:
-:HEADER-ARGS:matlab+: :exports code
-:HEADER-ARGS:matlab+: :comments no
-:HEADER-ARGS:matlab+: :eval no
-:HEADER-ARGS:matlab+: :tangle src/computeGeometricalProperties.m
-:END:
-
-*** Function description
-#+begin_src matlab
-  function [stewart] = computeGeometricalProperties(stewart, opts_param)
-#+end_src
-
-*** Optional Parameters
-Default values for opts.
-#+begin_src matlab
-  opts = struct(...
-      'Jd_pos', [0, 0, 30], ... % Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]
-      'Jf_pos', [0, 0, 30]  ... % Position of the Jacobian for force location from the top of the mobile platform [mm]
-      );
-#+end_src
-
-Populate opts with input parameters
 #+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
-  end
+  stewart.Kri = args.Kri;
+  stewart.Cri = args.Cri;
 #+end_src
 
-*** Rotation matrices
-We initialize $l_i$ and $\hat{s}_i$
-#+begin_src matlab
-  leg_length = zeros(6, 1); % [mm]
-  leg_vectors = zeros(6, 3);
-#+end_src
-
-We compute $b_i - a_i$, and then:
-\begin{align*}
-  l_i       &= \left|b_i - a_i\right| \\
-  \hat{s}_i &= \frac{b_i - a_i}{l_i}
-\end{align*}
-
-#+begin_src matlab
-  legs = stewart.Ab - stewart.Aa;
-
-  for i = 1:6
-      leg_length(i) = norm(legs(i,:));
-      leg_vectors(i,:) = legs(i,:) / leg_length(i);
-  end
-#+end_src
-
-We compute rotation matrices to have the orientation of the legs.
-The rotation matrix transforms the $z$ axis to the axis of the leg. The other axis are not important here.
-#+begin_src matlab
-  stewart.Rm = struct('R', eye(3));
-
-  for i = 1:6
-    sx = cross(leg_vectors(i,:), [1 0 0]);
-    sx = sx/norm(sx);
-
-    sy = -cross(sx, leg_vectors(i,:));
-    sy = sy/norm(sy);
-
-    sz = leg_vectors(i,:);
-    sz = sz/norm(sz);
-
-    stewart.Rm(i).R = [sx', sy', sz'];
-  end
-#+end_src
-
-*** Jacobian matrices
-Compute Jacobian Matrix
-#+begin_src matlab
-  Jd = zeros(6);
-
-  for i = 1:6
-    Jd(i, 1:3) = leg_vectors(i, :);
-    Jd(i, 4:6) = cross(0.001*(stewart.Bb(i, :) - opts.Jd_pos), leg_vectors(i, :));
-  end
-
-  stewart.Jd = Jd;
-  stewart.Jd_inv = inv(Jd);
-#+end_src
-
-#+begin_src matlab
-  Jf = zeros(6);
-
-  for i = 1:6
-    Jf(i, 1:3) = leg_vectors(i, :);
-    Jf(i, 4:6) = cross(0.001*(stewart.Bb(i, :) - opts.Jf_pos), leg_vectors(i, :));
-  end
-
-  stewart.Jf = Jf;
-  stewart.Jf_inv = inv(Jf);
-#+end_src
-
-#+begin_src matlab
-  end
-#+end_src
-
-** initializeMechanicalElements                                   :noexport:
-:PROPERTIES:
-:HEADER-ARGS:matlab+: :exports code
-:HEADER-ARGS:matlab+: :comments no
-:HEADER-ARGS:matlab+: :eval no
-:HEADER-ARGS:matlab+: :tangle src/initializeMechanicalElements.m
-:END:
-
-*** Function description
-#+begin_src matlab
-  function [stewart] = initializeMechanicalElements(stewart, opts_param)
-#+end_src
-
-*** Optional Parameters
-Default values for opts.
-#+begin_src matlab
-  opts = struct(...
-      'thickness', 10, ... % Thickness of the base and platform [mm]
-      'density',   1000, ... % Density of the material used for the hexapod [kg/m3]
-      'k_ax',      1e8, ... % Stiffness of each actuator [N/m]
-      'c_ax',      1000, ... % Damping of each actuator [N/(m/s)]
-      'stroke',    50e-6  ... % Maximum stroke of each actuator [m]
-      );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          opts.(opt{1}) = opts_param.(opt{1});
-      end
-  end
-#+end_src
-
-*** Bottom Plate
-#+name: fig:stewart_bottom_plate
-#+caption: Schematic of the bottom plates with all the parameters
-[[file:./figs/stewart_bottom_plate.png]]
-
-The bottom plate structure is initialized.
-#+begin_src matlab
-  BP = struct();
-#+end_src
-
-We defined its internal radius (if there is a hole in the bottom plate) and its outer radius.
-#+begin_src matlab
-  BP.Rint = 0;   % Internal Radius [mm]
-  BP.Rext = 150; % External Radius [mm]
-#+end_src
-
-We define its thickness.
-#+begin_src matlab
-  BP.H = opts.thickness; % Thickness of the Bottom Plate [mm]
-#+end_src
-
-We defined the density of the material of the bottom plate.
-#+begin_src matlab
-  BP.density = opts.density; % Density of the material [kg/m3]
-#+end_src
-
-And its color.
-#+begin_src matlab
-  BP.color = [0.7 0.7 0.7]; % Color [RGB]
-#+end_src
-
-Then the profile of the bottom plate is computed and will be used by Simscape
-#+begin_src matlab
-  BP.shape = [BP.Rint BP.H; BP.Rint 0; BP.Rext 0; BP.Rext BP.H]; % [mm]
-#+end_src
-
-The structure is added to the stewart structure
-#+begin_src matlab
-  stewart.BP = BP;
-#+end_src
-
-*** Top Plate
-The top plate structure is initialized.
-#+begin_src matlab
-  TP = struct();
-#+end_src
-
-We defined the internal and external radius of the top plate.
-#+begin_src matlab
-  TP.Rint = 0;   % [mm]
-  TP.Rext = 100; % [mm]
-#+end_src
-
-The thickness of the top plate.
-#+begin_src matlab
-  TP.H = 10; % [mm]
-#+end_src
-
-The density of its material.
-#+begin_src matlab
-  TP.density = opts.density; % Density of the material [kg/m3]
-#+end_src
-
-Its color.
-#+begin_src matlab
-  TP.color = [0.7 0.7 0.7]; % Color [RGB]
-#+end_src
-
-Then the shape of the top plate is computed
-#+begin_src matlab
-  TP.shape = [TP.Rint TP.H; TP.Rint 0; TP.Rext 0; TP.Rext TP.H];
-#+end_src
-
-The structure is added to the stewart structure
-#+begin_src matlab
-  stewart.TP  = TP;
-#+end_src
-
-*** Legs
-#+name: fig:stewart_legs
-#+caption: Schematic for the legs of the Stewart platform
-[[file:./figs/stewart_legs.png]]
-
-The leg structure is initialized.
-#+begin_src matlab
-  Leg = struct();
-#+end_src
-
-The maximum Stroke of each leg is defined.
-#+begin_src matlab
-  Leg.stroke = opts.stroke; % [m]
-#+end_src
-
-The stiffness and damping of each leg are defined
-#+begin_src matlab
-  Leg.k_ax = opts.k_ax; % Stiffness of each leg [N/m]
-  Leg.c_ax = opts.c_ax; % Damping of each leg [N/(m/s)]
-#+end_src
-
-The radius of the legs are defined
-#+begin_src matlab
-  Leg.Rtop = 10; % Radius of the cylinder of the top part of the leg[mm]
-  Leg.Rbot = 12; % Radius of the cylinder of the bottom part of the leg [mm]
-#+end_src
-
-The density of its material.
-#+begin_src matlab
-  Leg.density = opts.density; % Density of the material used for the legs [kg/m3]
-#+end_src
-
-Its color.
-#+begin_src matlab
-  Leg.color = [0.5 0.5 0.5]; % Color of the top part of the leg [RGB]
-#+end_src
-
-The radius of spheres representing the ball joints are defined.
-#+begin_src matlab
-  Leg.R = 1.3*Leg.Rbot; % Size of the sphere at the extremity of the leg [mm]
-#+end_src
-
-We estimate the length of the legs.
-#+begin_src matlab
-  legs = stewart.Ab - stewart.Aa;
-  Leg.lenght = norm(legs(1,:))/1.5;
-#+end_src
-
-Then the shape of the bottom leg is estimated
-#+begin_src matlab
-  Leg.shape.bot = ...
-      [0        0; ...
-       Leg.Rbot 0; ...
-       Leg.Rbot Leg.lenght; ...
-       Leg.Rtop Leg.lenght; ...
-       Leg.Rtop 0.2*Leg.lenght; ...
-       0        0.2*Leg.lenght];
-#+end_src
-
-The structure is added to the stewart structure
-#+begin_src matlab
-  stewart.Leg = Leg;
-#+end_src
-
-*** Ball Joints
-#+name: fig:stewart_ball_joints
-#+caption: Schematic of the support for the ball joints
-[[file:./figs/stewart_ball_joints.png]]
-
-=SP= is the structure representing the support for the ball joints at the extremity of each leg.
-
-The =SP= structure is initialized.
-#+begin_src matlab
-  SP = struct();
-#+end_src
-
-We can define its rotational stiffness and damping. For now, we use perfect joints.
-#+begin_src matlab
-  SP.k = 0; % [N*m/deg]
-  SP.c = 0; % [N*m/deg]
-#+end_src
-
-Its height is defined
-#+begin_src matlab
-  SP.H = stewart.Aa(1, 3) - BP.H; % [mm]
-#+end_src
-
-Its radius is based on the radius on the sphere at the end of the legs.
-#+begin_src matlab
-  SP.R = Leg.R; % [mm]
-#+end_src
-
-#+begin_src matlab
-  SP.section = [0    SP.H-SP.R;
-                0    0;
-                SP.R 0;
-                SP.R SP.H];
-#+end_src
-
-The density of its material is defined.
-#+begin_src matlab
-  SP.density = opts.density; % [kg/m^3]
-#+end_src
-
-Its color is defined.
-#+begin_src matlab
-  SP.color = [0.7 0.7 0.7]; % [RGB]
-#+end_src
-
-The structure is added to the Hexapod structure
-#+begin_src matlab
-  stewart.SP  = SP;
-#+end_src
-
-** initializeSample                                               :noexport:
-:PROPERTIES:
-:HEADER-ARGS:matlab+: :exports code
-:HEADER-ARGS:matlab+: :comments no
-:HEADER-ARGS:matlab+: :eval no
-:HEADER-ARGS:matlab+: :tangle src/initializeSample.m
-:END:
-
-*** Function description
-#+begin_src matlab
-  function [] = initializeSample(opts_param)
-#+end_src
-
-*** Optional Parameters
-Default values for opts.
-#+begin_src matlab
-  sample = struct( ...
-      'radius',     100, ... % radius of the cylinder [mm]
-      'height',     100, ... % height of the cylinder [mm]
-      'mass',       10,  ... % mass of the cylinder [kg]
-      'measheight', 50, ... % measurement point z-offset [mm]
-      'offset',     [0, 0, 0],   ... % offset position of the sample [mm]
-      'color',      [0.9 0.1 0.1] ...
-      );
-#+end_src
-
-Populate opts with input parameters
-#+begin_src matlab
-  if exist('opts_param','var')
-      for opt = fieldnames(opts_param)'
-          sample.(opt{1}) = opts_param.(opt{1});
-      end
-  end
-#+end_src
-
-*** Save the Sample structure
-#+begin_src matlab
-  save('./mat/sample.mat', 'sample');
-#+end_src
-
-#+begin_src matlab
-  end
-#+end_src
+* Bibliography                                                        :ignore:
+bibliographystyle:unsrt
+bibliography:ref.bib
