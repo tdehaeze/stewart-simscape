@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-27 lun. 17:41 -->
+<!-- 2020-01-28 mar. 17:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -254,11 +254,175 @@ for the JavaScript code in this tag.
  <a accesskey="H" href="./index.html"> HOME </a>
 </div><div id="content">
 <h1 class="title">Stewart Platform - Simscape Model</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc3777e1">1. Parameters used for the Simscape Model</a></li>
+<li><a href="#org7fa1a16">2. Simulation Configuration - Configuration reference</a></li>
+<li><a href="#org7e9bc96">3. Subsystem Reference</a></li>
+<li><a href="#orgfa5fbd3">4. Basic configuration for the Fixed base, Mobile Platform and Struts</a></li>
+<li><a href="#org09d2012">5. Sensors included in the Struts and on the Mobile Platform</a></li>
+<li><a href="#orgbe9032d">6. Inertial Sensors</a>
+<ul>
+<li><a href="#org8a7e37e">6.1. Z-Axis Geophone</a></li>
+<li><a href="#orgcd29586">6.2. Z-Axis Accelerometer</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
+<div id="outline-container-orgc3777e1" class="outline-2">
+<h2 id="orgc3777e1"><span class="section-number-2">1</span> Parameters used for the Simscape Model</h2>
+</div>
+
+<div id="outline-container-org7fa1a16" class="outline-2">
+<h2 id="org7fa1a16"><span class="section-number-2">2</span> Simulation Configuration - Configuration reference</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be shared among all the simulink files.
+</p>
+
+<p>
+This is done using something called &ldquo;Configuration Reference&rdquo; (<a href="https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html">documentation</a>).
+</p>
+
+<p>
+Basically, the configuration is stored in a mat file <code>conf_simscape.mat</code> and then loaded in the workspace for it to be accessible to all the simulink models.
+It is automatically loaded when the Simulink project is open. It can be loaded manually with the command:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">load(<span class="org-string">'mat/conf_simscape.mat'</span>);
+</pre>
+</div>
+
+<p>
+It is however possible to modify specific parameters just for one Simulink file using the <code>set_param</code> command:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-variable-name">conf_simscape</span>, <span class="org-string">'StopTime'</span>, 1);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7e9bc96" class="outline-2">
+<h2 id="org7e9bc96"><span class="section-number-2">3</span> Subsystem Reference</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Several Stewart platform models are used, for instance one is use to study the dynamics while the other is used to apply active damping techniques.
+</p>
+
+<p>
+However, all the Simscape models share some subsystems using the <b>Subsystem Reference</b> Simulink block (<a href="https://fr.mathworks.com/help/simulink/ug/referenced-subsystem-1.html">documentation</a>).
+</p>
+
+<p>
+These shared subsystems are:
+</p>
+<ul class="org-ul">
+<li><code>Fixed_Based.slx</code> - Fixed base of the Stewart Platform</li>
+<li><code>Mobile_Platform.slx</code> - Mobile platform of the Stewart Platform</li>
+<li><code>stewart_strut.slx</code> - One strut containing two spherical/universal joints, the actuator as well as the included sensors. A parameter <code>i</code> is initialized to determine what it the &ldquo;number&rdquo; of the strut.</li>
+</ul>
+
+<p>
+These subsystems are referenced from another subsystem called <code>Stewart_Platform.slx</code>, that basically connect them correctly.
+This subsystem is then referenced in other simulink models for various purposes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfa5fbd3" class="outline-2">
+<h2 id="orgfa5fbd3"><span class="section-number-2">4</span> Basic configuration for the Fixed base, Mobile Platform and Struts</h2>
+</div>
+
+<div id="outline-container-org09d2012" class="outline-2">
+<h2 id="org09d2012"><span class="section-number-2">5</span> Sensors included in the Struts and on the Mobile Platform</h2>
+</div>
+
+<div id="outline-container-orgbe9032d" class="outline-2">
+<h2 id="orgbe9032d"><span class="section-number-2">6</span> Inertial Sensors</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org8a7e37e" class="outline-3">
+<h3 id="org8a7e37e"><span class="section-number-3">6.1</span> Z-Axis Geophone</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+<a id="org8a1f5cd"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="../src/initializeZAxisGeophone.m">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[geophone]</span> = <span class="org-function-name">initializeZAxisGeophone</span>(<span class="org-variable-name">args</span>)
+    arguments
+        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
+        args.freq (1,1) double {mustBeNumeric, mustBePositive} = 1    <span class="org-comment">% [Hz]</span>
+    <span class="org-keyword">end</span>
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%%</span></span>
+    geophone.m = args.mass;
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% The Stiffness is set to have the damping resonance frequency</span></span>
+    geophone.k = geophone.m <span class="org-type">*</span> (2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>args.freq)<span class="org-type">^</span>2;
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% We set the damping value to have critical damping</span></span>
+    geophone.c = 2<span class="org-type">*</span>sqrt(geophone.m <span class="org-type">*</span> geophone.k);
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% Save</span></span>
+    save(<span class="org-string">'./mat/geophone_z_axis.mat'</span>, <span class="org-string">'geophone'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcd29586" class="outline-3">
+<h3 id="orgcd29586"><span class="section-number-3">6.2</span> Z-Axis Accelerometer</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+<a id="org0db4022"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="../src/initializeZAxisAccelerometer.m">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[accelerometer]</span> = <span class="org-function-name">initializeZAxisAccelerometer</span>(<span class="org-variable-name">args</span>)
+    arguments
+        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
+        args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  <span class="org-comment">% [Hz]</span>
+    <span class="org-keyword">end</span>
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%%</span></span>
+    accelerometer.m = args.mass;
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% The Stiffness is set to have the damping resonance frequency</span></span>
+    accelerometer.k = accelerometer.m <span class="org-type">*</span> (2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>args.freq)<span class="org-type">^</span>2;
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% We set the damping value to have critical damping</span></span>
+    accelerometer.c = 2<span class="org-type">*</span>sqrt(accelerometer.m <span class="org-type">*</span> accelerometer.k);
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% Gain correction of the accelerometer to have a unity gain until the resonance</span></span>
+    accelerometer.gain = <span class="org-type">-</span>accelerometer.k<span class="org-type">/</span>accelerometer.m;
+
+    <span class="org-matlab-cellbreak"><span class="org-comment">%% Save</span></span>
+    save(<span class="org-string">'./mat/accelerometer_z_axis.mat'</span>, <span class="org-string">'accelerometer'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-01-27 lun. 17:41</p>
+<p class="date">Created: 2020-01-28 mar. 17:37</p>
 </div>
 </body>
 </html>

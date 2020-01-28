@@ -20,3 +20,103 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+* Introduction                                                        :ignore:
+
+* Parameters used for the Simscape Model
+
+* Simulation Configuration - Configuration reference
+As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be shared among all the simulink files.
+
+This is done using something called "Configuration Reference" ([[https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html][documentation]]).
+
+Basically, the configuration is stored in a mat file =conf_simscape.mat= and then loaded in the workspace for it to be accessible to all the simulink models.
+It is automatically loaded when the Simulink project is open. It can be loaded manually with the command:
+#+begin_src matlab :eval no
+  load('mat/conf_simscape.mat');
+#+end_src
+
+It is however possible to modify specific parameters just for one Simulink file using the =set_param= command:
+#+begin_src matlab :eval no
+  set_param(conf_simscape, 'StopTime', 1);
+#+end_src
+
+* Subsystem Reference
+Several Stewart platform models are used, for instance one is use to study the dynamics while the other is used to apply active damping techniques.
+
+However, all the Simscape models share some subsystems using the *Subsystem Reference* Simulink block ([[https://fr.mathworks.com/help/simulink/ug/referenced-subsystem-1.html][documentation]]).
+
+These shared subsystems are:
+- =Fixed_Based.slx= - Fixed base of the Stewart Platform
+- =Mobile_Platform.slx= - Mobile platform of the Stewart Platform
+- =stewart_strut.slx= - One strut containing two spherical/universal joints, the actuator as well as the included sensors. A parameter =i= is initialized to determine what it the "number" of the strut.
+
+These subsystems are referenced from another subsystem called =Stewart_Platform.slx=, that basically connect them correctly.
+This subsystem is then referenced in other simulink models for various purposes.
+
+* Basic configuration for the Fixed base, Mobile Platform and Struts
+
+* Sensors included in the Struts and on the Mobile Platform
+
+* Inertial Sensors
+** Z-Axis Geophone
+:PROPERTIES:
+:header-args:matlab+: :tangle ./src/initializeZAxisGeophone.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeZAxisGeophone>>
+
+This Matlab function is accessible [[file:../src/initializeZAxisGeophone.m][here]].
+
+#+begin_src matlab
+  function [geophone] = initializeZAxisGeophone(args)
+      arguments
+          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 1    % [Hz]
+      end
+
+      %%
+      geophone.m = args.mass;
+
+      %% The Stiffness is set to have the damping resonance frequency
+      geophone.k = geophone.m * (2*pi*args.freq)^2;
+
+      %% We set the damping value to have critical damping
+      geophone.c = 2*sqrt(geophone.m * geophone.k);
+
+      %% Save
+      save('./mat/geophone_z_axis.mat', 'geophone');
+  end
+#+end_src
+
+** Z-Axis Accelerometer
+:PROPERTIES:
+:header-args:matlab+: :tangle ./src/initializeZAxisAccelerometer.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeZAxisAccelerometer>>
+
+This Matlab function is accessible [[file:../src/initializeZAxisAccelerometer.m][here]].
+
+#+begin_src matlab
+  function [accelerometer] = initializeZAxisAccelerometer(args)
+      arguments
+          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+          args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  % [Hz]
+      end
+
+      %%
+      accelerometer.m = args.mass;
+
+      %% The Stiffness is set to have the damping resonance frequency
+      accelerometer.k = accelerometer.m * (2*pi*args.freq)^2;
+
+      %% We set the damping value to have critical damping
+      accelerometer.c = 2*sqrt(accelerometer.m * accelerometer.k);
+
+      %% Gain correction of the accelerometer to have a unity gain until the resonance
+      accelerometer.gain = -accelerometer.k/accelerometer.m;
+
+      %% Save
+      save('./mat/accelerometer_z_axis.mat', 'accelerometer');
+  end
+#+end_src
