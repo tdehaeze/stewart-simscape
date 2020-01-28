@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-28 mar. 13:39 -->
+<!-- 2020-01-28 mar. 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platforms</title>
@@ -259,8 +259,8 @@ The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewar
 The project is divided into several section listed below.
 </p>
 
-<div id="outline-container-org2246378" class="outline-2">
-<h2 id="org2246378"><span class="section-number-2">1</span> Simulink Project (<a href="simulink-project.html">link</a>)</h2>
+<div id="outline-container-orge0ffde8" class="outline-2">
+<h2 id="orge0ffde8"><span class="section-number-2">1</span> Simulink Project (<a href="simulink-project.html">link</a>)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The project is managed with a <b>Simulink Project</b>.
@@ -269,8 +269,8 @@ Such project is briefly presented <a href="simulink-project.html">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org213a021" class="outline-2">
-<h2 id="org213a021"><span class="section-number-2">2</span> Stewart Platform Architecture Definition (<a href="stewart-architecture.html">link</a>)</h2>
+<div id="outline-container-org840f439" class="outline-2">
+<h2 id="org840f439"><span class="section-number-2">2</span> Stewart Platform Architecture Definition (<a href="stewart-architecture.html">link</a>)</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The way the Stewart Platform is defined <a href="stewart-architecture.html">here</a>.
@@ -281,8 +281,8 @@ All the geometrical parameters are defined including:
 </p>
 <ul class="org-ul">
 <li>Definition of the location of the frames</li>
-<li>Size of the platforms and the limbs</li>
 <li>Location/orientation of the limbs</li>
+<li>Size/inertia of the platforms and the limbs</li>
 </ul>
 
 <p>
@@ -290,14 +290,13 @@ Other parameters are also defined such as:
 </p>
 <ul class="org-ul">
 <li>Stiffness and damping of the struts</li>
-<li>Inertia of the different elements</li>
 <li>Rest position of the Stewart platform</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org43ed1d4" class="outline-2">
-<h2 id="org43ed1d4"><span class="section-number-2">3</span> Simscape Model of the Stewart Platform (<a href="simscape-model.html">link</a>)</h2>
+<div id="outline-container-org91daed3" class="outline-2">
+<h2 id="org91daed3"><span class="section-number-2">3</span> Simscape Model of the Stewart Platform (<a href="simscape-model.html">link</a>)</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The Stewart Platform is then modeled using <a href="https://www.mathworks.com/products/simscape.html">Simscape</a>.
@@ -309,8 +308,8 @@ The way to model is build and works is explained <a href="simscape-model.html">h
 </div>
 </div>
 
-<div id="outline-container-org5851cea" class="outline-2">
-<h2 id="org5851cea"><span class="section-number-2">4</span> Kinematic Analysis (<a href="kinematic-study.html">link</a>)</h2>
+<div id="outline-container-orgf826a60" class="outline-2">
+<h2 id="orgf826a60"><span class="section-number-2">4</span> Kinematic Analysis (<a href="kinematic-study.html">link</a>)</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 From the defined geometry of the Stewart platform, we can perform static analysis such as:
@@ -330,8 +329,8 @@ All these analysis are described <a href="kinematic-study.html">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgcc5dd70" class="outline-2">
-<h2 id="orgcc5dd70"><span class="section-number-2">5</span> Identification of the Stewart Dynamics (<a href="identification.html">link</a>)</h2>
+<div id="outline-container-org34ceac7" class="outline-2">
+<h2 id="org34ceac7"><span class="section-number-2">5</span> Identification of the Stewart Dynamics (<a href="identification.html">link</a>)</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 The Dynamics of the Stewart platform can be identified using the Simscape model.
@@ -352,8 +351,8 @@ The code that is used for identification is explained <a href="identification.ht
 </div>
 </div>
 
-<div id="outline-container-org58fb0b9" class="outline-2">
-<h2 id="org58fb0b9"><span class="section-number-2">6</span> Active Damping (<a href="active-damping.html">link</a>)</h2>
+<div id="outline-container-org2c5545b" class="outline-2">
+<h2 id="org2c5545b"><span class="section-number-2">6</span> Active Damping (<a href="active-damping.html">link</a>)</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The use of different sensors are compared for active damping:
@@ -371,8 +370,8 @@ The result of the analysis is accessible <a href="active-damping.html">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgb149881" class="outline-2">
-<h2 id="orgb149881"><span class="section-number-2">7</span> Motion Control of the Stewart Platform (<a href="control-study.html">link</a>)</h2>
+<div id="outline-container-org8ab41c3" class="outline-2">
+<h2 id="org8ab41c3"><span class="section-number-2">7</span> Motion Control of the Stewart Platform (<a href="control-study.html">link</a>)</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Some control architecture for motion control of the Stewart platform are applied on the Simscape model and compared in <a href="control-study.html">this</a> document.
@@ -380,8 +379,8 @@ Some control architecture for motion control of the Stewart platform are applied
 </div>
 </div>
 
-<div id="outline-container-org6bf9b4a" class="outline-2">
-<h2 id="org6bf9b4a"><span class="section-number-2">8</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
+<div id="outline-container-org46a0310" class="outline-2">
+<h2 id="org46a0310"><span class="section-number-2">8</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 The cubic configuration is a special class of Stewart platform that has interesting properties.

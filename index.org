@@ -35,12 +35,11 @@ The way the Stewart Platform is defined [[file:stewart-architecture.org][here]].
 
 All the geometrical parameters are defined including:
 - Definition of the location of the frames
-- Size of the platforms and the limbs
 - Location/orientation of the limbs
+- Size/inertia of the platforms and the limbs
 
 Other parameters are also defined such as:
 - Stiffness and damping of the struts
-- Inertia of the different elements
 - Rest position of the Stewart platform
 
 * Simscape Model of the Stewart Platform ([[file:simscape-model.org][link]])

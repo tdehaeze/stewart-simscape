@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-08-26 lun. 11:55 -->
+<!-- 2020-01-28 mar. 17:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kinematic Study of the Stewart Platform</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="Thomas Dehaeze" />
+<meta name="author" content="Dehaeze Thomas" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -204,7 +205,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2019 Free Software Foundation, Inc.
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -245,6 +246,31 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em",
+               Macros: {
+                 bm: ["{\\boldsymbol #1}",1],
+               }
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -257,93 +283,116 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4a99119">1. Needed Actuator Stroke</a>
+<li><a href="#org63c8faa">1. Needed Actuator Stroke</a>
 <ul>
-<li><a href="#org119868f">1.1. Stewart architecture definition</a></li>
-<li><a href="#org8ece9f1">1.2. Wanted translations and rotations</a></li>
-<li><a href="#org8cd9dfc">1.3. Needed stroke for "pure" rotations or translations</a></li>
-<li><a href="#org9acbff2">1.4. Needed stroke for combined translations and rotations</a></li>
+<li><a href="#orged5be9e">1.1. Stewart architecture definition</a></li>
+<li><a href="#org73e5cf8">1.2. Wanted translations and rotations</a></li>
+<li><a href="#org9825ccf">1.3. Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
+<li><a href="#org0440602">1.4. Needed stroke for combined translations and rotations</a></li>
 </ul>
 </li>
-<li><a href="#org0aef174">2. Maximum Stroke</a></li>
-<li><a href="#orgff4f3e2">3. Functions</a>
+<li><a href="#org092f7f8">2. Maximum Stroke</a></li>
+<li><a href="#org720ba56">3. Functions</a>
 <ul>
-<li><a href="#orgca8f528">3.1. getMaxPositions</a></li>
-<li><a href="#org0ac04ca">3.2. getMaxPureDisplacement</a></li>
+<li><a href="#org8125766">3.1. getMaxPositions</a></li>
+<li><a href="#org91e4101">3.2. getMaxPureDisplacement</a></li>
+<li><a href="#orgf75fefe">3.3. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
+<ul>
+<li><a href="#orgae47616">3.3.1. Function description</a></li>
+<li><a href="#org78705da">3.3.2. Compute Jacobian Matrix</a></li>
+<li><a href="#orgb7dc1d7">3.3.3. Compute Stiffness Matrix</a></li>
+<li><a href="#org7aa6c04">3.3.4. Compute Compliance Matrix</a></li>
+</ul>
+</li>
+<li><a href="#org9c46957">3.4. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
+<ul>
+<li><a href="#org9da7af0">3.4.1. Function description</a></li>
+<li><a href="#orge2cc540">3.4.2. Optional Parameters</a></li>
+<li><a href="#orga1a0cc7">3.4.3. Theory</a></li>
+<li><a href="#org9b86eb9">3.4.4. Compute</a></li>
+</ul>
+</li>
+<li><a href="#org7e6d65c">3.5. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
+<ul>
+<li><a href="#org65e0ce7">3.5.1. Function description</a></li>
+<li><a href="#orgf6a32e1">3.5.2. Optional Parameters</a></li>
+<li><a href="#orgce0b559">3.5.3. Computation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org4a99119" class="outline-2">
-<h2 id="org4a99119"><span class="section-number-2">1</span> Needed Actuator Stroke</h2>
+<div id="outline-container-org63c8faa" class="outline-2">
+<h2 id="org63c8faa"><span class="section-number-2">1</span> Needed Actuator Stroke</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The goal is to determine the needed stroke of the actuators to obtain wanted translations and rotations.
 </p>
 </div>
 
-<div id="outline-container-org119868f" class="outline-3">
-<h3 id="org119868f"><span class="section-number-3">1.1</span> Stewart architecture definition</h3>
+<div id="outline-container-orged5be9e" class="outline-3">
+<h3 id="orged5be9e"><span class="section-number-3">1.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 We use a cubic architecture.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
-    <span class="org-string">'H_tot'</span>, <span class="org-highlight-numbers-number">90</span>, <span class="org-underline">...</span> <span class="org-comment">% Total height of the Hexapod [mm]</span>
-    <span class="org-string">'L'</span>,     <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span>sqrt<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-2">)</span>, <span class="org-underline">...</span> <span class="org-comment">% Size of the Cube [mm]</span>
-    <span class="org-string">'H'</span>,     <span class="org-highlight-numbers-number">60</span>, <span class="org-underline">...</span> <span class="org-comment">% Height between base joints and platform joints [mm]</span>
-    <span class="org-string">'H0'</span>,    <span class="org-highlight-numbers-number">200</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span><span class="org-type">-</span><span class="org-highlight-numbers-number">60</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> <span class="org-underline">...</span> <span class="org-comment">% Height between the corner of the cube and the plane containing the base joints [mm]</span>
-    <span class="org-rainbow-delimiters-depth-1">)</span>;
-stewart = initializeCubicConfiguration<span class="org-rainbow-delimiters-depth-1">(</span>opts<span class="org-rainbow-delimiters-depth-1">)</span>;
-opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
-    <span class="org-string">'Jd_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">100</span><span class="org-rainbow-delimiters-depth-2">]</span>, <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
-    <span class="org-string">'Jf_pos'</span>, <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-type">-</span><span class="org-highlight-numbers-number">50</span><span class="org-rainbow-delimiters-depth-2">]</span>  <span class="org-underline">...</span> <span class="org-comment">% Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
-    <span class="org-rainbow-delimiters-depth-1">)</span>;
-stewart = computeGeometricalProperties<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
-opts = struct<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-underline">...</span>
-    <span class="org-string">'stroke'</span>, <span class="org-highlight-numbers-number">50e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span> <span class="org-underline">...</span> <span class="org-comment">% Maximum stroke of each actuator [m]</span>
-    <span class="org-rainbow-delimiters-depth-1">)</span>;
-stewart = initializeMechanicalElements<span class="org-rainbow-delimiters-depth-1">(</span>stewart, opts<span class="org-rainbow-delimiters-depth-1">)</span>;
+<pre class="src src-matlab">opts = struct(...
+    <span class="org-string">'H_tot'</span>, 90, ...<span class="org-comment"> % Total height of the Hexapod [mm]</span>
+    <span class="org-string">'L'</span>,     200<span class="org-type">/</span>sqrt(3), ...<span class="org-comment"> % Size of the Cube [mm]</span>
+    <span class="org-string">'H'</span>,     60, ...<span class="org-comment"> % Height between base joints and platform joints [mm]</span>
+    <span class="org-string">'H0'</span>,    200<span class="org-type">/</span>2<span class="org-type">-</span>60<span class="org-type">/</span>2 ...<span class="org-comment"> % Height between the corner of the cube and the plane containing the base joints [mm]</span>
+    );
+stewart = initializeCubicConfiguration(opts);
+opts = struct(...
+    <span class="org-string">'Jd_pos'</span>, [0, 0, 100], ...<span class="org-comment"> % Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]</span>
+    <span class="org-string">'Jf_pos'</span>, [0, 0, <span class="org-type">-</span>50]  ...<span class="org-comment"> % Position of the Jacobian for force location from the top of the mobile platform [mm]</span>
+    );
+stewart = computeGeometricalProperties(stewart, opts);
+opts = struct(...
+    <span class="org-string">'stroke'</span>, 50e<span class="org-type">-</span>6 ...<span class="org-comment"> % Maximum stroke of each actuator [m]</span>
+    );
+stewart = initializeMechanicalElements(stewart, opts);
 
-save<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'./mat/stewart.mat', 'stewart'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+save(<span class="org-string">'./mat/stewart.mat'</span>, <span class="org-string">'stewart'</span>);
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8ece9f1" class="outline-3">
-<h3 id="org8ece9f1"><span class="section-number-3">1.2</span> Wanted translations and rotations</h3>
+<div id="outline-container-org73e5cf8" class="outline-3">
+<h3 id="org73e5cf8"><span class="section-number-3">1.2</span> Wanted translations and rotations</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We define wanted translations and rotations
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Tx_max = <span class="org-highlight-numbers-number">15e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>; <span class="org-comment">% Translation [m]</span>
-Ty_max = <span class="org-highlight-numbers-number">15e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>; <span class="org-comment">% Translation [m]</span>
-Tz_max = <span class="org-highlight-numbers-number">15e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>; <span class="org-comment">% Translation [m]</span>
-Rx_max = <span class="org-highlight-numbers-number">30e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>; <span class="org-comment">% Rotation [rad]</span>
-Ry_max = <span class="org-highlight-numbers-number">30e</span><span class="org-type">-</span><span class="org-highlight-numbers-number">6</span>; <span class="org-comment">% Rotation [rad]</span>
+<pre class="src src-matlab">Tx_max = 15e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
+Ty_max = 15e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
+Tz_max = 15e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
+Rx_max = 30e<span class="org-type">-</span>6; <span class="org-comment">% Rotation [rad]</span>
+Ry_max = 30e<span class="org-type">-</span>6; <span class="org-comment">% Rotation [rad]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8cd9dfc" class="outline-3">
-<h3 id="org8cd9dfc"><span class="section-number-3">1.3</span> Needed stroke for "pure" rotations or translations</h3>
+<div id="outline-container-org9825ccf" class="outline-3">
+<h3 id="org9825ccf"><span class="section-number-3">1.3</span> Needed stroke for &ldquo;pure&rdquo; rotations or translations</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-First, we estimate the needed actuator stroke for "pure" rotations and translation.
+First, we estimate the needed actuator stroke for &ldquo;pure&rdquo; rotations and translation.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">LTx = stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span>Tx_max <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
-LTy = stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span> Ty_max <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
-LTz = stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> Tz_max <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
-LRx = stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> Rx_max <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
-LRy = stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> Ry_max <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
+<pre class="src src-matlab">LTx = stewart.Jd<span class="org-type">*</span>[Tx_max 0 0 0 0 0]<span class="org-type">'</span>;
+LTy = stewart.Jd<span class="org-type">*</span>[0 Ty_max 0 0 0 0]<span class="org-type">'</span>;
+LTz = stewart.Jd<span class="org-type">*</span>[0 0 Tz_max 0 0 0]<span class="org-type">'</span>;
+LRx = stewart.Jd<span class="org-type">*</span>[0 0 0 Rx_max 0 0]<span class="org-type">'</span>;
+LRy = stewart.Jd<span class="org-type">*</span>[0 0 0 0 Ry_max 0]<span class="org-type">'</span>;
 </pre>
 </div>
 
@@ -353,26 +402,26 @@ From -1.2e-05[m] to 1.1e-05[m]: Total stroke = 22.9[um]
 </div>
 </div>
 
-<div id="outline-container-org9acbff2" class="outline-3">
-<h3 id="org9acbff2"><span class="section-number-3">1.4</span> Needed stroke for combined translations and rotations</h3>
+<div id="outline-container-org0440602" class="outline-3">
+<h3 id="org0440602"><span class="section-number-3">1.4</span> Needed stroke for combined translations and rotations</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Now, we combine translations and rotations, and we try to find the worst case (that we suppose to happen at the border).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Lmax = <span class="org-highlight-numbers-number">0</span>;
-Lmin = <span class="org-highlight-numbers-number">0</span>;
-pos = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>;
-<span class="org-keyword">for</span> <span class="org-variable-name">Tx</span> = <span class="org-constant"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-constant">-Tx_max</span>,Tx_max<span class="org-rainbow-delimiters-depth-1">]</span>
-<span class="org-keyword">for</span> <span class="org-variable-name">Ty</span> = <span class="org-constant"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-constant">-Ty_max</span>,Ty_max<span class="org-rainbow-delimiters-depth-1">]</span>
-<span class="org-keyword">for</span> <span class="org-variable-name">Tz</span> = <span class="org-constant"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-constant">-Tz_max</span>,Tz_max<span class="org-rainbow-delimiters-depth-1">]</span>
-<span class="org-keyword">for</span> <span class="org-variable-name">Rx</span> = <span class="org-constant"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-constant">-Rx_max</span>,Rx_max<span class="org-rainbow-delimiters-depth-1">]</span>
-<span class="org-keyword">for</span> <span class="org-variable-name">Ry</span> = <span class="org-constant"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-constant">-Ry_max</span>,Ry_max<span class="org-rainbow-delimiters-depth-1">]</span>
-    lmax = max<span class="org-rainbow-delimiters-depth-1">(</span>stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-2">[</span>Tx Ty Tz Rx Ry <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span>'<span class="org-rainbow-delimiters-depth-1">)</span>;
-    lmin = min<span class="org-rainbow-delimiters-depth-1">(</span>stewart.Jd<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-2">[</span>Tx Ty Tz Rx Ry <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-2">]</span>'<span class="org-rainbow-delimiters-depth-1">)</span>;
+<pre class="src src-matlab">Lmax = 0;
+Lmin = 0;
+pos = [0, 0, 0, 0, 0];
+<span class="org-keyword">for</span> <span class="org-variable-name">Tx</span> = <span class="org-constant">[-Tx_max</span>,Tx_max]
+<span class="org-keyword">for</span> <span class="org-variable-name">Ty</span> = <span class="org-constant">[-Ty_max</span>,Ty_max]
+<span class="org-keyword">for</span> <span class="org-variable-name">Tz</span> = <span class="org-constant">[-Tz_max</span>,Tz_max]
+<span class="org-keyword">for</span> <span class="org-variable-name">Rx</span> = <span class="org-constant">[-Rx_max</span>,Rx_max]
+<span class="org-keyword">for</span> <span class="org-variable-name">Ry</span> = <span class="org-constant">[-Ry_max</span>,Ry_max]
+    lmax = max(stewart.Jd<span class="org-type">*</span>[Tx Ty Tz Rx Ry 0]<span class="org-type">'</span>);
+    lmin = min(stewart.Jd<span class="org-type">*</span>[Tx Ty Tz Rx Ry 0]<span class="org-type">'</span>);
     <span class="org-keyword">if</span> lmax <span class="org-type">&gt;</span> Lmax
         Lmax = lmax;
-        pos = <span class="org-rainbow-delimiters-depth-1">[</span>Tx Ty Tz Rx Ry<span class="org-rainbow-delimiters-depth-1">]</span>;
+        pos = [Tx Ty Tz Rx Ry];
     <span class="org-keyword">end</span>
     <span class="org-keyword">if</span> lmin <span class="org-type">&lt;</span> Lmin
         Lmin = lmin;
@@ -386,7 +435,7 @@ pos = <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-high
 </div>
 
 <p>
-We obtain a needed stroke shown below (almost two times the needed stroke for "pure" rotations and translations).
+We obtain a needed stroke shown below (almost two times the needed stroke for &ldquo;pure&rdquo; rotations and translations).
 </p>
 <pre class="example">
 From -3.1e-05[m] to 3.1e-05[m]: Total stroke = 61.5[um]
@@ -395,80 +444,341 @@ From -3.1e-05[m] to 3.1e-05[m]: Total stroke = 61.5[um]
 </div>
 </div>
 
-<div id="outline-container-org0aef174" class="outline-2">
-<h2 id="org0aef174"><span class="section-number-2">2</span> Maximum Stroke</h2>
+<div id="outline-container-org092f7f8" class="outline-2">
+<h2 id="org092f7f8"><span class="section-number-2">2</span> Maximum Stroke</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 From a specified actuator stroke, we try to estimate the available maneuverability of the Stewart platform.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-rainbow-delimiters-depth-1">[</span>X, Y, Z<span class="org-rainbow-delimiters-depth-1">]</span> = getMaxPositions<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">stewart</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<pre class="src src-matlab">[X, Y, Z] = getMaxPositions(<span class="org-variable-name">stewart</span>);
 </pre>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-type">figure</span>;
-plot3<span class="org-rainbow-delimiters-depth-1">(</span>X, Y, Z, <span class="org-string">'k-'</span><span class="org-rainbow-delimiters-depth-1">)</span>
+plot3(X, Y, Z, <span class="org-string">'k-'</span>)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgff4f3e2" class="outline-2">
-<h2 id="orgff4f3e2"><span class="section-number-2">3</span> Functions</h2>
+<div id="outline-container-org720ba56" class="outline-2">
+<h2 id="org720ba56"><span class="section-number-2">3</span> Functions</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgca8f528" class="outline-3">
-<h3 id="orgca8f528"><span class="section-number-3">3.1</span> getMaxPositions</h3>
+<div id="outline-container-org8125766" class="outline-3">
+<h3 id="org8125766"><span class="section-number-3">3.1</span> getMaxPositions</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">X, Y, Z</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">getMaxPositions</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">stewart</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[X, Y, Z]</span> = <span class="org-function-name">getMaxPositions</span>(<span class="org-variable-name">stewart</span>)
     Leg = stewart.Leg;
     J = stewart.Jd;
-    theta = linspace<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span><span class="org-type">*</span><span class="org-constant">pi</span>, <span class="org-highlight-numbers-number">100</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    phi = linspace<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">-</span><span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span> , <span class="org-constant">pi</span><span class="org-type">/</span><span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">100</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    dmax = zeros<span class="org-rainbow-delimiters-depth-1">(</span>length<span class="org-rainbow-delimiters-depth-2">(</span>theta<span class="org-rainbow-delimiters-depth-2">)</span>, length<span class="org-rainbow-delimiters-depth-2">(</span>phi<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    theta = linspace(0, 2<span class="org-type">*</span><span class="org-constant">pi</span>, 100);
+    phi = linspace(<span class="org-type">-</span><span class="org-constant">pi</span><span class="org-type">/</span>2 , <span class="org-constant">pi</span><span class="org-type">/</span>2, 100);
+    dmax = zeros(length(theta), length(phi));
 
-    <span class="org-keyword">for</span> <span class="org-variable-name">i</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:length</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">theta</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
-        <span class="org-keyword">for</span> <span class="org-variable-name">j</span> = <span class="org-constant"><span class="org-highlight-numbers-number">1</span></span><span class="org-constant">:length</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">(</span></span><span class="org-constant">phi</span><span class="org-constant"><span class="org-rainbow-delimiters-depth-1">)</span></span>
-            L = J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-1">[</span>cos<span class="org-rainbow-delimiters-depth-2">(</span>phi<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">j</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-type">*</span>cos<span class="org-rainbow-delimiters-depth-2">(</span>theta<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span> cos<span class="org-rainbow-delimiters-depth-2">(</span>phi<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">j</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-type">*</span>sin<span class="org-rainbow-delimiters-depth-2">(</span>theta<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">i</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span> sin<span class="org-rainbow-delimiters-depth-2">(</span>phi<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">j</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-1">]</span>';
-            dmax<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">i</span>, <span class="org-constant">j</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>L<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    <span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(theta)</span>
+        <span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">j</span></span> = <span class="org-constant">1:length(phi)</span>
+            L = J<span class="org-type">*</span>[cos(phi(<span class="org-constant">j</span>))<span class="org-type">*</span>cos(theta(<span class="org-constant">i</span>)) cos(phi(<span class="org-constant">j</span>))<span class="org-type">*</span>sin(theta(<span class="org-constant">i</span>)) sin(phi(<span class="org-constant">j</span>)) 0 0 0]<span class="org-type">'</span>;
+            dmax(<span class="org-constant">i</span>, <span class="org-constant">j</span>) = Leg.stroke<span class="org-type">/</span>max(abs(L));
         <span class="org-keyword">end</span>
     <span class="org-keyword">end</span>
 
-    X = dmax<span class="org-type">.*</span>cos<span class="org-rainbow-delimiters-depth-1">(</span>repmat<span class="org-rainbow-delimiters-depth-2">(</span>phi,length<span class="org-rainbow-delimiters-depth-3">(</span>theta<span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">.*</span>cos<span class="org-rainbow-delimiters-depth-1">(</span>repmat<span class="org-rainbow-delimiters-depth-2">(</span>theta,length<span class="org-rainbow-delimiters-depth-3">(</span>phi<span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>';
-    Y = dmax<span class="org-type">.*</span>cos<span class="org-rainbow-delimiters-depth-1">(</span>repmat<span class="org-rainbow-delimiters-depth-2">(</span>phi,length<span class="org-rainbow-delimiters-depth-3">(</span>theta<span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-type">.*</span>sin<span class="org-rainbow-delimiters-depth-1">(</span>repmat<span class="org-rainbow-delimiters-depth-2">(</span>theta,length<span class="org-rainbow-delimiters-depth-3">(</span>phi<span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>';
-    Z = dmax<span class="org-type">.*</span>sin<span class="org-rainbow-delimiters-depth-1">(</span>repmat<span class="org-rainbow-delimiters-depth-2">(</span>phi,length<span class="org-rainbow-delimiters-depth-3">(</span>theta<span class="org-rainbow-delimiters-depth-3">)</span>,<span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+    X = dmax<span class="org-type">.*</span>cos(repmat(phi,length(theta),1))<span class="org-type">.*</span>cos(repmat(theta,length(phi),1))<span class="org-type">'</span>;
+    Y = dmax<span class="org-type">.*</span>cos(repmat(phi,length(theta),1))<span class="org-type">.*</span>sin(repmat(theta,length(phi),1))<span class="org-type">'</span>;
+    Z = dmax<span class="org-type">.*</span>sin(repmat(phi,length(theta),1));
 <span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0ac04ca" class="outline-3">
-<h3 id="org0ac04ca"><span class="section-number-3">3.2</span> getMaxPureDisplacement</h3>
+<div id="outline-container-org91e4101" class="outline-3">
+<h3 id="org91e4101"><span class="section-number-3">3.2</span> getMaxPureDisplacement</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">[</span></span><span class="org-variable-name">max_disp</span><span class="org-variable-name"><span class="org-rainbow-delimiters-depth-1">]</span></span> = <span class="org-function-name">getMaxPureDisplacement</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-variable-name">Leg</span>, <span class="org-variable-name">J</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    max_disp = zeros<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">2</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">3</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">4</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">5</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">1</span> <span class="org-highlight-numbers-number">0</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
-    max_disp<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-highlight-numbers-number">6</span><span class="org-rainbow-delimiters-depth-1">)</span> = Leg.stroke<span class="org-type">/</span>max<span class="org-rainbow-delimiters-depth-1">(</span>abs<span class="org-rainbow-delimiters-depth-2">(</span>J<span class="org-type">*</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">0</span> <span class="org-highlight-numbers-number">1</span><span class="org-rainbow-delimiters-depth-3">]</span>'<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[max_disp]</span> = <span class="org-function-name">getMaxPureDisplacement</span>(<span class="org-variable-name">Leg</span>, <span class="org-variable-name">J</span>)
+    max_disp = zeros(6, 1);
+    max_disp<span class="org-type">(1) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[1 0 0 0 0 0]<span class="org-type">'</span>));
+    max_disp<span class="org-type">(2) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[0 1 0 0 0 0]<span class="org-type">'</span>));
+    max_disp<span class="org-type">(3) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[0 0 1 0 0 0]<span class="org-type">'</span>));
+    max_disp<span class="org-type">(4) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[0 0 0 1 0 0]<span class="org-type">'</span>));
+    max_disp<span class="org-type">(5) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[0 0 0 0 1 0]<span class="org-type">'</span>));
+    max_disp<span class="org-type">(6) </span>= Leg.stroke<span class="org-type">/</span>max(abs(J<span class="org-type">*</span>[0 0 0 0 0 1]<span class="org-type">'</span>));
 <span class="org-keyword">end</span>
 </pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf75fefe" class="outline-3">
+<h3 id="orgf75fefe"><span class="section-number-3">3.3</span> <code>computeJacobian</code>: Compute the Jacobian Matrix</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+<a id="org02bdbb2"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="src/computeJacobian.m">here</a>.
+</p>
+</div>
+
+<div id="outline-container-orgae47616" class="outline-4">
+<h4 id="orgae47616"><span class="section-number-4">3.3.1</span> Function description</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">computeJacobian</span>(<span class="org-variable-name">stewart</span>)
+<span class="org-comment">% computeJacobian -</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [stewart] = computeJacobian(stewart)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - stewart - With at least the following fields:</span>
+<span class="org-comment">%        - As [3x6] - The 6 unit vectors for each strut expressed in {A}</span>
+<span class="org-comment">%        - Ab [3x6] - The 6 position of the joints bi expressed in {A}</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - stewart - With the 3 added field:</span>
+<span class="org-comment">%        - J [6x6] - The Jacobian Matrix</span>
+<span class="org-comment">%        - K [6x6] - The Stiffness Matrix</span>
+<span class="org-comment">%        - C [6x6] - The Compliance Matrix</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org78705da" class="outline-4">
+<h4 id="org78705da"><span class="section-number-4">3.3.2</span> Compute Jacobian Matrix</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart.J = [stewart.As<span class="org-type">'</span> , cross(stewart.Ab, stewart.As)<span class="org-type">'</span>];
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb7dc1d7" class="outline-4">
+<h4 id="orgb7dc1d7"><span class="section-number-4">3.3.3</span> Compute Stiffness Matrix</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart.K = stewart.J<span class="org-type">'*</span>diag(stewart.Ki)<span class="org-type">*</span>stewart.J;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7aa6c04" class="outline-4">
+<h4 id="org7aa6c04"><span class="section-number-4">3.3.4</span> Compute Compliance Matrix</h4>
+<div class="outline-text-4" id="text-3-3-4">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart.C = inv(stewart.K);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9c46957" class="outline-3">
+<h3 id="org9c46957"><span class="section-number-3">3.4</span> <code>inverseKinematics</code>: Compute Inverse Kinematics</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+<a id="orgab617cc"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="src/inverseKinematics.m">here</a>.
+</p>
+</div>
+
+<div id="outline-container-org9da7af0" class="outline-4">
+<h4 id="org9da7af0"><span class="section-number-4">3.4.1</span> Function description</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[Li, dLi]</span> = <span class="org-function-name">inverseKinematics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
+<span class="org-comment">% inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [stewart] = inverseKinematics(stewart)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - stewart - A structure with the following fields</span>
+<span class="org-comment">%        - Aa   [3x6] - The positions ai expressed in {A}</span>
+<span class="org-comment">%        - Bb   [3x6] - The positions bi expressed in {B}</span>
+<span class="org-comment">%    - args - Can have the following fields:</span>
+<span class="org-comment">%        - AP   [3x1] - The wanted position of {B} with respect to {A}</span>
+<span class="org-comment">%        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}</span>
+<span class="org-comment">%    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2cc540" class="outline-4">
+<h4 id="orge2cc540"><span class="section-number-4">3.4.2</span> Optional Parameters</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+    stewart
+    args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+    args.ARB (3,3) double {mustBeNumeric} = eye(3)
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga1a0cc7" class="outline-4">
+<h4 id="orga1a0cc7"><span class="section-number-4">3.4.3</span> Theory</h4>
+<div class="outline-text-4" id="text-3-4-3">
+<p>
+For inverse kinematic analysis, it is assumed that the position \({}^A\bm{P}\) and orientation of the moving platform \({}^A\bm{R}_B\) are given and the problem is to obtain the joint variables, namely, \(\bm{L} = [l_1, l_2, \dots, l_6]^T\).
+</p>
+
+<p>
+From the geometry of the manipulator, the loop closure for each limb, \(i = 1, 2, \dots, 6\) can be written as
+</p>
+\begin{align*}
+  l_i {}^A\hat{\bm{s}}_i &= {}^A\bm{A} + {}^A\bm{b}_i - {}^A\bm{a}_i \\
+                         &= {}^A\bm{A} + {}^A\bm{R}_b {}^B\bm{b}_i - {}^A\bm{a}_i
+\end{align*}
+
+<p>
+To obtain the length of each actuator and eliminate \(\hat{\bm{s}}_i\), it is sufficient to dot multiply each side by itself:
+</p>
+\begin{equation}
+  l_i^2 \left[ {}^A\hat{\bm{s}}_i^T {}^A\hat{\bm{s}}_i \right] = \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]^T \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]
+\end{equation}
+
+<p>
+Hence, for \(i = 1, 2, \dots, 6\), each limb length can be uniquely determined by:
+</p>
+\begin{equation}
+  l_i = \sqrt{{}^A\bm{P}^T {}^A\bm{P} + {}^B\bm{b}_i^T {}^B\bm{b}_i + {}^A\bm{a}_i^T {}^A\bm{a}_i - 2 {}^A\bm{P}^T {}^A\bm{a}_i + 2 {}^A\bm{P}^T \left[{}^A\bm{R}_B {}^B\bm{b}_i\right] - 2 \left[{}^A\bm{R}_B {}^B\bm{b}_i\right]^T {}^A\bm{a}_i}
+\end{equation}
+
+<p>
+If the position and orientation of the moving platform lie in the feasible workspace of the manipulator, one unique solution to the limb length is determined by the above equation.
+Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the position or orientation of the moving platform is not reachable.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9b86eb9" class="outline-4">
+<h4 id="org9b86eb9"><span class="section-number-4">3.4.4</span> Compute</h4>
+<div class="outline-text-4" id="text-3-4-4">
+<div class="org-src-container">
+<pre class="src src-matlab">Li = sqrt(args.AP<span class="org-type">'*</span>args.AP <span class="org-type">+</span> diag(stewart.Bb<span class="org-type">'*</span>stewart.Bb) <span class="org-type">+</span> diag(stewart.Aa<span class="org-type">'*</span>stewart.Aa) <span class="org-type">-</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>stewart.Aa)<span class="org-type">'</span> <span class="org-type">+</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>(args.ARB<span class="org-type">*</span>stewart.Bb))<span class="org-type">'</span> <span class="org-type">-</span> diag(2<span class="org-type">*</span>(args.ARB<span class="org-type">*</span>stewart.Bb)<span class="org-type">'*</span>stewart.Aa));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">dLi = Li<span class="org-type">-</span>stewart.l;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7e6d65c" class="outline-3">
+<h3 id="org7e6d65c"><span class="section-number-3">3.5</span> <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+<a id="orgee3cdbf"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="src/forwardKinematicsApprox.m">here</a>.
+</p>
+</div>
+
+<div id="outline-container-org65e0ce7" class="outline-4">
+<h4 id="org65e0ce7"><span class="section-number-4">3.5.1</span> Function description</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[P, R]</span> = <span class="org-function-name">forwardKinematicsApprox</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
+<span class="org-comment">% forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using</span>
+<span class="org-comment">%                           the Jacobian Matrix</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [P, R] = forwardKinematicsApprox(stewart, args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - stewart - A structure with the following fields</span>
+<span class="org-comment">%        - J  [6x6] - The Jacobian Matrix</span>
+<span class="org-comment">%    - args - Can have the following fields:</span>
+<span class="org-comment">%        - dL [6x1] - Displacement of each strut [m]</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - P  [3x1] - The estimated position of {B} with respect to {A}</span>
+<span class="org-comment">%    - R  [3x3] - The estimated rotation matrix that gives the orientation of {B} with respect to {A}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf6a32e1" class="outline-4">
+<h4 id="orgf6a32e1"><span class="section-number-4">3.5.2</span> Optional Parameters</h4>
+<div class="outline-text-4" id="text-3-5-2">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+    stewart
+    args.dL (6,1) double {mustBeNumeric} = zeros(6,1)
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgce0b559" class="outline-4">
+<h4 id="orgce0b559"><span class="section-number-4">3.5.3</span> Computation</h4>
+<div class="outline-text-4" id="text-3-5-3">
+<p>
+From a small displacement of each strut \(d\bm{\mathcal{L}}\), we can compute the
+position and orientation of {B} with respect to {A} using the following formula:
+\[ d \bm{\mathcal{X}} = \bm{J}^{-1} d\bm{\mathcal{L}} \]
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">X = stewart.J<span class="org-type">\</span>args.dL;
+</pre>
+</div>
+
+<p>
+The position vector corresponds to the first 3 elements.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">P = X(1<span class="org-type">:</span>3);
+</pre>
+</div>
+
+<p>
+The next 3 elements are the orientation of {B} with respect to {A} expressed
+using the screw axis.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">theta = norm(X(4<span class="org-type">:</span>6));
+s = X(4<span class="org-type">:</span>6)<span class="org-type">/</span>theta;
+</pre>
+</div>
+
+<p>
+We then compute the corresponding rotation matrix.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">R = [s(1)<span class="org-type">^</span>2<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">+</span> cos(theta) ,        s(1)<span class="org-type">*</span>s(2)<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">-</span> s(3)<span class="org-type">*</span>sin(theta), s(1)<span class="org-type">*</span>s(3)<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">+</span> s(2)<span class="org-type">*</span>sin(theta);
+     s<span class="org-type">(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);</span>
+     s<span class="org-type">(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];</span>
+</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2019-08-26 lun. 11:55</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="author">Author: Dehaeze Thomas</p>
+<p class="date">Created: 2020-01-28 mar. 17:38</p>
 </div>
 </body>
 </html>

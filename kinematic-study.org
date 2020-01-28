@@ -182,3 +182,177 @@ From a specified actuator stroke, we try to estimate the available maneuverabili
       max_disp(6) = Leg.stroke/max(abs(J*[0 0 0 0 0 1]'));
   end
 #+end_src
+** =computeJacobian=: Compute the Jacobian Matrix
+:PROPERTIES:
+:header-args:matlab+: :tangle src/computeJacobian.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:computeJacobian>>
+
+This Matlab function is accessible [[file:src/computeJacobian.m][here]].
+
+*** Function description
+#+begin_src matlab
+  function [stewart] = computeJacobian(stewart)
+  % computeJacobian -
+  %
+  % Syntax: [stewart] = computeJacobian(stewart)
+  %
+  % Inputs:
+  %    - stewart - With at least the following fields:
+  %        - As [3x6] - The 6 unit vectors for each strut expressed in {A}
+  %        - Ab [3x6] - The 6 position of the joints bi expressed in {A}
+  %
+  % Outputs:
+  %    - stewart - With the 3 added field:
+  %        - J [6x6] - The Jacobian Matrix
+  %        - K [6x6] - The Stiffness Matrix
+  %        - C [6x6] - The Compliance Matrix
+#+end_src
+
+*** Compute Jacobian Matrix
+#+begin_src matlab
+  stewart.J = [stewart.As' , cross(stewart.Ab, stewart.As)'];
+#+end_src
+
+*** Compute Stiffness Matrix
+#+begin_src matlab
+  stewart.K = stewart.J'*diag(stewart.Ki)*stewart.J;
+#+end_src
+
+*** Compute Compliance Matrix
+#+begin_src matlab
+  stewart.C = inv(stewart.K);
+#+end_src
+
+** =inverseKinematics=: Compute Inverse Kinematics
+:PROPERTIES:
+:header-args:matlab+: :tangle src/inverseKinematics.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:inverseKinematics>>
+
+This Matlab function is accessible [[file:src/inverseKinematics.m][here]].
+
+*** Function description
+#+begin_src matlab
+  function [Li, dLi] = inverseKinematics(stewart, args)
+  % inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
+  %
+  % Syntax: [stewart] = inverseKinematics(stewart)
+  %
+  % Inputs:
+  %    - stewart - A structure with the following fields
+  %        - Aa   [3x6] - The positions ai expressed in {A}
+  %        - Bb   [3x6] - The positions bi expressed in {B}
+  %    - args - Can have the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %
+  % Outputs:
+  %    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}
+  %    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
+#+end_src
+
+*** Optional Parameters
+#+begin_src matlab
+  arguments
+      stewart
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+  end
+#+end_src
+
+*** Theory
+For inverse kinematic analysis, it is assumed that the position ${}^A\bm{P}$ and orientation of the moving platform ${}^A\bm{R}_B$ are given and the problem is to obtain the joint variables, namely, $\bm{L} = [l_1, l_2, \dots, l_6]^T$.
+
+From the geometry of the manipulator, the loop closure for each limb, $i = 1, 2, \dots, 6$ can be written as
+\begin{align*}
+  l_i {}^A\hat{\bm{s}}_i &= {}^A\bm{A} + {}^A\bm{b}_i - {}^A\bm{a}_i \\
+                         &= {}^A\bm{A} + {}^A\bm{R}_b {}^B\bm{b}_i - {}^A\bm{a}_i
+\end{align*}
+
+To obtain the length of each actuator and eliminate $\hat{\bm{s}}_i$, it is sufficient to dot multiply each side by itself:
+\begin{equation}
+  l_i^2 \left[ {}^A\hat{\bm{s}}_i^T {}^A\hat{\bm{s}}_i \right] = \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]^T \left[ {}^A\bm{P} + {}^A\bm{R}_B {}^B\bm{b}_i - {}^A\bm{a}_i \right]
+\end{equation}
+
+Hence, for $i = 1, 2, \dots, 6$, each limb length can be uniquely determined by:
+\begin{equation}
+  l_i = \sqrt{{}^A\bm{P}^T {}^A\bm{P} + {}^B\bm{b}_i^T {}^B\bm{b}_i + {}^A\bm{a}_i^T {}^A\bm{a}_i - 2 {}^A\bm{P}^T {}^A\bm{a}_i + 2 {}^A\bm{P}^T \left[{}^A\bm{R}_B {}^B\bm{b}_i\right] - 2 \left[{}^A\bm{R}_B {}^B\bm{b}_i\right]^T {}^A\bm{a}_i}
+\end{equation}
+
+If the position and orientation of the moving platform lie in the feasible workspace of the manipulator, one unique solution to the limb length is determined by the above equation.
+Otherwise, when the limbs' lengths derived yield complex numbers, then the position or orientation of the moving platform is not reachable.
+
+*** Compute
+#+begin_src matlab
+  Li = sqrt(args.AP'*args.AP + diag(stewart.Bb'*stewart.Bb) + diag(stewart.Aa'*stewart.Aa) - (2*args.AP'*stewart.Aa)' + (2*args.AP'*(args.ARB*stewart.Bb))' - diag(2*(args.ARB*stewart.Bb)'*stewart.Aa));
+#+end_src
+
+#+begin_src matlab
+  dLi = Li-stewart.l;
+#+end_src
+
+** =forwardKinematicsApprox=: Compute the Approximate Forward Kinematics
+:PROPERTIES:
+:header-args:matlab+: :tangle src/forwardKinematicsApprox.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:forwardKinematicsApprox>>
+
+This Matlab function is accessible [[file:src/forwardKinematicsApprox.m][here]].
+
+*** Function description
+#+begin_src matlab
+  function [P, R] = forwardKinematicsApprox(stewart, args)
+  % forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using
+  %                           the Jacobian Matrix
+  %
+  % Syntax: [P, R] = forwardKinematicsApprox(stewart, args)
+  %
+  % Inputs:
+  %    - stewart - A structure with the following fields
+  %        - J  [6x6] - The Jacobian Matrix
+  %    - args - Can have the following fields:
+  %        - dL [6x1] - Displacement of each strut [m]
+  %
+  % Outputs:
+  %    - P  [3x1] - The estimated position of {B} with respect to {A}
+  %    - R  [3x3] - The estimated rotation matrix that gives the orientation of {B} with respect to {A}
+#+end_src
+
+*** Optional Parameters
+#+begin_src matlab
+  arguments
+      stewart
+      args.dL (6,1) double {mustBeNumeric} = zeros(6,1)
+  end
+#+end_src
+
+*** Computation
+From a small displacement of each strut $d\bm{\mathcal{L}}$, we can compute the
+position and orientation of {B} with respect to {A} using the following formula:
+\[ d \bm{\mathcal{X}} = \bm{J}^{-1} d\bm{\mathcal{L}} \]
+#+begin_src matlab
+  X = stewart.J\args.dL;
+#+end_src
+
+The position vector corresponds to the first 3 elements.
+#+begin_src matlab
+  P = X(1:3);
+#+end_src
+
+The next 3 elements are the orientation of {B} with respect to {A} expressed
+using the screw axis.
+#+begin_src matlab
+  theta = norm(X(4:6));
+  s = X(4:6)/theta;
+#+end_src
+
+We then compute the corresponding rotation matrix.
+#+begin_src matlab
+  R = [s(1)^2*(1-cos(theta)) + cos(theta) ,        s(1)*s(2)*(1-cos(theta)) - s(3)*sin(theta), s(1)*s(3)*(1-cos(theta)) + s(2)*sin(theta);
+       s(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);
+       s(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];
+#+end_src
