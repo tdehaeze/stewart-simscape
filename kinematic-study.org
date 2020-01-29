@@ -21,7 +21,8 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
-* Matlab Init                                               :noexport:ignore:
+* Introduction                                                        :ignore:
+* Matlab Init                                                :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
@@ -88,100 +89,7 @@ First, we estimate the needed actuator stroke for "pure" rotations and translati
 #+RESULTS:
 : From -1.2e-05[m] to 1.1e-05[m]: Total stroke = 22.9[um]
 
-** Needed stroke for combined translations and rotations
-Now, we combine translations and rotations, and we try to find the worst case (that we suppose to happen at the border).
-#+begin_src matlab :results none
-  Lmax = 0;
-  Lmin = 0;
-  pos = [0, 0, 0, 0, 0];
-  for Tx = [-Tx_max,Tx_max]
-  for Ty = [-Ty_max,Ty_max]
-  for Tz = [-Tz_max,Tz_max]
-  for Rx = [-Rx_max,Rx_max]
-  for Ry = [-Ry_max,Ry_max]
-      lmax = max(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
-      lmin = min(stewart.Jd*[Tx Ty Tz Rx Ry 0]');
-      if lmax > Lmax
-          Lmax = lmax;
-          pos = [Tx Ty Tz Rx Ry];
-      end
-      if lmin < Lmin
-          Lmin = lmin;
-      end
-  end
-  end
-  end
-  end
-  end
-#+end_src
-
-We obtain a needed stroke shown below (almost two times the needed stroke for "pure" rotations and translations).
-#+begin_src matlab :results value :exports results
-  ans = sprintf('From %.2g[m] to %.2g[m]: Total stroke = %.1f[um]', Lmin, Lmax, 1e6*(Lmax-Lmin))
-#+end_src
-
-#+RESULTS:
-: From -3.1e-05[m] to 3.1e-05[m]: Total stroke = 61.5[um]
-
-* Maximum Stroke
-From a specified actuator stroke, we try to estimate the available maneuverability of the Stewart platform.
-
-#+begin_src matlab :results silent
-  [X, Y, Z] = getMaxPositions(stewart);
-#+end_src
-
-#+begin_src matlab :results silent
-  figure;
-  plot3(X, Y, Z, 'k-')
-#+end_src
-
 * Functions
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :exports code
-  :HEADER-ARGS:matlab+: :comments no
-  :HEADER-ARGS:matlab+: :mkdir yes
-  :HEADER-ARGS:matlab+: :eval no
-  :END:
-** getMaxPositions
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :tangle src/getMaxPositions.m
-  :END:
-#+begin_src matlab
-  function [X, Y, Z] = getMaxPositions(stewart)
-      Leg = stewart.Leg;
-      J = stewart.Jd;
-      theta = linspace(0, 2*pi, 100);
-      phi = linspace(-pi/2 , pi/2, 100);
-      dmax = zeros(length(theta), length(phi));
-
-      for i = 1:length(theta)
-          for j = 1:length(phi)
-              L = J*[cos(phi(j))*cos(theta(i)) cos(phi(j))*sin(theta(i)) sin(phi(j)) 0 0 0]';
-              dmax(i, j) = Leg.stroke/max(abs(L));
-          end
-      end
-
-      X = dmax.*cos(repmat(phi,length(theta),1)).*cos(repmat(theta,length(phi),1))';
-      Y = dmax.*cos(repmat(phi,length(theta),1)).*sin(repmat(theta,length(phi),1))';
-      Z = dmax.*sin(repmat(phi,length(theta),1));
-  end
-#+end_src
-
-** getMaxPureDisplacement
-  :PROPERTIES:
-  :HEADER-ARGS:matlab+: :tangle src/getMaxPureDisplacement.m
-  :END:
-#+begin_src matlab
-  function [max_disp] = getMaxPureDisplacement(Leg, J)
-      max_disp = zeros(6, 1);
-      max_disp(1) = Leg.stroke/max(abs(J*[1 0 0 0 0 0]'));
-      max_disp(2) = Leg.stroke/max(abs(J*[0 1 0 0 0 0]'));
-      max_disp(3) = Leg.stroke/max(abs(J*[0 0 1 0 0 0]'));
-      max_disp(4) = Leg.stroke/max(abs(J*[0 0 0 1 0 0]'));
-      max_disp(5) = Leg.stroke/max(abs(J*[0 0 0 0 1 0]'));
-      max_disp(6) = Leg.stroke/max(abs(J*[0 0 0 0 0 1]'));
-  end
-#+end_src
 ** =computeJacobian=: Compute the Jacobian Matrix
 :PROPERTIES:
 :header-args:matlab+: :tangle src/computeJacobian.m
