@@ -145,7 +145,7 @@ The global stiffness and damping of the Stewart platform depends on its geometry
 Each Actuator is modeled by 3 elements in parallel (Figure [[fig:stewart_platform_actuator]]):
 - A spring with a stiffness $k_{i}$
 - A dashpot with a damping $c_{i}$
-- An ideal force actuator
+- An ideal force actuator generating a force $\tau_i$
 
 #+name: fig:stewart_platform_actuator
 #+caption: Model of the Stewart platform actuator
@@ -814,8 +814,8 @@ This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 #+begin_src matlab
   arguments
       stewart
-      args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
-      args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e1*ones(6,1)
+      args.Ki (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e6*ones(6,1)
+      args.Ci (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
   end
 #+end_src
 
@@ -849,13 +849,17 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
   %
   % Inputs:
   %    - args - Structure with the following fields:
-  %        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
-  %        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
+  %        - Kbi [6x1] - Rotational Stiffness for each top spherical joints [N/rad]
+  %        - Cbi [6x1] - Damping of each top spherical joint [N/(rad/s)]
+  %        - Kti [6x1] - Rotational Stiffness for each bottom universal joints [N/rad]
+  %        - Cti [6x1] - Damping of each bottom universal joint [N/(rad/s)]
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
-  %        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
+  %        - Kbi [6x1] - Rotational Stiffness for each top spherical joints [N/rad]
+  %        - Cbi [6x1] - Damping of each top spherical joint [N/(rad/s)]
+  %        - Kti [6x1] - Rotational Stiffness for each bottom universal joints [N/rad]
+  %        - Cti [6x1] - Damping of each bottom universal joint [N/(rad/s)]
 #+end_src
 
 *** Optional Parameters
@@ -865,8 +869,10 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 #+begin_src matlab
   arguments
       stewart
-      args.Kri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
-      args.Cri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
+      args.Kti (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+      args.Cti (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+      args.Kbi (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+      args.Cbi (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
   end
 #+end_src
 
@@ -875,8 +881,10 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  stewart.Kri = args.Kri;
-  stewart.Cri = args.Cri;
+  stewart.Kti = args.Kti;
+  stewart.Cti = args.Cti;
+  stewart.Kbi = args.Kbi;
+  stewart.Cbi = args.Cbi;
 #+end_src
 
 * Bibliography                                                        :ignore:
