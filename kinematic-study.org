@@ -31,7 +31,8 @@ The current document is divided in the following sections:
 - Section [[sec:jacobian_analysis]]: The Jacobian matrix is derived from the geometry of the Stewart platform. Then it is shown that the Jacobian can link velocities and forces present in the system, and thus this matrix can be very useful for both analysis and control of the Stewart platform.
 - Section [[sec:stiffness_analysis]]: The stiffness and compliance matrices are derived from the Jacobian matrix and the stiffness of each strut.
 - Section [[sec:forward_inverse_kinematics]]: The Forward and Inverse kinematic problems are presented.
-
+- Section [[sec:required_actuator_stroke]]: The Inverse kinematic solution is used to estimate required actuator stroke from the wanted mobility of the Stewart platform.
+ 
 * Jacobian Analysis
 <<sec:jacobian_analysis>>
 ** Introduction                                                      :ignore:
@@ -179,12 +180,12 @@ In a next section, an approximate solution of the forward kinematics problem is 
 ** Approximate solution of the Forward and Inverse Kinematic problem for small displacement using the Jacobian matrix
 <<sec:approximate_forward_inverse_kinematics>>
 
-For small displacements mobile platform displacement $\delta \bm{\mathcal{X}} = [\delta x, \delta y, \delta z, \delta \theta_x, \delta \theta_y, \delta \theta_z ]^T$ around $\bm{\mathcal{X}}_0$, the associated joint displacement can be computed using the Jacobian:
+For small displacements mobile platform displacement $\delta \bm{\mathcal{X}} = [\delta x, \delta y, \delta z, \delta \theta_x, \delta \theta_y, \delta \theta_z ]^T$ around $\bm{\mathcal{X}}_0$, the associated joint displacement can be computed using the Jacobian (approximate solution of the inverse kinematic problem):
 \begin{equation*}
   \delta\bm{\mathcal{L}} = \bm{J} \delta\bm{\mathcal{X}}
 \end{equation*}
 
-Similarly, for small joint displacements $\delta\bm{\mathcal{L}} = [ \delta l_1,\ \dots,\ \delta l_6 ]^T$ around $\bm{\mathcal{L}}_0$, it is possible to find the induced small displacement of the mobile platform:
+Similarly, for small joint displacements $\delta\bm{\mathcal{L}} = [ \delta l_1,\ \dots,\ \delta l_6 ]^T$ around $\bm{\mathcal{L}}_0$, it is possible to find the induced small displacement of the mobile platform (approximate solution of the forward kinematic problem):
 \begin{equation*}
   \delta\bm{\mathcal{X}} = \bm{J}^{-1} \delta\bm{\mathcal{L}}
 \end{equation*}
@@ -489,7 +490,69 @@ Let's now define the actuator stroke.
   L_max =  50e-6; % [m]
 #+end_src
 
-** TODO Approximate Forward Dynamics
+** Pure translations
+Let's first estimate the mobility in translation when the orientation of the Stewart platform stays the same.
+
+As shown previously, for such small stroke, we can use the approximate Forward Dynamics solution using the Jacobian matrix:
+\begin{equation*}
+  \delta\bm{\mathcal{L}} = \bm{J} \delta\bm{\mathcal{X}}
+\end{equation*}
+
+To obtain the mobility "volume" attainable by the Stewart platform when it's orientation is set to zero, we use the spherical coordinate $(r, \theta, \phi)$.
+
+For each possible value of $(\theta, \phi)$, we compute the maximum radius $r$ attainable with the constraint that the stroke of each actuator should be between =L_min= and =L_max=.
+#+begin_src matlab
+  thetas = linspace(0, pi, 50);
+  phis = linspace(0, 2*pi, 50);
+  rs = zeros(length(thetas), length(phis));
+
+  for i = 1:length(thetas)
+    for j = 1:length(phis)
+      Tx = sin(thetas(i))*cos(phis(j));
+      Ty = sin(thetas(i))*sin(phis(j));
+      Tz = cos(thetas(i));
+
+      dL = stewart.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
+
+      rs(i, j) = max([dL(dL<0)*L_min; dL(dL>0)*L_max]);
+    end
+  end
+#+end_src
+
+
+Now that we have found the corresponding radius $r$, we plot the obtained mobility.
+We can also approximate the mobility by a sphere with a radius equal to the minimum obtained value of $r$, this is however a pessimistic estimation of the mobility.
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+data2orgtable([1e6*L_min, 1e6*L_max, 1e6*(min(min(rs)))], {}, {'=L_min= [$\mu m$]', '=L_max= [$\mu m$]', '=R= [$\mu m$]'}, ' %.1f ');
+#+end_src
+
+#+RESULTS:
+| =L_min= [$\mu m$] | =L_max= [$\mu m$] | =R= [$\mu m$] |
+|-------------------+-------------------+---------------|
+|             -50.0 |              50.0 |          31.5 |
+
+#+begin_src matlab :exports none
+  figure;
+  plot3(reshape(rs.*(sin(thetas)'*cos(phis)), [1, length(thetas)*length(phis)]), ...
+        reshape(rs.*(sin(thetas)'*sin(phis)), [1, length(thetas)*length(phis)]), ...
+        reshape(rs.*(cos(thetas)'*ones(1, length(phis))), [1, length(thetas)*length(phis)]))
+  xlabel('X Translation [m]');
+  ylabel('Y Translation [m]');
+  zlabel('Z Translation [m]');
+#+end_src
+
+#+HEADER: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/mobility_translations_null_rotation.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+NAME: fig:mobility_translations_null_rotation
+#+CAPTION: Obtain mobility of the Stewart platform for zero rotations ([[./figs/mobility_translations_null_rotation.png][png]], [[./figs/mobility_translations_null_rotation.pdf][pdf]])
+[[file:figs/mobility_translations_null_rotation.png]]
+
+*** TODO Do that by slice                                         :noexport:
+using this function https://fr.mathworks.com/help/matlab/ref/contour3.html
 
 * Functions
 <<sec:functions>>
