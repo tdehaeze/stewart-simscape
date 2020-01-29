@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-28 mar. 17:37 -->
+<!-- 2020-01-29 mer. 12:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -246,6 +246,31 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em",
+               Macros: {
+                 bm: ["{\\boldsymbol #1}",1],
+               }
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -258,34 +283,83 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc3777e1">1. Parameters used for the Simscape Model</a></li>
-<li><a href="#org7fa1a16">2. Simulation Configuration - Configuration reference</a></li>
-<li><a href="#org7e9bc96">3. Subsystem Reference</a></li>
-<li><a href="#orgfa5fbd3">4. Basic configuration for the Fixed base, Mobile Platform and Struts</a></li>
-<li><a href="#org09d2012">5. Sensors included in the Struts and on the Mobile Platform</a></li>
-<li><a href="#orgbe9032d">6. Inertial Sensors</a>
+<li><a href="#org002dfa5">1. Parameters used for the Simscape Model</a></li>
+<li><a href="#orgf99cee5">2. Simulation Configuration - Configuration reference</a></li>
+<li><a href="#org7bf96b7">3. Subsystem Reference</a></li>
+<li><a href="#orgae34e57">4. Subsystem - Fixed base and Mobile Platform</a></li>
+<li><a href="#org2e16af3">5. Subsystem - Struts</a>
 <ul>
-<li><a href="#org8a7e37e">6.1. Z-Axis Geophone</a></li>
-<li><a href="#orgcd29586">6.2. Z-Axis Accelerometer</a></li>
+<li><a href="#org59382cb">5.1. Strut Configuration</a></li>
+<li><a href="#org5a54286">5.2. Z-Axis Geophone</a>
+<ul>
+<li><a href="#org7f22bd7">5.2.1. Working Principle</a></li>
+<li><a href="#org3956dae">5.2.2. Initialization function</a></li>
+</ul>
+</li>
+<li><a href="#org2561089">5.3. Z-Axis Accelerometer</a>
+<ul>
+<li><a href="#org70a289b">5.3.1. Working Principle</a></li>
+<li><a href="#orgc7763c4">5.3.2. Initialization function</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc3777e1" class="outline-2">
-<h2 id="orgc3777e1"><span class="section-number-2">1</span> Parameters used for the Simscape Model</h2>
-</div>
-
-<div id="outline-container-org7fa1a16" class="outline-2">
-<h2 id="org7fa1a16"><span class="section-number-2">2</span> Simulation Configuration - Configuration reference</h2>
-<div class="outline-text-2" id="text-2">
 <p>
-As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be shared among all the simulink files.
+In this document is explained how the Simscape model of the Stewart Platform is implemented.
 </p>
 
 <p>
-This is done using something called &ldquo;Configuration Reference&rdquo; (<a href="https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html">documentation</a>).
+It is divided in the following sections:
+</p>
+<ul class="org-ul">
+<li>section <a href="#org2553b43">1</a>: is explained how the parameters of the Stewart platform are set for the Simscape model</li>
+<li>section <a href="#orgc20ead1">2</a>: the Simulink configuration (solver, simulation time, &#x2026;) is shared among all the Simulink files. It is explain how this is done.</li>
+<li>section <a href="#org374fa44">3</a>: All the elements (platforms, struts, sensors, &#x2026;) are saved in separate files and imported in Simulink files using &ldquo;subsystem referenced&rdquo;.</li>
+<li>section <a href="#org0562d05">4</a>: The simscape model for the fixed base and mobile platform are described in this section.</li>
+<li>section <a href="#org0ff5129">5</a>: The simscape model for the Stewart platform struts is described in this section.</li>
+</ul>
+
+<div id="outline-container-org002dfa5" class="outline-2">
+<h2 id="org002dfa5"><span class="section-number-2">1</span> Parameters used for the Simscape Model</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a id="org2553b43"></a>
+The Simscape Model of the Stewart Platform is working with the <code>stewart</code> structure generated using the functions described <a href="stewart-architecture.html">here</a>.
+</p>
+
+<p>
+All the geometry and inertia of the mechanical elements are defined in the <code>stewart</code> structure.
+</p>
+
+<p>
+By updating the <code>stewart</code> structure in the workspace, the Simscape model will be automatically updated.
+</p>
+
+<p>
+Thus, nothing should be changed by hand inside the Simscape model.
+</p>
+
+<p>
+The main advantage to have all the parameters defined in one structure (and not hard-coded in some simulink blocs) it that we can easily change the Stewart architecture/parameters in a Matlab script to perform some parametric study for instance.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgf99cee5" class="outline-2">
+<h2 id="orgf99cee5"><span class="section-number-2">2</span> Simulation Configuration - Configuration reference</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a id="orgc20ead1"></a>
+As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be <b>shared</b> among all the simulink files.
+</p>
+
+<p>
+This is done using something called &ldquo;<b>Configuration Reference</b>&rdquo; (<a href="https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html">documentation</a>).
 </p>
 
 <p>
@@ -298,7 +372,7 @@ It is automatically loaded when the Simulink project is open. It can be loaded m
 </div>
 
 <p>
-It is however possible to modify specific parameters just for one Simulink file using the <code>set_param</code> command:
+It is however possible to modify specific parameters just for one simulation using the <code>set_param</code> command:
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-variable-name">conf_simscape</span>, <span class="org-string">'StopTime'</span>, 1);
@@ -307,10 +381,11 @@ It is however possible to modify specific parameters just for one Simulink file 
 </div>
 </div>
 
-<div id="outline-container-org7e9bc96" class="outline-2">
-<h2 id="org7e9bc96"><span class="section-number-2">3</span> Subsystem Reference</h2>
+<div id="outline-container-org7bf96b7" class="outline-2">
+<h2 id="org7bf96b7"><span class="section-number-2">3</span> Subsystem Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
+<a id="org374fa44"></a>
 Several Stewart platform models are used, for instance one is use to study the dynamics while the other is used to apply active damping techniques.
 </p>
 
@@ -328,29 +403,163 @@ These shared subsystems are:
 </ul>
 
 <p>
-These subsystems are referenced from another subsystem called <code>Stewart_Platform.slx</code>, that basically connect them correctly.
-This subsystem is then referenced in other simulink models for various purposes.
+These subsystems are referenced from another subsystem called <code>Stewart_Platform.slx</code> shown in figure <a href="#org7f7ef2b">1</a>, that basically connect them correctly.
+This subsystem is then referenced in other simulink models for various purposes (control, analysis, simulation, &#x2026;).
+</p>
+
+
+<div id="org7f7ef2b" class="figure">
+<p><img src="figs/simscape_stewart_platform.png" alt="simscape_stewart_platform.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Simscape Subsystem of the Stewart platform. Encapsulate the Subsystems corresponding to the fixed base, mobile platform and all the struts.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgae34e57" class="outline-2">
+<h2 id="orgae34e57"><span class="section-number-2">4</span> Subsystem - Fixed base and Mobile Platform</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<a id="org0562d05"></a>
+Both the fixed base and the mobile platform simscape models share many similarities.
+</p>
+
+<p>
+Their are both composed of:
+</p>
+<ul class="org-ul">
+<li>a solid body representing the platform</li>
+<li>6 rigid transform blocks to go from the frame \(\{F\}\) (resp. \(\{M\}\)) to the location of the joints.
+These rigid transform are using \({}^F\bm{a}_i\) (resp. \({}^M\bm{b}_i\)) for the position of the joint and \({}^F\bm{R}_{a_i}\) (resp. \({}^M\bm{R}_{b_i}\)) for the orientation of the joint.</li>
+</ul>
+
+<p>
+As always, the parameters that define the geometry are taken from the <code>stewart</code> structure.
+</p>
+
+
+<div id="orga1b9893" class="figure">
+<p><img src="figs/simscape_fixed_base.png" alt="simscape_fixed_base.png" width="1000px" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Simscape Model of the Fixed base</p>
+</div>
+
+
+<div id="org1f71117" class="figure">
+<p><img src="figs/simscape_mobile_platform.png" alt="simscape_mobile_platform.png" width="800px" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Simscape Model of the Mobile platform</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e16af3" class="outline-2">
+<h2 id="org2e16af3"><span class="section-number-2">5</span> Subsystem - Struts</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<a id="org0ff5129"></a>
+</p>
+</div>
+<div id="outline-container-org59382cb" class="outline-3">
+<h3 id="org59382cb"><span class="section-number-3">5.1</span> Strut Configuration</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+For the Stewart platform, the 6 struts are identical.
+Thus, all the struts used in the Stewart platform are referring to the same subsystem called <code>stewart_strut.slx</code> and shown in Figure <a href="#org9ef7b41">4</a>.
+</p>
+
+<p>
+This strut as the following structure:
+</p>
+<ul class="org-ul">
+<li><b>Universal Joint*</b> connected on the Fixed base</li>
+<li><b>Prismatic Joint*</b> for the actuator</li>
+<li><b>Spherical Joint*</b> connected on the Mobile platform</li>
+</ul>
+
+<p>
+This configuration is called <b>UPS</b>.
+</p>
+
+<p>
+The other common configuration <b>SPS</b> has the disadvantage of having additional passive degrees-of-freedom corresponding to the rotation of the strut around its main axis.
+This is why the <b>UPS</b> configuration is used, but other configuration can be easily implemented.
+</p>
+
+
+<div id="org9ef7b41" class="figure">
+<p><img src="figs/simscape_strut.png" alt="simscape_strut.png" width="800px" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Simscape model of the Stewart platform&rsquo;s strut</p>
+</div>
+
+<p>
+Several sensors are included in the strut that may or may not be used for control:
+</p>
+<ul class="org-ul">
+<li>Relative Displacement sensor: gives the relative displacement of the strut.</li>
+<li>Force sensor: measure the total force applied by the force actuator, the stiffness and damping forces in the direction of the strut.</li>
+<li>Inertial sensor: measure the absolute motion (velocity) of the top part of the strut in the direction of the strut.</li>
+</ul>
+
+<p>
+There is two main types of inertial sensor that can be used to measure the absolute motion of the top part of the strut in the direction of the strut:
+</p>
+<ul class="org-ul">
+<li>a geophone that measures the absolute velocity above some frequency</li>
+<li>an accelerometer that measures the absolute acceleration below some frequency</li>
+</ul>
+
+<p>
+Both inertial sensors are described bellow.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgfa5fbd3" class="outline-2">
-<h2 id="orgfa5fbd3"><span class="section-number-2">4</span> Basic configuration for the Fixed base, Mobile Platform and Struts</h2>
+<div id="outline-container-org5a54286" class="outline-3">
+<h3 id="org5a54286"><span class="section-number-3">5.2</span> Z-Axis Geophone</h3>
+<div class="outline-text-3" id="text-5-2">
 </div>
-
-<div id="outline-container-org09d2012" class="outline-2">
-<h2 id="org09d2012"><span class="section-number-2">5</span> Sensors included in the Struts and on the Mobile Platform</h2>
-</div>
-
-<div id="outline-container-orgbe9032d" class="outline-2">
-<h2 id="orgbe9032d"><span class="section-number-2">6</span> Inertial Sensors</h2>
-<div class="outline-text-2" id="text-6">
-</div>
-<div id="outline-container-org8a7e37e" class="outline-3">
-<h3 id="org8a7e37e"><span class="section-number-3">6.1</span> Z-Axis Geophone</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-org7f22bd7" class="outline-4">
+<h4 id="org7f22bd7"><span class="section-number-4">5.2.1</span> Working Principle</h4>
+<div class="outline-text-4" id="text-5-2-1">
 <p>
-<a id="org8a1f5cd"></a>
+From the schematic of the Z-axis geophone shown in Figure <a href="#orgbecc7b0">5</a>, we can write the transfer function from the support velocity \(\dot{w}\) to the relative velocity of the inertial mass \(\dot{d}\):
+\[ \frac{\dot{d}}{\dot{w}} = \frac{-\frac{s^2}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+</p>
+<ul class="org-ul">
+<li>\(\omega_0 = \sqrt{\frac{k}{m}}\)</li>
+<li>\(\xi = \frac{1}{2} \sqrt{\frac{m}{k}}\)</li>
+</ul>
+
+
+<div id="orgbecc7b0" class="figure">
+<p><img src="figs/inertial_sensor.png" alt="inertial_sensor.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Schematic of a Z-Axis geophone</p>
+</div>
+
+<p>
+We see that at frequencies above \(\omega_0\):
+\[ \frac{\dot{d}}{\dot{w}} \approx -1 \]
+</p>
+
+<p>
+And thus, the measurement of the relative velocity of the mass with respect to its support gives the absolute velocity of the support.
+</p>
+
+<p>
+We generally want to have the smallest resonant frequency \(\omega_0\) to measure low frequency absolute velocity, however there is a trade-off between \(\omega_0\) and the mass of the inertial mass.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3956dae" class="outline-4">
+<h4 id="org3956dae"><span class="section-number-4">5.2.2</span> Initialization function</h4>
+<div class="outline-text-4" id="text-5-2-2">
+<p>
+<a id="orgabe7399"></a>
 </p>
 
 <p>
@@ -380,12 +589,56 @@ This Matlab function is accessible <a href="../src/initializeZAxisGeophone.m">he
 </div>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgcd29586" class="outline-3">
-<h3 id="orgcd29586"><span class="section-number-3">6.2</span> Z-Axis Accelerometer</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-org2561089" class="outline-3">
+<h3 id="org2561089"><span class="section-number-3">5.3</span> Z-Axis Accelerometer</h3>
+<div class="outline-text-3" id="text-5-3">
+</div>
+<div id="outline-container-org70a289b" class="outline-4">
+<h4 id="org70a289b"><span class="section-number-4">5.3.1</span> Working Principle</h4>
+<div class="outline-text-4" id="text-5-3-1">
 <p>
-<a id="org0db4022"></a>
+From the schematic of the Z-axis accelerometer shown in Figure <a href="#orgbacfc60">6</a>, we can write the transfer function from the support acceleration \(\ddot{w}\) to the relative position of the inertial mass \(d\):
+\[ \frac{d}{\ddot{w}} = \frac{-\frac{1}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+</p>
+<ul class="org-ul">
+<li>\(\omega_0 = \sqrt{\frac{k}{m}}\)</li>
+<li>\(\xi = \frac{1}{2} \sqrt{\frac{m}{k}}\)</li>
+</ul>
+
+
+<div id="orgbacfc60" class="figure">
+<p><img src="figs/inertial_sensor.png" alt="inertial_sensor.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Schematic of a Z-Axis geophone</p>
+</div>
+
+<p>
+We see that at frequencies below \(\omega_0\):
+\[ \frac{d}{\ddot{w}} \approx -\frac{1}{{\omega_0}^2} \]
+</p>
+
+<p>
+And thus, the measurement of the relative displacement of the mass with respect to its support gives the absolute acceleration of the support.
+</p>
+
+<p>
+Note that there is trade-off between:
+</p>
+<ul class="org-ul">
+<li>the highest measurable acceleration \(\omega_0\)</li>
+<li>the sensitivity of the accelerometer which is equal to \(-\frac{1}{{\omega_0}^2}\)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc7763c4" class="outline-4">
+<h4 id="orgc7763c4"><span class="section-number-4">5.3.2</span> Initialization function</h4>
+<div class="outline-text-4" id="text-5-3-2">
+<p>
+<a id="orge9014b7"></a>
 </p>
 
 <p>
@@ -420,9 +673,10 @@ This Matlab function is accessible <a href="../src/initializeZAxisAccelerometer.
 </div>
 </div>
 </div>
+</div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-01-28 mar. 17:37</p>
+<p class="date">Created: 2020-01-29 mer. 12:02</p>
 </div>
 </body>
 </html>

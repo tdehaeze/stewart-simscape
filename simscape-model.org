@@ -21,13 +21,33 @@
 :END:
 
 * Introduction                                                        :ignore:
+In this document is explained how the Simscape model of the Stewart Platform is implemented.
+
+It is divided in the following sections:
+- section [[sec:simscape_parameters]]: is explained how the parameters of the Stewart platform are set for the Simscape model
+- section [[sec:simulink_configuration]]: the Simulink configuration (solver, simulation time, ...) is shared among all the Simulink files. It is explain how this is done.
+- section [[sec:subsystem_reference]]: All the elements (platforms, struts, sensors, ...) are saved in separate files and imported in Simulink files using "subsystem referenced".
+- section [[sec:fixed_mobile_platforms]]: The simscape model for the fixed base and mobile platform are described in this section.
+- section [[sec:struts]]: The simscape model for the Stewart platform struts is described in this section.
 
 * Parameters used for the Simscape Model
+<<sec:simscape_parameters>>
+The Simscape Model of the Stewart Platform is working with the =stewart= structure generated using the functions described [[file:stewart-architecture.org][here]].
+
+All the geometry and inertia of the mechanical elements are defined in the =stewart= structure.
+
+By updating the =stewart= structure in the workspace, the Simscape model will be automatically updated.
+
+Thus, nothing should be changed by hand inside the Simscape model.
+
+The main advantage to have all the parameters defined in one structure (and not hard-coded in some simulink blocs) it that we can easily change the Stewart architecture/parameters in a Matlab script to perform some parametric study for instance.
+
 
 * Simulation Configuration - Configuration reference
-As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be shared among all the simulink files.
+<<sec:simulink_configuration>>
+As multiple simulink files will be used for simulation and tests, it is very useful to determine good simulation configuration that will be *shared* among all the simulink files.
 
-This is done using something called "Configuration Reference" ([[https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html][documentation]]).
+This is done using something called "*Configuration Reference*" ([[https://fr.mathworks.com/help/simulink/ug/more-about-configuration-references.html][documentation]]).
 
 Basically, the configuration is stored in a mat file =conf_simscape.mat= and then loaded in the workspace for it to be accessible to all the simulink models.
 It is automatically loaded when the Simulink project is open. It can be loaded manually with the command:
@@ -35,12 +55,13 @@ It is automatically loaded when the Simulink project is open. It can be loaded m
   load('mat/conf_simscape.mat');
 #+end_src
 
-It is however possible to modify specific parameters just for one Simulink file using the =set_param= command:
+It is however possible to modify specific parameters just for one simulation using the =set_param= command:
 #+begin_src matlab :eval no
   set_param(conf_simscape, 'StopTime', 1);
 #+end_src
 
 * Subsystem Reference
+<<sec:subsystem_reference>>
 Several Stewart platform models are used, for instance one is use to study the dynamics while the other is used to apply active damping techniques.
 
 However, all the Simscape models share some subsystems using the *Subsystem Reference* Simulink block ([[https://fr.mathworks.com/help/simulink/ug/referenced-subsystem-1.html][documentation]]).
@@ -50,15 +71,86 @@ These shared subsystems are:
 - =Mobile_Platform.slx= - Mobile platform of the Stewart Platform
 - =stewart_strut.slx= - One strut containing two spherical/universal joints, the actuator as well as the included sensors. A parameter =i= is initialized to determine what it the "number" of the strut.
 
-These subsystems are referenced from another subsystem called =Stewart_Platform.slx=, that basically connect them correctly.
-This subsystem is then referenced in other simulink models for various purposes.
+These subsystems are referenced from another subsystem called =Stewart_Platform.slx= shown in figure [[fig:simscape_stewart_platform]], that basically connect them correctly.
+This subsystem is then referenced in other simulink models for various purposes (control, analysis, simulation, ...).
 
-* Basic configuration for the Fixed base, Mobile Platform and Struts
+#+name: fig:simscape_stewart_platform
+#+caption: Simscape Subsystem of the Stewart platform. Encapsulate the Subsystems corresponding to the fixed base, mobile platform and all the struts.
+[[file:figs/simscape_stewart_platform.png]]
 
-* Sensors included in the Struts and on the Mobile Platform
+* Subsystem - Fixed base and Mobile Platform
+<<sec:fixed_mobile_platforms>>
+Both the fixed base and the mobile platform simscape models share many similarities.
 
-* Inertial Sensors
+Their are both composed of:
+- a solid body representing the platform
+- 6 rigid transform blocks to go from the frame $\{F\}$ (resp. $\{M\}$) to the location of the joints.
+  These rigid transform are using ${}^F\bm{a}_i$ (resp. ${}^M\bm{b}_i$) for the position of the joint and ${}^F\bm{R}_{a_i}$ (resp. ${}^M\bm{R}_{b_i}$) for the orientation of the joint.
+
+As always, the parameters that define the geometry are taken from the =stewart= structure.
+
+#+name: fig:simscape_fixed_base
+#+caption: Simscape Model of the Fixed base
+#+attr_html: :width 1000px
+[[file:figs/simscape_fixed_base.png]]
+
+#+name: fig:simscape_mobile_platform
+#+caption: Simscape Model of the Mobile platform
+#+attr_html: :width 800px
+[[file:figs/simscape_mobile_platform.png]]
+
+* Subsystem - Struts
+<<sec:struts>>
+** Strut Configuration
+For the Stewart platform, the 6 struts are identical.
+Thus, all the struts used in the Stewart platform are referring to the same subsystem called =stewart_strut.slx= and shown in Figure [[fig:simscape_strut]].
+
+This strut as the following structure:
+- *Universal Joint** connected on the Fixed base
+- *Prismatic Joint** for the actuator
+- *Spherical Joint** connected on the Mobile platform
+
+This configuration is called *UPS*.
+
+The other common configuration *SPS* has the disadvantage of having additional passive degrees-of-freedom corresponding to the rotation of the strut around its main axis.
+This is why the *UPS* configuration is used, but other configuration can be easily implemented.
+
+#+name: fig:simscape_strut
+#+caption: Simscape model of the Stewart platform's strut
+#+attr_html: :width 800px
+[[file:figs/simscape_strut.png]]
+
+Several sensors are included in the strut that may or may not be used for control:
+- Relative Displacement sensor: gives the relative displacement of the strut.
+- Force sensor: measure the total force applied by the force actuator, the stiffness and damping forces in the direction of the strut.
+- Inertial sensor: measure the absolute motion (velocity) of the top part of the strut in the direction of the strut.
+
+There is two main types of inertial sensor that can be used to measure the absolute motion of the top part of the strut in the direction of the strut:
+- a geophone that measures the absolute velocity above some frequency
+- an accelerometer that measures the absolute acceleration below some frequency
+
+Both inertial sensors are described bellow.
+
 ** Z-Axis Geophone
+*** Working Principle
+From the schematic of the Z-axis geophone shown in Figure [[fig:z_axis_geophone]], we can write the transfer function from the support velocity $\dot{w}$ to the relative velocity of the inertial mass $\dot{d}$:
+\[ \frac{\dot{d}}{\dot{w}} = \frac{-\frac{s^2}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+- $\omega_0 = \sqrt{\frac{k}{m}}$
+- $\xi = \frac{1}{2} \sqrt{\frac{m}{k}}$
+
+#+name: fig:z_axis_geophone
+#+caption: Schematic of a Z-Axis geophone
+[[file:figs/inertial_sensor.png]]
+
+We see that at frequencies above $\omega_0$:
+\[ \frac{\dot{d}}{\dot{w}} \approx -1 \]
+
+And thus, the measurement of the relative velocity of the mass with respect to its support gives the absolute velocity of the support.
+
+We generally want to have the smallest resonant frequency $\omega_0$ to measure low frequency absolute velocity, however there is a trade-off between $\omega_0$ and the mass of the inertial mass.
+
+*** Initialization function
 :PROPERTIES:
 :header-args:matlab+: :tangle ./src/initializeZAxisGeophone.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -89,6 +181,27 @@ This Matlab function is accessible [[file:../src/initializeZAxisGeophone.m][here
 #+end_src
 
 ** Z-Axis Accelerometer
+*** Working Principle
+From the schematic of the Z-axis accelerometer shown in Figure [[fig:z_axis_accelerometer]], we can write the transfer function from the support acceleration $\ddot{w}$ to the relative position of the inertial mass $d$:
+\[ \frac{d}{\ddot{w}} = \frac{-\frac{1}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+- $\omega_0 = \sqrt{\frac{k}{m}}$
+- $\xi = \frac{1}{2} \sqrt{\frac{m}{k}}$
+
+#+name: fig:z_axis_accelerometer
+#+caption: Schematic of a Z-Axis geophone
+[[file:figs/inertial_sensor.png]]
+
+We see that at frequencies below $\omega_0$:
+\[ \frac{d}{\ddot{w}} \approx -\frac{1}{{\omega_0}^2} \]
+
+And thus, the measurement of the relative displacement of the mass with respect to its support gives the absolute acceleration of the support.
+
+Note that there is trade-off between:
+- the highest measurable acceleration $\omega_0$
+- the sensitivity of the accelerometer which is equal to $-\frac{1}{{\omega_0}^2}$
+
+*** Initialization function
 :PROPERTIES:
 :header-args:matlab+: :tangle ./src/initializeZAxisAccelerometer.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -120,3 +233,4 @@ This Matlab function is accessible [[file:../src/initializeZAxisAccelerometer.m]
       save('./mat/accelerometer_z_axis.mat', 'accelerometer');
   end
 #+end_src
+
