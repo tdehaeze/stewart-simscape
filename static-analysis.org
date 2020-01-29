@@ -20,45 +20,6 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
-* Jacobian
-** Relation to platform parameters
-A Jacobian is defined by:
-- the orientations of the struts $\hat{s}_i$ expressed in a frame $\{A\}$ linked to the fixed platform.
-- the vectors from $O_B$ to $b_i$ expressed in the frame $\{A\}$
-
-Then, the choice of $O_B$ changes the Jacobian.
-
-** Jacobian for displacement
-\[ \dot{q} = J \dot{X} \]
-With:
-- $q = [q_1\ q_2\ q_3\ q_4\ q_5\ q_6]$ vector of linear displacement of actuated joints
-- $X = [x\ y\ z\ \theta_x\ \theta_y\ \theta_z]$ position and orientation of $O_B$ expressed in the frame $\{A\}$
-
-For very small displacements $\delta q$ and $\delta X$, we have $\delta q = J \delta X$.
-
-** Jacobian for forces
-\[ F = J^T \tau \]
-With:
-- $\tau = [\tau_1\ \tau_2\ \tau_3\ \tau_4\ \tau_5\ \tau_6]$ vector of actuator forces
-- $F = [f_x\ f_y\ f_z\ n_x\ n_y\ n_z]$ force and torque acting on point $O_B$
-
-* Stiffness matrix $K$
-
-\[ K = J^T \text{diag}(k_i) J \]
-
-If all the struts have the same stiffness $k$, then $K = k J^T J$
-
-$K$ only depends of the geometry of the stewart platform: it depends on the Jacobian, that is on the orientations of the struts, position of the joints and choice of frame $\{B\}$.
-
-\[ F = K X \]
-
-With $F$ forces and torques applied to the moving platform at the origin of $\{B\}$ and $X$ the translations and rotations of $\{B\}$ with respect to $\{A\}$.
-
-\[ C = K^{-1} \]
-
-The compliance element $C_{ij}$ is then the stiffness
-\[ X_i = C_{ij} F_j \]
-
 * Coupling
 What causes the coupling from $F_i$ to $X_i$ ?
 
