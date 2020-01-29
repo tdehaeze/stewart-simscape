@@ -146,6 +146,9 @@ Let's check the size of =G=:
 #+RESULTS:
 : size(G)
 : State-space model with 12 outputs, 6 inputs, and 18 states.
+: 'org_babel_eoe'
+: ans =
+:     'org_babel_eoe'
 
 We expect to have only 12 states (corresponding to the 6dof of the mobile platform).
 #+begin_src matlab :results replace output
@@ -261,6 +264,18 @@ Save the movie of the mode shape.
 #+begin_src matlab
   end
 #+end_src
+
+#+name: fig:mode1
+#+caption: Identified mode - 1
+[[file:figs/mode1.gif]]
+
+#+name: fig:mode3
+#+caption: Identified mode - 3
+[[file:figs/mode3.gif]]
+
+#+name: fig:mode5
+#+caption: Identified mode - 5
+[[file:figs/mode5.gif]]
 
 ** Identification
 #+begin_src matlab
