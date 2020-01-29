@@ -15,8 +15,8 @@ function [stewart] = initializeStrutDynamics(stewart, args)
 
 arguments
     stewart
-    args.Ki (6,1) double {mustBeNumeric, mustBePositive} = 1e6*ones(6,1)
-    args.Ci (6,1) double {mustBeNumeric, mustBePositive} = 1e1*ones(6,1)
+    args.Ki (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e6*ones(6,1)
+    args.Ci (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
 end
 
 stewart.Ki = args.Ki;

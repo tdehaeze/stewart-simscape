@@ -5,19 +5,27 @@ function [stewart] = initializeJointDynamics(stewart, args)
 %
 % Inputs:
 %    - args - Structure with the following fields:
-%        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
-%        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
+%        - Kbi [6x1] - Rotational Stiffness for each top spherical joints [N/rad]
+%        - Cbi [6x1] - Damping of each top spherical joint [N/(rad/s)]
+%        - Kti [6x1] - Rotational Stiffness for each bottom universal joints [N/rad]
+%        - Cti [6x1] - Damping of each bottom universal joint [N/(rad/s)]
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%        - Kri [6x1] - Rotational Stiffness for each spherical joints [N/rad]
-%        - Cri [6x1] - Damping of each spherical joint [N/(rad/s)]
+%        - Kbi [6x1] - Rotational Stiffness for each top spherical joints [N/rad]
+%        - Cbi [6x1] - Damping of each top spherical joint [N/(rad/s)]
+%        - Kti [6x1] - Rotational Stiffness for each bottom universal joints [N/rad]
+%        - Cti [6x1] - Damping of each bottom universal joint [N/(rad/s)]
 
 arguments
     stewart
-    args.Kri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
-    args.Cri (6,1) double {mustBeNumeric, mustBePositive} = zeros(6,1)
+    args.Kti (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+    args.Cti (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+    args.Kbi (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
+    args.Cbi (6,1) double {mustBeNumeric, mustBeNonnegative} = zeros(6,1)
 end
 
-stewart.Kri = args.Kri;
-stewart.Cri = args.Cri;
+stewart.Kti = args.Kti;
+stewart.Cti = args.Cti;
+stewart.Kbi = args.Kbi;
+stewart.Cbi = args.Cbi;
