@@ -22,7 +22,39 @@
 :END:
 
 * Introduction                                                        :ignore:
-* Matlab Init                                                :noexport:ignore:
+
+* Jacobian Analysis
+** Introduction                                                      :ignore:
+
+** Jacobian Computation
+
+** Velocity of the struts to the velocity of the mobile platform
+
+** Displacement of the struts to the displacement of the mobile platform
+
+** Force Transformation
+
+* Forward and Inverse Kinematics
+** Introduction                                                      :ignore:
+
+** Inverse Kinematics
+
+
+** Forward Kinematics
+
+
+** Approximate Forward Kinematics
+
+
+* Stiffness Analysis
+** Introduction                                                      :ignore:
+
+** Computation of the Stiffness and Compliance Matrix
+
+* Estimated required actuator stroke for specified platform mobility
+** Introduction                                                      :ignore:
+
+** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
@@ -35,10 +67,10 @@
   simulinkproject('./');
 #+end_src
 
-* Needed Actuator Stroke
+** Needed Actuator Stroke
 The goal is to determine the needed stroke of the actuators to obtain wanted translations and rotations.
 
-** Stewart architecture definition
+*** Stewart architecture definition
 We use a cubic architecture.
 
 #+begin_src matlab :results silent
@@ -62,7 +94,7 @@ We use a cubic architecture.
   save('./mat/stewart.mat', 'stewart');
 #+end_src
 
-** Wanted translations and rotations
+*** Wanted translations and rotations
 We define wanted translations and rotations
 #+begin_src matlab :results silent
   Tx_max = 15e-6; % Translation [m]
@@ -72,7 +104,7 @@ We define wanted translations and rotations
   Ry_max = 30e-6; % Rotation [rad]
 #+end_src
 
-** Needed stroke for "pure" rotations or translations
+*** Needed stroke for "pure" rotations or translations
 First, we estimate the needed actuator stroke for "pure" rotations and translation.
 #+begin_src matlab :results silent
   LTx = stewart.Jd*[Tx_max 0 0 0 0 0]';
@@ -88,6 +120,23 @@ First, we estimate the needed actuator stroke for "pure" rotations and translati
 
 #+RESULTS:
 : From -1.2e-05[m] to 1.1e-05[m]: Total stroke = 22.9[um]
+
+* Estimated platform mobility from specified actuator stroke
+** Introduction                                                      :ignore:
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('./');
+#+end_src
+
 
 * Functions
 ** =computeJacobian=: Compute the Jacobian Matrix
