@@ -196,6 +196,12 @@ As the inverse kinematic can be easily solved exactly this is not much useful, h
 The function =forwardKinematicsApprox= (described [[sec:forwardKinematicsApprox][here]]) can be used to solve the forward kinematic problem using the Jacobian matrix.
 
 ** Estimation of the range validity of the approximate inverse kinematics
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/approximate_inverse_kinematics_validity.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
+<<sec:approximate_inverse_kinematics_validity>>
+
 *** Introduction                                                    :ignore:
 As we know how to exactly solve the Inverse kinematic problem, we can compare the exact solution with the approximate solution using the Jacobian matrix.
 For small displacements, the approximate solution is expected to work well.
@@ -299,6 +305,10 @@ The relative strut length displacement is shown in Figure [[fig:inverse_kinemati
 For small wanted displacements (up to $\approx 1\%$ of the size of the Hexapod), the approximate inverse kinematic solution using the Jacobian matrix is quite correct.
 
 * Estimated required actuator stroke from specified platform mobility
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/required_stroke_from_mobility.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:required_actuator_stroke>>
 ** Introduction                                                      :ignore:
 Let's say one want to design a Stewart platform with some specified mobility (position and orientation).
@@ -450,6 +460,10 @@ We obtain the required actuator stroke:
 This is probably a much realistic estimation of the required actuator stroke.
 
 * Estimated platform mobility from specified actuator stroke
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/mobility_from_actuator_stroke.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:obtained_mobility_from_stroke>>
 ** Introduction                                                      :ignore:
 Here, from some value of the actuator stroke, we would like to estimate the mobility of the Stewart platform.
