@@ -1,8 +1,5 @@
 #+TITLE: Stewart Platforms
 :DRAWER:
-#+OPTIONS: toc:nil
-#+OPTIONS: html-postamble:nil
-
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 #+HTML_HEAD: <script src="./js/jquery.min.js"></script>
