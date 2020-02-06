@@ -1,4 +1,4 @@
-#+TITLE: Stewart Platform - Active Damping
+#+TITLE: Stewart Platform - Decentralized Active Damping
 :DRAWER:
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
@@ -20,7 +20,249 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+* Introduction                                                        :ignore:
+
+The following decentralized active damping techniques are briefly studied:
+- Inertial Control (proportional feedback of the absolute velocity): Section [[sec:active_damping_inertial]]
+- Integral Force Feedback: Section [[sec:active_damping_iff]]
+- Direct feedback of the relative velocity of each strut: Section [[sec:active_damping_dvf]]
+
 * Inertial Control
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/active_damping_inertial.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
+<<sec:active_damping_inertial>>
+
+** Introduction                                                      :ignore:
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('./');
+#+end_src
+
+#+begin_src matlab
+  open('simulink/stewart_active_damping.slx')
+#+end_src
+
+** Identification of the Dynamics
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'disable', true);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Vm'],  1, 'openoutput'); io_i = io_i + 1; % Absolute velocity of each leg [m/s]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Vm1', 'Vm2', 'Vm3', 'Vm4', 'Vm5', 'Vm6'};
+#+end_src
+
+The transfer function from actuator forces to force sensors is shown in Figure [[fig:inertial_plant_coupling]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    plot(freqs, abs(squeeze(freqresp(G(['Vm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G('Vm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [$\frac{m/s}{N}$]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(['Vm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G('Vm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$F_{m,i}/F_i$', '$F_{m,j}/F_i$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/inertial_plant_coupling.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:inertial_plant_coupling
+#+caption: Transfer function from the Actuator force $F_{i}$ to the absolute velocity of the same leg $v_{m,i}$ and to the absolute velocity of the other legs $v_{m,j}$ with $i \neq j$ in grey ([[./figs/inertial_plant_coupling.png][png]], [[./figs/inertial_plant_coupling.pdf][pdf]])
+[[file:figs/inertial_plant_coupling.png]]
+
+** Effect of the Flexible Joint stiffness on the Dynamics
+We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
+#+begin_src matlab
+  stewart = initializeJointDynamics(stewart);
+  Gf = linearize(mdl, io, options);
+  Gf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gf.OutputName = {'Vm1', 'Vm2', 'Vm3', 'Vm4', 'Vm5', 'Vm6'};
+#+end_src
+
+The new dynamics from force actuator to force sensor is shown in Figure [[fig:inertial_plant_flexible_joint_decentralized]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G( 'Vm1', 'F1'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gf('Vm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [$\frac{m/s}{N}$]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G( 'Vm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Perfect Joints');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gf('Vm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Flexible Joints');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend('location', 'southwest')
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/inertial_plant_flexible_joint_decentralized.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:inertial_plant_flexible_joint_decentralized
+#+caption: Transfer function from the Actuator force $F_{i}$ to the absolute velocity sensor $v_{m,i}$ ([[./figs/inertial_plant_flexible_joint_decentralized.png][png]], [[./figs/inertial_plant_flexible_joint_decentralized.pdf][pdf]])
+[[file:figs/inertial_plant_flexible_joint_decentralized.png]]
+
+** Obtained Damping
+The control is a performed in a decentralized manner.
+The $6 \times 6$ control is a diagonal matrix with pure proportional action on the diagonal:
+\[ K(s) = g
+  \begin{bmatrix}
+    1 & & 0 \\
+    & \ddots & \\
+    0 & & 1
+  \end{bmatrix} \]
+
+The root locus is shown in figure [[fig:root_locus_inertial_rot_stiffness]] and the obtained pole damping function of the control gain is shown in figure [[fig:pole_damping_gain_inertial_rot_stiffness]].
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  plot(real(pole(G)),  imag(pole(G)),  'x');
+  plot(real(pole(Gf)), imag(pole(Gf)), 'x');
+  set(gca,'ColorOrderIndex',1);
+  plot(real(tzero(G)),  imag(tzero(G)),  'o');
+  plot(real(tzero(Gf)), imag(tzero(Gf)), 'o');
+  for i = 1:length(gains)
+    cl_poles = pole(feedback(G, gains(i)*eye(6)));
+    set(gca,'ColorOrderIndex',1);
+    plot(real(cl_poles), imag(cl_poles), '.');
+    cl_poles = pole(feedback(Gf, gains(i)*eye(6)));
+    set(gca,'ColorOrderIndex',2);
+    plot(real(cl_poles), imag(cl_poles), '.');
+  end
+  ylim([0,2000]);
+  xlim([-2000,0]);
+  xlabel('Real Part')
+  ylabel('Imaginary Part')
+  axis square
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/root_locus_inertial_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:root_locus_inertial_rot_stiffness
+#+caption: Root Locus plot with Decentralized Inertial Control when considering the stiffness of flexible joints ([[./figs/root_locus_inertial_rot_stiffness.png][png]], [[./figs/root_locus_inertial_rot_stiffness.pdf][pdf]])
+[[file:figs/root_locus_inertial_rot_stiffness.png]]
+
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  for i = 1:length(gains)
+    set(gca,'ColorOrderIndex',1);
+    cl_poles = pole(feedback(G, gains(i)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+    set(gca,'ColorOrderIndex',2);
+    cl_poles = pole(feedback(Gf, gains(i)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+  end
+  xlabel('Control Gain');
+  ylabel('Damping of the Poles');
+  set(gca, 'XScale', 'log');
+  ylim([0,pi/2]);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/pole_damping_gain_inertial_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:pole_damping_gain_inertial_rot_stiffness
+#+caption: Damping of the poles with respect to the gain of the Decentralized Inertial Control when considering the stiffness of flexible joints ([[./figs/pole_damping_gain_inertial_rot_stiffness.png][png]], [[./figs/pole_damping_gain_inertial_rot_stiffness.pdf][pdf]])
+[[file:figs/pole_damping_gain_inertial_rot_stiffness.png]]
+
+** Conclusion
+#+begin_important
+  Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
+#+end_important
+
+* Integral Force Feedback
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/active_damping_iff.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
+<<sec:active_damping_iff>>
+
+** Introduction                                                      :ignore:
 ** Matlab Init                                             :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
 <<matlab-dir>>
@@ -34,24 +276,25 @@
   simulinkproject('./');
 #+end_src
 
-** Simscape Model
 #+begin_src matlab
   open('simulink/stewart_active_damping.slx')
 #+end_src
 
-** Initialize the Stewart model
+** Identification of the Dynamics with perfect Joints
+We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
   stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateCubicConfiguration(stewart, 'Hc', 40e-3, 'FOc', 45e-3, 'FHa', 5e-3, 'MHb', 5e-3);
+  stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'disable', true);
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
   stewart = initializeStewartPose(stewart);
 #+end_src
 
-** Identification of the Dynamics
+And we identify the dynamics from force actuators to force sensors.
 #+begin_src matlab
   %% Options for Linearized
   options = linearizeOptions;
@@ -62,34 +305,414 @@
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/WVB'], 1, 'openoutput'); io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput'); io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Fm'], 1, 'openoutput'); io_i = io_i + 1; % Force Sensor Outputs [N]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
   G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
-  G.OutputName = {'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz', ...
-                  'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
+  G.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
 #+end_src
 
-** Analysis
+The transfer function from actuator forces to force sensors is shown in Figure [[fig:iff_plant_coupling]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    plot(freqs, abs(squeeze(freqresp(G(['Fm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G('Fm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(['Fm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G('Fm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$F_{m,i}/F_i$', '$F_{m,j}/F_i$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/iff_plant_coupling.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:iff_plant_coupling
+#+caption: Transfer function from the Actuator force $F_{i}$ to the Force sensor of the same leg $F_{m,i}$ and to the force sensor of the other legs $F_{m,j}$ with $i \neq j$ in grey ([[./figs/iff_plant_coupling.png][png]], [[./figs/iff_plant_coupling.pdf][pdf]])
+[[file:figs/iff_plant_coupling.png]]
+
+** Effect of the Flexible Joint stiffness on the Dynamics
+We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
 #+begin_src matlab
-  freqs = 2*pi*logspace(1, 4, 1000);
-
-  figure;
-  bode(G({'D1', 'D2', 'D3', 'D4', 'D5', 'D6'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
-
-  figure;
-  bode(stewart.J*G({'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
+  stewart = initializeJointDynamics(stewart);
+  Gf = linearize(mdl, io, options);
+  Gf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gf.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
 #+end_src
 
-#+begin_src matlab
+The new dynamics from force actuator to force sensor is shown in Figure [[fig:iff_plant_flexible_joint_decentralized]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
   figure;
-  bode(G({'D1', 'D2', 'D3', 'D4', 'D5', 'D6'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), stewart.J*G({'Vx', 'Vy', 'Vz', 'Wx', 'Wy', 'Wz'}, {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'}), freqs)
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G( 'Fm1', 'F1'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gf('Fm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G( 'Fm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Perfect Joints');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gf('Fm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Flexible Joints');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend('location', 'southwest')
+
+  linkaxes([ax1,ax2],'x');
 #+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/iff_plant_flexible_joint_decentralized.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:iff_plant_flexible_joint_decentralized
+#+caption: Transfer function from the Actuator force $F_{i}$ to the force sensor $F_{m,i}$ ([[./figs/iff_plant_flexible_joint_decentralized.png][png]], [[./figs/iff_plant_flexible_joint_decentralized.pdf][pdf]])
+[[file:figs/iff_plant_flexible_joint_decentralized.png]]
+
+** Obtained Damping
+The control is a performed in a decentralized manner.
+The $6 \times 6$ control is a diagonal matrix with pure integration action on the diagonal:
+\[ K(s) = g
+  \begin{bmatrix}
+    \frac{1}{s} & & 0 \\
+    & \ddots & \\
+    0 & & \frac{1}{s}
+  \end{bmatrix} \]
+
+The root locus is shown in figure [[fig:root_locus_iff_rot_stiffness]] and the obtained pole damping function of the control gain is shown in figure [[fig:pole_damping_gain_iff_rot_stiffness]].
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  plot(real(pole(G)),  imag(pole(G)),  'x');
+  plot(real(pole(Gf)), imag(pole(Gf)), 'x');
+  set(gca,'ColorOrderIndex',1);
+  plot(real(tzero(G)),  imag(tzero(G)),  'o');
+  plot(real(tzero(Gf)), imag(tzero(Gf)), 'o');
+  for i = 1:length(gains)
+    cl_poles = pole(feedback(G, (gains(i)/s)*eye(6)));
+    set(gca,'ColorOrderIndex',1);
+    plot(real(cl_poles), imag(cl_poles), '.');
+    cl_poles = pole(feedback(Gf, (gains(i)/s)*eye(6)));
+    set(gca,'ColorOrderIndex',2);
+    plot(real(cl_poles), imag(cl_poles), '.');
+  end
+  ylim([0,inf]);
+  xlim([-3000,0]);
+  xlabel('Real Part')
+  ylabel('Imaginary Part')
+  axis square
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/root_locus_iff_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:root_locus_iff_rot_stiffness
+#+caption: Root Locus plot with Decentralized Integral Force Feedback when considering the stiffness of flexible joints ([[./figs/root_locus_iff_rot_stiffness.png][png]], [[./figs/root_locus_iff_rot_stiffness.pdf][pdf]])
+[[file:figs/root_locus_iff_rot_stiffness.png]]
+
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  for i = 1:length(gains)
+    set(gca,'ColorOrderIndex',1);
+    cl_poles = pole(feedback(G, (gains(i)/s)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+    set(gca,'ColorOrderIndex',2);
+    cl_poles = pole(feedback(Gf, (gains(i)/s)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+  end
+  xlabel('Control Gain');
+  ylabel('Damping of the Poles');
+  set(gca, 'XScale', 'log');
+  ylim([0,pi/2]);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/pole_damping_gain_iff_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:pole_damping_gain_iff_rot_stiffness
+#+caption: Damping of the poles with respect to the gain of the Decentralized Integral Force Feedback when considering the stiffness of flexible joints ([[./figs/pole_damping_gain_iff_rot_stiffness.png][png]], [[./figs/pole_damping_gain_iff_rot_stiffness.pdf][pdf]])
+[[file:figs/pole_damping_gain_iff_rot_stiffness.png]]
 
 ** Conclusion
-It is similar to use:
-- one 6dof inertial sensor and the Jacobian the have the velocity of each lim
-- 6 1dof inertial sensor in each top part of the limbs
+#+begin_important
+  The joint stiffness has a huge impact on the attainable active damping performance when using force sensors.
+  Thus, if Integral Force Feedback is to be used in a Stewart platform with flexible joints, the rotational stiffness of the joints should be minimized.
+#+end_important
+
+* Direct Velocity Feedback
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/active_damping_dvf.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
+<<sec:active_damping_dvf>>
+
+** Introduction                                                      :ignore:
+** Matlab Init                                             :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('./');
+#+end_src
+
+#+begin_src matlab
+  open('simulink/stewart_active_damping.slx')
+#+end_src
+
+** Identification of the Dynamics with perfect Joints
+We first initialize the Stewart platform without joint stiffness.
+#+begin_src matlab
+  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'disable', true);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+And we identify the dynamics from force actuators to force sensors.
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput'); io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Dm'], 1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [N]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+The transfer function from actuator forces to relative motion sensors is shown in Figure [[fig:dvf_plant_coupling]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    plot(freqs, abs(squeeze(freqresp(G(['Dm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G('Dm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 2:6
+    set(gca,'ColorOrderIndex',2);
+    p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(['Dm', num2str(i)], 'F1'), freqs, 'Hz'))));
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G('Dm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$D_{m,i}/F_i$', '$D_{m,j}/F_i$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/dvf_plant_coupling.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:dvf_plant_coupling
+#+caption: Transfer function from the Actuator force $F_{i}$ to the Relative Motion Sensor $D_{m,j}$ with $i \neq j$ ([[./figs/dvf_plant_coupling.png][png]], [[./figs/dvf_plant_coupling.pdf][pdf]])
+[[file:figs/dvf_plant_coupling.png]]
+
+
+** Effect of the Flexible Joint stiffness on the Dynamics
+We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
+#+begin_src matlab
+  stewart = initializeJointDynamics(stewart);
+  Gf = linearize(mdl, io, options);
+  Gf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gf.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+The new dynamics from force actuator to relative motion sensor is shown in Figure [[fig:dvf_plant_flexible_joint_decentralized]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G( 'Dm1', 'F1'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gf('Dm1', 'F1'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G( 'Dm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Perfect Joints');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gf('Dm1', 'F1'), freqs, 'Hz'))), 'DisplayName', 'Flexible Joints');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend('location', 'northeast');
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/dvf_plant_flexible_joint_decentralized.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:dvf_plant_flexible_joint_decentralized
+#+caption: Transfer function from the Actuator force $F_{i}$ to the relative displacement sensor $D_{m,i}$ ([[./figs/dvf_plant_flexible_joint_decentralized.png][png]], [[./figs/dvf_plant_flexible_joint_decentralized.pdf][pdf]])
+[[file:figs/dvf_plant_flexible_joint_decentralized.png]]
+
+** Obtained Damping
+The control is a performed in a decentralized manner.
+The $6 \times 6$ control is a diagonal matrix with pure derivative action on the diagonal:
+\[ K(s) = g
+  \begin{bmatrix}
+    s & & \\
+    & \ddots & \\
+    & & s
+  \end{bmatrix} \]
+
+The root locus is shown in figure [[fig:root_locus_dvf_rot_stiffness]] and the obtained pole damping function of the control gain is shown in figure [[fig:pole_damping_gain_dvf_rot_stiffness]].
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  plot(real(pole(G)),  imag(pole(G)),  'x');
+  plot(real(pole(Gf)), imag(pole(Gf)), 'x');
+  set(gca,'ColorOrderIndex',1);
+  plot(real(tzero(G)),  imag(tzero(G)),  'o');
+  plot(real(tzero(Gf)), imag(tzero(Gf)), 'o');
+  for i = 1:length(gains)
+    cl_poles = pole(feedback(G, (gains(i)*s)*eye(6)));
+    set(gca,'ColorOrderIndex',1);
+    plot(real(cl_poles), imag(cl_poles), '.');
+    cl_poles = pole(feedback(Gf, (gains(i)*s)*eye(6)));
+    set(gca,'ColorOrderIndex',2);
+    plot(real(cl_poles), imag(cl_poles), '.');
+  end
+  ylim([0,inf]);
+  xlim([-3000,0]);
+  xlabel('Real Part')
+  ylabel('Imaginary Part')
+  axis square
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/root_locus_dvf_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:root_locus_dvf_rot_stiffness
+#+caption: Root Locus plot with Direct Velocity Feedback when considering the Stiffness of flexible joints ([[./figs/root_locus_dvf_rot_stiffness.png][png]], [[./figs/root_locus_dvf_rot_stiffness.pdf][pdf]])
+[[file:figs/root_locus_dvf_rot_stiffness.png]]
+
+#+begin_src matlab :exports none
+  gains = logspace(0, 5, 1000);
+
+  figure;
+  hold on;
+  for i = 1:length(gains)
+    set(gca,'ColorOrderIndex',1);
+    cl_poles = pole(feedback(G, (gains(i)*s)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+    set(gca,'ColorOrderIndex',2);
+    cl_poles = pole(feedback(Gf, (gains(i)*s)*eye(6)));
+    poles_damp = phase(cl_poles(imag(cl_poles)>0)) - pi/2;
+    plot(gains(i)*ones(size(poles_damp)), poles_damp, '.');
+  end
+  xlabel('Control Gain');
+  ylabel('Damping of the Poles');
+  set(gca, 'XScale', 'log');
+  ylim([0,pi/2]);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/pole_damping_gain_dvf_rot_stiffness.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:pole_damping_gain_dvf_rot_stiffness
+#+caption: Damping of the poles with respect to the gain of the Direct Velocity Feedback when considering the Stiffness of flexible joints ([[./figs/pole_damping_gain_dvf_rot_stiffness.png][png]], [[./figs/pole_damping_gain_dvf_rot_stiffness.pdf][pdf]])
+[[file:figs/pole_damping_gain_dvf_rot_stiffness.png]]
+
+** Conclusion
+#+begin_important
+  Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
+#+end_important
