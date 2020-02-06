@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-27 lun. 17:41 -->
+<!-- 2020-02-06 jeu. 17:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -246,31 +246,16 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em",
-               Macros: {
-                 bm: ["{\\boldsymbol #1}",1],
-               }
-             }
-});
-</script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+<script>
+      MathJax = {
+          tex: { macros: {
+                  bm: ["\\boldsymbol{#1}",1],
+                  }
+              }
+          };
+          </script>
+          <script type="text/javascript"
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -283,33 +268,46 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org86c83bf">1. Questions we wish to answer with this analysis</a></li>
-<li><a href="#org0b05973">2. <span class="todo TODO">TODO</span> Configuration Analysis - Stiffness Matrix</a>
+<li><a href="#org43e4755">1. Questions we wish to answer with this analysis</a></li>
+<li><a href="#org7c85269">2. <span class="todo TODO">TODO</span> Configuration Analysis - Stiffness Matrix</a>
 <ul>
-<li><a href="#org3f035e8">2.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#org77ecb36">2.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
-<li><a href="#org42ea8ad">2.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#org38870ce">2.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org08c7461">2.5. Conclusion</a></li>
+<li><a href="#org7a2e2af">2.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#orgdd082ef">2.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
+<li><a href="#org314610d">2.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#org460e492">2.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
+<li><a href="#orgccb5ef0">2.5. Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#orgc4c2abd">3. <span class="todo TODO">TODO</span> Cubic size analysis</a></li>
-<li><a href="#org36a27e6">4. <span class="todo TODO">TODO</span> initializeCubicConfiguration</a>
+<li><a href="#org29d657d">3. <span class="todo TODO">TODO</span> Cubic size analysis</a></li>
+<li><a href="#orgc12b0fc">4. Functions</a>
 <ul>
-<li><a href="#orgf299c5c">4.1. Function description</a></li>
-<li><a href="#org46c8589">4.2. Optional Parameters</a></li>
-<li><a href="#orgd8d9b14">4.3. Cube Creation</a></li>
-<li><a href="#org181d1d8">4.4. Vectors of each leg</a></li>
-<li><a href="#orgb396e98">4.5. Verification of Height of the Stewart Platform</a></li>
-<li><a href="#orgf38af83">4.6. Determinate the location of the joints</a></li>
-<li><a href="#orgdf9e3cf">4.7. Returns Stewart Structure</a></li>
+<li><a href="#org12a207e">4.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
+<ul>
+<li><a href="#orgecee38f">Function description</a></li>
+<li><a href="#orgb9948d8">Documentation</a></li>
+<li><a href="#orgbfb0bd5">Optional Parameters</a></li>
+<li><a href="#orgcb22d51">Position of the Cube</a></li>
+<li><a href="#org2f09e98">Compute the pose</a></li>
 </ul>
 </li>
-<li><a href="#orgf8fb731">5. <span class="todo TODO">TODO</span> Tests</a>
+</ul>
+</li>
+<li><a href="#org4eaf218">5. <span class="todo TODO">TODO</span> initializeCubicConfiguration</a>
 <ul>
-<li><a href="#org4434fe5">5.1. First attempt to parametrisation</a></li>
-<li><a href="#org723e6eb">5.2. Second attempt</a></li>
-<li><a href="#orgcc173ac">5.3. Generate the Stewart platform for a Cubic configuration</a></li>
+<li><a href="#org4fb2bc6">5.1. Function description</a></li>
+<li><a href="#orgb540658">5.2. Optional Parameters</a></li>
+<li><a href="#org1474f46">5.3. Cube Creation</a></li>
+<li><a href="#org03d2dd7">5.4. Vectors of each leg</a></li>
+<li><a href="#orgfed36b2">5.5. Verification of Height of the Stewart Platform</a></li>
+<li><a href="#orgdb27b02">5.6. Determinate the location of the joints</a></li>
+<li><a href="#org5079890">5.7. Returns Stewart Structure</a></li>
+</ul>
+</li>
+<li><a href="#orgd9f1e20">6. <span class="todo TODO">TODO</span> Tests</a>
+<ul>
+<li><a href="#orgea7297c">6.1. First attempt to parametrisation</a></li>
+<li><a href="#orgd6ed3c3">6.2. Second attempt</a></li>
+<li><a href="#orgf39eafa">6.3. Generate the Stewart platform for a Cubic configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -318,28 +316,27 @@ for the JavaScript code in this tag.
 
 <p>
 The discovery of the Cubic configuration is done in <a class='org-ref-reference' href="#geng94_six_degree_of_freed_activ">geng94_six_degree_of_freed_activ</a>.
-Further analysis is conducted in <a class='org-ref-reference' href="#jafari03_orthog_gough_stewar_platf_microm">jafari03_orthog_gough_stewar_platf_microm</a>.
+Further analysis is conducted in
 </p>
-
-<p>
-People using orthogonal/cubic configuration: <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>.
-</p>
-
 
 <p>
 The specificity of the Cubic configuration is that each actuator is orthogonal with the others.
 </p>
 
 <p>
-To generate and study the Cubic configuration, <code>initializeCubicConfiguration</code> is used (description in section <a href="#org8b1f609">4</a>).
+The cubic (or orthogonal) configuration of the Stewart platform is now widely used (<a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>,<a class='org-ref-reference' href="#jafari03_orthog_gough_stewar_platf_microm">jafari03_orthog_gough_stewar_platf_microm</a>).
 </p>
 
 <p>
 According to <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>, the cubic configuration provides a uniform stiffness in all directions and <b>minimizes the crosscoupling</b> from actuator to sensor of different legs (being orthogonal to each other).
 </p>
 
-<div id="outline-container-org86c83bf" class="outline-2">
-<h2 id="org86c83bf"><span class="section-number-2">1</span> Questions we wish to answer with this analysis</h2>
+<p>
+To generate and study the Cubic configuration, <code>initializeCubicConfiguration</code> is used (description in section <a href="#org83d7db1">5</a>).
+</p>
+
+<div id="outline-container-org43e4755" class="outline-2">
+<h2 id="org43e4755"><span class="section-number-2">1</span> Questions we wish to answer with this analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The goal is to study the benefits of using a cubic configuration:
@@ -352,20 +349,20 @@ The goal is to study the benefits of using a cubic configuration:
 </div>
 </div>
 
-<div id="outline-container-org0b05973" class="outline-2">
-<h2 id="org0b05973"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Configuration Analysis - Stiffness Matrix</h2>
+<div id="outline-container-org7c85269" class="outline-2">
+<h2 id="org7c85269"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Configuration Analysis - Stiffness Matrix</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3f035e8" class="outline-3">
-<h3 id="org3f035e8"><span class="section-number-3">2.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
+<div id="outline-container-org7a2e2af" class="outline-3">
+<h3 id="org7a2e2af"><span class="section-number-3">2.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-We create a cubic Stewart platform (figure <a href="#org1effc0f">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
+We create a cubic Stewart platform (figure <a href="#org01dbe25">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
 </p>
 
 
-<div id="org1effc0f" class="figure">
+<div id="org01dbe25" class="figure">
 <p><img src="./figs/3d-cubic-stewart-aligned.png" alt="3d-cubic-stewart-aligned.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Centered cubic configuration</p>
@@ -469,11 +466,11 @@ save(<span class="org-string">'./mat/stewart.mat'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-org77ecb36" class="outline-3">
-<h3 id="org77ecb36"><span class="section-number-3">2.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
+<div id="outline-container-orgdd082ef" class="outline-3">
+<h3 id="orgdd082ef"><span class="section-number-3">2.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org1effc0f">1</a>).
+We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org01dbe25">1</a>).
 The Jacobian matrix is not estimated at the location of the center of the cube.
 </p>
 
@@ -573,16 +570,16 @@ stewart = computeGeometricalProperties(stewart, opts);
 </div>
 </div>
 
-<div id="outline-container-org42ea8ad" class="outline-3">
-<h3 id="org42ea8ad"><span class="section-number-3">2.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
+<div id="outline-container-org314610d" class="outline-3">
+<h3 id="org314610d"><span class="section-number-3">2.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org3f10bc2">2</a>).
+Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org4aa7b60">2</a>).
 The Jacobian is estimated at the cube center.
 </p>
 
 
-<div id="org3f10bc2" class="figure">
+<div id="org4aa7b60" class="figure">
 <p><img src="./figs/3d-cubic-stewart-misaligned.png" alt="3d-cubic-stewart-misaligned.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Not centered cubic configuration</p>
@@ -695,8 +692,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-org38870ce" class="outline-3">
-<h3 id="org38870ce"><span class="section-number-3">2.4</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
+<div id="outline-container-org460e492" class="outline-3">
+<h3 id="org460e492"><span class="section-number-3">2.4</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center.
@@ -810,8 +807,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-org08c7461" class="outline-3">
-<h3 id="org08c7461"><span class="section-number-3">2.5</span> Conclusion</h3>
+<div id="outline-container-orgccb5ef0" class="outline-3">
+<h3 id="orgccb5ef0"><span class="section-number-3">2.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="important">
 <ul class="org-ul">
@@ -824,8 +821,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 </div>
 
-<div id="outline-container-orgc4c2abd" class="outline-2">
-<h2 id="orgc4c2abd"><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Cubic size analysis</h2>
+<div id="outline-container-org29d657d" class="outline-2">
+<h2 id="org29d657d"><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Cubic size analysis</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 We here study the effect of the size of the cube used for the Stewart configuration.
@@ -900,7 +897,7 @@ xlabel(<span class="org-string">'Cube Size [mm]'</span>); ylabel(<span class="or
 </div>
 
 
-<div id="org659a01f" class="figure">
+<div id="orgeec8e66" class="figure">
 <p><img src="figs/stiffness_cube_size.png" alt="stiffness_cube_size.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>\(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) function of the size of the cube</p>
@@ -921,17 +918,143 @@ In that case, the legs will the further separated. Size of the cube is then limi
 </div>
 </div>
 
-<div id="outline-container-org36a27e6" class="outline-2">
-<h2 id="org36a27e6"><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> initializeCubicConfiguration</h2>
+<div id="outline-container-orgc12b0fc" class="outline-2">
+<h2 id="orgc12b0fc"><span class="section-number-2">4</span> Functions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="org8b1f609"></a>
+<a id="orgee0330a"></a>
 </p>
 </div>
 
-<div id="outline-container-orgf299c5c" class="outline-3">
-<h3 id="orgf299c5c"><span class="section-number-3">4.1</span> Function description</h3>
+<div id="outline-container-org12a207e" class="outline-3">
+<h3 id="org12a207e"><span class="section-number-3">4.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
 <div class="outline-text-3" id="text-4-1">
+<p>
+<a id="org0a684d8"></a>
+</p>
+
+<p>
+This Matlab function is accessible <a href="src/generateCubicConfiguration.m">here</a>.
+</p>
+</div>
+
+<div id="outline-container-orgecee38f" class="outline-4">
+<h4 id="orgecee38f">Function description</h4>
+<div class="outline-text-4" id="text-orgecee38f">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">generateCubicConfiguration</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
+<span class="org-comment">% generateCubicConfiguration - Generate a Cubic Configuration</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [stewart] = generateCubicConfiguration(stewart, args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - stewart - A structure with the following fields</span>
+<span class="org-comment">%        - H   [1x1] - Total height of the platform [m]</span>
+<span class="org-comment">%    - args - Can have the following fields:</span>
+<span class="org-comment">%        - Hc  [1x1] - Height of the "useful" part of the cube [m]</span>
+<span class="org-comment">%        - FOc [1x1] - Height of the center of the cube with respect to {F} [m]</span>
+<span class="org-comment">%        - FHa [1x1] - Height of the plane joining the points ai with respect to the frame {F} [m]</span>
+<span class="org-comment">%        - MHb [1x1] - Height of the plane joining the points bi with respect to the frame {M} [m]</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - stewart - updated Stewart structure with the added fields:</span>
+<span class="org-comment">%        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}</span>
+<span class="org-comment">%        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb9948d8" class="outline-4">
+<h4 id="orgb9948d8">Documentation</h4>
+<div class="outline-text-4" id="text-orgb9948d8">
+
+<div id="orgff1f403" class="figure">
+<p><img src="figs/cubic-configuration-definition.png" alt="cubic-configuration-definition.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Cubic Configuration</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbfb0bd5" class="outline-4">
+<h4 id="orgbfb0bd5">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgbfb0bd5">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+    stewart
+    args.Hc  (1,1) double {mustBeNumeric, mustBePositive} = 60e<span class="org-type">-</span>3
+    args.FOc (1,1) double {mustBeNumeric} = 50e<span class="org-type">-</span>3
+    args.FHa (1,1) double {mustBeNumeric, mustBePositive} = 15e<span class="org-type">-</span>3
+    args.MHb (1,1) double {mustBeNumeric, mustBePositive} = 15e<span class="org-type">-</span>3
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcb22d51" class="outline-4">
+<h4 id="orgcb22d51">Position of the Cube</h4>
+<div class="outline-text-4" id="text-orgcb22d51">
+<p>
+We define the useful points of the cube with respect to the Cube&rsquo;s center.
+\({}^{C}C\) are the 6 vertices of the cubes expressed in a frame {C} which is
+located at the center of the cube and aligned with {F} and {M}.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">sx = [ 2; <span class="org-type">-</span>1; <span class="org-type">-</span>1];
+sy = [ 0;  1; <span class="org-type">-</span>1];
+sz = [ 1;  1;  1];
+
+R = [sx, sy, sz]<span class="org-type">./</span>vecnorm([sx, sy, sz]);
+
+L = args.Hc<span class="org-type">*</span>sqrt(3);
+
+Cc = R<span class="org-type">'*</span>[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] <span class="org-type">-</span> [0;0;1.5<span class="org-type">*</span>args.Hc];
+
+CCf = [Cc(<span class="org-type">:</span>,1), Cc(<span class="org-type">:</span>,3), Cc(<span class="org-type">:</span>,3), Cc(<span class="org-type">:</span>,5), Cc(<span class="org-type">:</span>,5), Cc(<span class="org-type">:</span>,1)]; <span class="org-comment">% CCf(:,i) corresponds to the bottom cube's vertice corresponding to the i'th leg</span>
+CCm = [Cc(<span class="org-type">:</span>,2), Cc(<span class="org-type">:</span>,2), Cc(<span class="org-type">:</span>,4), Cc(<span class="org-type">:</span>,4), Cc(<span class="org-type">:</span>,6), Cc(<span class="org-type">:</span>,6)]; <span class="org-comment">% CCm(:,i) corresponds to the top cube's vertice corresponding to the i'th leg</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2f09e98" class="outline-4">
+<h4 id="org2f09e98">Compute the pose</h4>
+<div class="outline-text-4" id="text-org2f09e98">
+<p>
+We can compute the vector of each leg \({}^{C}\hat{\bm{s}}_{i}\) (unit vector from \({}^{C}C_{f}\) to \({}^{C}C_{m}\)).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">CSi = (CCm <span class="org-type">-</span> CCf)<span class="org-type">./</span>vecnorm(CCm <span class="org-type">-</span> CCf);
+</pre>
+</div>
+
+<p>
+We now which to compute the position of the joints \(a_{i}\) and \(b_{i}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart.Fa = CCf <span class="org-type">+</span> [0; 0; args.FOc] <span class="org-type">+</span> ((args.FHa<span class="org-type">-</span>(args.FOc<span class="org-type">-</span>args.Hc<span class="org-type">/</span>2))<span class="org-type">./</span>CSi(3,<span class="org-type">:</span>))<span class="org-type">.*</span>CSi;
+stewart.Mb = CCf <span class="org-type">+</span> [0; 0; args.FOc<span class="org-type">-</span>stewart.H] <span class="org-type">+</span> ((stewart.H<span class="org-type">-</span>args.MHb<span class="org-type">-</span>(args.FOc<span class="org-type">-</span>args.Hc<span class="org-type">/</span>2))<span class="org-type">./</span>CSi(3,<span class="org-type">:</span>))<span class="org-type">.*</span>CSi;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4eaf218" class="outline-2">
+<h2 id="org4eaf218"><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> initializeCubicConfiguration</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<a id="org83d7db1"></a>
+</p>
+</div>
+
+<div id="outline-container-org4fb2bc6" class="outline-3">
+<h3 id="org4fb2bc6"><span class="section-number-3">5.1</span> Function description</h3>
+<div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeCubicConfiguration</span>(<span class="org-variable-name">opts_param</span>)
 </pre>
@@ -939,9 +1062,9 @@ In that case, the legs will the further separated. Size of the cube is then limi
 </div>
 </div>
 
-<div id="outline-container-org46c8589" class="outline-3">
-<h3 id="org46c8589"><span class="section-number-3">4.2</span> Optional Parameters</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgb540658" class="outline-3">
+<h3 id="orgb540658"><span class="section-number-3">5.2</span> Optional Parameters</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 Default values for opts.
 </p>
@@ -969,9 +1092,9 @@ Populate opts with input parameters
 </div>
 </div>
 
-<div id="outline-container-orgd8d9b14" class="outline-3">
-<h3 id="orgd8d9b14"><span class="section-number-3">4.3</span> Cube Creation</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org1474f46" class="outline-3">
+<h3 id="org1474f46"><span class="section-number-3">5.3</span> Cube Creation</h3>
+<div class="outline-text-3" id="text-5-3">
 <div class="org-src-container">
 <pre class="src src-matlab">points = [0, 0, 0; ...
           0, 0, 1; ...
@@ -1015,9 +1138,9 @@ We use to rotation matrix to rotate the cube
 </div>
 </div>
 
-<div id="outline-container-org181d1d8" class="outline-3">
-<h3 id="org181d1d8"><span class="section-number-3">4.4</span> Vectors of each leg</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-org03d2dd7" class="outline-3">
+<h3 id="org03d2dd7"><span class="section-number-3">5.4</span> Vectors of each leg</h3>
+<div class="outline-text-3" id="text-5-4">
 <div class="org-src-container">
 <pre class="src src-matlab">leg_indices = [3, 4; ...
                2, 4; ...
@@ -1044,9 +1167,9 @@ legs_start = zeros(6, 3);
 </div>
 </div>
 
-<div id="outline-container-orgb396e98" class="outline-3">
-<h3 id="orgb396e98"><span class="section-number-3">4.5</span> Verification of Height of the Stewart Platform</h3>
-<div class="outline-text-3" id="text-4-5">
+<div id="outline-container-orgfed36b2" class="outline-3">
+<h3 id="orgfed36b2"><span class="section-number-3">5.5</span> Verification of Height of the Stewart Platform</h3>
+<div class="outline-text-3" id="text-5-5">
 <p>
 If the Stewart platform is not contained in the cube, throw an error.
 </p>
@@ -1064,9 +1187,9 @@ If the Stewart platform is not contained in the cube, throw an error.
 </div>
 </div>
 
-<div id="outline-container-orgf38af83" class="outline-3">
-<h3 id="orgf38af83"><span class="section-number-3">4.6</span> Determinate the location of the joints</h3>
-<div class="outline-text-3" id="text-4-6">
+<div id="outline-container-orgdb27b02" class="outline-3">
+<h3 id="orgdb27b02"><span class="section-number-3">5.6</span> Determinate the location of the joints</h3>
+<div class="outline-text-3" id="text-5-6">
 <p>
 We now determine the location of the joints on the fixed platform w.r.t the fixed frame \(\{A\}\).
 \(\{A\}\) is fixed to the bottom of the base.
@@ -1110,9 +1233,9 @@ Ab = Ab <span class="org-type">-</span> h<span class="org-type">*</span>[0, 0, 1
 </div>
 </div>
 
-<div id="outline-container-orgdf9e3cf" class="outline-3">
-<h3 id="orgdf9e3cf"><span class="section-number-3">4.7</span> Returns Stewart Structure</h3>
-<div class="outline-text-3" id="text-4-7">
+<div id="outline-container-org5079890" class="outline-3">
+<h3 id="org5079890"><span class="section-number-3">5.7</span> Returns Stewart Structure</h3>
+<div class="outline-text-3" id="text-5-7">
 <div class="org-src-container">
 <pre class="src src-matlab">  stewart = struct();
   stewart.Aa = Aa;
@@ -1126,18 +1249,18 @@ Ab = Ab <span class="org-type">-</span> h<span class="org-type">*</span>[0, 0, 1
 </div>
 </div>
 
-<div id="outline-container-orgf8fb731" class="outline-2">
-<h2 id="orgf8fb731"><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> Tests</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgd9f1e20" class="outline-2">
+<h2 id="orgd9f1e20"><span class="section-number-2">6</span> <span class="todo TODO">TODO</span> Tests</h2>
+<div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org4434fe5" class="outline-3">
-<h3 id="org4434fe5"><span class="section-number-3">5.1</span> First attempt to parametrisation</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-orgea7297c" class="outline-3">
+<h3 id="orgea7297c"><span class="section-number-3">6.1</span> First attempt to parametrisation</h3>
+<div class="outline-text-3" id="text-6-1">
 
-<div id="org8dfcb96" class="figure">
+<div id="org65e66e5" class="figure">
 <p><img src="./figs/stewart_bottom_plate.png" alt="stewart_bottom_plate.png" />
 </p>
-<p><span class="figure-number">Figure 4: </span>Schematic of the bottom plates with all the parameters</p>
+<p><span class="figure-number">Figure 5: </span>Schematic of the bottom plates with all the parameters</p>
 </div>
 
 <p>
@@ -1169,9 +1292,9 @@ Lets express \(a_i\), \(b_i\) and \(a_j\):
 </div>
 </div>
 
-<div id="outline-container-org723e6eb" class="outline-3">
-<h3 id="org723e6eb"><span class="section-number-3">5.2</span> Second attempt</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-orgd6ed3c3" class="outline-3">
+<h3 id="orgd6ed3c3"><span class="section-number-3">6.2</span> Second attempt</h3>
+<div class="outline-text-3" id="text-6-2">
 <p>
 We start with the point of a cube in space:
 </p>
@@ -1297,9 +1420,9 @@ Let&rsquo;s then estimate the middle position of the platform
 </div>
 </div>
 
-<div id="outline-container-orgcc173ac" class="outline-3">
-<h3 id="orgcc173ac"><span class="section-number-3">5.3</span> Generate the Stewart platform for a Cubic configuration</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-orgf39eafa" class="outline-3">
+<h3 id="orgf39eafa"><span class="section-number-3">6.3</span> Generate the Stewart platform for a Cubic configuration</h3>
+<div class="outline-text-3" id="text-6-3">
 <p>
 First we defined the height of the Hexapod.
 </p>
@@ -1360,15 +1483,15 @@ zlim([0, 2]);
 <p>
 
 <h1 class='org-ref-bib-h1'>Bibliography</h1>
-<ul class='org-ref-bib'><li><a id="geng94_six_degree_of_freed_activ">[geng94_six_degree_of_freed_activ]</a> <a name="geng94_six_degree_of_freed_activ"></a>Geng & Haynes, Six Degree-Of-Freedom Active Vibration Control Using the  Stewart Platforms, <i>IEEE Transactions on Control Systems Technology</i>, <b>2(1)</b>, 45-53 (1994). <a href="https://doi.org/10.1109/87.273110">link</a>. <a href="http://dx.doi.org/10.1109/87.273110">doi</a>.</li>
+<ul class='org-ref-bib'><li><a id="geng94_six_degree_of_freed_activ">[geng94_six_degree_of_freed_activ]</a> <a name="geng94_six_degree_of_freed_activ"></a>Geng & Haynes, Six Degree-Of-Freedom Active Vibration Control Using the Stewart Platforms, <i>IEEE Transactions on Control Systems Technology</i>, <b>2(1)</b>, 45-53 (1994). <a href="https://doi.org/10.1109/87.273110">link</a>. <a href="http://dx.doi.org/10.1109/87.273110">doi</a>.</li>
+<li><a id="preumont07_six_axis_singl_stage_activ">[preumont07_six_axis_singl_stage_activ]</a> <a name="preumont07_six_axis_singl_stage_activ"></a>Preumont, Horodinca, Romanescu, de Marneffe, Avraam, Deraemaeker, Bossens & Abu Hanieh, A Six-Axis Single-Stage Active Vibration Isolator Based on Stewart Platform, <i>Journal of Sound and Vibration</i>, <b>300(3-5)</b>, 644-661 (2007). <a href="https://doi.org/10.1016/j.jsv.2006.07.050">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2006.07.050">doi</a>.</li>
 <li><a id="jafari03_orthog_gough_stewar_platf_microm">[jafari03_orthog_gough_stewar_platf_microm]</a> <a name="jafari03_orthog_gough_stewar_platf_microm"></a>Jafari & McInroy, Orthogonal Gough-Stewart Platforms for Micromanipulation, <i>IEEE Transactions on Robotics and Automation</i>, <b>19(4)</b>, 595-603 (2003). <a href="https://doi.org/10.1109/tra.2003.814506">link</a>. <a href="http://dx.doi.org/10.1109/tra.2003.814506">doi</a>.</li>
-<li><a id="preumont07_six_axis_singl_stage_activ">[preumont07_six_axis_singl_stage_activ]</a> <a name="preumont07_six_axis_singl_stage_activ"></a>Preumont, Horodinca, Romanescu, de, Marneffe, Avraam, Deraemaeker, Bossens, & Abu Hanieh, A Six-Axis Single-Stage Active Vibration Isolator Based on  Stewart Platform, <i>Journal of Sound and Vibration</i>, <b>300(3-5)</b>, 644-661 (2007). <a href="https://doi.org/10.1016/j.jsv.2006.07.050">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2006.07.050">doi</a>.</li>
 </ul>
 </p>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-01-27 lun. 17:41</p>
+<p class="date">Created: 2020-02-06 jeu. 17:25</p>
 </div>
 </body>
 </html>

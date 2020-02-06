@@ -22,19 +22,18 @@
 :END:
 
 * Introduction                                                       :ignore:
-The discovery of the Cubic configuration is done in citenum:geng94_six_degree_of_freed_activ.
-Further analysis is conducted in cite:jafari03_orthog_gough_stewar_platf_microm.
-
-People using orthogonal/cubic configuration: cite:preumont07_six_axis_singl_stage_activ.
-
+The discovery of the Cubic configuration is done in cite:geng94_six_degree_of_freed_activ.
+Further analysis is conducted in
 
 The specificity of the Cubic configuration is that each actuator is orthogonal with the others.
 
-To generate and study the Cubic configuration, =initializeCubicConfiguration= is used (description in section [[sec:initializeCubicConfiguration]]).
+The cubic (or orthogonal) configuration of the Stewart platform is now widely used (cite:preumont07_six_axis_singl_stage_activ,jafari03_orthog_gough_stewar_platf_microm).
 
 According to cite:preumont07_six_axis_singl_stage_activ, the cubic configuration provides a uniform stiffness in all directions and *minimizes the crosscoupling* from actuator to sensor of different legs (being orthogonal to each other).
 
-* Matlab Init                                               :noexport:ignore:
+To generate and study the Cubic configuration, =initializeCubicConfiguration= is used (description in section [[sec:initializeCubicConfiguration]]).
+
+* Matlab Init                                                :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
@@ -303,6 +302,103 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
   In order to maximize the rotational stiffness of the Stewart platform, the size of the cube should be the highest possible.
   In that case, the legs will the further separated. Size of the cube is then limited by allowed space.
 #+end_important
+
+* Functions
+<<sec:functions>>
+
+** =generateCubicConfiguration=: Generate a Cubic Configuration
+:PROPERTIES:
+:header-args:matlab+: :tangle src/generateCubicConfiguration.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:generateCubicConfiguration>>
+
+This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = generateCubicConfiguration(stewart, args)
+  % generateCubicConfiguration - Generate a Cubic Configuration
+  %
+  % Syntax: [stewart] = generateCubicConfiguration(stewart, args)
+  %
+  % Inputs:
+  %    - stewart - A structure with the following fields
+  %        - H   [1x1] - Total height of the platform [m]
+  %    - args - Can have the following fields:
+  %        - Hc  [1x1] - Height of the "useful" part of the cube [m]
+  %        - FOc [1x1] - Height of the center of the cube with respect to {F} [m]
+  %        - FHa [1x1] - Height of the plane joining the points ai with respect to the frame {F} [m]
+  %        - MHb [1x1] - Height of the plane joining the points bi with respect to the frame {M} [m]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+  %        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+  %        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
+#+end_src
+
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+name: fig:cubic-configuration-definition
+#+caption: Cubic Configuration
+[[file:figs/cubic-configuration-definition.png]]
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.Hc  (1,1) double {mustBeNumeric, mustBePositive} = 60e-3
+      args.FOc (1,1) double {mustBeNumeric} = 50e-3
+      args.FHa (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
+      args.MHb (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
+  end
+#+end_src
+
+*** Position of the Cube
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+We define the useful points of the cube with respect to the Cube's center.
+${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is
+located at the center of the cube and aligned with {F} and {M}.
+
+#+begin_src matlab
+  sx = [ 2; -1; -1];
+  sy = [ 0;  1; -1];
+  sz = [ 1;  1;  1];
+
+  R = [sx, sy, sz]./vecnorm([sx, sy, sz]);
+
+  L = args.Hc*sqrt(3);
+
+  Cc = R'*[[0;0;L],[L;0;L],[L;0;0],[L;L;0],[0;L;0],[0;L;L]] - [0;0;1.5*args.Hc];
+
+  CCf = [Cc(:,1), Cc(:,3), Cc(:,3), Cc(:,5), Cc(:,5), Cc(:,1)]; % CCf(:,i) corresponds to the bottom cube's vertice corresponding to the i'th leg
+  CCm = [Cc(:,2), Cc(:,2), Cc(:,4), Cc(:,4), Cc(:,6), Cc(:,6)]; % CCm(:,i) corresponds to the top cube's vertice corresponding to the i'th leg
+#+end_src
+
+*** Compute the pose
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from ${}^{C}C_{f}$ to ${}^{C}C_{m}$).
+#+begin_src matlab
+  CSi = (CCm - CCf)./vecnorm(CCm - CCf);
+#+end_src
+
+We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
+#+begin_src matlab
+  stewart.Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+  stewart.Mb = CCf + [0; 0; args.FOc-stewart.H] + ((stewart.H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+#+end_src
 
 * TODO initializeCubicConfiguration
 :PROPERTIES:
@@ -615,5 +711,5 @@ And we plot the legs.
 #+end_src
 
 * Bibliography                                                      :ignore:
-bibliographystyle:unsrt
+bibliographystyle:unsrtnat
 bibliography:ref.bib
