@@ -105,6 +105,19 @@ An important difference from basic Simulink models is that the states in a physi
 #+end_src
 
 * States as the motion of the mobile platform
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('./');
+#+end_src
+
 ** Initialize the Stewart Platform
 #+begin_src matlab
   stewart = initializeFramesPositions();

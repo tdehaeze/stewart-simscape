@@ -874,11 +874,11 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 #+begin_src matlab
   arguments
       stewart
-      args.Ksbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-1*ones(6,1)
+      args.Ksbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+1*ones(6,1)
       args.Csbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-      args.Ksti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-2*ones(6,1)
-      args.Csti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-      args.Kubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-1*ones(6,1)
+      args.Ksti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+0*ones(6,1)
+      args.Csti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
+      args.Kubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+1*ones(6,1)
       args.Cubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
       args.disable logical {mustBeNumericOrLogical} = false
   end
@@ -890,12 +890,12 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 :END:
 #+begin_src matlab
   if args.disable
-    stewart.Ksbi = 0;
-    stewart.Csbi = 0;
-    stewart.Ksti = 0;
-    stewart.Csti = 0;
-    stewart.Kubi = 0;
-    stewart.Cubi = 0;
+    stewart.Ksbi = zeros(6,1);
+    stewart.Csbi = zeros(6,1);
+    stewart.Ksti = zeros(6,1);
+    stewart.Csti = zeros(6,1);
+    stewart.Kubi = zeros(6,1);
+    stewart.Cubi = zeros(6,1);
   else
     stewart.Ksbi = args.Ksbi;
     stewart.Csbi = args.Csbi;
