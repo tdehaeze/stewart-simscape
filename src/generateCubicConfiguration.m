@@ -21,8 +21,8 @@ arguments
     stewart
     args.Hc  (1,1) double {mustBeNumeric, mustBePositive} = 60e-3
     args.FOc (1,1) double {mustBeNumeric} = 50e-3
-    args.FHa (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
-    args.MHb (1,1) double {mustBeNumeric, mustBePositive} = 15e-3
+    args.FHa (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
+    args.MHb (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
 end
 
 sx = [ 2; -1; -1];
