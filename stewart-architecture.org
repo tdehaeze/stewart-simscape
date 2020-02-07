@@ -868,22 +868,22 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
   %
   % Inputs:
   %    - args - Structure with the following fields:
-  %        - Ksbi [6x1] - Bending (Rx, Ry) Stiffness for each top Spherical joints [N/rad]
-  %        - Csbi [6x1] - Bending (Rx, Ry) Damping of each top Spherical joint [N/(rad/s)]
-  %        - Ksti [6x1] - Torsion (Rz) Stiffness for each top Spherical joints [N/rad]
-  %        - Csti [6x1] - Torsion (Rz) Damping of each top Spherical joint [N/(rad/s)]
-  %        - Kubi [6x1] - Bending (Rx, Ry) Stiffness for each bottom Universal joints [N/rad]
-  %        - Cubi [6x1] - Bending (Rx, Ry) Damping of each bottom Universal joint [N/(rad/s)]
-  %        - disable [true/false] - Sets all the stiffness/damping to zero
+  %        - Ksbi [6x1] - Bending (Rx, Ry) Stiffness for each top Spherical joints [(N.m)/rad]
+  %        - Csbi [6x1] - Bending (Rx, Ry) Damping of each top Spherical joint [(N.m)/(rad/s)]
+  %        - Ksti [6x1] - Torsion (Rz) Stiffness for each top Spherical joints [(N.m)/rad]
+  %        - Csti [6x1] - Torsion (Rz) Damping of each top Spherical joint [(N.m)/(rad/s)]
+  %        - Kubi [6x1] - Bending (Rx, Ry) Stiffness for each bottom Universal joints [(N.m)/rad]
+  %        - Cubi [6x1] - Bending (Rx, Ry) Damping of each bottom Universal joint [(N.m)/(rad/s)]
+  %        - disable [boolean] - Sets all the stiffness/damping to zero
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %        - Ksbi [6x1] - Bending (Rx, Ry) Stiffness for each top Spherical joints [N/rad]
-  %        - Csbi [6x1] - Bending (Rx, Ry) Damping of each top Spherical joint [N/(rad/s)]
-  %        - Ksti [6x1] - Torsion (Rz) Stiffness for each top Spherical joints [N/rad]
-  %        - Csti [6x1] - Torsion (Rz) Damping of each top Spherical joint [N/(rad/s)]
-  %        - Kubi [6x1] - Bending (Rx, Ry) Stiffness for each bottom Universal joints [N/rad]
-  %        - Cubi [6x1] - Bending (Rx, Ry) Damping of each bottom Universal joint [N/(rad/s)]
+  %        - Ksbi [6x1] - Bending (Rx, Ry) Stiffness for each top Spherical joints [(N.m)/rad]
+  %        - Csbi [6x1] - Bending (Rx, Ry) Damping of each top Spherical joint [(N.m)/(rad/s)]
+  %        - Ksti [6x1] - Torsion (Rz) Stiffness for each top Spherical joints [(N.m)/rad]
+  %        - Csti [6x1] - Torsion (Rz) Damping of each top Spherical joint [(N.m)/(rad/s)]
+  %        - Kubi [6x1] - Bending (Rx, Ry) Stiffness for each bottom Universal joints [(N.m)/rad]
+  %        - Cubi [6x1] - Bending (Rx, Ry) Damping of each bottom Universal joint [(N.m)/(rad/s)]
 #+end_src
 
 *** Optional Parameters
@@ -893,11 +893,11 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 #+begin_src matlab
   arguments
       stewart
-      args.Ksbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+1*ones(6,1)
+      args.Ksbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
       args.Csbi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-      args.Ksti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+0*ones(6,1)
+      args.Ksti (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
       args.Csti (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
-      args.Kubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e+1*ones(6,1)
+      args.Kubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
       args.Cubi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
       args.disable logical {mustBeNumericOrLogical} = false
   end
