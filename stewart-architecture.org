@@ -221,10 +221,61 @@ Then, define the inertia and geometry of the fixed base, mobile platform and str
 Finally, initialize the strut stiffness and damping properties.
 #+begin_src matlab
   stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
-  stewart = initializeJointDynamics(stewart, 'Ksi', zeros(6,1), 'Csi', zeros(6,1));
+  stewart = initializeJointDynamics(stewart);
 #+end_src
 
 The obtained =stewart= Matlab structure contains all the information for analysis of the Stewart platform and for simulations using Simscape.
+
+The function =displayArchitecture= can be used to display the current Stewart configuration:
+#+begin_src matlab
+  displayArchitecture(stewart);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_architecture_example.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_architecture_example
+#+caption: Display of the current Stewart platform architecture ([[./figs/stewart_architecture_example.png][png]], [[./figs/stewart_architecture_example.pdf][pdf]])
+[[file:figs/stewart_architecture_example.png]]
+
+There are many options to show or hides elements such as labels and frames.
+The documentation of the function is available [[sec:displayArchitecture][here]].
+
+Let's now move a little bit the top platform and re-display the configuration:
+#+begin_src matlab
+  tx = 0.1; % [rad]
+  ty = 0.2; % [rad]
+  tz = 0.05; % [rad]
+
+  Rx = [1 0        0;
+        0 cos(tx) -sin(tx);
+        0 sin(tx)  cos(tx)];
+
+  Ry = [ cos(ty) 0 sin(ty);
+        0        1 0;
+        -sin(ty) 0 cos(ty)];
+
+  Rz = [cos(tz) -sin(tz) 0;
+        sin(tz)  cos(tz) 0;
+        0        0       1];
+
+  ARB = Rz*Ry*Rx;
+  AP = [0.08; 0; 0]; % [m]
+
+  displayArchitecture(stewart, 'AP', AP, 'ARB', ARB);
+  view([0 -1 0]);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_architecture_example_pose.pdf" :var figsize="wide-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_architecture_example_pose
+#+caption: Display of the Stewart platform architecture at some defined pose ([[./figs/stewart_architecture_example_pose.png][png]], [[./figs/stewart_architecture_example_pose.pdf][pdf]])
+[[file:figs/stewart_architecture_example_pose.png]]
 
 * Functions
 <<sec:functions>>
@@ -872,6 +923,259 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
     stewart.Kubi = args.Kubi;
     stewart.Cubi = args.Cubi;
   end
+#+end_src
+
+** =displayArchitecture=: 3D plot of the Stewart platform architecture
+:PROPERTIES:
+:header-args:matlab+: :tangle src/displayArchitecture.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:displayArchitecture>>
+
+This Matlab function is accessible [[file:src/displayArchitecture.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [] = displayArchitecture(stewart, args)
+  % displayArchitecture - 3D plot of the Stewart platform architecture
+  %
+  % Syntax: [] = displayArchitecture(args)
+  %
+  % Inputs:
+  %    - stewart
+  %    - args - Structure with the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %        - frames    [true/false] - Display the Frames
+  %        - legs      [true/false] - Display the Legs
+  %        - joints    [true/false] - Display the Joints
+  %        - labels    [true/false] - Display the Labels
+  %        - platforms [true/false] - Display the Platforms
+  %
+  % Outputs:
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+      args.frames logical {mustBeNumericOrLogical} = true
+      args.legs logical {mustBeNumericOrLogical} = true
+      args.joints logical {mustBeNumericOrLogical} = true
+      args.labels logical {mustBeNumericOrLogical} = true
+      args.platforms logical {mustBeNumericOrLogical} = true
+  end
+#+end_src
+
+*** Figure Creation, Frames and Homogeneous transformations
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+The reference frame of the 3d plot corresponds to the frame $\{F\}$.
+#+begin_src matlab
+  figure;
+  hold on;
+#+end_src
+
+We first compute homogeneous matrices that will be useful to position elements on the figure where the reference frame is $\{F\}$.
+#+begin_src matlab
+  FTa = [eye(3), stewart.FO_A; ...
+         zeros(1,3), 1];
+  ATb = [args.ARB, args.AP; ...
+         zeros(1,3), 1];
+  BTm = [eye(3), -stewart.MO_B; ...
+         zeros(1,3), 1];
+
+  FTm = FTa*ATb*BTm;
+#+end_src
+
+Let's define a parameter that define the length of the unit vectors used to display the frames.
+#+begin_src matlab
+  d_unit_vector = stewart.H/4;
+#+end_src
+
+Let's define a parameter used to position the labels with respect to the center of the element.
+#+begin_src matlab
+  d_label = stewart.H/20;
+#+end_src
+
+*** Fixed Base elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+Let's first plot the frame $\{F\}$.
+#+begin_src matlab
+  Ff = [0, 0, 0];
+  if args.frames
+    quiver3(Ff(1)*ones(1,3), Ff(2)*ones(1,3), Ff(3)*ones(1,3), ...
+            [d_unit_vector 0 0], [0 d_unit_vector 0], [0 0 d_unit_vector], '-', 'Color', [0 0.4470 0.7410])
+
+    if args.labels
+      text(Ff(1) + d_label, ...
+          Ff(2) + d_label, ...
+          Ff(3) + d_label, '$\{F\}$', 'Color', [0 0.4470 0.7410]);
+    end
+  end
+#+end_src
+
+Now plot the frame $\{A\}$ fixed to the Base.
+#+begin_src matlab
+  Fa = stewart.FO_A;
+
+  if args.frames
+    quiver3(Fa(1)*ones(1,3), Fa(2)*ones(1,3), Fa(3)*ones(1,3), ...
+            [d_unit_vector 0 0], [0 d_unit_vector 0], [0 0 d_unit_vector], '-', 'Color', [0 0.4470 0.7410])
+
+    if args.labels
+      text(Fa(1) + d_label, ...
+           Fa(2) + d_label, ...
+           Fa(3) + d_label, '$\{A\}$', 'Color', [0 0.4470 0.7410]);
+    end
+  end
+#+end_src
+
+Let's then plot the circle corresponding to the shape of the Fixed base.
+#+begin_src matlab
+  if args.platforms && isfield(stewart, 'platforms') && isfield(stewart.platforms, 'Fpr')
+    theta = [0:0.01:2*pi+0.01]; % Angles [rad]
+    v = null([0; 0; 1]'); % Two vectors that are perpendicular to the circle normal
+    center = [0; 0; 0]; % Center of the circle
+    radius = stewart.platforms.Fpr; % Radius of the circle [m]
+
+    points = center*ones(1, length(theta)) + radius*(v(:,1)*cos(theta) + v(:,2)*sin(theta));
+
+    plot3(points(1,:), ...
+          points(2,:), ...
+          points(3,:), '-', 'Color', [0 0.4470 0.7410]);
+  end
+#+end_src
+
+Let's now plot the position and labels of the Fixed Joints
+#+begin_src matlab
+  if args.joints
+    scatter3(stewart.Fa(1,:), ...
+             stewart.Fa(2,:), ...
+             stewart.Fa(3,:), 'MarkerEdgeColor', [0 0.4470 0.7410]);
+    if args.labels
+      for i = 1:size(stewart.Fa,2)
+        text(stewart.Fa(1,i) + d_label, ...
+             stewart.Fa(2,i), ...
+             stewart.Fa(3,i), sprintf('$a_{%i}$', i), 'Color', [0 0.4470 0.7410]);
+      end
+    end
+  end
+#+end_src
+
+*** Mobile Platform elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+Plot the frame $\{M\}$.
+#+begin_src matlab
+  Fm = FTm*[0; 0; 0; 1]; % Get the position of frame {M} w.r.t. {F}
+
+  if args.frames
+    FM_uv = FTm*[d_unit_vector*eye(3); zeros(1,3)]; % Rotated Unit vectors
+    quiver3(Fm(1)*ones(1,3), Fm(2)*ones(1,3), Fm(3)*ones(1,3), ...
+            FM_uv(1,1:3), FM_uv(2,1:3), FM_uv(3,1:3), '-', 'Color', [0.8500 0.3250 0.0980])
+
+    if args.labels
+      text(Fm(1) + d_label, ...
+           Fm(2) + d_label, ...
+           Fm(3) + d_label, '$\{M\}$', 'Color', [0.8500 0.3250 0.0980]);
+    end
+  end
+#+end_src
+
+Plot the frame $\{B\}$.
+#+begin_src matlab
+  FB = stewart.FO_A + args.AP;
+
+  if args.frames
+    FB_uv = FTm*[d_unit_vector*eye(3); zeros(1,3)]; % Rotated Unit vectors
+    quiver3(FB(1)*ones(1,3), FB(2)*ones(1,3), FB(3)*ones(1,3), ...
+            FB_uv(1,1:3), FB_uv(2,1:3), FB_uv(3,1:3), '-', 'Color', [0.8500 0.3250 0.0980])
+
+    if args.labels
+      text(FB(1) - d_label, ...
+           FB(2) + d_label, ...
+           FB(3) + d_label, '$\{B\}$', 'Color', [0.8500 0.3250 0.0980]);
+    end
+  end
+#+end_src
+
+Let's then plot the circle corresponding to the shape of the Mobile platform.
+#+begin_src matlab
+  if args.platforms && isfield(stewart, 'platforms') && isfield(stewart.platforms, 'Mpr')
+    theta = [0:0.01:2*pi+0.01]; % Angles [rad]
+    v = null((FTm(1:3,1:3)*[0;0;1])'); % Two vectors that are perpendicular to the circle normal
+    center = Fm(1:3); % Center of the circle
+    radius = stewart.platforms.Mpr; % Radius of the circle [m]
+
+    points = center*ones(1, length(theta)) + radius*(v(:,1)*cos(theta) + v(:,2)*sin(theta));
+
+    plot3(points(1,:), ...
+          points(2,:), ...
+          points(3,:), '-', 'Color', [0.8500 0.3250 0.0980]);
+  end
+#+end_src
+
+Plot the position and labels of the rotation joints fixed to the mobile platform.
+#+begin_src matlab
+  if args.joints
+    Fb = FTm*[stewart.Mb;ones(1,6)];
+
+    scatter3(Fb(1,:), ...
+             Fb(2,:), ...
+             Fb(3,:), 'MarkerEdgeColor', [0.8500 0.3250 0.0980]);
+
+    if args.labels
+      for i = 1:size(Fb,2)
+        text(Fb(1,i) + d_label, ...
+             Fb(2,i), ...
+             Fb(3,i), sprintf('$b_{%i}$', i), 'Color', [0.8500 0.3250 0.0980]);
+      end
+    end
+  end
+#+end_src
+
+*** Legs
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+Plot the legs connecting the joints of the fixed base to the joints of the mobile platform.
+#+begin_src matlab
+  if args.legs
+    for i = 1:6
+      plot3([stewart.Fa(1,i), Fb(1,i)], ...
+            [stewart.Fa(2,i), Fb(2,i)], ...
+            [stewart.Fa(3,i), Fb(3,i)], 'k-');
+
+      if args.labels
+        text((stewart.Fa(1,i)+Fb(1,i))/2 + d_label, ...
+             (stewart.Fa(2,i)+Fb(2,i))/2, ...
+             (stewart.Fa(3,i)+Fb(3,i))/2, sprintf('$%i$', i), 'Color', 'k');
+      end
+    end
+  end
+#+end_src
+
+*** Figure parameters
+#+begin_src matlab
+  view([1 -0.6 0.4]);
+  axis equal;
+  axis off;
 #+end_src
 
 * Bibliography                                                        :ignore:
