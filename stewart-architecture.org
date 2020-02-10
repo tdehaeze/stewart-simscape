@@ -288,6 +288,15 @@ Let's now move a little bit the top platform and re-display the configuration:
 
 This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]].
 
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+name: fig:stewart-frames-position
+#+caption: Definition of the position of the frames
+[[file:figs/stewart-frames-position.png]]
+
 *** Function description
 :PROPERTIES:
 :UNNUMBERED: t
@@ -310,15 +319,6 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
   %        - MO_B [3x1] - Position of {B} with respect to {M} [m]
   %        - FO_A [3x1] - Position of {A} with respect to {F} [m]
 #+end_src
-
-*** Documentation
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-
-#+name: fig:stewart-frames-position
-#+caption: Definition of the position of the frames
-[[file:figs/stewart-frames-position.png]]
 
 *** Optional Parameters
 :PROPERTIES:
@@ -361,31 +361,6 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
 <<sec:generateGeneralConfiguration>>
 
 This Matlab function is accessible [[file:src/generateGeneralConfiguration.m][here]].
-
-*** Function description
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  function [stewart] = generateGeneralConfiguration(stewart, args)
-  % generateGeneralConfiguration - Generate a Very General Configuration
-  %
-  % Syntax: [stewart] = generateGeneralConfiguration(stewart, args)
-  %
-  % Inputs:
-  %    - args - Can have the following fields:
-  %        - FH  [1x1] - Height of the position of the fixed joints with respect to the frame {F} [m]
-  %        - FR  [1x1] - Radius of the position of the fixed joints in the X-Y [m]
-  %        - FTh [6x1] - Angles of the fixed joints in the X-Y plane with respect to the X axis [rad]
-  %        - MH  [1x1] - Height of the position of the mobile joints with respect to the frame {M} [m]
-  %        - FR  [1x1] - Radius of the position of the mobile joints in the X-Y [m]
-  %        - MTh [6x1] - Angles of the mobile joints in the X-Y plane with respect to the X axis [rad]
-  %
-  % Outputs:
-  %    - stewart - updated Stewart structure with the added fields:
-  %        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
-  %        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
-#+end_src
 
 *** Documentation
 :PROPERTIES:
@@ -442,6 +417,31 @@ The radius of the circles can be chosen as well as the angles where the joints a
 #+RESULTS:
 [[file:figs/stewart_bottom_plate.png]]
 
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = generateGeneralConfiguration(stewart, args)
+  % generateGeneralConfiguration - Generate a Very General Configuration
+  %
+  % Syntax: [stewart] = generateGeneralConfiguration(stewart, args)
+  %
+  % Inputs:
+  %    - args - Can have the following fields:
+  %        - FH  [1x1] - Height of the position of the fixed joints with respect to the frame {F} [m]
+  %        - FR  [1x1] - Radius of the position of the fixed joints in the X-Y [m]
+  %        - FTh [6x1] - Angles of the fixed joints in the X-Y plane with respect to the X axis [rad]
+  %        - MH  [1x1] - Height of the position of the mobile joints with respect to the frame {M} [m]
+  %        - FR  [1x1] - Radius of the position of the mobile joints in the X-Y [m]
+  %        - MTh [6x1] - Angles of the mobile joints in the X-Y plane with respect to the X axis [rad]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+  %        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+  %        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
+#+end_src
+
 *** Optional Parameters
 :PROPERTIES:
 :UNNUMBERED: t
@@ -483,6 +483,15 @@ The radius of the circles can be chosen as well as the angles where the joints a
 
 This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
 
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+name: fig:stewart-struts
+#+caption: Position and orientation of the struts
+[[file:figs/stewart-struts.png]]
+
 *** Function description
 :PROPERTIES:
 :UNNUMBERED: t
@@ -513,15 +522,6 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
   %        - FRa [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the bottom of the i'th strut from {F}
   %        - MRb [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the top of the i'th strut from {M}
 #+end_src
-
-*** Documentation
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-
-#+name: fig:stewart-struts
-#+caption: Position and orientation of the struts
-[[file:figs/stewart-struts.png]]
 
 *** Compute the position of the Joints
 :PROPERTIES:
@@ -805,6 +805,50 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
 
 This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+name: fig:piezoelectric_stack
+#+attr_html: :width 500px
+#+caption: Example of a piezoelectric stach actuator (PI)
+[[file:figs/piezoelectric_stack.jpg]]
+
+A simplistic model of such amplified actuator is shown in Figure [[fig:actuator_model_simple]] where:
+- $k_{i}$ represent the vertical stiffness of the actuator
+- $F_{i}$ represents the force applied by the actuator
+- $F_{m,i}$ represents the total measured force
+- $v_{m,i}$ represents the absolute velocity of the top part of the actuator
+- $d_{m,i}$ represents the total relative displacement of the actuator
+
+#+begin_src latex :file actuator_model_simple.pdf :post pdf2svg(file=*this*, ext="png") :exports results
+  \begin{tikzpicture}
+    \draw (-1, 0) -- (1, 0);
+
+    % Spring, Damper, and Actuator
+    \draw[spring]   (-1, 0) -- (-1, 1.5) node[midway, left=0.1]{$k_{i}$};
+    \draw[damper]   ( 0, 0) -- ( 0, 1.5) node[midway, left=0.2]{$c_{i}$};
+    \draw[actuator] ( 1, 0) -- ( 1, 1.5) node[midway, left=0.1](F){$F_{i}$};
+
+    \node[forcesensor={2}{0.2}] (fsens) at (0, 1.5){};
+
+    \node[left] at (fsens.west) {$F_{m,i}$};
+
+    \draw[dashed] (1, 0) -- ++(0.4, 0);
+    \draw[dashed] (1, 1.7) -- ++(0.4, 0);
+
+    \draw[->] (0, 1.7)node[]{$\bullet$} -- ++(0, 0.5) node[right]{$v_{m,i}$};
+
+    \draw[<->] (1.4, 0) -- ++(0, 1.7) node[midway, right]{$d_{m,i}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:actuator_model_simple
+#+caption: Simple model of an Actuator
+#+RESULTS:
+[[file:figs/actuator_model_simple.png]]
+
 *** Function description
 :PROPERTIES:
 :UNNUMBERED: t
@@ -845,6 +889,127 @@ This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
 #+begin_src matlab
   stewart.Ki = args.Ki;
   stewart.Ci = args.Ci;
+
+  stewart.actuator_type = 1;
+#+end_src
+
+** =initializeAmplifiedStrutDynamics=: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator
+:PROPERTIES:
+:header-args:matlab+: :tangle src/initializeAmplifiedStrutDynamics.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeAmplifiedStrutDynamics>>
+
+This Matlab function is accessible [[file:src/initializeAmplifiedStrutDynamics.m][here]].
+
+*** Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+An amplified piezoelectric actuator is shown in Figure [[fig:cedrat_apa95ml]].
+
+#+name: fig:cedrat_apa95ml
+#+attr_html: :width 500px
+#+caption: Example of an Amplified piezoelectric actuator with an integrated displacement sensor (Cedrat Technologies)
+[[file:figs/amplified_piezo_with_displacement_sensor.jpg]]
+
+A simplistic model of such amplified actuator is shown in Figure [[fig:amplified_piezo_model]] where:
+- $k_{p,i}$ represent the vertical stiffness when the piezoelectric stack is removed
+- $k_{s,i}$ is the vertical stiffness contribution of the piezoelectric stack
+- $F_{i}$ represents the part of the piezoelectric stack that is used as a force actuator
+- $F_{m,i}$ represents the remaining part of the piezoelectric stack that is used as a force sensor
+- $v_{m,i}$ represents the absolute velocity of the top part of the actuator
+- $d_{m,i}$ represents the total relative displacement of the actuator
+
+#+begin_src latex :file iff_1dof.pdf :post pdf2svg(file=*this*, ext="png") :exports results
+  \begin{tikzpicture}
+    % Ground
+    \draw (-1.2, 0) -- (1, 0);
+
+    % Mass
+    \draw (-1.2, 1.4) -- ++(2.2, 0);
+    \node[forcesensor={0.4}{0.4}] (fsensn) at (0, 1){};
+    \draw[] (-0.4, 1) -- (0.4, 1);
+    \node[right] at (fsensn.east) {$F_{m,i}$};
+
+    % Spring, Damper, and Actuator
+    \draw[spring] (-0.4, 0) -- (-0.4, 1) node[midway, right=0.1]{$k_{s,i}$};
+    \draw[actuator={0.4}{0.2}] (0.4, 0) -- (0.4, 1) node[midway, right=0.1]{$F_{i}$};
+
+    \draw[spring] (-1, 0) -- (-1, 1.4) node[midway, left=0.1]{$k_{p,i}$};
+
+    \draw[dashed] (1, 0) -- ++(0.4, 0);
+
+    \draw[dashed] (1, 1.4) -- ++(0.4, 0);
+
+    \draw[->] (0, 1.4)node[]{$\bullet$} -- ++(0, 0.5) node[right]{$v_{m,i}$};
+
+    \draw[<->] (1.4, 0) -- ++(0, 1.4) node[midway, right]{$d_{m,i}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:amplified_piezo_model
+#+caption: Model of an amplified actuator
+#+RESULTS:
+[[file:figs/iff_1dof.png]]
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = initializeAmplifiedStrutDynamics(stewart, args)
+  % initializeAmplifiedStrutDynamics - Add Stiffness and Damping properties of each strut
+  %
+  % Syntax: [stewart] = initializeAmplifiedStrutDynamics(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - Ksi [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+  %        - Csi [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+  %        - Kdi [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
+  %        - Cdi [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+  %        - Ki  [6x1] - Total Stiffness of each strut [N/m]
+  %        - Ci  [6x1] - Total Damping of each strut [N/(m/s)]
+  %        - Ksi [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+  %        - Csi [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+  %        - Kdi [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
+  %        - Cdi [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.Kdi (6,1) double {mustBeNumeric, mustBeNonnegative} = 5e6*ones(6,1)
+      args.Cdi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.Ksi (6,1) double {mustBeNumeric, mustBeNonnegative} = 15e6*ones(6,1)
+      args.Csi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+  end
+#+end_src
+
+*** Add Stiffness and Damping properties of each strut
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  stewart.Ksi = args.Ksi;
+  stewart.Csi = args.Csi;
+
+  stewart.Kdi = args.Kdi;
+  stewart.Cdi = args.Cdi;
+
+  stewart.Ki = args.Ksi + args.Kdi;
+  stewart.Ci = args.Csi + args.Cdi;
+
+  stewart.actuator_type = 2;
 #+end_src
 
 ** =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints

@@ -21,3 +21,5 @@ end
 
 stewart.Ki = args.Ki;
 stewart.Ci = args.Ci;
+
+stewart.actuator_type = 1;
