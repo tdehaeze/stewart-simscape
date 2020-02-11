@@ -1,4 +1,4 @@
-#+TITLE: Stewart Platforms Toolbox
+#+TITLE: Stewart Platforms - Matlab/Simscape Toolbox
 :DRAWER:
 #+OPTIONS: toc:nil
 #+OPTIONS: html-postamble:nil
@@ -10,3 +10,28 @@
 #+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
 #+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 :END:
+
+The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
+
+The documentation of this toolbox is available [[https://tdehaeze.github.io/stewart-simscape/][here]].
+
+* Org Publish Configuration                                         :noexport:
+#+begin_src emacs-lisp :results none
+  (setq org-publish-project-alist
+        '(("stewart-simscape"
+           :base-directory "./org/"
+           :base-extension "org"
+           :publishing-directory "./docs/"
+           :author "Dehaeze Thomas"
+           :email "dehaeze.thomas@gmail.com/"
+           :recursive nil
+           :publishing-function org-html-publish-to-html
+           :auto-preamble t
+           :auto-sitemap t
+           :sitemap-title "Sitemap"
+           :html-link-up "index.html"
+           :html-link-home "index.html"
+           :with-todo-keywords nil
+           :html-wrap-src-lines nil
+           :table-of-contents nil)))
+#+end_src
