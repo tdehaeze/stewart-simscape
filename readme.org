@@ -2,6 +2,7 @@
 :DRAWER:
 #+OPTIONS: toc:nil
 #+OPTIONS: html-postamble:nil
+#+EXPORT_EXCLUDE_TAGS: exclude noexport
 
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
