@@ -21,7 +21,6 @@
 :END:
 
 * Introduction                                                        :ignore:
-
 The following decentralized active damping techniques are briefly studied:
 - Inertial Control (proportional feedback of the absolute velocity): Section [[sec:active_damping_inertial]]
 - Integral Force Feedback: Section [[sec:active_damping_iff]]
@@ -54,7 +53,8 @@ The following decentralized active damping techniques are briefly studied:
 
 ** Identification of the Dynamics
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -283,10 +283,12 @@ The root locus is shown in figure [[fig:root_locus_inertial_rot_stiffness]] and 
 ** Identification of the Dynamics with perfect Joints
 We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
+  stewart = initializeAmplifiedStrutDynamics(stewart);
   stewart = initializeJointDynamics(stewart, 'disable', true);
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
@@ -316,7 +318,7 @@ And we identify the dynamics from force actuators to force sensors.
 
 The transfer function from actuator forces to force sensors is shown in Figure [[fig:iff_plant_coupling]].
 #+begin_src matlab :exports none
-  freqs = logspace(1, 3, 1000);
+  freqs = logspace(1, 4, 1000);
 
   figure;
 
@@ -514,7 +516,8 @@ The root locus is shown in figure [[fig:root_locus_iff_rot_stiffness]] and the o
 ** Identification of the Dynamics with perfect Joints
 We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);

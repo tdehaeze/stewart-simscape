@@ -56,7 +56,8 @@ We create a cubic Stewart platform (figure [[fig:3d-cubic-stewart-aligned]]) in 
 The Jacobian matrix is estimated at the location of the center of the cube.
 
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 100e-3, 'MO_B', -50e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 100e-3, 'MO_B', -50e-3);
   stewart = generateCubicConfiguration(stewart, 'Hc', 100e-3, 'FOc', 50e-3, 'FHa', 0, 'MHb', 0);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', ones(6,1));
@@ -99,7 +100,8 @@ We create a cubic Stewart platform with center of the cube located at the center
 The Jacobian matrix is not estimated at the location of the center of the cube.
 
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 100e-3, 'MO_B', 0);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 100e-3, 'MO_B', 0);
   stewart = generateCubicConfiguration(stewart, 'Hc', 100e-3, 'FOc', 50e-3, 'FHa', 0, 'MHb', 0);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', ones(6,1));
@@ -142,7 +144,8 @@ The Jacobian is estimated at the cube center.
 [[file:./figs/3d-cubic-stewart-misaligned.png]]
 
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 80e-3, 'MO_B', -40e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 80e-3, 'MO_B', -40e-3);
   stewart = generateCubicConfiguration(stewart, 'Hc', 100e-3, 'FOc', 50e-3, 'FHa', 0, 'MHb', 0);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', ones(6,1));
@@ -188,7 +191,8 @@ The center height of the Stewart platform is then at $z = \frac{175-75}{2} = 50$
 The center of the cube from the top platform is at $z = 110 - 175 = -65$.
 
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 80e-3, 'MO_B', -40e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 80e-3, 'MO_B', -40e-3);
   stewart = generateCubicConfiguration(stewart, 'Hc', 100e-3, 'FOc', 50e-3, 'FHa', 0, 'MHb', 0);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart, 'Ki', ones(6,1));
@@ -237,7 +241,8 @@ This is possible, to do so:
   It is possible to have small cube, but then to configuration is a little bit strange.
 
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 100e-3, 'MO_B', 50e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 100e-3, 'MO_B', 50e-3);
   FOc = stewart.H + stewart.MO_B(3);
   Hc = 2*(stewart.H + stewart.MO_B(3));
   stewart = generateCubicConfiguration(stewart, 'Hc', Hc, 'FOc', FOc, 'FHa', 10e-3, 'MHb', 10e-3);
@@ -368,7 +373,7 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
   %
   % Inputs:
   %    - stewart - A structure with the following fields
-  %        - H   [1x1] - Total height of the platform [m]
+  %        - geometry.H [1x1] - Total height of the platform [m]
   %    - args - Can have the following fields:
   %        - Hc  [1x1] - Height of the "useful" part of the cube [m]
   %        - FOc [1x1] - Height of the center of the cube with respect to {F} [m]
@@ -377,8 +382,8 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
-  %        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
-  %        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
+  %        - platform_F.Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+  %        - platform_M.Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
 #+end_src
 
 *** Documentation
@@ -401,6 +406,15 @@ This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here
       args.FHa (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
       args.MHb (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
   end
+#+end_src
+
+*** Check the =stewart= structure elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  assert(isfield(stewart.geometry, 'H'),   'stewart.geometry should have attribute H')
+  H = stewart.geometry.H;
 #+end_src
 
 *** Position of the Cube
@@ -437,8 +451,17 @@ We can compute the vector of each leg ${}^{C}\hat{\bm{s}}_{i}$ (unit vector from
 
 We now which to compute the position of the joints $a_{i}$ and $b_{i}$.
 #+begin_src matlab
-  stewart.Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
-  stewart.Mb = CCf + [0; 0; args.FOc-stewart.H] + ((stewart.H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+  Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+  Mb = CCf + [0; 0; args.FOc-H] + ((H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+#+end_src
+
+*** Populate the =stewart= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  stewart.platform_F.Fa = Fa;
+  stewart.platform_M.Mb = Mb;
 #+end_src
 
 * Bibliography                                                        :ignore:

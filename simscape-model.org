@@ -131,6 +131,7 @@ There is two main types of inertial sensor that can be used to measure the absol
 
 Both inertial sensors are described bellow.
 
+* Other Elements
 ** Z-Axis Geophone
 *** Working Principle
 From the schematic of the Z-axis geophone shown in Figure [[fig:z_axis_geophone]], we can write the transfer function from the support velocity $\dot{w}$ to the relative velocity of the inertial mass $\dot{d}$:

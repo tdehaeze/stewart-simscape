@@ -65,7 +65,8 @@ An important difference from basic Simulink models is that the states in a physi
 
 ** Initialize the Stewart Platform
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -120,7 +121,8 @@ An important difference from basic Simulink models is that the states in a physi
 
 ** Initialize the Stewart Platform
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -354,7 +356,8 @@ Save the movie of the mode shape.
 
 ** Initialize the Stewart Platform
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);

@@ -41,7 +41,8 @@
 
 ** test
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -129,7 +130,8 @@ Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}
 ** Compare external forces and forces applied by the actuators
 Initialization of the Stewart platform.
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -194,7 +196,8 @@ Seems quite similar.
 ** Comparison of the static transfer function and the Compliance matrix
 Initialization of the Stewart platform.
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
@@ -257,7 +260,8 @@ The low frequency transfer function matrix from $\mathcal{\bm{F}}$ to $\mathcal{
 ** Transfer function from forces applied in the legs to the displacement of the legs
 Initialization of the Stewart platform.
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);

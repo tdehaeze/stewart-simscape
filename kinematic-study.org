@@ -226,7 +226,8 @@ This will also gives us the range for which the approximate forward kinematic is
 *** Stewart architecture definition
 We first define some general Stewart architecture.
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStewartPose(stewart);
@@ -331,7 +332,8 @@ This is what is analyzed in this section.
 ** Stewart architecture definition
 Let's first define the Stewart platform architecture that we want to study.
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStewartPose(stewart);
@@ -487,7 +489,8 @@ However, for small displacements, we can use the Jacobian as an approximate solu
 ** Stewart architecture definition
 Let's first define the Stewart platform architecture that we want to study.
 #+begin_src matlab
-  stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStewartPose(stewart);

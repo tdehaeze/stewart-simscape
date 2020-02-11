@@ -69,7 +69,8 @@
 
 ** Initialize the Stewart platform
 #+begin_src matlab
-  stewart = initializeFramesPositions();
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
