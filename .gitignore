@@ -1,4 +1,4 @@
-figs/*.svg
+docs/figs/*.svg
 *.autosave
 *.original
 old/
