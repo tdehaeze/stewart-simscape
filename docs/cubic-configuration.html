@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 15:26 -->
+<!-- 2020-02-11 mar. 15:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -268,19 +268,19 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8c6677e">Configuration Analysis - Stiffness Matrix</a>
+<li><a href="#org8c6677e">1. Configuration Analysis - Stiffness Matrix</a>
 <ul>
-<li><a href="#orgf6f7ad2">Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#orga88e79a">Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
-<li><a href="#orge02ec88">Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
-<li><a href="#org43fd7e4">Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#orgd35acc0">Conclusion</a></li>
-<li><a href="#org8afa645">Having Cube&rsquo;s center above the top platform</a></li>
+<li><a href="#orgf6f7ad2">1.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
+<li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
+<li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
+<li><a href="#orgd35acc0">1.5. Conclusion</a></li>
+<li><a href="#org8afa645">1.6. Having Cube&rsquo;s center above the top platform</a></li>
 </ul>
 </li>
-<li><a href="#org3044455">Functions</a>
+<li><a href="#org3044455">2. Functions</a>
 <ul>
-<li><a href="#org56504f1"><code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
+<li><a href="#org56504f1">2.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
 <ul>
 <li><a href="#orga5a9ba8">Function description</a></li>
 <li><a href="#org3253792">Documentation</a></li>
@@ -315,7 +315,7 @@ According to <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage
 </p>
 
 <p>
-To generate and study the Cubic configuration, <code>generateCubicConfiguration</code> is used (description in section <a href="#orga8311d3">No description for this link</a>).
+To generate and study the Cubic configuration, <code>generateCubicConfiguration</code> is used (description in section <a href="#orga8311d3">2.1</a>).
 The goal is to study the benefits of using a cubic configuration:
 </p>
 <ul class="org-ul">
@@ -325,12 +325,12 @@ The goal is to study the benefits of using a cubic configuration:
 </ul>
 
 <div id="outline-container-org8c6677e" class="outline-2">
-<h2 id="org8c6677e">Configuration Analysis - Stiffness Matrix</h2>
-<div class="outline-text-2" id="text-org8c6677e">
+<h2 id="org8c6677e"><span class="section-number-2">1</span> Configuration Analysis - Stiffness Matrix</h2>
+<div class="outline-text-2" id="text-1">
 </div>
 <div id="outline-container-orgf6f7ad2" class="outline-3">
-<h3 id="orgf6f7ad2">Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
-<div class="outline-text-3" id="text-orgf6f7ad2">
+<h3 id="orgf6f7ad2"><span class="section-number-3">1.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
 We create a cubic Stewart platform (figure <a href="#org9454f54">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
@@ -437,8 +437,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 
 <div id="outline-container-orga88e79a" class="outline-3">
-<h3 id="orga88e79a">Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
-<div class="outline-text-3" id="text-orga88e79a">
+<h3 id="orga88e79a"><span class="section-number-3">1.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org9454f54">1</a>).
 The Jacobian matrix is not estimated at the location of the center of the cube.
@@ -538,8 +538,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 
 <div id="outline-container-orge02ec88" class="outline-3">
-<h3 id="orge02ec88">Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
-<div class="outline-text-3" id="text-orge02ec88">
+<h3 id="orge02ec88"><span class="section-number-3">1.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org97b319c">4</a>).
 The Jacobian is estimated at the cube center.
@@ -650,8 +650,8 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 
 <div id="outline-container-org43fd7e4" class="outline-3">
-<h3 id="org43fd7e4">Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
-<div class="outline-text-3" id="text-org43fd7e4">
+<h3 id="org43fd7e4"><span class="section-number-3">1.4</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</h3>
+<div class="outline-text-3" id="text-1-4">
 <p>
 Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center.
 The Jacobian is estimated at the center of the Stewart platform.
@@ -758,8 +758,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 
 <div id="outline-container-orgd35acc0" class="outline-3">
-<h3 id="orgd35acc0">Conclusion</h3>
-<div class="outline-text-3" id="text-orgd35acc0">
+<h3 id="orgd35acc0"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div class="outline-text-3" id="text-1-5">
 <div class="important">
 <ul class="org-ul">
 <li>The cubic configuration permits to have \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\)</li>
@@ -771,8 +771,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 
 <div id="outline-container-org8afa645" class="outline-3">
-<h3 id="org8afa645">Having Cube&rsquo;s center above the top platform</h3>
-<div class="outline-text-3" id="text-org8afa645">
+<h3 id="org8afa645"><span class="section-number-3">1.6</span> Having Cube&rsquo;s center above the top platform</h3>
+<div class="outline-text-3" id="text-1-6">
 <p>
 Let&rsquo;s say we want to have a decouple dynamics above the top platform.
 Thus, we want the cube&rsquo;s center to be located above the top center.
@@ -881,16 +881,16 @@ We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiff
 </div>
 
 <div id="outline-container-org3044455" class="outline-2">
-<h2 id="org3044455">Functions</h2>
-<div class="outline-text-2" id="text-org3044455">
+<h2 id="org3044455"><span class="section-number-2">2</span> Functions</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 <a id="org28ba607"></a>
 </p>
 </div>
 
 <div id="outline-container-org56504f1" class="outline-3">
-<h3 id="org56504f1"><code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
-<div class="outline-text-3" id="text-org56504f1">
+<h3 id="org56504f1"><span class="section-number-3">2.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 <a id="orga8311d3"></a>
 </p>
@@ -1039,7 +1039,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 15:26</p>
+<p class="date">Created: 2020-02-11 mar. 15:50</p>
 </div>
 </body>
 </html>

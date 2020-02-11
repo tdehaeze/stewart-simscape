@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 15:23 -->
+<!-- 2020-02-11 mar. 15:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Definition of the Architecture</title>
@@ -269,137 +268,137 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8d01b94">Definition of the Stewart Platform Geometry</a>
+<li><a href="#org8d01b94">1. Definition of the Stewart Platform Geometry</a>
 <ul>
-<li><a href="#org8fe4e0e">Frames Definition</a></li>
-<li><a href="#org1fc986a">Location of the Spherical Joints</a></li>
-<li><a href="#org6a51c7d">Length and orientation of the struts</a></li>
-<li><a href="#org9261b10">Rest Position of the Stewart platform</a></li>
+<li><a href="#org8fe4e0e">1.1. Frames Definition</a></li>
+<li><a href="#org1fc986a">1.2. Location of the Spherical Joints</a></li>
+<li><a href="#org6a51c7d">1.3. Length and orientation of the struts</a></li>
+<li><a href="#org9261b10">1.4. Rest Position of the Stewart platform</a></li>
 </ul>
 </li>
-<li><a href="#orgbce93f2">Definition of the Inertia and geometry of the Fixed base, Mobile platform and Struts</a>
+<li><a href="#orgbce93f2">2. Definition of the Inertia and geometry of the Fixed base, Mobile platform and Struts</a>
 <ul>
-<li><a href="#orgd783c33">Inertia and Geometry of the Fixed and Mobile platforms</a></li>
-<li><a href="#org126d465">Inertia and Geometry of the struts</a></li>
+<li><a href="#orgd783c33">2.1. Inertia and Geometry of the Fixed and Mobile platforms</a></li>
+<li><a href="#org126d465">2.2. Inertia and Geometry of the struts</a></li>
 </ul>
 </li>
-<li><a href="#orgd7fb840">Definition of the stiffness and damping of the joints</a>
+<li><a href="#orgd7fb840">3. Definition of the stiffness and damping of the joints</a>
 <ul>
-<li><a href="#orgdb7ce43">Stiffness and Damping of the Actuator</a></li>
-<li><a href="#orgd5629d6">Stiffness and Damping of the Spherical Joints</a></li>
+<li><a href="#orgdb7ce43">3.1. Stiffness and Damping of the Actuator</a></li>
+<li><a href="#orgd5629d6">3.2. Stiffness and Damping of the Spherical Joints</a></li>
 </ul>
 </li>
-<li><a href="#org6d2c540">Summary of the Initialization Procedure and Matlab Example</a>
+<li><a href="#org6d2c540">4. Summary of the Initialization Procedure and Matlab Example</a>
 <ul>
-<li><a href="#org715f118">Example of the initialization of a Stewart Platform</a></li>
+<li><a href="#org715f118">4.1. Example of the initialization of a Stewart Platform</a></li>
 </ul>
 </li>
-<li><a href="#org48340b4">Functions</a>
+<li><a href="#org48340b4">5. Functions</a>
 <ul>
-<li><a href="#orgd89f0e1"><code>initializeStewartPlatform</code>: Initialize the Stewart Platform structure</a>
+<li><a href="#orgd89f0e1">5.1. <code>initializeStewartPlatform</code>: Initialize the Stewart Platform structure</a>
 <ul>
-<li><a href="#orgbc1420f">Documentation</a></li>
-<li><a href="#org3c4d7d8">Function description</a></li>
+<li><a href="#org076d07b">Documentation</a></li>
+<li><a href="#org1612620">Function description</a></li>
 <li><a href="#orgd567fc1">Initialize the Stewart structure</a></li>
 </ul>
 </li>
-<li><a href="#orgb11894c"><code>initializeFramesPositions</code>: Initialize the positions of frames {A}, {B}, {F} and {M}</a>
+<li><a href="#orgb11894c">5.2. <code>initializeFramesPositions</code>: Initialize the positions of frames {A}, {B}, {F} and {M}</a>
 <ul>
-<li><a href="#org527c72f">Documentation</a></li>
-<li><a href="#orgb28c816">Function description</a></li>
-<li><a href="#org8bcc794">Optional Parameters</a></li>
+<li><a href="#orgf137e52">Documentation</a></li>
+<li><a href="#orgef24367">Function description</a></li>
+<li><a href="#org8dbfacd">Optional Parameters</a></li>
 <li><a href="#org458592e">Compute the position of each frame</a></li>
-<li><a href="#org0516874">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#orga9b891a">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org9057387"><code>generateGeneralConfiguration</code>: Generate a Very General Configuration</a>
+<li><a href="#org9057387">5.3. <code>generateGeneralConfiguration</code>: Generate a Very General Configuration</a>
 <ul>
-<li><a href="#org8e00e26">Documentation</a></li>
-<li><a href="#orgd7988c9">Function description</a></li>
-<li><a href="#orgbca44f1">Optional Parameters</a></li>
+<li><a href="#org6686470">Documentation</a></li>
+<li><a href="#org8e0c109">Function description</a></li>
+<li><a href="#orge635bdc">Optional Parameters</a></li>
 <li><a href="#org232e4c2">Compute the pose</a></li>
-<li><a href="#orgc0cd111">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#orge19481b">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org861f6de"><code>computeJointsPose</code>: Compute the Pose of the Joints</a>
+<li><a href="#org861f6de">5.4. <code>computeJointsPose</code>: Compute the Pose of the Joints</a>
 <ul>
-<li><a href="#org7165251">Documentation</a></li>
-<li><a href="#org67db014">Function description</a></li>
-<li><a href="#org96d0ef3">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgd00ef90">Documentation</a></li>
+<li><a href="#orga8f705b">Function description</a></li>
+<li><a href="#org4889a22">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org52b0d4c">Compute the position of the Joints</a></li>
 <li><a href="#org4b76b0f">Compute the strut length and orientation</a></li>
 <li><a href="#orgd621d5e">Compute the orientation of the Joints</a></li>
-<li><a href="#org2a4c563">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#orgf383464">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org329bef9"><code>initializeStewartPose</code>: Determine the initial stroke in each leg to have the wanted pose</a>
+<li><a href="#org329bef9">5.5. <code>initializeStewartPose</code>: Determine the initial stroke in each leg to have the wanted pose</a>
 <ul>
-<li><a href="#orgbe9f167">Function description</a></li>
-<li><a href="#org9aa96f1">Optional Parameters</a></li>
+<li><a href="#orgfa57533">Function description</a></li>
+<li><a href="#orge534e6f">Optional Parameters</a></li>
 <li><a href="#org3d3ef62">Use the Inverse Kinematic function</a></li>
-<li><a href="#org63a831f">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#org5e7e71c">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org6ff5b31"><code>initializeCylindricalPlatforms</code>: Initialize the geometry of the Fixed and Mobile Platforms</a>
+<li><a href="#org6ff5b31">5.6. <code>initializeCylindricalPlatforms</code>: Initialize the geometry of the Fixed and Mobile Platforms</a>
 <ul>
-<li><a href="#org930d1f3">Function description</a></li>
-<li><a href="#orgf010fb9">Optional Parameters</a></li>
+<li><a href="#org11374c9">Function description</a></li>
+<li><a href="#org56dc51c">Optional Parameters</a></li>
 <li><a href="#org25a390a">Compute the Inertia matrices of platforms</a></li>
-<li><a href="#org61255f3">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#org120ea12">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org60aa215"><code>initializeCylindricalStruts</code>: Define the inertia of cylindrical struts</a>
+<li><a href="#org60aa215">5.7. <code>initializeCylindricalStruts</code>: Define the inertia of cylindrical struts</a>
 <ul>
-<li><a href="#orgc7d5120">Function description</a></li>
-<li><a href="#orgfb4e3ed">Optional Parameters</a></li>
+<li><a href="#org7a6774e">Function description</a></li>
+<li><a href="#orgccd9ddc">Optional Parameters</a></li>
 <li><a href="#orgc056498">Compute the properties of the cylindrical struts</a></li>
-<li><a href="#orgc329127">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#orgbe49c20">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org3ad0cd1"><code>initializeStrutDynamics</code>: Add Stiffness and Damping properties of each strut</a>
+<li><a href="#org3ad0cd1">5.8. <code>initializeStrutDynamics</code>: Add Stiffness and Damping properties of each strut</a>
 <ul>
-<li><a href="#org9075466">Documentation</a></li>
-<li><a href="#org21e1e52">Function description</a></li>
-<li><a href="#orgd9bda04">Optional Parameters</a></li>
+<li><a href="#org063be5b">Documentation</a></li>
+<li><a href="#orgfc83159">Function description</a></li>
+<li><a href="#org8756943">Optional Parameters</a></li>
 <li><a href="#orgadb8327">Add Stiffness and Damping properties of each strut</a></li>
 </ul>
 </li>
-<li><a href="#orgd8d403e"><code>initializeAmplifiedStrutDynamics</code>: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator</a>
+<li><a href="#orgd8d403e">5.9. <code>initializeAmplifiedStrutDynamics</code>: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator</a>
 <ul>
-<li><a href="#org8ba232a">Documentation</a></li>
-<li><a href="#org7b6e247">Function description</a></li>
-<li><a href="#org936848c">Optional Parameters</a></li>
+<li><a href="#org11b907a">Documentation</a></li>
+<li><a href="#orgc9ac7ad">Function description</a></li>
+<li><a href="#org2508e19">Optional Parameters</a></li>
 <li><a href="#org9b435e8">Compute the total stiffness and damping</a></li>
-<li><a href="#orgd78e8b0">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#org933fa09">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#orgeb6173a"><code>initializeJointDynamics</code>: Add Stiffness and Damping properties for spherical joints</a>
+<li><a href="#orgeb6173a">5.10. <code>initializeJointDynamics</code>: Add Stiffness and Damping properties for spherical joints</a>
 <ul>
-<li><a href="#org051062f">Function description</a></li>
-<li><a href="#orgf57427f">Optional Parameters</a></li>
+<li><a href="#orgea4c71f">Function description</a></li>
+<li><a href="#orgbb42633">Optional Parameters</a></li>
 <li><a href="#orgc6d4183">Add Actuator Type</a></li>
 <li><a href="#orgc0e613c">Add Stiffness and Damping in Translation of each strut</a></li>
 <li><a href="#org04698fc">Add Stiffness and Damping in Rotation of each strut</a></li>
 </ul>
 </li>
-<li><a href="#orgea07e0e"><code>initializeInertialSensor</code>: Initialize the inertial sensor in each strut</a>
+<li><a href="#orgea07e0e">5.11. <code>initializeInertialSensor</code>: Initialize the inertial sensor in each strut</a>
 <ul>
-<li><a href="#org86c4462">Function description</a></li>
-<li><a href="#org6d69ef4">Optional Parameters</a></li>
+<li><a href="#org2462fa5">Function description</a></li>
+<li><a href="#orgcc6ded4">Optional Parameters</a></li>
 <li><a href="#org463075d">Compute the properties of the sensor</a></li>
-<li><a href="#orgbf82c53">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#org37e6016">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org5266e9d"><code>displayArchitecture</code>: 3D plot of the Stewart platform architecture</a>
+<li><a href="#org5266e9d">5.12. <code>displayArchitecture</code>: 3D plot of the Stewart platform architecture</a>
 <ul>
-<li><a href="#orgfcc25cc">Function description</a></li>
-<li><a href="#org51d9478">Optional Parameters</a></li>
-<li><a href="#org1ee899b">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgdd7c996">Function description</a></li>
+<li><a href="#org99b2163">Optional Parameters</a></li>
+<li><a href="#org9e5d50c">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#orgc088b18">Figure Creation, Frames and Homogeneous transformations</a></li>
 <li><a href="#orgc25a979">Fixed Base elements</a></li>
 <li><a href="#org8417772">Mobile Platform elements</a></li>
 <li><a href="#org5f40b79">Legs</a></li>
-<li><a href="#org81be27b">Figure parameters</a></li>
+<li><a href="#org81be27b">5.12.1. Figure parameters</a></li>
 </ul>
 </li>
 </ul>
@@ -424,22 +423,22 @@ When possible, the notations are compatible with the one used in <a class='org-r
 The definition of the Stewart platform is done in three main parts:
 </p>
 <ul class="org-ul">
-<li>First, the geometry if defined (Section <a href="#orga5e83f9">No description for this link</a>)</li>
-<li>Then, the inertia of the mechanical elements are defined (Section <a href="#orga326389">No description for this link</a>)</li>
-<li>Finally, the Stiffness and Damping characteristics of the elements are defined (Section <a href="#org96459ea">No description for this link</a>)</li>
+<li>First, the geometry if defined (Section <a href="#orga5e83f9">1</a>)</li>
+<li>Then, the inertia of the mechanical elements are defined (Section <a href="#orga326389">2</a>)</li>
+<li>Finally, the Stiffness and Damping characteristics of the elements are defined (Section <a href="#org96459ea">3</a>)</li>
 </ul>
 
 <p>
-In section <a href="#orgaede9ee">No description for this link</a>, the procedure the initialize the Stewart platform is summarize and the associated Matlab code is shown.
+In section <a href="#orgaede9ee">4</a>, the procedure the initialize the Stewart platform is summarize and the associated Matlab code is shown.
 </p>
 
 <p>
-Finally, all the Matlab function used to initialize the Stewart platform are described in section <a href="#orgac086c4">No description for this link</a>.
+Finally, all the Matlab function used to initialize the Stewart platform are described in section <a href="#orgac086c4">5</a>.
 </p>
 
 <div id="outline-container-org8d01b94" class="outline-2">
-<h2 id="org8d01b94">Definition of the Stewart Platform Geometry</h2>
-<div class="outline-text-2" id="text-org8d01b94">
+<h2 id="org8d01b94"><span class="section-number-2">1</span> Definition of the Stewart Platform Geometry</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 <a id="orga5e83f9"></a>
 </p>
@@ -458,8 +457,8 @@ This steps are detailed below.
 </p>
 </div>
 <div id="outline-container-org8fe4e0e" class="outline-3">
-<h3 id="org8fe4e0e">Frames Definition</h3>
-<div class="outline-text-3" id="text-org8fe4e0e">
+<h3 id="org8fe4e0e"><span class="section-number-3">1.1</span> Frames Definition</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
 We define 4 important <b>frames</b> (see Figure <a href="#org9940a8f">1</a>):
 </p>
@@ -507,8 +506,8 @@ The definition of the frames is done with the <code>initializeFramesPositions</c
 </div>
 
 <div id="outline-container-org1fc986a" class="outline-3">
-<h3 id="org1fc986a">Location of the Spherical Joints</h3>
-<div class="outline-text-3" id="text-org1fc986a">
+<h3 id="org1fc986a"><span class="section-number-3">1.2</span> Location of the Spherical Joints</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 Then, we define the <b>location of the spherical joints</b> (see Figure <a href="#org5a59399">2</a>):
 </p>
@@ -548,8 +547,8 @@ The location of the spherical joints are then given by \({}^{F}\bm{a}_{i}\) and 
 </div>
 
 <div id="outline-container-org6a51c7d" class="outline-3">
-<h3 id="org6a51c7d">Length and orientation of the struts</h3>
-<div class="outline-text-3" id="text-org6a51c7d">
+<h3 id="org6a51c7d"><span class="section-number-3">1.3</span> Length and orientation of the struts</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 From the location of the joints (\({}^{F}\bm{a}_{i}\) and \({}^{M}\bm{b}_{i}\)), we compute the length \(l_i\) and orientation of each strut \(\hat{\bm{s}}_i\) (unit vector aligned with the strut).
 The length and orientation of each strut is represented in figure <a href="#org145b8ab">3</a>.
@@ -569,8 +568,8 @@ This is done with the <code>computeJointsPose</code> function (<a href="#org7f34
 </div>
 
 <div id="outline-container-org9261b10" class="outline-3">
-<h3 id="org9261b10">Rest Position of the Stewart platform</h3>
-<div class="outline-text-3" id="text-org9261b10">
+<h3 id="org9261b10"><span class="section-number-3">1.4</span> Rest Position of the Stewart platform</h3>
+<div class="outline-text-3" id="text-1-4">
 <p>
 We may want to initialize the Stewart platform in some position and orientation that corresponds to its rest position.
 </p>
@@ -591,8 +590,8 @@ Then, the function <code>initializeStewartPose</code> (<a href="#orga94c6a9">lin
 </div>
 
 <div id="outline-container-orgbce93f2" class="outline-2">
-<h2 id="orgbce93f2">Definition of the Inertia and geometry of the Fixed base, Mobile platform and Struts</h2>
-<div class="outline-text-2" id="text-orgbce93f2">
+<h2 id="orgbce93f2"><span class="section-number-2">2</span> Definition of the Inertia and geometry of the Fixed base, Mobile platform and Struts</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 <a id="orga326389"></a>
 </p>
@@ -611,8 +610,8 @@ It is thus important to set them properly.
 </p>
 </div>
 <div id="outline-container-orgd783c33" class="outline-3">
-<h3 id="orgd783c33">Inertia and Geometry of the Fixed and Mobile platforms</h3>
-<div class="outline-text-3" id="text-orgd783c33">
+<h3 id="orgd783c33"><span class="section-number-3">2.1</span> Inertia and Geometry of the Fixed and Mobile platforms</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 In order to set the inertia of the fixed and mobile platforms, we can use the following function that assume that both platforms are cylindrical:
 </p>
@@ -623,8 +622,8 @@ In order to set the inertia of the fixed and mobile platforms, we can use the fo
 </div>
 
 <div id="outline-container-org126d465" class="outline-3">
-<h3 id="org126d465">Inertia and Geometry of the struts</h3>
-<div class="outline-text-3" id="text-org126d465">
+<h3 id="org126d465"><span class="section-number-3">2.2</span> Inertia and Geometry of the struts</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 Similarly for the struts, we suppose here that they have a cylindrical shape.
 They are initialize with the following function:
@@ -637,8 +636,8 @@ They are initialize with the following function:
 </div>
 
 <div id="outline-container-orgd7fb840" class="outline-2">
-<h2 id="orgd7fb840">Definition of the stiffness and damping of the joints</h2>
-<div class="outline-text-2" id="text-orgd7fb840">
+<h2 id="orgd7fb840"><span class="section-number-2">3</span> Definition of the stiffness and damping of the joints</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 <a id="org96459ea"></a>
 </p>
@@ -652,8 +651,8 @@ The global stiffness and damping of the Stewart platform depends on its geometry
 </div>
 
 <div id="outline-container-orgdb7ce43" class="outline-3">
-<h3 id="orgdb7ce43">Stiffness and Damping of the Actuator</h3>
-<div class="outline-text-3" id="text-orgdb7ce43">
+<h3 id="orgdb7ce43"><span class="section-number-3">3.1</span> Stiffness and Damping of the Actuator</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 Each Actuator is modeled by 3 elements in parallel (Figure <a href="#orgf28da6c">4</a>):
 </p>
@@ -677,8 +676,8 @@ The initialization of the stiffness and damping properties of the actuators is d
 </div>
 
 <div id="outline-container-orgd5629d6" class="outline-3">
-<h3 id="orgd5629d6">Stiffness and Damping of the Spherical Joints</h3>
-<div class="outline-text-3" id="text-orgd5629d6">
+<h3 id="orgd5629d6"><span class="section-number-3">3.2</span> Stiffness and Damping of the Spherical Joints</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 Even though we often suppose that the spherical joint are perfect in the sense that we neglect its stiffness and damping, we can set some rotation stiffness and damping of each of the spherical/universal joints.
 </p>
@@ -691,8 +690,8 @@ This is done with the <code>initializeJointDynamics</code> function (<a href="#o
 </div>
 
 <div id="outline-container-org6d2c540" class="outline-2">
-<h2 id="org6d2c540">Summary of the Initialization Procedure and Matlab Example</h2>
-<div class="outline-text-2" id="text-org6d2c540">
+<h2 id="org6d2c540"><span class="section-number-2">4</span> Summary of the Initialization Procedure and Matlab Example</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 <a id="orgaede9ee"></a>
 </p>
@@ -720,8 +719,8 @@ By following this procedure, we obtain a Matlab structure <code>stewart</code> t
 </p>
 </div>
 <div id="outline-container-org715f118" class="outline-3">
-<h3 id="org715f118">Example of the initialization of a Stewart Platform</h3>
-<div class="outline-text-3" id="text-org715f118">
+<h3 id="org715f118"><span class="section-number-3">4.1</span> Example of the initialization of a Stewart Platform</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 Let&rsquo;s first define the Stewart Platform Geometry.
 </p>
@@ -824,16 +823,16 @@ view([0 <span class="org-type">-</span>1 0]);
 </div>
 
 <div id="outline-container-org48340b4" class="outline-2">
-<h2 id="org48340b4">Functions</h2>
-<div class="outline-text-2" id="text-org48340b4">
+<h2 id="org48340b4"><span class="section-number-2">5</span> Functions</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 <a id="orgac086c4"></a>
 </p>
 </div>
 
 <div id="outline-container-orgd89f0e1" class="outline-3">
-<h3 id="orgd89f0e1"><code>initializeStewartPlatform</code>: Initialize the Stewart Platform structure</h3>
-<div class="outline-text-3" id="text-orgd89f0e1">
+<h3 id="orgd89f0e1"><span class="section-number-3">5.1</span> <code>initializeStewartPlatform</code>: Initialize the Stewart Platform structure</h3>
+<div class="outline-text-3" id="text-5-1">
 <p>
 <a id="org2917f22"></a>
 </p>
@@ -843,11 +842,11 @@ This Matlab function is accessible <a href="src/initializeStewartPlatform.m">her
 </p>
 </div>
 
-<div id="outline-container-orgbc1420f" class="outline-4">
-<h4 id="orgbc1420f">Documentation</h4>
-<div class="outline-text-4" id="text-orgbc1420f">
+<div id="outline-container-org076d07b" class="outline-4">
+<h4 id="org076d07b">Documentation</h4>
+<div class="outline-text-4" id="text-org076d07b">
 
-<div id="orge07a045" class="figure">
+<div id="org7d10bbd" class="figure">
 <p><img src="figs/stewart-frames-position.png" alt="stewart-frames-position.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Definition of the position of the frames</p>
@@ -855,9 +854,9 @@ This Matlab function is accessible <a href="src/initializeStewartPlatform.m">her
 </div>
 </div>
 
-<div id="outline-container-org3c4d7d8" class="outline-4">
-<h4 id="org3c4d7d8">Function description</h4>
-<div class="outline-text-4" id="text-org3c4d7d8">
+<div id="outline-container-org1612620" class="outline-4">
+<h4 id="org1612620">Function description</h4>
+<div class="outline-text-4" id="text-org1612620">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeStewartPlatform</span>()
 <span class="org-comment">% initializeStewartPlatform - Initialize the stewart structure</span>
@@ -905,8 +904,8 @@ stewart.kinematics = struct();
 </div>
 
 <div id="outline-container-orgb11894c" class="outline-3">
-<h3 id="orgb11894c"><code>initializeFramesPositions</code>: Initialize the positions of frames {A}, {B}, {F} and {M}</h3>
-<div class="outline-text-3" id="text-orgb11894c">
+<h3 id="orgb11894c"><span class="section-number-3">5.2</span> <code>initializeFramesPositions</code>: Initialize the positions of frames {A}, {B}, {F} and {M}</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 <a id="org3009bf2"></a>
 </p>
@@ -916,11 +915,11 @@ This Matlab function is accessible <a href="src/initializeFramesPositions.m">her
 </p>
 </div>
 
-<div id="outline-container-org527c72f" class="outline-4">
-<h4 id="org527c72f">Documentation</h4>
-<div class="outline-text-4" id="text-org527c72f">
+<div id="outline-container-orgf137e52" class="outline-4">
+<h4 id="orgf137e52">Documentation</h4>
+<div class="outline-text-4" id="text-orgf137e52">
 
-<div id="org5ddff61" class="figure">
+<div id="org6fe2446" class="figure">
 <p><img src="figs/stewart-frames-position.png" alt="stewart-frames-position.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Definition of the position of the frames</p>
@@ -928,9 +927,9 @@ This Matlab function is accessible <a href="src/initializeFramesPositions.m">her
 </div>
 </div>
 
-<div id="outline-container-orgb28c816" class="outline-4">
-<h4 id="orgb28c816">Function description</h4>
-<div class="outline-text-4" id="text-orgb28c816">
+<div id="outline-container-orgef24367" class="outline-4">
+<h4 id="orgef24367">Function description</h4>
+<div class="outline-text-4" id="text-orgef24367">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeFramesPositions</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeFramesPositions - Initialize the positions of frames {A}, {B}, {F} and {M}</span>
@@ -953,9 +952,9 @@ This Matlab function is accessible <a href="src/initializeFramesPositions.m">her
 </div>
 </div>
 
-<div id="outline-container-org8bcc794" class="outline-4">
-<h4 id="org8bcc794">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org8bcc794">
+<div id="outline-container-org8dbfacd" class="outline-4">
+<h4 id="org8dbfacd">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org8dbfacd">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -983,9 +982,9 @@ FO_A = MO_B <span class="org-type">+</span> FO_M; <span class="org-comment">% Po
 </div>
 </div>
 
-<div id="outline-container-org0516874" class="outline-4">
-<h4 id="org0516874">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-org0516874">
+<div id="outline-container-orga9b891a" class="outline-4">
+<h4 id="orga9b891a">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-orga9b891a">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.geometry.H      = H;
 stewart.geometry.FO_M   = FO_M;
@@ -998,8 +997,8 @@ stewart.platform_F.FO_A = FO_A;
 </div>
 
 <div id="outline-container-org9057387" class="outline-3">
-<h3 id="org9057387"><code>generateGeneralConfiguration</code>: Generate a Very General Configuration</h3>
-<div class="outline-text-3" id="text-org9057387">
+<h3 id="org9057387"><span class="section-number-3">5.3</span> <code>generateGeneralConfiguration</code>: Generate a Very General Configuration</h3>
+<div class="outline-text-3" id="text-5-3">
 <p>
 <a id="org9f50820"></a>
 </p>
@@ -1009,9 +1008,9 @@ This Matlab function is accessible <a href="src/generateGeneralConfiguration.m">
 </p>
 </div>
 
-<div id="outline-container-org8e00e26" class="outline-4">
-<h4 id="org8e00e26">Documentation</h4>
-<div class="outline-text-4" id="text-org8e00e26">
+<div id="outline-container-org6686470" class="outline-4">
+<h4 id="org6686470">Documentation</h4>
+<div class="outline-text-4" id="text-org6686470">
 <p>
 Joints are positions on a circle centered with the Z axis of {F} and {M} and at a chosen distance from {F} and {M}.
 The radius of the circles can be chosen as well as the angles where the joints are located (see Figure <a href="#org4c354b6">9</a>).
@@ -1026,9 +1025,9 @@ The radius of the circles can be chosen as well as the angles where the joints a
 </div>
 </div>
 
-<div id="outline-container-orgd7988c9" class="outline-4">
-<h4 id="orgd7988c9">Function description</h4>
-<div class="outline-text-4" id="text-orgd7988c9">
+<div id="outline-container-org8e0c109" class="outline-4">
+<h4 id="org8e0c109">Function description</h4>
+<div class="outline-text-4" id="text-org8e0c109">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">generateGeneralConfiguration</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% generateGeneralConfiguration - Generate a Very General Configuration</span>
@@ -1053,9 +1052,9 @@ The radius of the circles can be chosen as well as the angles where the joints a
 </div>
 </div>
 
-<div id="outline-container-orgbca44f1" class="outline-4">
-<h4 id="orgbca44f1">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgbca44f1">
+<div id="outline-container-orge635bdc" class="outline-4">
+<h4 id="orge635bdc">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orge635bdc">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1090,9 +1089,9 @@ Mb = zeros(3,6);
 </div>
 </div>
 
-<div id="outline-container-orgc0cd111" class="outline-4">
-<h4 id="orgc0cd111">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-orgc0cd111">
+<div id="outline-container-orge19481b" class="outline-4">
+<h4 id="orge19481b">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-orge19481b">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.platform_F.Fa = Fa;
 stewart.platform_M.Mb = Mb;
@@ -1103,8 +1102,8 @@ stewart.platform_M.Mb = Mb;
 </div>
 
 <div id="outline-container-org861f6de" class="outline-3">
-<h3 id="org861f6de"><code>computeJointsPose</code>: Compute the Pose of the Joints</h3>
-<div class="outline-text-3" id="text-org861f6de">
+<h3 id="org861f6de"><span class="section-number-3">5.4</span> <code>computeJointsPose</code>: Compute the Pose of the Joints</h3>
+<div class="outline-text-3" id="text-5-4">
 <p>
 <a id="org7f34b08"></a>
 </p>
@@ -1114,9 +1113,9 @@ This Matlab function is accessible <a href="src/computeJointsPose.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org7165251" class="outline-4">
-<h4 id="org7165251">Documentation</h4>
-<div class="outline-text-4" id="text-org7165251">
+<div id="outline-container-orgd00ef90" class="outline-4">
+<h4 id="orgd00ef90">Documentation</h4>
+<div class="outline-text-4" id="text-orgd00ef90">
 
 <div id="org8ffb841" class="figure">
 <p><img src="figs/stewart-struts.png" alt="stewart-struts.png" />
@@ -1126,9 +1125,9 @@ This Matlab function is accessible <a href="src/computeJointsPose.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org67db014" class="outline-4">
-<h4 id="org67db014">Function description</h4>
-<div class="outline-text-4" id="text-org67db014">
+<div id="outline-container-orga8f705b" class="outline-4">
+<h4 id="orga8f705b">Function description</h4>
+<div class="outline-text-4" id="text-orga8f705b">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">computeJointsPose</span>(<span class="org-variable-name">stewart</span>)
 <span class="org-comment">% computeJointsPose -</span>
@@ -1161,9 +1160,9 @@ This Matlab function is accessible <a href="src/computeJointsPose.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org96d0ef3" class="outline-4">
-<h4 id="org96d0ef3">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org96d0ef3">
+<div id="outline-container-org4889a22" class="outline-4">
+<h4 id="org4889a22">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org4889a22">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.platform_F, <span class="org-string">'Fa'</span>),   <span class="org-string">'stewart.platform_F should have attribute Fa'</span>)
 Fa = stewart.platform_F.Fa;
@@ -1234,9 +1233,9 @@ MRb = zeros(3,3,6);
 </div>
 </div>
 
-<div id="outline-container-org2a4c563" class="outline-4">
-<h4 id="org2a4c563">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-org2a4c563">
+<div id="outline-container-orgf383464" class="outline-4">
+<h4 id="orgf383464">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-orgf383464">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.geometry.Aa = Aa;
 stewart.geometry.Ab = Ab;
@@ -1258,8 +1257,8 @@ stewart.platform_M.MRb = MRb;
 </div>
 
 <div id="outline-container-org329bef9" class="outline-3">
-<h3 id="org329bef9"><code>initializeStewartPose</code>: Determine the initial stroke in each leg to have the wanted pose</h3>
-<div class="outline-text-3" id="text-org329bef9">
+<h3 id="org329bef9"><span class="section-number-3">5.5</span> <code>initializeStewartPose</code>: Determine the initial stroke in each leg to have the wanted pose</h3>
+<div class="outline-text-3" id="text-5-5">
 <p>
 <a id="orga94c6a9"></a>
 </p>
@@ -1269,9 +1268,9 @@ This Matlab function is accessible <a href="src/initializeStewartPose.m">here</a
 </p>
 </div>
 
-<div id="outline-container-orgbe9f167" class="outline-4">
-<h4 id="orgbe9f167">Function description</h4>
-<div class="outline-text-4" id="text-orgbe9f167">
+<div id="outline-container-orgfa57533" class="outline-4">
+<h4 id="orgfa57533">Function description</h4>
+<div class="outline-text-4" id="text-orgfa57533">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeStewartPose</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeStewartPose - Determine the initial stroke in each leg to have the wanted pose</span>
@@ -1295,9 +1294,9 @@ This Matlab function is accessible <a href="src/initializeStewartPose.m">here</a
 </div>
 </div>
 
-<div id="outline-container-org9aa96f1" class="outline-4">
-<h4 id="org9aa96f1">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org9aa96f1">
+<div id="outline-container-orge534e6f" class="outline-4">
+<h4 id="orge534e6f">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orge534e6f">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1319,9 +1318,9 @@ This Matlab function is accessible <a href="src/initializeStewartPose.m">here</a
 </div>
 </div>
 
-<div id="outline-container-org63a831f" class="outline-4">
-<h4 id="org63a831f">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-org63a831f">
+<div id="outline-container-org5e7e71c" class="outline-4">
+<h4 id="org5e7e71c">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-org5e7e71c">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.actuators.Leq = dLi;
 </pre>
@@ -1331,8 +1330,8 @@ This Matlab function is accessible <a href="src/initializeStewartPose.m">here</a
 </div>
 
 <div id="outline-container-org6ff5b31" class="outline-3">
-<h3 id="org6ff5b31"><code>initializeCylindricalPlatforms</code>: Initialize the geometry of the Fixed and Mobile Platforms</h3>
-<div class="outline-text-3" id="text-org6ff5b31">
+<h3 id="org6ff5b31"><span class="section-number-3">5.6</span> <code>initializeCylindricalPlatforms</code>: Initialize the geometry of the Fixed and Mobile Platforms</h3>
+<div class="outline-text-3" id="text-5-6">
 <p>
 <a id="org6ad7062"></a>
 </p>
@@ -1342,9 +1341,9 @@ This Matlab function is accessible <a href="src/initializeCylindricalPlatforms.m
 </p>
 </div>
 
-<div id="outline-container-org930d1f3" class="outline-4">
-<h4 id="org930d1f3">Function description</h4>
-<div class="outline-text-4" id="text-org930d1f3">
+<div id="outline-container-org11374c9" class="outline-4">
+<h4 id="org11374c9">Function description</h4>
+<div class="outline-text-4" id="text-org11374c9">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeCylindricalPlatforms</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeCylindricalPlatforms - Initialize the geometry of the Fixed and Mobile Platforms</span>
@@ -1378,9 +1377,9 @@ This Matlab function is accessible <a href="src/initializeCylindricalPlatforms.m
 </div>
 </div>
 
-<div id="outline-container-orgf010fb9" class="outline-4">
-<h4 id="orgf010fb9">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgf010fb9">
+<div id="outline-container-org56dc51c" class="outline-4">
+<h4 id="org56dc51c">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org56dc51c">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1415,9 +1414,9 @@ This Matlab function is accessible <a href="src/initializeCylindricalPlatforms.m
 </div>
 </div>
 
-<div id="outline-container-org61255f3" class="outline-4">
-<h4 id="org61255f3">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-org61255f3">
+<div id="outline-container-org120ea12" class="outline-4">
+<h4 id="org120ea12">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-org120ea12">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.platform_F.type = 1;
 
@@ -1442,8 +1441,8 @@ stewart.platform_M.H = args.Mph;
 </div>
 
 <div id="outline-container-org60aa215" class="outline-3">
-<h3 id="org60aa215"><code>initializeCylindricalStruts</code>: Define the inertia of cylindrical struts</h3>
-<div class="outline-text-3" id="text-org60aa215">
+<h3 id="org60aa215"><span class="section-number-3">5.7</span> <code>initializeCylindricalStruts</code>: Define the inertia of cylindrical struts</h3>
+<div class="outline-text-3" id="text-5-7">
 <p>
 <a id="org6263b6d"></a>
 </p>
@@ -1453,9 +1452,9 @@ This Matlab function is accessible <a href="src/initializeCylindricalStruts.m">h
 </p>
 </div>
 
-<div id="outline-container-orgc7d5120" class="outline-4">
-<h4 id="orgc7d5120">Function description</h4>
-<div class="outline-text-4" id="text-orgc7d5120">
+<div id="outline-container-org7a6774e" class="outline-4">
+<h4 id="org7a6774e">Function description</h4>
+<div class="outline-text-4" id="text-org7a6774e">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeCylindricalStruts</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeCylindricalStruts - Define the mass and moment of inertia of cylindrical struts</span>
@@ -1488,9 +1487,9 @@ This Matlab function is accessible <a href="src/initializeCylindricalStruts.m">h
 </div>
 </div>
 
-<div id="outline-container-orgfb4e3ed" class="outline-4">
-<h4 id="orgfb4e3ed">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgfb4e3ed">
+<div id="outline-container-orgccd9ddc" class="outline-4">
+<h4 id="orgccd9ddc">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgccd9ddc">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1538,9 +1537,9 @@ I_M = zeros(3, 3, 6); <span class="org-comment">% Inertia of the "mobile" part o
 </div>
 </div>
 
-<div id="outline-container-orgc329127" class="outline-4">
-<h4 id="orgc329127">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-orgc329127">
+<div id="outline-container-orgbe49c20" class="outline-4">
+<h4 id="orgbe49c20">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-orgbe49c20">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.struts_M.type = 1;
 
@@ -1565,8 +1564,8 @@ stewart.struts_F.H = Fsh;
 </div>
 
 <div id="outline-container-org3ad0cd1" class="outline-3">
-<h3 id="org3ad0cd1"><code>initializeStrutDynamics</code>: Add Stiffness and Damping properties of each strut</h3>
-<div class="outline-text-3" id="text-org3ad0cd1">
+<h3 id="org3ad0cd1"><span class="section-number-3">5.8</span> <code>initializeStrutDynamics</code>: Add Stiffness and Damping properties of each strut</h3>
+<div class="outline-text-3" id="text-5-8">
 <p>
 <a id="org7f8f2b7"></a>
 </p>
@@ -1576,9 +1575,9 @@ This Matlab function is accessible <a href="src/initializeStrutDynamics.m">here<
 </p>
 </div>
 
-<div id="outline-container-org9075466" class="outline-4">
-<h4 id="org9075466">Documentation</h4>
-<div class="outline-text-4" id="text-org9075466">
+<div id="outline-container-org063be5b" class="outline-4">
+<h4 id="org063be5b">Documentation</h4>
+<div class="outline-text-4" id="text-org063be5b">
 
 <div id="orgbbfb204" class="figure">
 <p><img src="figs/piezoelectric_stack.jpg" alt="piezoelectric_stack.jpg" width="500px" />
@@ -1607,9 +1606,9 @@ A simplistic model of such amplified actuator is shown in Figure <a href="#org62
 </div>
 </div>
 
-<div id="outline-container-org21e1e52" class="outline-4">
-<h4 id="org21e1e52">Function description</h4>
-<div class="outline-text-4" id="text-org21e1e52">
+<div id="outline-container-orgfc83159" class="outline-4">
+<h4 id="orgfc83159">Function description</h4>
+<div class="outline-text-4" id="text-orgfc83159">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeStrutDynamics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeStrutDynamics - Add Stiffness and Damping properties of each strut</span>
@@ -1631,9 +1630,9 @@ A simplistic model of such amplified actuator is shown in Figure <a href="#org62
 </div>
 </div>
 
-<div id="outline-container-orgd9bda04" class="outline-4">
-<h4 id="orgd9bda04">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgd9bda04">
+<div id="outline-container-org8756943" class="outline-4">
+<h4 id="org8756943">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org8756943">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1660,8 +1659,8 @@ stewart.actuators.C = args.C;
 </div>
 
 <div id="outline-container-orgd8d403e" class="outline-3">
-<h3 id="orgd8d403e"><code>initializeAmplifiedStrutDynamics</code>: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator</h3>
-<div class="outline-text-3" id="text-orgd8d403e">
+<h3 id="orgd8d403e"><span class="section-number-3">5.9</span> <code>initializeAmplifiedStrutDynamics</code>: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator</h3>
+<div class="outline-text-3" id="text-5-9">
 <p>
 <a id="org7d40eca"></a>
 </p>
@@ -1671,9 +1670,9 @@ This Matlab function is accessible <a href="src/initializeAmplifiedStrutDynamics
 </p>
 </div>
 
-<div id="outline-container-org8ba232a" class="outline-4">
-<h4 id="org8ba232a">Documentation</h4>
-<div class="outline-text-4" id="text-org8ba232a">
+<div id="outline-container-org11b907a" class="outline-4">
+<h4 id="org11b907a">Documentation</h4>
+<div class="outline-text-4" id="text-org11b907a">
 <p>
 An amplified piezoelectric actuator is shown in Figure <a href="#org9e7e9ad">13</a>.
 </p>
@@ -1706,9 +1705,9 @@ A simplistic model of such amplified actuator is shown in Figure <a href="#orgcf
 </div>
 </div>
 
-<div id="outline-container-org7b6e247" class="outline-4">
-<h4 id="org7b6e247">Function description</h4>
-<div class="outline-text-4" id="text-org7b6e247">
+<div id="outline-container-orgc9ac7ad" class="outline-4">
+<h4 id="orgc9ac7ad">Function description</h4>
+<div class="outline-text-4" id="text-orgc9ac7ad">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeAmplifiedStrutDynamics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeAmplifiedStrutDynamics - Add Stiffness and Damping properties of each strut</span>
@@ -1736,9 +1735,9 @@ A simplistic model of such amplified actuator is shown in Figure <a href="#orgcf
 </div>
 </div>
 
-<div id="outline-container-org936848c" class="outline-4">
-<h4 id="org936848c">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org936848c">
+<div id="outline-container-org2508e19" class="outline-4">
+<h4 id="org2508e19">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org2508e19">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1763,9 +1762,9 @@ C = args.Ca <span class="org-type">+</span> args.Cr;
 </div>
 </div>
 
-<div id="outline-container-orgd78e8b0" class="outline-4">
-<h4 id="orgd78e8b0">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-orgd78e8b0">
+<div id="outline-container-org933fa09" class="outline-4">
+<h4 id="org933fa09">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-org933fa09">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.actuators.type = 2;
 
@@ -1784,8 +1783,8 @@ stewart.actuators.C = K;
 </div>
 
 <div id="outline-container-orgeb6173a" class="outline-3">
-<h3 id="orgeb6173a"><code>initializeJointDynamics</code>: Add Stiffness and Damping properties for spherical joints</h3>
-<div class="outline-text-3" id="text-orgeb6173a">
+<h3 id="orgeb6173a"><span class="section-number-3">5.10</span> <code>initializeJointDynamics</code>: Add Stiffness and Damping properties for spherical joints</h3>
+<div class="outline-text-3" id="text-5-10">
 <p>
 <a id="org0d21456"></a>
 </p>
@@ -1795,9 +1794,9 @@ This Matlab function is accessible <a href="src/initializeJointDynamics.m">here<
 </p>
 </div>
 
-<div id="outline-container-org051062f" class="outline-4">
-<h4 id="org051062f">Function description</h4>
-<div class="outline-text-4" id="text-org051062f">
+<div id="outline-container-orgea4c71f" class="outline-4">
+<h4 id="orgea4c71f">Function description</h4>
+<div class="outline-text-4" id="text-orgea4c71f">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeJointDynamics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeJointDynamics - Add Stiffness and Damping properties for the spherical joints</span>
@@ -1832,9 +1831,9 @@ This Matlab function is accessible <a href="src/initializeJointDynamics.m">here<
 </div>
 </div>
 
-<div id="outline-container-orgf57427f" class="outline-4">
-<h4 id="orgf57427f">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgf57427f">
+<div id="outline-container-orgbb42633" class="outline-4">
+<h4 id="orgbb42633">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgbb42633">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1949,8 +1948,8 @@ stewart.joints_F.Ct = args.Cf_F;
 </div>
 
 <div id="outline-container-orgea07e0e" class="outline-3">
-<h3 id="orgea07e0e"><code>initializeInertialSensor</code>: Initialize the inertial sensor in each strut</h3>
-<div class="outline-text-3" id="text-orgea07e0e">
+<h3 id="orgea07e0e"><span class="section-number-3">5.11</span> <code>initializeInertialSensor</code>: Initialize the inertial sensor in each strut</h3>
+<div class="outline-text-3" id="text-5-11">
 <p>
 <a id="orgd96277a"></a>
 </p>
@@ -1960,9 +1959,9 @@ This Matlab function is accessible <a href="src/initializeInertialSensor.m">here
 </p>
 </div>
 
-<div id="outline-container-org86c4462" class="outline-4">
-<h4 id="org86c4462">Function description</h4>
-<div class="outline-text-4" id="text-org86c4462">
+<div id="outline-container-org2462fa5" class="outline-4">
+<h4 id="org2462fa5">Function description</h4>
+<div class="outline-text-4" id="text-org2462fa5">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">initializeInertialSensor</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeInertialSensor - Initialize the inertial sensor in each strut</span>
@@ -1988,9 +1987,9 @@ This Matlab function is accessible <a href="src/initializeInertialSensor.m">here
 </div>
 </div>
 
-<div id="outline-container-org6d69ef4" class="outline-4">
-<h4 id="org6d69ef4">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org6d69ef4">
+<div id="outline-container-orgcc6ded4" class="outline-4">
+<h4 id="orgcc6ded4">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgcc6ded4">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -2031,9 +2030,9 @@ This Matlab function is accessible <a href="src/initializeInertialSensor.m">here
 </div>
 </div>
 
-<div id="outline-container-orgbf82c53" class="outline-4">
-<h4 id="orgbf82c53">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-orgbf82c53">
+<div id="outline-container-org37e6016" class="outline-4">
+<h4 id="org37e6016">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-org37e6016">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.sensors.inertial = sensor;
 </pre>
@@ -2043,8 +2042,8 @@ This Matlab function is accessible <a href="src/initializeInertialSensor.m">here
 </div>
 
 <div id="outline-container-org5266e9d" class="outline-3">
-<h3 id="org5266e9d"><code>displayArchitecture</code>: 3D plot of the Stewart platform architecture</h3>
-<div class="outline-text-3" id="text-org5266e9d">
+<h3 id="org5266e9d"><span class="section-number-3">5.12</span> <code>displayArchitecture</code>: 3D plot of the Stewart platform architecture</h3>
+<div class="outline-text-3" id="text-5-12">
 <p>
 <a id="org5526211"></a>
 </p>
@@ -2054,9 +2053,9 @@ This Matlab function is accessible <a href="src/displayArchitecture.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orgfcc25cc" class="outline-4">
-<h4 id="orgfcc25cc">Function description</h4>
-<div class="outline-text-4" id="text-orgfcc25cc">
+<div id="outline-container-orgdd7c996" class="outline-4">
+<h4 id="orgdd7c996">Function description</h4>
+<div class="outline-text-4" id="text-orgdd7c996">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[]</span> = <span class="org-function-name">displayArchitecture</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% displayArchitecture - 3D plot of the Stewart platform architecture</span>
@@ -2084,9 +2083,9 @@ This Matlab function is accessible <a href="src/displayArchitecture.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org51d9478" class="outline-4">
-<h4 id="org51d9478">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org51d9478">
+<div id="outline-container-org99b2163" class="outline-4">
+<h4 id="org99b2163">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org99b2163">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -2106,9 +2105,9 @@ This Matlab function is accessible <a href="src/displayArchitecture.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org1ee899b" class="outline-4">
-<h4 id="org1ee899b">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org1ee899b">
+<div id="outline-container-org9e5d50c" class="outline-4">
+<h4 id="org9e5d50c">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org9e5d50c">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.platform_F, <span class="org-string">'FO_A'</span>), <span class="org-string">'stewart.platform_F should have attribute FO_A'</span>)
 FO_A = stewart.platform_F.FO_A;
@@ -2365,8 +2364,8 @@ Plot the legs connecting the joints of the fixed base to the joints of the mobil
 </div>
 
 <div id="outline-container-org81be27b" class="outline-4">
-<h4 id="org81be27b">Figure parameters</h4>
-<div class="outline-text-4" id="text-org81be27b">
+<h4 id="org81be27b"><span class="section-number-4">5.12.1</span> Figure parameters</h4>
+<div class="outline-text-4" id="text-5-12-1">
 <div class="org-src-container">
 <pre class="src src-matlab">view([1 <span class="org-type">-</span>0.6 0.4]);
 <span class="org-type">axis</span> equal;
@@ -2387,7 +2386,7 @@ Plot the legs connecting the joints of the fixed base to the joints of the mobil
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 15:23</p>
+<p class="date">Created: 2020-02-11 mar. 15:50</p>
 </div>
 </body>
 </html>

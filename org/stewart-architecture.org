@@ -1,5 +1,11 @@
 #+TITLE: Stewart Platform - Definition of the Architecture
 :DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
@@ -200,7 +206,7 @@ By following this procedure, we obtain a Matlab structure =stewart= that contain
 #+end_src
 
 #+begin_src matlab
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 ** Example of the initialization of a Stewart Platform

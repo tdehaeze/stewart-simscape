@@ -1,5 +1,11 @@
 #+TITLE: Stewart Platform - Static Analysis
 :DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
@@ -10,16 +16,6 @@
 #+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
 #+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
-#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
-#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
-#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
-#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
-#+PROPERTY: header-args:latex+ :results raw replace :buffer no
-#+PROPERTY: header-args:latex+ :eval no-export
-#+PROPERTY: header-args:latex+ :exports both
-#+PROPERTY: header-args:latex+ :mkdirp yes
-#+PROPERTY: header-args:latex+ :output-dir figs
-
 #+PROPERTY: header-args:matlab  :session *MATLAB*
 #+PROPERTY: header-args:matlab+ :comments org
 #+PROPERTY: header-args:matlab+ :exports both
@@ -28,6 +24,18 @@
 #+PROPERTY: header-args:matlab+ :noweb yes
 #+PROPERTY: header-args:matlab+ :mkdirp yes
 #+PROPERTY: header-args:matlab+ :output-dir figs
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports results
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
 * Coupling

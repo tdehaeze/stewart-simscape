@@ -1,5 +1,11 @@
 #+TITLE: Identification of the Stewart Platform using Simscape
 :DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
@@ -11,7 +17,6 @@
 #+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
 #+PROPERTY: header-args:matlab  :session *MATLAB*
-#+PROPERTY: header-args:matlab+ :tangle matlab/identification.m
 #+PROPERTY: header-args:matlab+ :comments org
 #+PROPERTY: header-args:matlab+ :exports both
 #+PROPERTY: header-args:matlab+ :results none
@@ -24,11 +29,13 @@
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
-#+PROPERTY: header-args:latex+ :results raw replace :buffer no
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
 #+PROPERTY: header-args:latex+ :eval no-export
-#+PROPERTY: header-args:latex+ :exports both
+#+PROPERTY: header-args:latex+ :exports results
 #+PROPERTY: header-args:latex+ :mkdirp yes
 #+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
 * Introduction                                                        :ignore:
@@ -68,7 +75,7 @@ An important difference from basic Simulink models is that the states in a physi
 #+end_src
 
 #+begin_src matlab :results none :exports none
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 ** Simscape Model
@@ -126,7 +133,7 @@ An important difference from basic Simulink models is that the states in a physi
 #+end_src
 
 #+begin_src matlab :results none :exports none
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 ** Initialize the Stewart Platform
@@ -355,7 +362,7 @@ Save the movie of the mode shape.
 #+end_src
 
 #+begin_src matlab :results none :exports none
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 ** Simscape Model

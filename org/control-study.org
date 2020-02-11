@@ -1,5 +1,11 @@
 #+TITLE: Stewart Platform - Control Study
 :DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
@@ -26,7 +32,7 @@
 #+PROPERTY: header-args:latex+ :results file raw replace
 #+PROPERTY: header-args:latex+ :buffer no
 #+PROPERTY: header-args:latex+ :eval no-export
-#+PROPERTY: header-args:latex+ :exports both
+#+PROPERTY: header-args:latex+ :exports results
 #+PROPERTY: header-args:latex+ :mkdirp yes
 #+PROPERTY: header-args:latex+ :output-dir figs
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
@@ -43,7 +49,7 @@
 #+end_src
 
 #+begin_src matlab
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 ** Control Schematic

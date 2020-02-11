@@ -9,39 +9,33 @@
 #+HTML_LINK_HOME: ./index.html
 #+HTML_LINK_UP: ./index.html
 
-#+OPTIONS: toc:nil
-#+OPTIONS: html-postamble:nil
-
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/zenburn.css"/>
-#+HTML_HEAD: <script type="text/javascript" src="./js/jquery.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="./js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="./js/jquery.stickytableheaders.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="./js/readtheorg.js"></script>
-
-#+HTML_MATHJAX: align: center tagside: right font: TeX
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
 #+PROPERTY: header-args:matlab  :session *MATLAB*
 #+PROPERTY: header-args:matlab+ :comments org
-#+PROPERTY: header-args:matlab+ :results none
 #+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
 #+PROPERTY: header-args:matlab+ :eval no-export
-#+PROPERTY: header-args:matlab+ :output-dir figs
-#+PROPERTY: header-args:matlab+ :tangle no
+#+PROPERTY: header-args:matlab+ :noweb yes
 #+PROPERTY: header-args:matlab+ :mkdirp yes
-
-#+PROPERTY: header-args:shell  :eval no-export
+#+PROPERTY: header-args:matlab+ :output-dir figs
 
 #+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
-#+PROPERTY: header-args:latex+ :results raw replace :buffer no
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
 #+PROPERTY: header-args:latex+ :eval no-export
-#+PROPERTY: header-args:latex+ :exports both
+#+PROPERTY: header-args:latex+ :exports results
 #+PROPERTY: header-args:latex+ :mkdirp yes
 #+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
 A Simulink Project is used for the study of Stewart platforms using Simscape.
@@ -59,7 +53,7 @@ From the [[https://mathworks.com/products/simulink/projects.html][Simulink proje
 The project can be opened using the =simulinkproject= function:
 
 #+begin_src matlab
-  simulinkproject('./');
+  simulinkproject('../');
 #+end_src
 
 When the project opens, a startup script is ran.
