@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-22 mer. 16:31 -->
+<!-- 2020-02-11 mar. 15:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Dynamics Study</title>
@@ -247,31 +246,16 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em",
-               Macros: {
-                 bm: ["{\\boldsymbol #1}",1],
-               }
-             }
-});
-</script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+<script>
+      MathJax = {
+          tex: { macros: {
+                  bm: ["\\boldsymbol{#1}",1],
+                  }
+              }
+          };
+          </script>
+          <script type="text/javascript"
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -284,26 +268,26 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf59f0f9">1. Some tests</a>
+<li><a href="#orgdae5fe1">Some tests</a>
 <ul>
-<li><a href="#orgaf3d924">1.1. Simscape Model</a></li>
-<li><a href="#org7312203">1.2. test</a></li>
-<li><a href="#org9daf767">1.3. Compare external forces and forces applied by the actuators</a></li>
-<li><a href="#org2a5345f">1.4. Comparison of the static transfer function and the Compliance matrix</a></li>
-<li><a href="#org089f223">1.5. Transfer function from forces applied in the legs to the displacement of the legs</a></li>
+<li><a href="#orga032902">Simscape Model</a></li>
+<li><a href="#orgdbd3cde">test</a></li>
+<li><a href="#orgc59e712">Compare external forces and forces applied by the actuators</a></li>
+<li><a href="#org81ab204">Comparison of the static transfer function and the Compliance matrix</a></li>
+<li><a href="#orge663148">Transfer function from forces applied in the legs to the displacement of the legs</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf59f0f9" class="outline-2">
-<h2 id="orgf59f0f9"><span class="section-number-2">1</span> Some tests</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgdae5fe1" class="outline-2">
+<h2 id="orgdae5fe1">Some tests</h2>
+<div class="outline-text-2" id="text-orgdae5fe1">
 </div>
-<div id="outline-container-orgaf3d924" class="outline-3">
-<h3 id="orgaf3d924"><span class="section-number-3">1.1</span> Simscape Model</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-orga032902" class="outline-3">
+<h3 id="orga032902">Simscape Model</h3>
+<div class="outline-text-3" id="text-orga032902">
 <div class="org-src-container">
 <pre class="src src-matlab">open(<span class="org-string">'stewart_platform_dynamics.slx'</span>)
 </pre>
@@ -311,15 +295,19 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7312203" class="outline-3">
-<h3 id="org7312203"><span class="section-number-3">1.2</span> test</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgdbd3cde" class="outline-3">
+<h3 id="orgdbd3cde">test</h3>
+<div class="outline-text-3" id="text-orgdbd3cde">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 60e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 45e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 5e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 5e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'Ci'</span>, 1e2<span class="org-type">*</span>ones(6,1));
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
 </pre>
 </div>
 
@@ -408,18 +396,22 @@ bode(Gd, G)
 </div>
 </div>
 
-<div id="outline-container-org9daf767" class="outline-3">
-<h3 id="org9daf767"><span class="section-number-3">1.3</span> Compare external forces and forces applied by the actuators</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-orgc59e712" class="outline-3">
+<h3 id="orgc59e712">Compare external forces and forces applied by the actuators</h3>
+<div class="outline-text-3" id="text-orgc59e712">
 <p>
 Initialization of the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 60e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 45e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 5e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 5e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'Ci'</span>, 1e2<span class="org-type">*</span>ones(6,1));
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
 </pre>
 </div>
 
@@ -489,18 +481,22 @@ Seems quite similar.
 </div>
 </div>
 
-<div id="outline-container-org2a5345f" class="outline-3">
-<h3 id="org2a5345f"><span class="section-number-3">1.4</span> Comparison of the static transfer function and the Compliance matrix</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-org81ab204" class="outline-3">
+<h3 id="org81ab204">Comparison of the static transfer function and the Compliance matrix</h3>
+<div class="outline-text-3" id="text-org81ab204">
 <p>
 Initialization of the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 60e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 45e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 5e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 5e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'Ci'</span>, 1e2<span class="org-type">*</span>ones(6,1));
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
 </pre>
 </div>
 
@@ -688,18 +684,22 @@ The low frequency transfer function matrix from \(\mathcal{\bm{F}}\) to \(\mathc
 </div>
 </div>
 
-<div id="outline-container-org089f223" class="outline-3">
-<h3 id="org089f223"><span class="section-number-3">1.5</span> Transfer function from forces applied in the legs to the displacement of the legs</h3>
-<div class="outline-text-3" id="text-1-5">
+<div id="outline-container-orge663148" class="outline-3">
+<h3 id="orge663148">Transfer function from forces applied in the legs to the displacement of the legs</h3>
+<div class="outline-text-3" id="text-orge663148">
 <p>
 Initialization of the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 60e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 45e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 5e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 5e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'Ci'</span>, 1e2<span class="org-type">*</span>ones(6,1));
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
 </pre>
 </div>
 
@@ -742,7 +742,7 @@ G.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-01-22 mer. 16:31</p>
+<p class="date">Created: 2020-02-11 mar. 15:27</p>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-29 mer. 17:51 -->
+<!-- 2020-02-11 mar. 15:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -247,15 +247,15 @@ for the JavaScript code in this tag.
 /*]]>*///-->
 </script>
 <script>
-     MathJax = {
-       tex: { macros: {
-                bm: ["\\boldsymbol{#1}",1],
+      MathJax = {
+          tex: { macros: {
+                  bm: ["\\boldsymbol{#1}",1],
+                  }
               }
-            }
-      };
-      </script>
-      <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+          };
+          </script>
+          <script type="text/javascript"
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -268,37 +268,37 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbb8fbdb">1. Identification</a>
+<li><a href="#orgf65174f">Identification</a>
 <ul>
-<li><a href="#orgaf697f9">1.1. Simscape Model</a></li>
-<li><a href="#org22cb9e4">1.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org9768dca">1.3. Identification</a></li>
+<li><a href="#org5b89813">Simscape Model</a></li>
+<li><a href="#org2bfdf1b">Initialize the Stewart Platform</a></li>
+<li><a href="#org0d97b27">Identification</a></li>
 </ul>
 </li>
-<li><a href="#orge931438">2. States as the motion of the mobile platform</a>
+<li><a href="#orge464de2">States as the motion of the mobile platform</a>
 <ul>
-<li><a href="#org601fc1e">2.1. Initialize the Stewart Platform</a></li>
-<li><a href="#org85bc459">2.2. Identification</a></li>
-<li><a href="#org889aae3">2.3. Coordinate transformation</a></li>
-<li><a href="#orgae4b421">2.4. Analysis</a></li>
-<li><a href="#orge3b2a28">2.5. Visualizing the modes</a></li>
-<li><a href="#orgac2b65a">2.6. Identification</a></li>
-<li><a href="#orgd845f17">2.7. Change of states</a></li>
+<li><a href="#org987daca">Initialize the Stewart Platform</a></li>
+<li><a href="#orgc808316">Identification</a></li>
+<li><a href="#orge68adea">Coordinate transformation</a></li>
+<li><a href="#org4973ae1">Analysis</a></li>
+<li><a href="#orge7b97c8">Visualizing the modes</a></li>
+<li><a href="#org5d63457">Identification</a></li>
+<li><a href="#orgf7a52cb">Change of states</a></li>
 </ul>
 </li>
-<li><a href="#org4989001">3. Simple Model without any sensor</a>
+<li><a href="#org23d7e7b">Simple Model without any sensor</a>
 <ul>
-<li><a href="#org3ea636a">3.1. Simscape Model</a></li>
-<li><a href="#org9a6cc53">3.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org13a12f8">3.3. Identification</a></li>
+<li><a href="#org69b8a98">Simscape Model</a></li>
+<li><a href="#org4aef27a">Initialize the Stewart Platform</a></li>
+<li><a href="#orgb9fd532">Identification</a></li>
 </ul>
 </li>
-<li><a href="#org33bdc22">4. Cartesian Plot</a></li>
-<li><a href="#org6cfcaf6">5. From a force to force sensor</a></li>
-<li><a href="#orge759120">6. From a force applied in the leg to the displacement of the leg</a></li>
-<li><a href="#org6165b05">7. Transmissibility</a></li>
-<li><a href="#orge32e4db">8. Compliance</a></li>
-<li><a href="#org6c094f6">9. Inertial</a></li>
+<li><a href="#org0502cd2">Cartesian Plot</a></li>
+<li><a href="#org32e2eb3">From a force to force sensor</a></li>
+<li><a href="#org8ddfd2c">From a force applied in the leg to the displacement of the leg</a></li>
+<li><a href="#org5685537">Transmissibility</a></li>
+<li><a href="#org3335d1e">Compliance</a></li>
+<li><a href="#org5ca7af8">Inertial</a></li>
 </ul>
 </div>
 </div>
@@ -396,19 +396,20 @@ An important difference from basic Simulink models is that the states in a physi
 
 
 
-<div id="outline-container-orgbb8fbdb" class="outline-2">
-<h2 id="orgbb8fbdb"><span class="section-number-2">1</span> Identification</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgf65174f" class="outline-2">
+<h2 id="orgf65174f">Identification</h2>
+<div class="outline-text-2" id="text-orgf65174f">
 </div>
-<div id="outline-container-orgaf697f9" class="outline-3">
-<h3 id="orgaf697f9"><span class="section-number-3">1.1</span> Simscape Model</h3>
+<div id="outline-container-org5b89813" class="outline-3">
+<h3 id="org5b89813">Simscape Model</h3>
 </div>
 
-<div id="outline-container-org22cb9e4" class="outline-3">
-<h3 id="org22cb9e4"><span class="section-number-3">1.2</span> Initialize the Stewart Platform</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org2bfdf1b" class="outline-3">
+<h3 id="org2bfdf1b">Initialize the Stewart Platform</h3>
+<div class="outline-text-3" id="text-org2bfdf1b">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions();
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
@@ -421,9 +422,9 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org9768dca" class="outline-3">
-<h3 id="org9768dca"><span class="section-number-3">1.3</span> Identification</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org0d97b27" class="outline-3">
+<h3 id="org0d97b27">Identification</h3>
+<div class="outline-text-3" id="text-org0d97b27">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
@@ -456,15 +457,16 @@ G.OutputName = {<span class="org-string">'Xdx'</span>, <span class="org-string">
 </div>
 </div>
 
-<div id="outline-container-orge931438" class="outline-2">
-<h2 id="orge931438"><span class="section-number-2">2</span> States as the motion of the mobile platform</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orge464de2" class="outline-2">
+<h2 id="orge464de2">States as the motion of the mobile platform</h2>
+<div class="outline-text-2" id="text-orge464de2">
 </div>
-<div id="outline-container-org601fc1e" class="outline-3">
-<h3 id="org601fc1e"><span class="section-number-3">2.1</span> Initialize the Stewart Platform</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-org987daca" class="outline-3">
+<h3 id="org987daca">Initialize the Stewart Platform</h3>
+<div class="outline-text-3" id="text-org987daca">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions();
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
@@ -477,9 +479,9 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org85bc459" class="outline-3">
-<h3 id="org85bc459"><span class="section-number-3">2.2</span> Identification</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgc808316" class="outline-3">
+<h3 id="orgc808316">Identification</h3>
+<div class="outline-text-3" id="text-orgc808316">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
@@ -538,9 +540,9 @@ And indeed, we obtain 12 states.
 </div>
 </div>
 
-<div id="outline-container-org889aae3" class="outline-3">
-<h3 id="org889aae3"><span class="section-number-3">2.3</span> Coordinate transformation</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orge68adea" class="outline-3">
+<h3 id="orge68adea">Coordinate transformation</h3>
+<div class="outline-text-3" id="text-orge68adea">
 <p>
 We can perform the following transformation using the <code>ss2ss</code> command.
 </p>
@@ -574,9 +576,9 @@ Gt = ss(At, Bt, Ct, Dt);
 </div>
 </div>
 
-<div id="outline-container-orgae4b421" class="outline-3">
-<h3 id="orgae4b421"><span class="section-number-3">2.4</span> Analysis</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-org4973ae1" class="outline-3">
+<h3 id="org4973ae1">Analysis</h3>
+<div class="outline-text-3" id="text-org4973ae1">
 <div class="org-src-container">
 <pre class="src src-matlab">[V,D] = eig(Gt.A);
 </pre>
@@ -640,9 +642,9 @@ Gt = ss(At, Bt, Ct, Dt);
 </div>
 </div>
 
-<div id="outline-container-orge3b2a28" class="outline-3">
-<h3 id="orge3b2a28"><span class="section-number-3">2.5</span> Visualizing the modes</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-orge7b97c8" class="outline-3">
+<h3 id="orge7b97c8">Visualizing the modes</h3>
+<div class="outline-text-3" id="text-orge7b97c8">
 <p>
 To visualize the i&rsquo;th mode, we may excite the system using the inputs \(U_i\) such that \(B U_i\) is co-linear to \(\xi_i\) (the mode we want to excite).
 </p>
@@ -721,21 +723,21 @@ Save the movie of the mode shape.
 </div>
 
 
-<div id="org14fd95e" class="figure">
+<div id="orgb15855a" class="figure">
 <p><img src="figs/mode1.gif" alt="mode1.gif" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Identified mode - 1</p>
 </div>
 
 
-<div id="orgdece81c" class="figure">
+<div id="org1816e59" class="figure">
 <p><img src="figs/mode3.gif" alt="mode3.gif" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Identified mode - 3</p>
 </div>
 
 
-<div id="org618e1ca" class="figure">
+<div id="org01c8dca" class="figure">
 <p><img src="figs/mode5.gif" alt="mode5.gif" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Identified mode - 5</p>
@@ -743,9 +745,9 @@ Save the movie of the mode shape.
 </div>
 </div>
 
-<div id="outline-container-orgac2b65a" class="outline-3">
-<h3 id="orgac2b65a"><span class="section-number-3">2.6</span> Identification</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-org5d63457" class="outline-3">
+<h3 id="org5d63457">Identification</h3>
+<div class="outline-text-3" id="text-org5d63457">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
@@ -773,9 +775,9 @@ G = linearize(mdl, io, options);
 </div>
 </div>
 
-<div id="outline-container-orgd845f17" class="outline-3">
-<h3 id="orgd845f17"><span class="section-number-3">2.7</span> Change of states</h3>
-<div class="outline-text-3" id="text-2-7">
+<div id="outline-container-orgf7a52cb" class="outline-3">
+<h3 id="orgf7a52cb">Change of states</h3>
+<div class="outline-text-3" id="text-orgf7a52cb">
 <div class="org-src-container">
 <pre class="src src-matlab">At = G.C<span class="org-type">*</span>G.A<span class="org-type">*</span>pinv(G.C);
 
@@ -799,13 +801,13 @@ Dt = zeros(12, 6);
 </div>
 </div>
 
-<div id="outline-container-org4989001" class="outline-2">
-<h2 id="org4989001"><span class="section-number-2">3</span> Simple Model without any sensor</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org23d7e7b" class="outline-2">
+<h2 id="org23d7e7b">Simple Model without any sensor</h2>
+<div class="outline-text-2" id="text-org23d7e7b">
 </div>
-<div id="outline-container-org3ea636a" class="outline-3">
-<h3 id="org3ea636a"><span class="section-number-3">3.1</span> Simscape Model</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-org69b8a98" class="outline-3">
+<h3 id="org69b8a98">Simscape Model</h3>
+<div class="outline-text-3" id="text-org69b8a98">
 <div class="org-src-container">
 <pre class="src src-matlab">open <span class="org-string">'stewart_identification_simple.slx'</span>
 </pre>
@@ -814,11 +816,12 @@ Dt = zeros(12, 6);
 </div>
 
 
-<div id="outline-container-org9a6cc53" class="outline-3">
-<h3 id="org9a6cc53"><span class="section-number-3">3.2</span> Initialize the Stewart Platform</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-org4aef27a" class="outline-3">
+<h3 id="org4aef27a">Initialize the Stewart Platform</h3>
+<div class="outline-text-3" id="text-org4aef27a">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions();
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
@@ -831,9 +834,9 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org13a12f8" class="outline-3">
-<h3 id="org13a12f8"><span class="section-number-3">3.3</span> Identification</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-orgb9fd532" class="outline-3">
+<h3 id="orgb9fd532">Identification</h3>
+<div class="outline-text-3" id="text-orgb9fd532">
 <div class="org-src-container">
 <pre class="src src-matlab">stateorder = {...
     <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_1_1_1'</span>,...
@@ -919,9 +922,9 @@ G.OutputName = {<span class="org-string">'Xdx'</span>, <span class="org-string">
 </div>
 </div>
 
-<div id="outline-container-org33bdc22" class="outline-2">
-<h2 id="org33bdc22"><span class="section-number-2">4</span> Cartesian Plot</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org0502cd2" class="outline-2">
+<h2 id="org0502cd2">Cartesian Plot</h2>
+<div class="outline-text-2" id="text-org0502cd2">
 <p>
 From a force applied in the Cartesian frame to a displacement in the Cartesian frame.
 </p>
@@ -945,9 +948,9 @@ bode(G.G_cart, freqs);
 </div>
 </div>
 
-<div id="outline-container-org6cfcaf6" class="outline-2">
-<h2 id="org6cfcaf6"><span class="section-number-2">5</span> From a force to force sensor</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org32e2eb3" class="outline-2">
+<h2 id="org32e2eb3">From a force to force sensor</h2>
+<div class="outline-text-2" id="text-org32e2eb3">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
@@ -977,9 +980,9 @@ legend(<span class="org-string">'location'</span>, <span class="org-string">'sou
 </div>
 </div>
 
-<div id="outline-container-orge759120" class="outline-2">
-<h2 id="orge759120"><span class="section-number-2">6</span> From a force applied in the leg to the displacement of the leg</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org8ddfd2c" class="outline-2">
+<h2 id="org8ddfd2c">From a force applied in the leg to the displacement of the leg</h2>
+<div class="outline-text-2" id="text-org8ddfd2c">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
@@ -1008,9 +1011,9 @@ legend(<span class="org-string">'location'</span>, <span class="org-string">'nor
 </div>
 </div>
 
-<div id="outline-container-org6165b05" class="outline-2">
-<h2 id="org6165b05"><span class="section-number-2">7</span> Transmissibility</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org5685537" class="outline-2">
+<h2 id="org5685537">Transmissibility</h2>
+<div class="outline-text-2" id="text-org5685537">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-type">figure</span>;
 hold on;
@@ -1049,9 +1052,9 @@ xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="or
 </div>
 </div>
 
-<div id="outline-container-orge32e4db" class="outline-2">
-<h2 id="orge32e4db"><span class="section-number-2">8</span> Compliance</h2>
-<div class="outline-text-2" id="text-8">
+<div id="outline-container-org3335d1e" class="outline-2">
+<h2 id="org3335d1e">Compliance</h2>
+<div class="outline-text-2" id="text-org3335d1e">
 <p>
 From a force applied in the Cartesian frame to a relative displacement of the mobile platform with respect to the base.
 </p>
@@ -1070,9 +1073,9 @@ xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="or
 </div>
 </div>
 
-<div id="outline-container-org6c094f6" class="outline-2">
-<h2 id="org6c094f6"><span class="section-number-2">9</span> Inertial</h2>
-<div class="outline-text-2" id="text-9">
+<div id="outline-container-org5ca7af8" class="outline-2">
+<h2 id="org5ca7af8">Inertial</h2>
+<div class="outline-text-2" id="text-org5ca7af8">
 <p>
 From a force applied on the Cartesian frame to the absolute displacement of the mobile platform.
 </p>
@@ -1093,7 +1096,7 @@ xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="or
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-01-29 mer. 17:51</p>
+<p class="date">Created: 2020-02-11 mar. 15:26</p>
 </div>
 </body>
 </html>

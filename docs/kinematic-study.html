@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 15:10 -->
+<!-- 2020-02-11 mar. 15:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kinematic Study of the Stewart Platform</title>
@@ -268,73 +268,73 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org12dba9f">1. Jacobian Analysis</a>
+<li><a href="#org6858f1f">Jacobian Analysis</a>
 <ul>
-<li><a href="#orgf11b2b6">1.1. Jacobian Computation</a></li>
-<li><a href="#org77e916f">1.2. Jacobian - Velocity loop closure</a></li>
-<li><a href="#orgbd5d473">1.3. Jacobian - Static Force Transformation</a></li>
+<li><a href="#org8210cee">Jacobian Computation</a></li>
+<li><a href="#org4d71022">Jacobian - Velocity loop closure</a></li>
+<li><a href="#org2847e30">Jacobian - Static Force Transformation</a></li>
 </ul>
 </li>
-<li><a href="#orgecbb7b3">2. Stiffness Analysis</a>
+<li><a href="#org87bfd11">Stiffness Analysis</a>
 <ul>
-<li><a href="#orgbea68d5">2.1. Computation of the Stiffness and Compliance Matrix</a></li>
+<li><a href="#orgb1956e6">Computation of the Stiffness and Compliance Matrix</a></li>
 </ul>
 </li>
-<li><a href="#org7c304b7">3. Forward and Inverse Kinematics</a>
+<li><a href="#org5718735">Forward and Inverse Kinematics</a>
 <ul>
-<li><a href="#org9b180e9">3.1. Inverse Kinematics</a></li>
-<li><a href="#orga3a2319">3.2. Forward Kinematics</a></li>
-<li><a href="#org12d14b0">3.3. Approximate solution of the Forward and Inverse Kinematic problem for small displacement using the Jacobian matrix</a></li>
-<li><a href="#orgbad3ae9">3.4. Estimation of the range validity of the approximate inverse kinematics</a>
+<li><a href="#orgebda1d9">Inverse Kinematics</a></li>
+<li><a href="#org1795522">Forward Kinematics</a></li>
+<li><a href="#org5a3ce80">Approximate solution of the Forward and Inverse Kinematic problem for small displacement using the Jacobian matrix</a></li>
+<li><a href="#org86b4b35">Estimation of the range validity of the approximate inverse kinematics</a>
 <ul>
-<li><a href="#orge3ab830">3.4.1. Stewart architecture definition</a></li>
-<li><a href="#org294ab65">3.4.2. Comparison for &ldquo;pure&rdquo; translations</a></li>
-<li><a href="#orgea391a3">3.4.3. Conclusion</a></li>
+<li><a href="#orgccddf49">Stewart architecture definition</a></li>
+<li><a href="#orgd83ccf3">Comparison for &ldquo;pure&rdquo; translations</a></li>
+<li><a href="#org4871c83">Conclusion</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgddb8d5d">4. Estimated required actuator stroke from specified platform mobility</a>
+<li><a href="#org63255f9">Estimated required actuator stroke from specified platform mobility</a>
 <ul>
-<li><a href="#orgfb6bdb7">4.1. Stewart architecture definition</a></li>
-<li><a href="#orgba0801f">4.2. Wanted translations and rotations</a></li>
-<li><a href="#orgdeca909">4.3. Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
-<li><a href="#orgb713047">4.4. Needed stroke for &ldquo;combined&rdquo; rotations or translations</a></li>
+<li><a href="#org48ee074">Stewart architecture definition</a></li>
+<li><a href="#orgde50dd3">Wanted translations and rotations</a></li>
+<li><a href="#org24e45ca">Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
+<li><a href="#orgf6ba90c">Needed stroke for &ldquo;combined&rdquo; rotations or translations</a></li>
 </ul>
 </li>
-<li><a href="#orge5f80c6">5. Estimated platform mobility from specified actuator stroke</a>
+<li><a href="#orgbbbf7b3">Estimated platform mobility from specified actuator stroke</a>
 <ul>
-<li><a href="#org1865dbc">5.1. Stewart architecture definition</a></li>
-<li><a href="#orga4b5e5b">5.2. Pure translations</a></li>
+<li><a href="#org486419b">Stewart architecture definition</a></li>
+<li><a href="#org2c6819e">Pure translations</a></li>
 </ul>
 </li>
-<li><a href="#org748d42a">6. Functions</a>
+<li><a href="#orgc4916dc">Functions</a>
 <ul>
-<li><a href="#org00ba36f">6.1. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
+<li><a href="#org26e8b28"><code>computeJacobian</code>: Compute the Jacobian Matrix</a>
 <ul>
-<li><a href="#orgbdf3a2a">Function description</a></li>
-<li><a href="#orgd1d8163">Check the <code>stewart</code> structure elements</a></li>
-<li><a href="#orge54466d">Compute Jacobian Matrix</a></li>
-<li><a href="#org560e1a1">Compute Stiffness Matrix</a></li>
-<li><a href="#orga853f82">Compute Compliance Matrix</a></li>
-<li><a href="#org4e11a57">Populate the <code>stewart</code> structure</a></li>
+<li><a href="#org704ab84">Function description</a></li>
+<li><a href="#org3990e47">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#org0cd57b5">Compute Jacobian Matrix</a></li>
+<li><a href="#orge21dcfc">Compute Stiffness Matrix</a></li>
+<li><a href="#orgae76071">Compute Compliance Matrix</a></li>
+<li><a href="#org78f18d7">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#org6c7006f">6.2. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
+<li><a href="#orgb82066f"><code>inverseKinematics</code>: Compute Inverse Kinematics</a>
 <ul>
-<li><a href="#org7136bfb">Theory</a></li>
-<li><a href="#org75ec482">Function description</a></li>
-<li><a href="#orgc83e0f8">Optional Parameters</a></li>
-<li><a href="#org3ea2f51">Check the <code>stewart</code> structure elements</a></li>
-<li><a href="#org210ed60">Compute</a></li>
+<li><a href="#org89930b7">Theory</a></li>
+<li><a href="#org0d77b2e">Function description</a></li>
+<li><a href="#orgda02042">Optional Parameters</a></li>
+<li><a href="#org4a3c325">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#org0d64c23">Compute</a></li>
 </ul>
 </li>
-<li><a href="#org8f0dc6c">6.3. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
+<li><a href="#orgf5d8f0b"><code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
 <ul>
-<li><a href="#org7c35749">Function description</a></li>
-<li><a href="#org5eee73c">Optional Parameters</a></li>
-<li><a href="#orgee36d86">Check the <code>stewart</code> structure elements</a></li>
-<li><a href="#orgc3e4684">Computation</a></li>
+<li><a href="#org473d0b1">Function description</a></li>
+<li><a href="#org8fe02d3">Optional Parameters</a></li>
+<li><a href="#org83d7e5f">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orge5ade24">Computation</a></li>
 </ul>
 </li>
 </ul>
@@ -357,17 +357,17 @@ In this analysis, the relation between the geometrical parameters of the manipul
 The current document is divided in the following sections:
 </p>
 <ul class="org-ul">
-<li>Section <a href="#orge973aef">1</a>: The Jacobian matrix is derived from the geometry of the Stewart platform. Then it is shown that the Jacobian can link velocities and forces present in the system, and thus this matrix can be very useful for both analysis and control of the Stewart platform.</li>
-<li>Section <a href="#org2a4a521">2</a>: The stiffness and compliance matrices are derived from the Jacobian matrix and the stiffness of each strut.</li>
-<li>Section <a href="#org8833597">3</a>: The Forward and Inverse kinematic problems are presented.</li>
-<li>Section <a href="#org6ddfbc5">4</a>: The Inverse kinematic solution is used to estimate required actuator stroke from the wanted mobility of the Stewart platform.</li>
+<li>Section <a href="#orgc45d118">No description for this link</a>: The Jacobian matrix is derived from the geometry of the Stewart platform. Then it is shown that the Jacobian can link velocities and forces present in the system, and thus this matrix can be very useful for both analysis and control of the Stewart platform.</li>
+<li>Section <a href="#orgf9e4f1a">No description for this link</a>: The stiffness and compliance matrices are derived from the Jacobian matrix and the stiffness of each strut.</li>
+<li>Section <a href="#orgca82bb8">No description for this link</a>: The Forward and Inverse kinematic problems are presented.</li>
+<li>Section <a href="#orge72d811">No description for this link</a>: The Inverse kinematic solution is used to estimate required actuator stroke from the wanted mobility of the Stewart platform.</li>
 </ul>
 
-<div id="outline-container-org12dba9f" class="outline-2">
-<h2 id="org12dba9f"><span class="section-number-2">1</span> Jacobian Analysis</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-org6858f1f" class="outline-2">
+<h2 id="org6858f1f">Jacobian Analysis</h2>
+<div class="outline-text-2" id="text-org6858f1f">
 <p>
-<a id="orge973aef"></a>
+<a id="orgc45d118"></a>
 </p>
 <p>
 From <a class='org-ref-reference' href="#taghirad13_paral">taghirad13_paral</a>:
@@ -378,9 +378,9 @@ The Jacobian matrix not only reveals the <b>relation between the joint variable 
 </p>
 </blockquote>
 </div>
-<div id="outline-container-orgf11b2b6" class="outline-3">
-<h3 id="orgf11b2b6"><span class="section-number-3">1.1</span> Jacobian Computation</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-org8210cee" class="outline-3">
+<h3 id="org8210cee">Jacobian Computation</h3>
+<div class="outline-text-3" id="text-org8210cee">
 <p>
 If we note:
 </p>
@@ -404,7 +404,7 @@ Then, we can compute the Jacobian with the following equation (the superscript \
 \end{equation*}
 
 <p>
-The Jacobian matrix \(\bm{J}\) can be computed using the <code>computeJacobian</code> function (accessible <a href="#org519ef53">here</a>).
+The Jacobian matrix \(\bm{J}\) can be computed using the <code>computeJacobian</code> function (accessible <a href="#org2387f19">here</a>).
 For instance:
 </p>
 <div class="org-src-container">
@@ -422,9 +422,9 @@ This will add three new matrix to the <code>stewart</code> structure:
 </div>
 </div>
 
-<div id="outline-container-org77e916f" class="outline-3">
-<h3 id="org77e916f"><span class="section-number-3">1.2</span> Jacobian - Velocity loop closure</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org4d71022" class="outline-3">
+<h3 id="org4d71022">Jacobian - Velocity loop closure</h3>
+<div class="outline-text-3" id="text-org4d71022">
 <p>
 The Jacobian matrix links the input joint rate \(\dot{\bm{\mathcal{L}}} = [ \dot{l}_1, \dot{l}_2, \dot{l}_3, \dot{l}_4, \dot{l}_5, \dot{l}_6 ]^T\) of each strut to the output twist vector of the mobile platform is denoted by \(\dot{\bm{X}} = [^A\bm{v}_p, {}^A\bm{\omega}]^T\):
 </p>
@@ -446,14 +446,14 @@ If the Jacobian matrix is inversible, we can also compute \(\dot{\bm{\mathcal{X}
 
 <p>
 The Jacobian matrix can also be used to approximate forward and inverse kinematics for small displacements.
-This is explained in section <a href="#org2e542bf">3.3</a>.
+This is explained in section <a href="#org02628f3">No description for this link</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgbd5d473" class="outline-3">
-<h3 id="orgbd5d473"><span class="section-number-3">1.3</span> Jacobian - Static Force Transformation</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org2847e30" class="outline-3">
+<h3 id="org2847e30">Jacobian - Static Force Transformation</h3>
+<div class="outline-text-3" id="text-org2847e30">
 <p>
 If we note:
 </p>
@@ -479,20 +479,20 @@ If the Jacobian matrix is inversible, we also have the following relation:
 </div>
 </div>
 
-<div id="outline-container-orgecbb7b3" class="outline-2">
-<h2 id="orgecbb7b3"><span class="section-number-2">2</span> Stiffness Analysis</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org87bfd11" class="outline-2">
+<h2 id="org87bfd11">Stiffness Analysis</h2>
+<div class="outline-text-2" id="text-org87bfd11">
 <p>
-<a id="org2a4a521"></a>
+<a id="orgf9e4f1a"></a>
 </p>
 <p>
 Here, we focus on the deflections of the manipulator moving platform that are the result of the external applied wrench to the mobile platform.
 The amount of these deflections are a function of the applied wrench as well as the manipulator <b>structural stiffness</b>.
 </p>
 </div>
-<div id="outline-container-orgbea68d5" class="outline-3">
-<h3 id="orgbea68d5"><span class="section-number-3">2.1</span> Computation of the Stiffness and Compliance Matrix</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgb1956e6" class="outline-3">
+<h3 id="orgb1956e6">Computation of the Stiffness and Compliance Matrix</h3>
+<div class="outline-text-3" id="text-orgb1956e6">
 <p>
 As explain in <a href="stewart-architecture.html">this</a> document, each Actuator is modeled by 3 elements in parallel:
 </p>
@@ -542,24 +542,24 @@ The compliance matrix of a manipulator shows the mapping of the moving platform 
 \end{equation*}
 
 <p>
-The stiffness and compliance matrices are computed using the <code>computeJacobian</code> function (accessible <a href="#org519ef53">here</a>).
+The stiffness and compliance matrices are computed using the <code>computeJacobian</code> function (accessible <a href="#org2387f19">here</a>).
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7c304b7" class="outline-2">
-<h2 id="org7c304b7"><span class="section-number-2">3</span> Forward and Inverse Kinematics</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org5718735" class="outline-2">
+<h2 id="org5718735">Forward and Inverse Kinematics</h2>
+<div class="outline-text-2" id="text-org5718735">
 <p>
-<a id="org8833597"></a>
+<a id="orgca82bb8"></a>
 </p>
 </div>
-<div id="outline-container-org9b180e9" class="outline-3">
-<h3 id="org9b180e9"><span class="section-number-3">3.1</span> Inverse Kinematics</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgebda1d9" class="outline-3">
+<h3 id="orgebda1d9">Inverse Kinematics</h3>
+<div class="outline-text-3" id="text-orgebda1d9">
 <p>
-<a id="org3d57c25"></a>
+<a id="org2f224fc"></a>
 </p>
 
 <blockquote>
@@ -588,16 +588,16 @@ Otherwise, the solution gives complex numbers.
 </p>
 
 <p>
-This inverse kinematic solution can be obtained using the function <code>inverseKinematics</code> (described <a href="#orgaf5a9a0">here</a>).
+This inverse kinematic solution can be obtained using the function <code>inverseKinematics</code> (described <a href="#orgb8859d7">here</a>).
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga3a2319" class="outline-3">
-<h3 id="orga3a2319"><span class="section-number-3">3.2</span> Forward Kinematics</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-org1795522" class="outline-3">
+<h3 id="org1795522">Forward Kinematics</h3>
+<div class="outline-text-3" id="text-org1795522">
 <p>
-<a id="orgf7da4c0"></a>
+<a id="orgf1db8ea"></a>
 </p>
 
 <blockquote>
@@ -616,11 +616,11 @@ In a next section, an approximate solution of the forward kinematics problem is 
 </div>
 </div>
 
-<div id="outline-container-org12d14b0" class="outline-3">
-<h3 id="org12d14b0"><span class="section-number-3">3.3</span> Approximate solution of the Forward and Inverse Kinematic problem for small displacement using the Jacobian matrix</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-org5a3ce80" class="outline-3">
+<h3 id="org5a3ce80">Approximate solution of the Forward and Inverse Kinematic problem for small displacement using the Jacobian matrix</h3>
+<div class="outline-text-3" id="text-org5a3ce80">
 <p>
-<a id="org2e542bf"></a>
+<a id="org02628f3"></a>
 </p>
 
 <p>
@@ -643,16 +643,16 @@ As the inverse kinematic can be easily solved exactly this is not much useful, h
 </p>
 
 <p>
-The function <code>forwardKinematicsApprox</code> (described <a href="#org7ba3dc5">here</a>) can be used to solve the forward kinematic problem using the Jacobian matrix.
+The function <code>forwardKinematicsApprox</code> (described <a href="#orgdb31434">here</a>) can be used to solve the forward kinematic problem using the Jacobian matrix.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgbad3ae9" class="outline-3">
-<h3 id="orgbad3ae9"><span class="section-number-3">3.4</span> Estimation of the range validity of the approximate inverse kinematics</h3>
-<div class="outline-text-3" id="text-3-4">
+<div id="outline-container-org86b4b35" class="outline-3">
+<h3 id="org86b4b35">Estimation of the range validity of the approximate inverse kinematics</h3>
+<div class="outline-text-3" id="text-org86b4b35">
 <p>
-<a id="org6f7aec6"></a>
+<a id="org2bfd694"></a>
 </p>
 <p>
 As we know how to exactly solve the Inverse kinematic problem, we can compare the exact solution with the approximate solution using the Jacobian matrix.
@@ -666,14 +666,15 @@ This will also gives us the range for which the approximate forward kinematic is
 </p>
 </div>
 
-<div id="outline-container-orge3ab830" class="outline-4">
-<h4 id="orge3ab830"><span class="section-number-4">3.4.1</span> Stewart architecture definition</h4>
-<div class="outline-text-4" id="text-3-4-1">
+<div id="outline-container-orgccddf49" class="outline-4">
+<h4 id="orgccddf49">Stewart architecture definition</h4>
+<div class="outline-text-4" id="text-orgccddf49">
 <p>
 We first define some general Stewart architecture.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -687,17 +688,17 @@ stewart = computeJacobian(stewart);
 </div>
 </div>
 
-<div id="outline-container-org294ab65" class="outline-4">
-<h4 id="org294ab65"><span class="section-number-4">3.4.2</span> Comparison for &ldquo;pure&rdquo; translations</h4>
-<div class="outline-text-4" id="text-3-4-2">
+<div id="outline-container-orgd83ccf3" class="outline-4">
+<h4 id="orgd83ccf3">Comparison for &ldquo;pure&rdquo; translations</h4>
+<div class="outline-text-4" id="text-orgd83ccf3">
 <p>
 Let&rsquo;s first compare the perfect and approximate solution of the inverse for pure \(x\) translations.
 </p>
 
 <p>
 We compute the approximate and exact required strut stroke to have the wanted mobile platform \(x\) displacement.
-The estimate required strut stroke for both the approximate and exact solutions are shown in Figure <a href="#orgb688993">1</a>.
-The relative strut length displacement is shown in Figure <a href="#org4c3ea1b">2</a>.
+The estimate required strut stroke for both the approximate and exact solutions are shown in Figure <a href="#org5996f21">1</a>.
+The relative strut length displacement is shown in Figure <a href="#org02d8e34">2</a>.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">Xrs = logspace(<span class="org-type">-</span>6, <span class="org-type">-</span>1, 100); <span class="org-comment">% Wanted X translation of the mobile platform [m]</span>
@@ -714,14 +715,14 @@ Ls_exact = zeros(6, length(Xrs));
 </div>
 
 
-<div id="orgb688993" class="figure">
+<div id="org5996f21" class="figure">
 <p><img src="figs/inverse_kinematics_approx_validity_x_translation.png" alt="inverse_kinematics_approx_validity_x_translation.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Comparison of the Approximate solution and True solution for the Inverse kinematic problem (<a href="./figs/inverse_kinematics_approx_validity_x_translation.png">png</a>, <a href="./figs/inverse_kinematics_approx_validity_x_translation.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="org4c3ea1b" class="figure">
+<div id="org02d8e34" class="figure">
 <p><img src="figs/inverse_kinematics_approx_validity_x_translation_relative.png" alt="inverse_kinematics_approx_validity_x_translation_relative.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Relative length error by using the Approximate solution of the Inverse kinematic problem (<a href="./figs/inverse_kinematics_approx_validity_x_translation_relative.png">png</a>, <a href="./figs/inverse_kinematics_approx_validity_x_translation_relative.pdf">pdf</a>)</p>
@@ -729,9 +730,9 @@ Ls_exact = zeros(6, length(Xrs));
 </div>
 </div>
 
-<div id="outline-container-orgea391a3" class="outline-4">
-<h4 id="orgea391a3"><span class="section-number-4">3.4.3</span> Conclusion</h4>
-<div class="outline-text-4" id="text-3-4-3">
+<div id="outline-container-org4871c83" class="outline-4">
+<h4 id="org4871c83">Conclusion</h4>
+<div class="outline-text-4" id="text-org4871c83">
 <p>
 For small wanted displacements (up to \(\approx 1\%\) of the size of the Hexapod), the approximate inverse kinematic solution using the Jacobian matrix is quite correct.
 </p>
@@ -740,11 +741,11 @@ For small wanted displacements (up to \(\approx 1\%\) of the size of the Hexapod
 </div>
 </div>
 
-<div id="outline-container-orgddb8d5d" class="outline-2">
-<h2 id="orgddb8d5d"><span class="section-number-2">4</span> Estimated required actuator stroke from specified platform mobility</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org63255f9" class="outline-2">
+<h2 id="org63255f9">Estimated required actuator stroke from specified platform mobility</h2>
+<div class="outline-text-2" id="text-org63255f9">
 <p>
-<a id="org6ddfbc5"></a>
+<a id="orge72d811"></a>
 </p>
 <p>
 Let&rsquo;s say one want to design a Stewart platform with some specified mobility (position and orientation).
@@ -752,14 +753,15 @@ One may want to determine the required actuator stroke required to obtain the sp
 This is what is analyzed in this section.
 </p>
 </div>
-<div id="outline-container-orgfb6bdb7" class="outline-3">
-<h3 id="orgfb6bdb7"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-org48ee074" class="outline-3">
+<h3 id="org48ee074">Stewart architecture definition</h3>
+<div class="outline-text-3" id="text-org48ee074">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -773,9 +775,9 @@ stewart = computeJacobian(stewart);
 </div>
 </div>
 
-<div id="outline-container-orgba0801f" class="outline-3">
-<h3 id="orgba0801f"><span class="section-number-3">4.2</span> Wanted translations and rotations</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgde50dd3" class="outline-3">
+<h3 id="orgde50dd3">Wanted translations and rotations</h3>
+<div class="outline-text-3" id="text-orgde50dd3">
 <p>
 Let&rsquo;s now define the wanted extreme translations and rotations.
 </p>
@@ -791,9 +793,9 @@ Rz_max = 0;     <span class="org-comment">% Rotation [rad]</span>
 </div>
 </div>
 
-<div id="outline-container-orgdeca909" class="outline-3">
-<h3 id="orgdeca909"><span class="section-number-3">4.3</span> Needed stroke for &ldquo;pure&rdquo; rotations or translations</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org24e45ca" class="outline-3">
+<h3 id="org24e45ca">Needed stroke for &ldquo;pure&rdquo; rotations or translations</h3>
+<div class="outline-text-3" id="text-org24e45ca">
 <p>
 As a first estimation, we estimate the needed actuator stroke for &ldquo;pure&rdquo; rotations and translation.
 We do that using either the Inverse Kinematic solution or the Jacobian matrix as an approximation.
@@ -823,9 +825,9 @@ This is surely a low estimation of the required stroke.
 </div>
 </div>
 
-<div id="outline-container-orgb713047" class="outline-3">
-<h3 id="orgb713047"><span class="section-number-3">4.4</span> Needed stroke for &ldquo;combined&rdquo; rotations or translations</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-orgf6ba90c" class="outline-3">
+<h3 id="orgf6ba90c">Needed stroke for &ldquo;combined&rdquo; rotations or translations</h3>
+<div class="outline-text-3" id="text-orgf6ba90c">
 <p>
 We know would like to have a more precise estimation.
 </p>
@@ -1144,29 +1146,30 @@ This is probably a much realistic estimation of the required actuator stroke.
 </div>
 </div>
 
-<div id="outline-container-orge5f80c6" class="outline-2">
-<h2 id="orge5f80c6"><span class="section-number-2">5</span> Estimated platform mobility from specified actuator stroke</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgbbbf7b3" class="outline-2">
+<h2 id="orgbbbf7b3">Estimated platform mobility from specified actuator stroke</h2>
+<div class="outline-text-2" id="text-orgbbbf7b3">
 <p>
-<a id="org10d9ea8"></a>
+<a id="orgeca09fb"></a>
 </p>
 <p>
 Here, from some value of the actuator stroke, we would like to estimate the mobility of the Stewart platform.
 </p>
 
 <p>
-As explained in section <a href="#org8833597">3</a>, the forward kinematic problem of the Stewart platform is quite difficult to solve.
+As explained in section <a href="#orgca82bb8">No description for this link</a>, the forward kinematic problem of the Stewart platform is quite difficult to solve.
 However, for small displacements, we can use the Jacobian as an approximate solution.
 </p>
 </div>
-<div id="outline-container-org1865dbc" class="outline-3">
-<h3 id="org1865dbc"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-org486419b" class="outline-3">
+<h3 id="org486419b">Stewart architecture definition</h3>
+<div class="outline-text-3" id="text-org486419b">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -1189,9 +1192,9 @@ L_max =  50e<span class="org-type">-</span>6; <span class="org-comment">% [m]</s
 </div>
 </div>
 
-<div id="outline-container-orga4b5e5b" class="outline-3">
-<h3 id="orga4b5e5b"><span class="section-number-3">5.2</span> Pure translations</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-org2c6819e" class="outline-3">
+<h3 id="org2c6819e">Pure translations</h3>
+<div class="outline-text-3" id="text-org2c6819e">
 <p>
 Let&rsquo;s first estimate the mobility in translation when the orientation of the Stewart platform stays the same.
 </p>
@@ -1262,7 +1265,7 @@ We can also approximate the mobility by a sphere with a radius equal to the mini
 </table>
 
 
-<div id="orga71e017" class="figure">
+<div id="orgc67ab85" class="figure">
 <p><img src="figs/mobility_translations_null_rotation.png" alt="mobility_translations_null_rotation.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Obtain mobility of the Stewart platform for zero rotations (<a href="./figs/mobility_translations_null_rotation.png">png</a>, <a href="./figs/mobility_translations_null_rotation.pdf">pdf</a>)</p>
@@ -1271,18 +1274,18 @@ We can also approximate the mobility by a sphere with a radius equal to the mini
 </div>
 </div>
 
-<div id="outline-container-org748d42a" class="outline-2">
-<h2 id="org748d42a"><span class="section-number-2">6</span> Functions</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-orgc4916dc" class="outline-2">
+<h2 id="orgc4916dc">Functions</h2>
+<div class="outline-text-2" id="text-orgc4916dc">
 <p>
-<a id="org1e1d299"></a>
+<a id="orgf9a6042"></a>
 </p>
 </div>
-<div id="outline-container-org00ba36f" class="outline-3">
-<h3 id="org00ba36f"><span class="section-number-3">6.1</span> <code>computeJacobian</code>: Compute the Jacobian Matrix</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-org26e8b28" class="outline-3">
+<h3 id="org26e8b28"><code>computeJacobian</code>: Compute the Jacobian Matrix</h3>
+<div class="outline-text-3" id="text-org26e8b28">
 <p>
-<a id="org519ef53"></a>
+<a id="org2387f19"></a>
 </p>
 
 <p>
@@ -1290,9 +1293,9 @@ This Matlab function is accessible <a href="src/computeJacobian.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orgbdf3a2a" class="outline-4">
-<h4 id="orgbdf3a2a">Function description</h4>
-<div class="outline-text-4" id="text-orgbdf3a2a">
+<div id="outline-container-org704ab84" class="outline-4">
+<h4 id="org704ab84">Function description</h4>
+<div class="outline-text-4" id="text-org704ab84">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">computeJacobian</span>(<span class="org-variable-name">stewart</span>)
 <span class="org-comment">% computeJacobian -</span>
@@ -1315,9 +1318,9 @@ This Matlab function is accessible <a href="src/computeJacobian.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgd1d8163" class="outline-4">
-<h4 id="orgd1d8163">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orgd1d8163">
+<div id="outline-container-org3990e47" class="outline-4">
+<h4 id="org3990e47">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org3990e47">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'As'</span>),   <span class="org-string">'stewart.geometry should have attribute As'</span>)
 As = stewart.geometry.As;
@@ -1333,9 +1336,9 @@ Ki = stewart.actuators.K;
 </div>
 
 
-<div id="outline-container-orge54466d" class="outline-4">
-<h4 id="orge54466d">Compute Jacobian Matrix</h4>
-<div class="outline-text-4" id="text-orge54466d">
+<div id="outline-container-org0cd57b5" class="outline-4">
+<h4 id="org0cd57b5">Compute Jacobian Matrix</h4>
+<div class="outline-text-4" id="text-org0cd57b5">
 <div class="org-src-container">
 <pre class="src src-matlab">J = [As<span class="org-type">'</span> , cross(Ab, As)<span class="org-type">'</span>];
 </pre>
@@ -1343,9 +1346,9 @@ Ki = stewart.actuators.K;
 </div>
 </div>
 
-<div id="outline-container-org560e1a1" class="outline-4">
-<h4 id="org560e1a1">Compute Stiffness Matrix</h4>
-<div class="outline-text-4" id="text-org560e1a1">
+<div id="outline-container-orge21dcfc" class="outline-4">
+<h4 id="orge21dcfc">Compute Stiffness Matrix</h4>
+<div class="outline-text-4" id="text-orge21dcfc">
 <div class="org-src-container">
 <pre class="src src-matlab">K = J<span class="org-type">'*</span>diag(Ki)<span class="org-type">*</span>J;
 </pre>
@@ -1353,9 +1356,9 @@ Ki = stewart.actuators.K;
 </div>
 </div>
 
-<div id="outline-container-orga853f82" class="outline-4">
-<h4 id="orga853f82">Compute Compliance Matrix</h4>
-<div class="outline-text-4" id="text-orga853f82">
+<div id="outline-container-orgae76071" class="outline-4">
+<h4 id="orgae76071">Compute Compliance Matrix</h4>
+<div class="outline-text-4" id="text-orgae76071">
 <div class="org-src-container">
 <pre class="src src-matlab">C = inv(K);
 </pre>
@@ -1363,9 +1366,9 @@ Ki = stewart.actuators.K;
 </div>
 </div>
 
-<div id="outline-container-org4e11a57" class="outline-4">
-<h4 id="org4e11a57">Populate the <code>stewart</code> structure</h4>
-<div class="outline-text-4" id="text-org4e11a57">
+<div id="outline-container-org78f18d7" class="outline-4">
+<h4 id="org78f18d7">Populate the <code>stewart</code> structure</h4>
+<div class="outline-text-4" id="text-org78f18d7">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart.kinematics.J = J;
 stewart.kinematics.K = K;
@@ -1377,11 +1380,11 @@ stewart.kinematics.C = C;
 </div>
 
 
-<div id="outline-container-org6c7006f" class="outline-3">
-<h3 id="org6c7006f"><span class="section-number-3">6.2</span> <code>inverseKinematics</code>: Compute Inverse Kinematics</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-orgb82066f" class="outline-3">
+<h3 id="orgb82066f"><code>inverseKinematics</code>: Compute Inverse Kinematics</h3>
+<div class="outline-text-3" id="text-orgb82066f">
 <p>
-<a id="orgaf5a9a0"></a>
+<a id="orgb8859d7"></a>
 </p>
 
 <p>
@@ -1389,9 +1392,9 @@ This Matlab function is accessible <a href="src/inverseKinematics.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org7136bfb" class="outline-4">
-<h4 id="org7136bfb">Theory</h4>
-<div class="outline-text-4" id="text-org7136bfb">
+<div id="outline-container-org89930b7" class="outline-4">
+<h4 id="org89930b7">Theory</h4>
+<div class="outline-text-4" id="text-org89930b7">
 <p>
 For inverse kinematic analysis, it is assumed that the position \({}^A\bm{P}\) and orientation of the moving platform \({}^A\bm{R}_B\) are given and the problem is to obtain the joint variables, namely, \(\bm{L} = [l_1, l_2, \dots, l_6]^T\).
 </p>
@@ -1425,9 +1428,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org75ec482" class="outline-4">
-<h4 id="org75ec482">Function description</h4>
-<div class="outline-text-4" id="text-org75ec482">
+<div id="outline-container-org0d77b2e" class="outline-4">
+<h4 id="org0d77b2e">Function description</h4>
+<div class="outline-text-4" id="text-org0d77b2e">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[Li, dLi]</span> = <span class="org-function-name">inverseKinematics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}</span>
@@ -1451,9 +1454,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-orgc83e0f8" class="outline-4">
-<h4 id="orgc83e0f8">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgc83e0f8">
+<div id="outline-container-orgda02042" class="outline-4">
+<h4 id="orgda02042">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgda02042">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1465,9 +1468,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org3ea2f51" class="outline-4">
-<h4 id="org3ea2f51">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org3ea2f51">
+<div id="outline-container-org4a3c325" class="outline-4">
+<h4 id="org4a3c325">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org4a3c325">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'Aa'</span>),   <span class="org-string">'stewart.geometry should have attribute Aa'</span>)
 Aa = stewart.geometry.Aa;
@@ -1483,9 +1486,9 @@ l = stewart.geometry.l;
 </div>
 
 
-<div id="outline-container-org210ed60" class="outline-4">
-<h4 id="org210ed60">Compute</h4>
-<div class="outline-text-4" id="text-org210ed60">
+<div id="outline-container-org0d64c23" class="outline-4">
+<h4 id="org0d64c23">Compute</h4>
+<div class="outline-text-4" id="text-org0d64c23">
 <div class="org-src-container">
 <pre class="src src-matlab">Li = sqrt(args.AP<span class="org-type">'*</span>args.AP <span class="org-type">+</span> diag(Bb<span class="org-type">'*</span>Bb) <span class="org-type">+</span> diag(Aa<span class="org-type">'*</span>Aa) <span class="org-type">-</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>Aa)<span class="org-type">'</span> <span class="org-type">+</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>(args.ARB<span class="org-type">*</span>Bb))<span class="org-type">'</span> <span class="org-type">-</span> diag(2<span class="org-type">*</span>(args.ARB<span class="org-type">*</span>Bb)<span class="org-type">'*</span>Aa));
 </pre>
@@ -1499,11 +1502,11 @@ l = stewart.geometry.l;
 </div>
 </div>
 
-<div id="outline-container-org8f0dc6c" class="outline-3">
-<h3 id="org8f0dc6c"><span class="section-number-3">6.3</span> <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</h3>
-<div class="outline-text-3" id="text-6-3">
+<div id="outline-container-orgf5d8f0b" class="outline-3">
+<h3 id="orgf5d8f0b"><code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</h3>
+<div class="outline-text-3" id="text-orgf5d8f0b">
 <p>
-<a id="org7ba3dc5"></a>
+<a id="orgdb31434"></a>
 </p>
 
 <p>
@@ -1511,9 +1514,9 @@ This Matlab function is accessible <a href="src/forwardKinematicsApprox.m">here<
 </p>
 </div>
 
-<div id="outline-container-org7c35749" class="outline-4">
-<h4 id="org7c35749">Function description</h4>
-<div class="outline-text-4" id="text-org7c35749">
+<div id="outline-container-org473d0b1" class="outline-4">
+<h4 id="org473d0b1">Function description</h4>
+<div class="outline-text-4" id="text-org473d0b1">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[P, R]</span> = <span class="org-function-name">forwardKinematicsApprox</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using</span>
@@ -1535,9 +1538,9 @@ This Matlab function is accessible <a href="src/forwardKinematicsApprox.m">here<
 </div>
 </div>
 
-<div id="outline-container-org5eee73c" class="outline-4">
-<h4 id="org5eee73c">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org5eee73c">
+<div id="outline-container-org8fe02d3" class="outline-4">
+<h4 id="org8fe02d3">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org8fe02d3">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1548,9 +1551,9 @@ This Matlab function is accessible <a href="src/forwardKinematicsApprox.m">here<
 </div>
 </div>
 
-<div id="outline-container-orgee36d86" class="outline-4">
-<h4 id="orgee36d86">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orgee36d86">
+<div id="outline-container-org83d7e5f" class="outline-4">
+<h4 id="org83d7e5f">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org83d7e5f">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.kinematics, <span class="org-string">'J'</span>),   <span class="org-string">'stewart.kinematics should have attribute J'</span>)
 J = stewart.kinematics.J;
@@ -1559,9 +1562,9 @@ J = stewart.kinematics.J;
 </div>
 </div>
 
-<div id="outline-container-orgc3e4684" class="outline-4">
-<h4 id="orgc3e4684">Computation</h4>
-<div class="outline-text-4" id="text-orgc3e4684">
+<div id="outline-container-orge5ade24" class="outline-4">
+<h4 id="orge5ade24">Computation</h4>
+<div class="outline-text-4" id="text-orge5ade24">
 <p>
 From a small displacement of each strut \(d\bm{\mathcal{L}}\), we can compute the
 position and orientation of {B} with respect to {A} using the following formula:
@@ -1613,7 +1616,7 @@ We then compute the corresponding rotation matrix.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 15:10</p>
+<p class="date">Created: 2020-02-11 mar. 15:26</p>
 </div>
 </body>
 </html>

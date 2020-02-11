@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-06 jeu. 15:39 -->
+<!-- 2020-02-11 mar. 15:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Decentralized Active Damping</title>
@@ -268,28 +268,28 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfba33d4">1. Inertial Control</a>
+<li><a href="#orgd59c804">Inertial Control</a>
 <ul>
-<li><a href="#org0ea4bd4">1.1. Identification of the Dynamics</a></li>
-<li><a href="#org5a29480">1.2. Effect of the Flexible Joint stiffness on the Dynamics</a></li>
-<li><a href="#orga92be75">1.3. Obtained Damping</a></li>
-<li><a href="#orgb29f377">1.4. Conclusion</a></li>
+<li><a href="#org5f749c8">Identification of the Dynamics</a></li>
+<li><a href="#org543be7a">Effect of the Flexible Joint stiffness on the Dynamics</a></li>
+<li><a href="#org9a605b4">Obtained Damping</a></li>
+<li><a href="#org42a74ed">Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#org5fde56d">2. Integral Force Feedback</a>
+<li><a href="#org74c7eb4">Integral Force Feedback</a>
 <ul>
-<li><a href="#org8823e64">2.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#org2aff899">2.2. Effect of the Flexible Joint stiffness on the Dynamics</a></li>
-<li><a href="#org40dffdd">2.3. Obtained Damping</a></li>
-<li><a href="#org2ae5aaf">2.4. Conclusion</a></li>
+<li><a href="#orgc96f772">Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#orgd119d8a">Effect of the Flexible Joint stiffness on the Dynamics</a></li>
+<li><a href="#org2b5e45a">Obtained Damping</a></li>
+<li><a href="#org39ddf1e">Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#org9425768">3. Direct Velocity Feedback</a>
+<li><a href="#org08917d6">Direct Velocity Feedback</a>
 <ul>
-<li><a href="#org61043ac">3.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#org8f71141">3.2. Effect of the Flexible Joint stiffness on the Dynamics</a></li>
-<li><a href="#org87c6911">3.3. Obtained Damping</a></li>
-<li><a href="#org516fed1">3.4. Conclusion</a></li>
+<li><a href="#org243b924">Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#orgcdb3ee5">Effect of the Flexible Joint stiffness on the Dynamics</a></li>
+<li><a href="#orgff0cbf9">Obtained Damping</a></li>
+<li><a href="#org4027234">Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -300,24 +300,25 @@ for the JavaScript code in this tag.
 The following decentralized active damping techniques are briefly studied:
 </p>
 <ul class="org-ul">
-<li>Inertial Control (proportional feedback of the absolute velocity): Section <a href="#org3c68d9e">1</a></li>
-<li>Integral Force Feedback: Section <a href="#org62cd19c">2</a></li>
-<li>Direct feedback of the relative velocity of each strut: Section <a href="#org587277a">3</a></li>
+<li>Inertial Control (proportional feedback of the absolute velocity): Section <a href="#orgeb37c7d">No description for this link</a></li>
+<li>Integral Force Feedback: Section <a href="#orgab5e6b5">No description for this link</a></li>
+<li>Direct feedback of the relative velocity of each strut: Section <a href="#org0aa816a">No description for this link</a></li>
 </ul>
 
-<div id="outline-container-orgfba33d4" class="outline-2">
-<h2 id="orgfba33d4"><span class="section-number-2">1</span> Inertial Control</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgd59c804" class="outline-2">
+<h2 id="orgd59c804">Inertial Control</h2>
+<div class="outline-text-2" id="text-orgd59c804">
 <p>
-<a id="org3c68d9e"></a>
+<a id="orgeb37c7d"></a>
 </p>
 </div>
 
-<div id="outline-container-org0ea4bd4" class="outline-3">
-<h3 id="org0ea4bd4"><span class="section-number-3">1.1</span> Identification of the Dynamics</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-org5f749c8" class="outline-3">
+<h3 id="org5f749c8">Identification of the Dynamics</h3>
+<div class="outline-text-3" id="text-org5f749c8">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
@@ -350,10 +351,10 @@ G.OutputName = {<span class="org-string">'Vm1'</span>, <span class="org-string">
 </div>
 
 <p>
-The transfer function from actuator forces to force sensors is shown in Figure <a href="#orgfc5367b">1</a>.
+The transfer function from actuator forces to force sensors is shown in Figure <a href="#org834d990">1</a>.
 </p>
 
-<div id="orgfc5367b" class="figure">
+<div id="org834d990" class="figure">
 <p><img src="figs/inertial_plant_coupling.png" alt="inertial_plant_coupling.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Transfer function from the Actuator force \(F_{i}\) to the absolute velocity of the same leg \(v_{m,i}\) and to the absolute velocity of the other legs \(v_{m,j}\) with \(i \neq j\) in grey (<a href="./figs/inertial_plant_coupling.png">png</a>, <a href="./figs/inertial_plant_coupling.pdf">pdf</a>)</p>
@@ -361,9 +362,9 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-org5a29480" class="outline-3">
-<h3 id="org5a29480"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness on the Dynamics</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org543be7a" class="outline-3">
+<h3 id="org543be7a">Effect of the Flexible Joint stiffness on the Dynamics</h3>
+<div class="outline-text-3" id="text-org543be7a">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
 </p>
@@ -376,10 +377,10 @@ Gf.OutputName = {<span class="org-string">'Vm1'</span>, <span class="org-string"
 </div>
 
 <p>
-The new dynamics from force actuator to force sensor is shown in Figure <a href="#org2ee5d65">2</a>.
+The new dynamics from force actuator to force sensor is shown in Figure <a href="#org683c779">2</a>.
 </p>
 
-<div id="org2ee5d65" class="figure">
+<div id="org683c779" class="figure">
 <p><img src="figs/inertial_plant_flexible_joint_decentralized.png" alt="inertial_plant_flexible_joint_decentralized.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Transfer function from the Actuator force \(F_{i}\) to the absolute velocity sensor \(v_{m,i}\) (<a href="./figs/inertial_plant_flexible_joint_decentralized.png">png</a>, <a href="./figs/inertial_plant_flexible_joint_decentralized.pdf">pdf</a>)</p>
@@ -387,9 +388,9 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-orga92be75" class="outline-3">
-<h3 id="orga92be75"><span class="section-number-3">1.3</span> Obtained Damping</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org9a605b4" class="outline-3">
+<h3 id="org9a605b4">Obtained Damping</h3>
+<div class="outline-text-3" id="text-org9a605b4">
 <p>
 The control is a performed in a decentralized manner.
 The \(6 \times 6\) control is a diagonal matrix with pure proportional action on the diagonal:
@@ -402,17 +403,17 @@ The \(6 \times 6\) control is a diagonal matrix with pure proportional action on
 </p>
 
 <p>
-The root locus is shown in figure <a href="#org78a599c">3</a> and the obtained pole damping function of the control gain is shown in figure <a href="#org0b6bb28">4</a>.
+The root locus is shown in figure <a href="#org9af9e33">3</a> and the obtained pole damping function of the control gain is shown in figure <a href="#org4e6b73b">4</a>.
 </p>
 
-<div id="org78a599c" class="figure">
+<div id="org9af9e33" class="figure">
 <p><img src="figs/root_locus_inertial_rot_stiffness.png" alt="root_locus_inertial_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Root Locus plot with Decentralized Inertial Control when considering the stiffness of flexible joints (<a href="./figs/root_locus_inertial_rot_stiffness.png">png</a>, <a href="./figs/root_locus_inertial_rot_stiffness.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="org0b6bb28" class="figure">
+<div id="org4e6b73b" class="figure">
 <p><img src="figs/pole_damping_gain_inertial_rot_stiffness.png" alt="pole_damping_gain_inertial_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Damping of the poles with respect to the gain of the Decentralized Inertial Control when considering the stiffness of flexible joints (<a href="./figs/pole_damping_gain_inertial_rot_stiffness.png">png</a>, <a href="./figs/pole_damping_gain_inertial_rot_stiffness.pdf">pdf</a>)</p>
@@ -420,9 +421,9 @@ The root locus is shown in figure <a href="#org78a599c">3</a> and the obtained p
 </div>
 </div>
 
-<div id="outline-container-orgb29f377" class="outline-3">
-<h3 id="orgb29f377"><span class="section-number-3">1.4</span> Conclusion</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-org42a74ed" class="outline-3">
+<h3 id="org42a74ed">Conclusion</h3>
+<div class="outline-text-3" id="text-org42a74ed">
 <div class="important">
 <p>
 Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
@@ -433,25 +434,27 @@ Joint stiffness does increase the resonance frequencies of the system but does n
 </div>
 </div>
 
-<div id="outline-container-org5fde56d" class="outline-2">
-<h2 id="org5fde56d"><span class="section-number-2">2</span> Integral Force Feedback</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org74c7eb4" class="outline-2">
+<h2 id="org74c7eb4">Integral Force Feedback</h2>
+<div class="outline-text-2" id="text-org74c7eb4">
 <p>
-<a id="org62cd19c"></a>
+<a id="orgab5e6b5"></a>
 </p>
 </div>
 
-<div id="outline-container-org8823e64" class="outline-3">
-<h3 id="org8823e64"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgc96f772" class="outline-3">
+<h3 id="orgc96f772">Identification of the Dynamics with perfect Joints</h3>
+<div class="outline-text-3" id="text-orgc96f772">
 <p>
 We first initialize the Stewart platform without joint stiffness.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
+stewart = initializeAmplifiedStrutDynamics(stewart);
 stewart = initializeJointDynamics(stewart, <span class="org-string">'disable'</span>, <span class="org-constant">true</span>);
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
@@ -484,10 +487,10 @@ G.OutputName = {<span class="org-string">'Fm1'</span>, <span class="org-string">
 </div>
 
 <p>
-The transfer function from actuator forces to force sensors is shown in Figure <a href="#orgae4e327">5</a>.
+The transfer function from actuator forces to force sensors is shown in Figure <a href="#org3fca9dd">5</a>.
 </p>
 
-<div id="orgae4e327" class="figure">
+<div id="org3fca9dd" class="figure">
 <p><img src="figs/iff_plant_coupling.png" alt="iff_plant_coupling.png" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Transfer function from the Actuator force \(F_{i}\) to the Force sensor of the same leg \(F_{m,i}\) and to the force sensor of the other legs \(F_{m,j}\) with \(i \neq j\) in grey (<a href="./figs/iff_plant_coupling.png">png</a>, <a href="./figs/iff_plant_coupling.pdf">pdf</a>)</p>
@@ -495,9 +498,9 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-org2aff899" class="outline-3">
-<h3 id="org2aff899"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness on the Dynamics</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgd119d8a" class="outline-3">
+<h3 id="orgd119d8a">Effect of the Flexible Joint stiffness on the Dynamics</h3>
+<div class="outline-text-3" id="text-orgd119d8a">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
 </p>
@@ -510,10 +513,10 @@ Gf.OutputName = {<span class="org-string">'Fm1'</span>, <span class="org-string"
 </div>
 
 <p>
-The new dynamics from force actuator to force sensor is shown in Figure <a href="#orgd21a8a8">6</a>.
+The new dynamics from force actuator to force sensor is shown in Figure <a href="#org090868b">6</a>.
 </p>
 
-<div id="orgd21a8a8" class="figure">
+<div id="org090868b" class="figure">
 <p><img src="figs/iff_plant_flexible_joint_decentralized.png" alt="iff_plant_flexible_joint_decentralized.png" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Transfer function from the Actuator force \(F_{i}\) to the force sensor \(F_{m,i}\) (<a href="./figs/iff_plant_flexible_joint_decentralized.png">png</a>, <a href="./figs/iff_plant_flexible_joint_decentralized.pdf">pdf</a>)</p>
@@ -521,9 +524,9 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-org40dffdd" class="outline-3">
-<h3 id="org40dffdd"><span class="section-number-3">2.3</span> Obtained Damping</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org2b5e45a" class="outline-3">
+<h3 id="org2b5e45a">Obtained Damping</h3>
+<div class="outline-text-3" id="text-org2b5e45a">
 <p>
 The control is a performed in a decentralized manner.
 The \(6 \times 6\) control is a diagonal matrix with pure integration action on the diagonal:
@@ -536,17 +539,17 @@ The \(6 \times 6\) control is a diagonal matrix with pure integration action on 
 </p>
 
 <p>
-The root locus is shown in figure <a href="#org2cdbf69">7</a> and the obtained pole damping function of the control gain is shown in figure <a href="#orge344229">8</a>.
+The root locus is shown in figure <a href="#orge21bbea">7</a> and the obtained pole damping function of the control gain is shown in figure <a href="#org94d6943">8</a>.
 </p>
 
-<div id="org2cdbf69" class="figure">
+<div id="orge21bbea" class="figure">
 <p><img src="figs/root_locus_iff_rot_stiffness.png" alt="root_locus_iff_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Root Locus plot with Decentralized Integral Force Feedback when considering the stiffness of flexible joints (<a href="./figs/root_locus_iff_rot_stiffness.png">png</a>, <a href="./figs/root_locus_iff_rot_stiffness.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="orge344229" class="figure">
+<div id="org94d6943" class="figure">
 <p><img src="figs/pole_damping_gain_iff_rot_stiffness.png" alt="pole_damping_gain_iff_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Damping of the poles with respect to the gain of the Decentralized Integral Force Feedback when considering the stiffness of flexible joints (<a href="./figs/pole_damping_gain_iff_rot_stiffness.png">png</a>, <a href="./figs/pole_damping_gain_iff_rot_stiffness.pdf">pdf</a>)</p>
@@ -554,9 +557,9 @@ The root locus is shown in figure <a href="#org2cdbf69">7</a> and the obtained p
 </div>
 </div>
 
-<div id="outline-container-org2ae5aaf" class="outline-3">
-<h3 id="org2ae5aaf"><span class="section-number-3">2.4</span> Conclusion</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-org39ddf1e" class="outline-3">
+<h3 id="org39ddf1e">Conclusion</h3>
+<div class="outline-text-3" id="text-org39ddf1e">
 <div class="important">
 <p>
 The joint stiffness has a huge impact on the attainable active damping performance when using force sensors.
@@ -568,22 +571,23 @@ Thus, if Integral Force Feedback is to be used in a Stewart platform with flexib
 </div>
 </div>
 
-<div id="outline-container-org9425768" class="outline-2">
-<h2 id="org9425768"><span class="section-number-2">3</span> Direct Velocity Feedback</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org08917d6" class="outline-2">
+<h2 id="org08917d6">Direct Velocity Feedback</h2>
+<div class="outline-text-2" id="text-org08917d6">
 <p>
-<a id="org587277a"></a>
+<a id="org0aa816a"></a>
 </p>
 </div>
 
-<div id="outline-container-org61043ac" class="outline-3">
-<h3 id="org61043ac"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-org243b924" class="outline-3">
+<h3 id="org243b924">Identification of the Dynamics with perfect Joints</h3>
+<div class="outline-text-3" id="text-org243b924">
 <p>
 We first initialize the Stewart platform without joint stiffness.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeFramesPositions(<span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
@@ -619,10 +623,10 @@ G.OutputName = {<span class="org-string">'Dm1'</span>, <span class="org-string">
 </div>
 
 <p>
-The transfer function from actuator forces to relative motion sensors is shown in Figure <a href="#orgd8d51db">9</a>.
+The transfer function from actuator forces to relative motion sensors is shown in Figure <a href="#orgcc86228">9</a>.
 </p>
 
-<div id="orgd8d51db" class="figure">
+<div id="orgcc86228" class="figure">
 <p><img src="figs/dvf_plant_coupling.png" alt="dvf_plant_coupling.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Transfer function from the Actuator force \(F_{i}\) to the Relative Motion Sensor \(D_{m,j}\) with \(i \neq j\) (<a href="./figs/dvf_plant_coupling.png">png</a>, <a href="./figs/dvf_plant_coupling.pdf">pdf</a>)</p>
@@ -631,9 +635,9 @@ The transfer function from actuator forces to relative motion sensors is shown i
 </div>
 
 
-<div id="outline-container-org8f71141" class="outline-3">
-<h3 id="org8f71141"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness on the Dynamics</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-orgcdb3ee5" class="outline-3">
+<h3 id="orgcdb3ee5">Effect of the Flexible Joint stiffness on the Dynamics</h3>
+<div class="outline-text-3" id="text-orgcdb3ee5">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
 </p>
@@ -646,10 +650,10 @@ Gf.OutputName = {<span class="org-string">'Dm1'</span>, <span class="org-string"
 </div>
 
 <p>
-The new dynamics from force actuator to relative motion sensor is shown in Figure <a href="#orgb18f950">10</a>.
+The new dynamics from force actuator to relative motion sensor is shown in Figure <a href="#org5a86447">10</a>.
 </p>
 
-<div id="orgb18f950" class="figure">
+<div id="org5a86447" class="figure">
 <p><img src="figs/dvf_plant_flexible_joint_decentralized.png" alt="dvf_plant_flexible_joint_decentralized.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Transfer function from the Actuator force \(F_{i}\) to the relative displacement sensor \(D_{m,i}\) (<a href="./figs/dvf_plant_flexible_joint_decentralized.png">png</a>, <a href="./figs/dvf_plant_flexible_joint_decentralized.pdf">pdf</a>)</p>
@@ -657,9 +661,9 @@ The new dynamics from force actuator to relative motion sensor is shown in Figur
 </div>
 </div>
 
-<div id="outline-container-org87c6911" class="outline-3">
-<h3 id="org87c6911"><span class="section-number-3">3.3</span> Obtained Damping</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-orgff0cbf9" class="outline-3">
+<h3 id="orgff0cbf9">Obtained Damping</h3>
+<div class="outline-text-3" id="text-orgff0cbf9">
 <p>
 The control is a performed in a decentralized manner.
 The \(6 \times 6\) control is a diagonal matrix with pure derivative action on the diagonal:
@@ -672,17 +676,17 @@ The \(6 \times 6\) control is a diagonal matrix with pure derivative action on t
 </p>
 
 <p>
-The root locus is shown in figure <a href="#org5cb31c8">11</a> and the obtained pole damping function of the control gain is shown in figure <a href="#org4618492">12</a>.
+The root locus is shown in figure <a href="#org277d60d">11</a> and the obtained pole damping function of the control gain is shown in figure <a href="#orgd673396">12</a>.
 </p>
 
-<div id="org5cb31c8" class="figure">
+<div id="org277d60d" class="figure">
 <p><img src="figs/root_locus_dvf_rot_stiffness.png" alt="root_locus_dvf_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Root Locus plot with Direct Velocity Feedback when considering the Stiffness of flexible joints (<a href="./figs/root_locus_dvf_rot_stiffness.png">png</a>, <a href="./figs/root_locus_dvf_rot_stiffness.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="org4618492" class="figure">
+<div id="orgd673396" class="figure">
 <p><img src="figs/pole_damping_gain_dvf_rot_stiffness.png" alt="pole_damping_gain_dvf_rot_stiffness.png" />
 </p>
 <p><span class="figure-number">Figure 12: </span>Damping of the poles with respect to the gain of the Direct Velocity Feedback when considering the Stiffness of flexible joints (<a href="./figs/pole_damping_gain_dvf_rot_stiffness.png">png</a>, <a href="./figs/pole_damping_gain_dvf_rot_stiffness.pdf">pdf</a>)</p>
@@ -690,9 +694,9 @@ The root locus is shown in figure <a href="#org5cb31c8">11</a> and the obtained 
 </div>
 </div>
 
-<div id="outline-container-org516fed1" class="outline-3">
-<h3 id="org516fed1"><span class="section-number-3">3.4</span> Conclusion</h3>
-<div class="outline-text-3" id="text-3-4">
+<div id="outline-container-org4027234" class="outline-3">
+<h3 id="org4027234">Conclusion</h3>
+<div class="outline-text-3" id="text-org4027234">
 <div class="important">
 <p>
 Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
@@ -705,7 +709,7 @@ Joint stiffness does increase the resonance frequencies of the system but does n
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-06 jeu. 15:39</p>
+<p class="date">Created: 2020-02-11 mar. 15:26</p>
 </div>
 </body>
 </html>
