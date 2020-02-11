@@ -591,22 +591,39 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
   %
   % Inputs:
   %    - stewart - With at least the following fields:
-  %        - As [3x6] - The 6 unit vectors for each strut expressed in {A}
-  %        - Ab [3x6] - The 6 position of the joints bi expressed in {A}
+  %      - geometry.As [3x6] - The 6 unit vectors for each strut expressed in {A}
+  %      - geometry.Ab [3x6] - The 6 position of the joints bi expressed in {A}
+  %      - actuators.K [6x1] - Total stiffness of the actuators
   %
   % Outputs:
   %    - stewart - With the 3 added field:
-  %        - J [6x6] - The Jacobian Matrix
-  %        - K [6x6] - The Stiffness Matrix
-  %        - C [6x6] - The Compliance Matrix
+  %        - kinematics.J [6x6] - The Jacobian Matrix
+  %        - kinematics.K [6x6] - The Stiffness Matrix
+  %        - kinematics.C [6x6] - The Compliance Matrix
 #+end_src
+
+*** Check the =stewart= structure elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  assert(isfield(stewart.geometry, 'As'),   'stewart.geometry should have attribute As')
+  As = stewart.geometry.As;
+
+  assert(isfield(stewart.geometry, 'Ab'),   'stewart.geometry should have attribute Ab')
+  Ab = stewart.geometry.Ab;
+
+  assert(isfield(stewart.actuators, 'K'),   'stewart.actuators should have attribute K')
+  Ki = stewart.actuators.K;
+#+end_src
+
 
 *** Compute Jacobian Matrix
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  stewart.J = [stewart.As' , cross(stewart.Ab, stewart.As)'];
+  J = [As' , cross(Ab, As)'];
 #+end_src
 
 *** Compute Stiffness Matrix
@@ -614,7 +631,7 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  stewart.K = stewart.J'*diag(stewart.Ki)*stewart.J;
+  K = J'*diag(Ki)*J;
 #+end_src
 
 *** Compute Compliance Matrix
@@ -622,8 +639,19 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  stewart.C = inv(stewart.K);
+  C = inv(K);
 #+end_src
+
+*** Populate the =stewart= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  stewart.kinematics.J = J;
+  stewart.kinematics.K = K;
+  stewart.kinematics.C = C;
+#+end_src
+
 
 ** =inverseKinematics=: Compute Inverse Kinematics
 :PROPERTIES:
@@ -633,41 +661,6 @@ This Matlab function is accessible [[file:src/computeJacobian.m][here]].
 <<sec:inverseKinematics>>
 
 This Matlab function is accessible [[file:src/inverseKinematics.m][here]].
-
-*** Function description
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  function [Li, dLi] = inverseKinematics(stewart, args)
-  % inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
-  %
-  % Syntax: [stewart] = inverseKinematics(stewart)
-  %
-  % Inputs:
-  %    - stewart - A structure with the following fields
-  %        - Aa   [3x6] - The positions ai expressed in {A}
-  %        - Bb   [3x6] - The positions bi expressed in {B}
-  %    - args - Can have the following fields:
-  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
-  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
-  %
-  % Outputs:
-  %    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}
-  %    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
-#+end_src
-
-*** Optional Parameters
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  arguments
-      stewart
-      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
-      args.ARB (3,3) double {mustBeNumeric} = eye(3)
-  end
-#+end_src
 
 *** Theory
 :PROPERTIES:
@@ -694,16 +687,68 @@ Hence, for $i = 1, 2, \dots, 6$, each limb length can be uniquely determined by:
 If the position and orientation of the moving platform lie in the feasible workspace of the manipulator, one unique solution to the limb length is determined by the above equation.
 Otherwise, when the limbs' lengths derived yield complex numbers, then the position or orientation of the moving platform is not reachable.
 
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [Li, dLi] = inverseKinematics(stewart, args)
+  % inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
+  %
+  % Syntax: [stewart] = inverseKinematics(stewart)
+  %
+  % Inputs:
+  %    - stewart - A structure with the following fields
+  %        - geometry.Aa   [3x6] - The positions ai expressed in {A}
+  %        - geometry.Bb   [3x6] - The positions bi expressed in {B}
+  %        - geometry.l    [6x1] - Length of each strut
+  %    - args - Can have the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+  %
+  % Outputs:
+  %    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}
+  %    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+  end
+#+end_src
+
+*** Check the =stewart= structure elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  assert(isfield(stewart.geometry, 'Aa'),   'stewart.geometry should have attribute Aa')
+  Aa = stewart.geometry.Aa;
+
+  assert(isfield(stewart.geometry, 'Bb'),   'stewart.geometry should have attribute Bb')
+  Bb = stewart.geometry.Bb;
+
+  assert(isfield(stewart.geometry, 'l'),   'stewart.geometry should have attribute l')
+  l = stewart.geometry.l;
+#+end_src
+
+
 *** Compute
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  Li = sqrt(args.AP'*args.AP + diag(stewart.Bb'*stewart.Bb) + diag(stewart.Aa'*stewart.Aa) - (2*args.AP'*stewart.Aa)' + (2*args.AP'*(args.ARB*stewart.Bb))' - diag(2*(args.ARB*stewart.Bb)'*stewart.Aa));
+  Li = sqrt(args.AP'*args.AP + diag(Bb'*Bb) + diag(Aa'*Aa) - (2*args.AP'*Aa)' + (2*args.AP'*(args.ARB*Bb))' - diag(2*(args.ARB*Bb)'*Aa));
 #+end_src
 
 #+begin_src matlab
-  dLi = Li-stewart.l;
+  dLi = Li-l;
 #+end_src
 
 ** =forwardKinematicsApprox=: Compute the Approximate Forward Kinematics
@@ -728,7 +773,7 @@ This Matlab function is accessible [[file:src/forwardKinematicsApprox.m][here]].
   %
   % Inputs:
   %    - stewart - A structure with the following fields
-  %        - J  [6x6] - The Jacobian Matrix
+  %        - kinematics.J  [6x6] - The Jacobian Matrix
   %    - args - Can have the following fields:
   %        - dL [6x1] - Displacement of each strut [m]
   %
@@ -748,6 +793,15 @@ This Matlab function is accessible [[file:src/forwardKinematicsApprox.m][here]].
   end
 #+end_src
 
+*** Check the =stewart= structure elements
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  assert(isfield(stewart.kinematics, 'J'),   'stewart.kinematics should have attribute J')
+  J = stewart.kinematics.J;
+#+end_src
+
 *** Computation
 :PROPERTIES:
 :UNNUMBERED: t
@@ -756,7 +810,7 @@ From a small displacement of each strut $d\bm{\mathcal{L}}$, we can compute the
 position and orientation of {B} with respect to {A} using the following formula:
 \[ d \bm{\mathcal{X}} = \bm{J}^{-1} d\bm{\mathcal{L}} \]
 #+begin_src matlab
-  X = stewart.J\args.dL;
+  X = J\args.dL;
 #+end_src
 
 The position vector corresponds to the first 3 elements.
@@ -777,6 +831,7 @@ We then compute the corresponding rotation matrix.
        s(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);
        s(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];
 #+end_src
+
 * Bibliography                                                        :ignore:
 bibliographystyle:unsrt
 bibliography:ref.bib

@@ -6,7 +6,7 @@ function [P, R] = forwardKinematicsApprox(stewart, args)
 %
 % Inputs:
 %    - stewart - A structure with the following fields
-%        - J  [6x6] - The Jacobian Matrix
+%        - kinematics.J  [6x6] - The Jacobian Matrix
 %    - args - Can have the following fields:
 %        - dL [6x1] - Displacement of each strut [m]
 %
@@ -19,7 +19,10 @@ arguments
     args.dL (6,1) double {mustBeNumeric} = zeros(6,1)
 end
 
-X = stewart.J\args.dL;
+assert(isfield(stewart.kinematics, 'J'),   'stewart.kinematics should have attribute J')
+J = stewart.kinematics.J;
+
+X = J\args.dL;
 
 P = X(1:3);
 

@@ -5,8 +5,9 @@ function [Li, dLi] = inverseKinematics(stewart, args)
 %
 % Inputs:
 %    - stewart - A structure with the following fields
-%        - Aa   [3x6] - The positions ai expressed in {A}
-%        - Bb   [3x6] - The positions bi expressed in {B}
+%        - geometry.Aa   [3x6] - The positions ai expressed in {A}
+%        - geometry.Bb   [3x6] - The positions bi expressed in {B}
+%        - geometry.l    [6x1] - Length of each strut
 %    - args - Can have the following fields:
 %        - AP   [3x1] - The wanted position of {B} with respect to {A}
 %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
@@ -21,6 +22,15 @@ arguments
     args.ARB (3,3) double {mustBeNumeric} = eye(3)
 end
 
-Li = sqrt(args.AP'*args.AP + diag(stewart.Bb'*stewart.Bb) + diag(stewart.Aa'*stewart.Aa) - (2*args.AP'*stewart.Aa)' + (2*args.AP'*(args.ARB*stewart.Bb))' - diag(2*(args.ARB*stewart.Bb)'*stewart.Aa));
+assert(isfield(stewart.geometry, 'Aa'),   'stewart.geometry should have attribute Aa')
+Aa = stewart.geometry.Aa;
 
-dLi = Li-stewart.l;
+assert(isfield(stewart.geometry, 'Bb'),   'stewart.geometry should have attribute Bb')
+Bb = stewart.geometry.Bb;
+
+assert(isfield(stewart.geometry, 'l'),   'stewart.geometry should have attribute l')
+l = stewart.geometry.l;
+
+Li = sqrt(args.AP'*args.AP + diag(Bb'*Bb) + diag(Aa'*Aa) - (2*args.AP'*Aa)' + (2*args.AP'*(args.ARB*Bb))' - diag(2*(args.ARB*Bb)'*Aa));
+
+dLi = Li-l;

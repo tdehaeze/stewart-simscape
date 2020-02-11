@@ -5,7 +5,7 @@ function [stewart] = generateCubicConfiguration(stewart, args)
 %
 % Inputs:
 %    - stewart - A structure with the following fields
-%        - H   [1x1] - Total height of the platform [m]
+%        - geometry.H [1x1] - Total height of the platform [m]
 %    - args - Can have the following fields:
 %        - Hc  [1x1] - Height of the "useful" part of the cube [m]
 %        - FOc [1x1] - Height of the center of the cube with respect to {F} [m]
@@ -14,8 +14,8 @@ function [stewart] = generateCubicConfiguration(stewart, args)
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
-%        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
+%        - platform_F.Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+%        - platform_M.Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
 
 arguments
     stewart
@@ -24,6 +24,9 @@ arguments
     args.FHa (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
     args.MHb (1,1) double {mustBeNumeric, mustBeNonnegative} = 15e-3
 end
+
+assert(isfield(stewart.geometry, 'H'),   'stewart.geometry should have attribute H')
+H = stewart.geometry.H;
 
 sx = [ 2; -1; -1];
 sy = [ 0;  1; -1];
@@ -40,5 +43,8 @@ CCm = [Cc(:,2), Cc(:,2), Cc(:,4), Cc(:,4), Cc(:,6), Cc(:,6)]; % CCm(:,i) corresp
 
 CSi = (CCm - CCf)./vecnorm(CCm - CCf);
 
-stewart.Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
-stewart.Mb = CCf + [0; 0; args.FOc-stewart.H] + ((stewart.H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+Fa = CCf + [0; 0; args.FOc] + ((args.FHa-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+Mb = CCf + [0; 0; args.FOc-H] + ((H-args.MHb-(args.FOc-args.Hc/2))./CSi(3,:)).*CSi;
+
+stewart.platform_F.Fa = Fa;
+stewart.platform_M.Mb = Mb;

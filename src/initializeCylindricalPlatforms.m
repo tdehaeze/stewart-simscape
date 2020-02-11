@@ -14,15 +14,17 @@ function [stewart] = initializeCylindricalPlatforms(stewart, args)
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%      - platforms [struct] - structure with the following fields:
-%        - Fpm [1x1] - Fixed Platform Mass [kg]
-%        - Msi [3x3] - Mobile Platform Inertia matrix [kg*m^2]
-%        - Fph [1x1] - Fixed Platform Height [m]
-%        - Fpr [1x1] - Fixed Platform Radius [m]
-%        - Mpm [1x1] - Mobile Platform Mass [kg]
-%        - Fsi [3x3] - Fixed Platform Inertia matrix [kg*m^2]
-%        - Mph [1x1] - Mobile Platform Height [m]
-%        - Mpr [1x1] - Mobile Platform Radius [m]
+%      - platform_F [struct] - structure with the following fields:
+%        - type = 1
+%        - M [1x1] - Fixed Platform Mass [kg]
+%        - I [3x3] - Fixed Platform Inertia matrix [kg*m^2]
+%        - H [1x1] - Fixed Platform Height [m]
+%        - R [1x1] - Fixed Platform Radius [m]
+%      - platform_M [struct] - structure with the following fields:
+%        - M [1x1] - Mobile Platform Mass [kg]
+%        - I [3x3] - Mobile Platform Inertia matrix [kg*m^2]
+%        - H [1x1] - Mobile Platform Height [m]
+%        - R [1x1] - Mobile Platform Radius [m]
 
 arguments
     stewart
@@ -34,20 +36,24 @@ arguments
     args.Mpr (1,1) double {mustBeNumeric, mustBePositive} = 100e-3
 end
 
-platforms = struct();
+I_F = diag([1/12*args.Fpm * (3*args.Fpr^2 + args.Fph^2), ...
+            1/12*args.Fpm * (3*args.Fpr^2 + args.Fph^2), ...
+            1/2 *args.Fpm * args.Fpr^2]);
 
-platforms.Fpm = args.Fpm;
-platforms.Fph = args.Fph;
-platforms.Fpr = args.Fpr;
-platforms.Fpi = diag([1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
-                      1/12 * platforms.Fpm * (3*platforms.Fpr^2 + platforms.Fph^2), ...
-                      1/2  * platforms.Fpm * platforms.Fpr^2]);
+I_M = diag([1/12*args.Mpm * (3*args.Mpr^2 + args.Mph^2), ...
+            1/12*args.Mpm * (3*args.Mpr^2 + args.Mph^2), ...
+            1/2 *args.Mpm * args.Mpr^2]);
 
-platforms.Mpm = args.Mpm;
-platforms.Mph = args.Mph;
-platforms.Mpr = args.Mpr;
-platforms.Mpi = diag([1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
-                      1/12 * platforms.Mpm * (3*platforms.Mpr^2 + platforms.Mph^2), ...
-                      1/2  * platforms.Mpm * platforms.Mpr^2]);
+stewart.platform_F.type = 1;
 
-stewart.platforms = platforms;
+stewart.platform_F.I = I_F;
+stewart.platform_F.M = args.Fpm;
+stewart.platform_F.R = args.Fpr;
+stewart.platform_F.H = args.Fph;
+
+stewart.platform_M.type = 1;
+
+stewart.platform_M.I = I_M;
+stewart.platform_M.M = args.Mpm;
+stewart.platform_M.R = args.Mpr;
+stewart.platform_M.H = args.Mph;

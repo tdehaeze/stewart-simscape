@@ -5,35 +5,39 @@ function [stewart] = initializeAmplifiedStrutDynamics(stewart, args)
 %
 % Inputs:
 %    - args - Structure with the following fields:
-%        - Ksi [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
-%        - Csi [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
-%        - Kdi [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
-%        - Cdi [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
+%        - Ka [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+%        - Ca [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+%        - Kr [6x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
+%        - Cr [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%        - Ki  [6x1] - Total Stiffness of each strut [N/m]
-%        - Ci  [6x1] - Total Damping of each strut [N/(m/s)]
-%        - Ksi [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
-%        - Csi [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
-%        - Kdi [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
-%        - Cdi [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
+%      - actuators.type = 2
+%      - actuators.K   [6x1] - Total Stiffness of each strut [N/m]
+%      - actuators.C   [6x1] - Total Damping of each strut [N/(m/s)]
+%      - actuators.Ka [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+%      - actuators.Ca [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+%      - actuators.Kr [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
+%      - actuators.Cr [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
 
 arguments
     stewart
-    args.Kdi (6,1) double {mustBeNumeric, mustBeNonnegative} = 5e6*ones(6,1)
-    args.Cdi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
-    args.Ksi (6,1) double {mustBeNumeric, mustBeNonnegative} = 15e6*ones(6,1)
-    args.Csi (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.Kr (6,1) double {mustBeNumeric, mustBeNonnegative} = 5e6*ones(6,1)
+    args.Cr (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.Ka (6,1) double {mustBeNumeric, mustBeNonnegative} = 15e6*ones(6,1)
+    args.Ca (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
 end
 
-stewart.Ksi = args.Ksi;
-stewart.Csi = args.Csi;
+K = args.Ka + args.Kr;
+C = args.Ca + args.Cr;
 
-stewart.Kdi = args.Kdi;
-stewart.Cdi = args.Cdi;
+stewart.actuators.type = 2;
 
-stewart.Ki = args.Ksi + args.Kdi;
-stewart.Ci = args.Csi + args.Cdi;
+stewart.actuators.Ka = args.Ka;
+stewart.actuators.Ca = args.Ca;
 
-stewart.actuator_type = 2;
+stewart.actuators.Kr = args.Kr;
+stewart.actuators.Cr = args.Cr;
+
+stewart.actuators.K = K;
+stewart.actuators.C = K;

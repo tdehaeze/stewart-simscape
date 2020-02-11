@@ -14,8 +14,8 @@ function [stewart] = generateGeneralConfiguration(stewart, args)
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%        - Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
-%        - Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
+%        - platform_F.Fa  [3x6] - Its i'th column is the position vector of joint ai with respect to {F}
+%        - platform_M.Mb  [3x6] - Its i'th column is the position vector of joint bi with respect to {M}
 
 arguments
     stewart
@@ -27,10 +27,13 @@ arguments
     args.MTh (6,1) double {mustBeNumeric} = [-60+10, 60-10, 60+10, 180-10, 180+10, -60-10]*(pi/180);
 end
 
-stewart.Fa = zeros(3,6);
-stewart.Mb = zeros(3,6);
+Fa = zeros(3,6);
+Mb = zeros(3,6);
 
 for i = 1:6
-  stewart.Fa(:,i) = [args.FR*cos(args.FTh(i)); args.FR*sin(args.FTh(i)); args.FH];
-  stewart.Mb(:,i) = [args.MR*cos(args.MTh(i)); args.MR*sin(args.MTh(i)); -args.MH];
+  Fa(:,i) = [args.FR*cos(args.FTh(i)); args.FR*sin(args.FTh(i));  args.FH];
+  Mb(:,i) = [args.MR*cos(args.MTh(i)); args.MR*sin(args.MTh(i)); -args.MH];
 end
+
+stewart.platform_F.Fa = Fa;
+stewart.platform_M.Mb = Mb;

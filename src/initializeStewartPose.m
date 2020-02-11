@@ -14,7 +14,7 @@ function [stewart] = initializeStewartPose(stewart, args)
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
-%      - dLi[6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
+%      - actuators.Leq [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
 
 arguments
     stewart
@@ -24,4 +24,4 @@ end
 
 [Li, dLi] = inverseKinematics(stewart, 'AP', args.AP, 'ARB', args.ARB);
 
-stewart.dLi = dLi;
+stewart.actuators.Leq = dLi;
