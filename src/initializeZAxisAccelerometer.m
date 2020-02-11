@@ -1,6 +1,6 @@
 function [accelerometer] = initializeZAxisAccelerometer(args)
     arguments
-        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 5e-3 % [kg]
         args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  % [Hz]
     end
 

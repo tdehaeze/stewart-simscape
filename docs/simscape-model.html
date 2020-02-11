@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 15:50 -->
+<!-- 2020-02-11 mar. 17:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -281,14 +281,14 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org4bdfc33">6.1. Z-Axis Geophone</a>
 <ul>
-<li><a href="#org01abf4c">6.1.1. Working Principle</a></li>
-<li><a href="#org5da3f93">6.1.2. Initialization function</a></li>
+<li><a href="#org59ef364">6.1.1. Working Principle</a></li>
+<li><a href="#orgb3509cd">6.1.2. Initialization function</a></li>
 </ul>
 </li>
 <li><a href="#org99786f1">6.2. Z-Axis Accelerometer</a>
 <ul>
-<li><a href="#org01c45ef">6.2.1. Working Principle</a></li>
-<li><a href="#orga80b649">6.2.2. Initialization function</a></li>
+<li><a href="#orgf6e6126">6.2.1. Working Principle</a></li>
+<li><a href="#org7b9c8ed">6.2.2. Initialization function</a></li>
 </ul>
 </li>
 </ul>
@@ -513,8 +513,8 @@ Both inertial sensors are described bellow.
 <h3 id="org4bdfc33"><span class="section-number-3">6.1</span> Z-Axis Geophone</h3>
 <div class="outline-text-3" id="text-6-1">
 </div>
-<div id="outline-container-org01abf4c" class="outline-4">
-<h4 id="org01abf4c"><span class="section-number-4">6.1.1</span> Working Principle</h4>
+<div id="outline-container-org59ef364" class="outline-4">
+<h4 id="org59ef364"><span class="section-number-4">6.1.1</span> Working Principle</h4>
 <div class="outline-text-4" id="text-6-1-1">
 <p>
 From the schematic of the Z-axis geophone shown in Figure <a href="#org819fba8">5</a>, we can write the transfer function from the support velocity \(\dot{w}\) to the relative velocity of the inertial mass \(\dot{d}\):
@@ -548,8 +548,8 @@ We generally want to have the smallest resonant frequency \(\omega_0\) to measur
 </div>
 </div>
 
-<div id="outline-container-org5da3f93" class="outline-4">
-<h4 id="org5da3f93"><span class="section-number-4">6.1.2</span> Initialization function</h4>
+<div id="outline-container-orgb3509cd" class="outline-4">
+<h4 id="orgb3509cd"><span class="section-number-4">6.1.2</span> Initialization function</h4>
 <div class="outline-text-4" id="text-6-1-2">
 <p>
 <a id="orgd31bda9"></a>
@@ -588,8 +588,8 @@ This Matlab function is accessible <a href="../src/initializeZAxisGeophone.m">he
 <h3 id="org99786f1"><span class="section-number-3">6.2</span> Z-Axis Accelerometer</h3>
 <div class="outline-text-3" id="text-6-2">
 </div>
-<div id="outline-container-org01c45ef" class="outline-4">
-<h4 id="org01c45ef"><span class="section-number-4">6.2.1</span> Working Principle</h4>
+<div id="outline-container-orgf6e6126" class="outline-4">
+<h4 id="orgf6e6126"><span class="section-number-4">6.2.1</span> Working Principle</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <p>
 From the schematic of the Z-axis accelerometer shown in Figure <a href="#org1274602">6</a>, we can write the transfer function from the support acceleration \(\ddot{w}\) to the relative position of the inertial mass \(d\):
@@ -627,8 +627,8 @@ Note that there is trade-off between:
 </div>
 </div>
 
-<div id="outline-container-orga80b649" class="outline-4">
-<h4 id="orga80b649"><span class="section-number-4">6.2.2</span> Initialization function</h4>
+<div id="outline-container-org7b9c8ed" class="outline-4">
+<h4 id="org7b9c8ed"><span class="section-number-4">6.2.2</span> Initialization function</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 <a id="orge91f65f"></a>
@@ -641,7 +641,7 @@ This Matlab function is accessible <a href="../src/initializeZAxisAccelerometer.
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[accelerometer]</span> = <span class="org-function-name">initializeZAxisAccelerometer</span>(<span class="org-variable-name">args</span>)
     arguments
-        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
+        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 5e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
         args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  <span class="org-comment">% [Hz]</span>
     <span class="org-keyword">end</span>
 
@@ -669,7 +669,7 @@ This Matlab function is accessible <a href="../src/initializeZAxisAccelerometer.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 15:50</p>
+<p class="date">Created: 2020-02-11 mar. 17:51</p>
 </div>
 </body>
 </html>

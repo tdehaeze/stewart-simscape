@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 15:50 -->
+<!-- 2020-02-11 mar. 17:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -268,29 +268,29 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4f5919a">1. Identification</a>
+<li><a href="#org36eeb29">1. Identification</a>
 <ul>
-<li><a href="#org89ad201">1.1. Simscape Model</a></li>
-<li><a href="#orgf726654">1.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org79afd8d">1.3. Identification</a></li>
+<li><a href="#orgb4842a1">1.1. Simscape Model</a></li>
+<li><a href="#org4240dd7">1.2. Initialize the Stewart Platform</a></li>
+<li><a href="#org5695094">1.3. Identification</a></li>
 </ul>
 </li>
 <li><a href="#orge464de2">2. States as the motion of the mobile platform</a>
 <ul>
-<li><a href="#orge352695">2.1. Initialize the Stewart Platform</a></li>
-<li><a href="#org0dc382a">2.2. Identification</a></li>
+<li><a href="#org8d12d8c">2.1. Initialize the Stewart Platform</a></li>
+<li><a href="#orgef8d225">2.2. Identification</a></li>
 <li><a href="#orge68adea">2.3. Coordinate transformation</a></li>
 <li><a href="#org4973ae1">2.4. Analysis</a></li>
 <li><a href="#orge7b97c8">2.5. Visualizing the modes</a></li>
-<li><a href="#orgf6eca35">2.6. Identification</a></li>
+<li><a href="#org009b696">2.6. Identification</a></li>
 <li><a href="#orgf7a52cb">2.7. Change of states</a></li>
 </ul>
 </li>
 <li><a href="#org23d7e7b">3. Simple Model without any sensor</a>
 <ul>
-<li><a href="#org9366ba4">3.1. Simscape Model</a></li>
-<li><a href="#orgf4e4e80">3.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org9b90cca">3.3. Identification</a></li>
+<li><a href="#org2ad9d50">3.1. Simscape Model</a></li>
+<li><a href="#orgbc1f736">3.2. Initialize the Stewart Platform</a></li>
+<li><a href="#org43f8fc6">3.3. Identification</a></li>
 </ul>
 </li>
 <li><a href="#org0502cd2">4. Cartesian Plot</a></li>
@@ -396,16 +396,16 @@ An important difference from basic Simulink models is that the states in a physi
 
 
 
-<div id="outline-container-org4f5919a" class="outline-2">
-<h2 id="org4f5919a"><span class="section-number-2">1</span> Identification</h2>
+<div id="outline-container-org36eeb29" class="outline-2">
+<h2 id="org36eeb29"><span class="section-number-2">1</span> Identification</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org89ad201" class="outline-3">
-<h3 id="org89ad201"><span class="section-number-3">1.1</span> Simscape Model</h3>
+<div id="outline-container-orgb4842a1" class="outline-3">
+<h3 id="orgb4842a1"><span class="section-number-3">1.1</span> Simscape Model</h3>
 </div>
 
-<div id="outline-container-orgf726654" class="outline-3">
-<h3 id="orgf726654"><span class="section-number-3">1.2</span> Initialize the Stewart Platform</h3>
+<div id="outline-container-org4240dd7" class="outline-3">
+<h3 id="org4240dd7"><span class="section-number-3">1.2</span> Initialize the Stewart Platform</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -422,8 +422,8 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org79afd8d" class="outline-3">
-<h3 id="org79afd8d"><span class="section-number-3">1.3</span> Identification</h3>
+<div id="outline-container-org5695094" class="outline-3">
+<h3 id="org5695094"><span class="section-number-3">1.3</span> Identification</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
@@ -461,8 +461,8 @@ G.OutputName = {<span class="org-string">'Xdx'</span>, <span class="org-string">
 <h2 id="orge464de2"><span class="section-number-2">2</span> States as the motion of the mobile platform</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge352695" class="outline-3">
-<h3 id="orge352695"><span class="section-number-3">2.1</span> Initialize the Stewart Platform</h3>
+<div id="outline-container-org8d12d8c" class="outline-3">
+<h3 id="org8d12d8c"><span class="section-number-3">2.1</span> Initialize the Stewart Platform</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -479,8 +479,8 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org0dc382a" class="outline-3">
-<h3 id="org0dc382a"><span class="section-number-3">2.2</span> Identification</h3>
+<div id="outline-container-orgef8d225" class="outline-3">
+<h3 id="orgef8d225"><span class="section-number-3">2.2</span> Identification</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
@@ -745,8 +745,8 @@ Save the movie of the mode shape.
 </div>
 </div>
 
-<div id="outline-container-orgf6eca35" class="outline-3">
-<h3 id="orgf6eca35"><span class="section-number-3">2.6</span> Identification</h3>
+<div id="outline-container-org009b696" class="outline-3">
+<h3 id="org009b696"><span class="section-number-3">2.6</span> Identification</h3>
 <div class="outline-text-3" id="text-2-6">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
@@ -805,8 +805,8 @@ Dt = zeros(12, 6);
 <h2 id="org23d7e7b"><span class="section-number-2">3</span> Simple Model without any sensor</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org9366ba4" class="outline-3">
-<h3 id="org9366ba4"><span class="section-number-3">3.1</span> Simscape Model</h3>
+<div id="outline-container-org2ad9d50" class="outline-3">
+<h3 id="org2ad9d50"><span class="section-number-3">3.1</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-matlab">open <span class="org-string">'stewart_identification_simple.slx'</span>
@@ -816,8 +816,8 @@ Dt = zeros(12, 6);
 </div>
 
 
-<div id="outline-container-orgf4e4e80" class="outline-3">
-<h3 id="orgf4e4e80"><span class="section-number-3">3.2</span> Initialize the Stewart Platform</h3>
+<div id="outline-container-orgbc1f736" class="outline-3">
+<h3 id="orgbc1f736"><span class="section-number-3">3.2</span> Initialize the Stewart Platform</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -834,8 +834,8 @@ stewart = initializeStewartPose(stewart);
 </div>
 </div>
 
-<div id="outline-container-org9b90cca" class="outline-3">
-<h3 id="org9b90cca"><span class="section-number-3">3.3</span> Identification</h3>
+<div id="outline-container-org43f8fc6" class="outline-3">
+<h3 id="org43f8fc6"><span class="section-number-3">3.3</span> Identification</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-matlab">stateorder = {...
@@ -1096,7 +1096,7 @@ xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="or
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 15:50</p>
+<p class="date">Created: 2020-02-11 mar. 17:51</p>
 </div>
 </body>
 </html>

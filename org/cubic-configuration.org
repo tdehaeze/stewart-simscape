@@ -84,7 +84,7 @@ The Jacobian matrix is estimated at the location of the center of the cube.
 
 #+name: fig:3d-cubic-stewart-aligned
 #+caption: Centered cubic configuration
-[[file:./figs/3d-cubic-stewart-aligned.png]]
+[[file:figs/3d-cubic-stewart-aligned.png]]
 
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false);
@@ -158,7 +158,7 @@ The Jacobian is estimated at the cube center.
 
 #+name: fig:3d-cubic-stewart-misaligned
 #+caption: Not centered cubic configuration
-[[file:./figs/3d-cubic-stewart-misaligned.png]]
+[[file:figs/3d-cubic-stewart-misaligned.png]]
 
 #+begin_src matlab
   stewart = initializeStewartPlatform();
@@ -371,12 +371,12 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
 
 ** =generateCubicConfiguration=: Generate a Cubic Configuration
 :PROPERTIES:
-:header-args:matlab+: :tangle src/generateCubicConfiguration.m
+:header-args:matlab+: :tangle ../src/generateCubicConfiguration.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:generateCubicConfiguration>>
 
-This Matlab function is accessible [[file:src/generateCubicConfiguration.m][here]].
+This Matlab function is accessible [[file:../src/generateCubicConfiguration.m][here]].
 
 *** Function description
 :PROPERTIES:

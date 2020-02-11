@@ -295,12 +295,12 @@ Let's now move a little bit the top platform and re-display the configuration:
 
 ** =initializeStewartPlatform=: Initialize the Stewart Platform structure
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeStewartPlatform.m
+:header-args:matlab+: :tangle ../src/initializeStewartPlatform.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeStewartPlatform>>
 
-This Matlab function is accessible [[file:src/initializeStewartPlatform.m][here]].
+This Matlab function is accessible [[file:../src/initializeStewartPlatform.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -357,12 +357,12 @@ This Matlab function is accessible [[file:src/initializeStewartPlatform.m][here]
 
 ** =initializeFramesPositions=: Initialize the positions of frames {A}, {B}, {F} and {M}
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeFramesPositions.m
+:header-args:matlab+: :tangle ../src/initializeFramesPositions.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeFramesPositions>>
 
-This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]].
+This Matlab function is accessible [[file:../src/initializeFramesPositions.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -435,12 +435,12 @@ This Matlab function is accessible [[file:src/initializeFramesPositions.m][here]
 
 ** =generateGeneralConfiguration=: Generate a Very General Configuration
 :PROPERTIES:
-:header-args:matlab+: :tangle src/generateGeneralConfiguration.m
+:header-args:matlab+: :tangle ../src/generateGeneralConfiguration.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:generateGeneralConfiguration>>
 
-This Matlab function is accessible [[file:src/generateGeneralConfiguration.m][here]].
+This Matlab function is accessible [[file:../src/generateGeneralConfiguration.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -565,12 +565,12 @@ The radius of the circles can be chosen as well as the angles where the joints a
 
 ** =computeJointsPose=: Compute the Pose of the Joints
 :PROPERTIES:
-:header-args:matlab+: :tangle src/computeJointsPose.m
+:header-args:matlab+: :tangle ../src/computeJointsPose.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:computeJointsPose>>
 
-This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
+This Matlab function is accessible [[file:../src/computeJointsPose.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -700,12 +700,12 @@ This Matlab function is accessible [[file:src/computeJointsPose.m][here]].
 
 ** =initializeStewartPose=: Determine the initial stroke in each leg to have the wanted pose
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeStewartPose.m
+:header-args:matlab+: :tangle ../src/initializeStewartPose.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeStewartPose>>
 
-This Matlab function is accessible [[file:src/initializeStewartPose.m][here]].
+This Matlab function is accessible [[file:../src/initializeStewartPose.m][here]].
 
 *** Function description
 :PROPERTIES:
@@ -761,12 +761,12 @@ This Matlab function is accessible [[file:src/initializeStewartPose.m][here]].
 
 ** =initializeCylindricalPlatforms=: Initialize the geometry of the Fixed and Mobile Platforms
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeCylindricalPlatforms.m
+:header-args:matlab+: :tangle ../src/initializeCylindricalPlatforms.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeCylindricalPlatforms>>
 
-This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][here]].
+This Matlab function is accessible [[file:../src/initializeCylindricalPlatforms.m][here]].
 
 *** Function description
 :PROPERTIES:
@@ -858,12 +858,12 @@ This Matlab function is accessible [[file:src/initializeCylindricalPlatforms.m][
 
 ** =initializeCylindricalStruts=: Define the inertia of cylindrical struts
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeCylindricalStruts.m
+:header-args:matlab+: :tangle ../src/initializeCylindricalStruts.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeCylindricalStruts>>
 
-This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][here]].
+This Matlab function is accessible [[file:../src/initializeCylindricalStruts.m][here]].
 
 *** Function description
 :PROPERTIES:
@@ -968,12 +968,12 @@ This Matlab function is accessible [[file:src/initializeCylindricalStruts.m][her
 
 ** =initializeStrutDynamics=: Add Stiffness and Damping properties of each strut
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeStrutDynamics.m
+:header-args:matlab+: :tangle ../src/initializeStrutDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeStrutDynamics>>
 
-This Matlab function is accessible [[file:src/initializeStrutDynamics.m][here]].
+This Matlab function is accessible [[file:../src/initializeStrutDynamics.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -1049,8 +1049,8 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:actuator_
 #+begin_src matlab
   arguments
       stewart
-      args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e6*ones(6,1)
-      args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 20e6*ones(6,1)
+      args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 2e1*ones(6,1)
   end
 #+end_src
 
@@ -1067,12 +1067,12 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:actuator_
 
 ** =initializeAmplifiedStrutDynamics=: Add Stiffness and Damping properties of each strut for an amplified piezoelectric actuator
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeAmplifiedStrutDynamics.m
+:header-args:matlab+: :tangle ../src/initializeAmplifiedStrutDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeAmplifiedStrutDynamics>>
 
-This Matlab function is accessible [[file:src/initializeAmplifiedStrutDynamics.m][here]].
+This Matlab function is accessible [[file:../src/initializeAmplifiedStrutDynamics.m][here]].
 
 *** Documentation
 :PROPERTIES:
@@ -1196,12 +1196,12 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
 
 ** =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeJointDynamics.m
+:header-args:matlab+: :tangle ../src/initializeJointDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeJointDynamics>>
 
-This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
+This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here]].
 
 *** Function description
 :PROPERTIES:
@@ -1215,8 +1215,8 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
   %
   % Inputs:
   %    - args - Structure with the following fields:
-  %        - type_F - 'universal', 'spherical', 'univesal_p', 'spherical_p'
-  %        - type_M - 'universal', 'spherical', 'univesal_p', 'spherical_p'
+  %        - type_F - 'universal', 'spherical', 'universal_p', 'spherical_p'
+  %        - type_M - 'universal', 'spherical', 'universal_p', 'spherical_p'
   %        - Kf_M [6x1] - Bending (Rx, Ry) Stiffness for each top joints [(N.m)/rad]
   %        - Kt_M [6x1] - Torsion (Rz) Stiffness for each top joints [(N.m)/rad]
   %        - Cf_M [6x1] - Bending (Rx, Ry) Damping of each top joint [(N.m)/(rad/s)]
@@ -1245,8 +1245,8 @@ This Matlab function is accessible [[file:src/initializeJointDynamics.m][here]].
 #+begin_src matlab
   arguments
       stewart
-      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'univesal_p', 'spherical_p'})} = 'universal'
-      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'univesal_p', 'spherical_p'})} = 'spherical'
+      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'universal'
+      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'spherical'
       args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
       args.Cf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
       args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
@@ -1337,12 +1337,12 @@ Rotational Damping
 
 ** =initializeInertialSensor=: Initialize the inertial sensor in each strut
 :PROPERTIES:
-:header-args:matlab+: :tangle src/initializeInertialSensor.m
+:header-args:matlab+: :tangle ../src/initializeInertialSensor.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeInertialSensor>>
 
-This Matlab function is accessible [[file:src/initializeInertialSensor.m][here]].
+This Matlab function is accessible [[file:../src/initializeInertialSensor.m][here]].
 
 *** Function description
 :PROPERTIES:
@@ -1419,12 +1419,12 @@ This Matlab function is accessible [[file:src/initializeInertialSensor.m][here]]
 
 ** =displayArchitecture=: 3D plot of the Stewart platform architecture
 :PROPERTIES:
-:header-args:matlab+: :tangle src/displayArchitecture.m
+:header-args:matlab+: :tangle ../src/displayArchitecture.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:displayArchitecture>>
 
-This Matlab function is accessible [[file:src/displayArchitecture.m][here]].
+This Matlab function is accessible [[file:../src/displayArchitecture.m][here]].
 
 *** Function description
 :PROPERTIES:

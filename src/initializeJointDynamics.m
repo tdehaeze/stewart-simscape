@@ -5,8 +5,8 @@ function [stewart] = initializeJointDynamics(stewart, args)
 %
 % Inputs:
 %    - args - Structure with the following fields:
-%        - type_F - 'universal', 'spherical', 'univesal_p', 'spherical_p'
-%        - type_M - 'universal', 'spherical', 'univesal_p', 'spherical_p'
+%        - type_F - 'universal', 'spherical', 'universal_p', 'spherical_p'
+%        - type_M - 'universal', 'spherical', 'universal_p', 'spherical_p'
 %        - Kf_M [6x1] - Bending (Rx, Ry) Stiffness for each top joints [(N.m)/rad]
 %        - Kt_M [6x1] - Torsion (Rz) Stiffness for each top joints [(N.m)/rad]
 %        - Cf_M [6x1] - Bending (Rx, Ry) Damping of each top joint [(N.m)/(rad/s)]
@@ -29,8 +29,8 @@ function [stewart] = initializeJointDynamics(stewart, args)
 
 arguments
     stewart
-    args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'univesal_p', 'spherical_p'})} = 'universal'
-    args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'univesal_p', 'spherical_p'})} = 'spherical'
+    args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'universal'
+    args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'spherical'
     args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
     args.Cf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
     args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)

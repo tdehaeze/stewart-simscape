@@ -16,8 +16,8 @@ function [stewart] = initializeStrutDynamics(stewart, args)
 
 arguments
     stewart
-    args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e6*ones(6,1)
-    args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 20e6*ones(6,1)
+    args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 2e1*ones(6,1)
 end
 
 stewart.actuators.type = 1;

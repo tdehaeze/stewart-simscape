@@ -170,7 +170,7 @@ We generally want to have the smallest resonant frequency $\omega_0$ to measure 
 
 *** Initialization function
 :PROPERTIES:
-:header-args:matlab+: :tangle ./src/initializeZAxisGeophone.m
+:header-args:matlab+: :tangle ../src/initializeZAxisGeophone.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeZAxisGeophone>>
@@ -221,7 +221,7 @@ Note that there is trade-off between:
 
 *** Initialization function
 :PROPERTIES:
-:header-args:matlab+: :tangle ./src/initializeZAxisAccelerometer.m
+:header-args:matlab+: :tangle ../src/initializeZAxisAccelerometer.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
 <<sec:initializeZAxisAccelerometer>>
@@ -231,7 +231,7 @@ This Matlab function is accessible [[file:../src/initializeZAxisAccelerometer.m]
 #+begin_src matlab
   function [accelerometer] = initializeZAxisAccelerometer(args)
       arguments
-          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e-3 % [kg]
+          args.mass (1,1) double {mustBeNumeric, mustBePositive} = 5e-3 % [kg]
           args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  % [Hz]
       end
 
