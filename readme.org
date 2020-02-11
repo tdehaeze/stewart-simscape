@@ -1,6 +1,7 @@
 #+TITLE: Stewart Platforms - Matlab/Simscape Toolbox
 #+AUTHOR:    Dehaeze Thomas
 #+EMAIL:     dehaeze.thomas@gmail.com
+#+OPTIONS: num:nil toc:nil todo:nil
 #+EXPORT_EXCLUDE_TAGS: exclude noexport
 
 The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
