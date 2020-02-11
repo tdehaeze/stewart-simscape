@@ -1,16 +1,7 @@
 #+TITLE: Stewart Platforms - Matlab/Simscape Toolbox
-:DRAWER:
-#+OPTIONS: toc:nil
-#+OPTIONS: html-postamble:nil
+#+AUTHOR:    Dehaeze Thomas
+#+EMAIL:     dehaeze.thomas@gmail.com
 #+EXPORT_EXCLUDE_TAGS: exclude noexport
-
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
-#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
-#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
-#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
-:END:
 
 The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
 
