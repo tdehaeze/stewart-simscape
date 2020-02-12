@@ -17,6 +17,7 @@ function [] = displayArchitecture(stewart, args)
 %        - joints    [true/false] - Display the Joints
 %        - labels    [true/false] - Display the Labels
 %        - platforms [true/false] - Display the Platforms
+%        - views     ['all', 'xy', 'yz', 'xz', 'default'] -
 %
 % Outputs:
 
@@ -32,6 +33,7 @@ arguments
     args.joints    logical {mustBeNumericOrLogical} = true
     args.labels    logical {mustBeNumericOrLogical} = true
     args.platforms logical {mustBeNumericOrLogical} = true
+    args.views     char    {mustBeMember(args.views,{'all', 'xy', 'xz', 'yz', 'default'})} = 'default'
 end
 
 assert(isfield(stewart.platform_F, 'FO_A'), 'stewart.platform_F should have attribute FO_A')
@@ -49,7 +51,12 @@ Fa = stewart.platform_F.Fa;
 assert(isfield(stewart.platform_M, 'Mb'),   'stewart.platform_M should have attribute Mb')
 Mb = stewart.platform_M.Mb;
 
-figure;
+if ~strcmp(args.views, 'all')
+  figure;
+else
+  f = figure('visible', 'off');
+end
+
 hold on;
 
 FTa = [eye(3), FO_A; ...
@@ -185,6 +192,47 @@ if args.legs
   end
 end
 
-view([1 -0.6 0.4]);
+switch args.views
+  case 'default'
+      view([1 -0.6 0.4]);
+  case 'xy'
+      view([0 0 1]);
+  case 'xz'
+      view([0 -1 0]);
+  case 'yz'
+      view([1 0 0]);
+end
 axis equal;
 axis off;
+
+if strcmp(args.views, 'all')
+  hAx = findobj('type', 'axes');
+
+  figure;
+  s1 = subplot(2,2,1);
+  copyobj(get(hAx(1), 'Children'), s1);
+  view([0 0 1]);
+  axis equal;
+  axis off;
+  title('Top')
+
+  s2 = subplot(2,2,2);
+  copyobj(get(hAx(1), 'Children'), s2);
+  view([1 -0.6 0.4]);
+  axis equal;
+  axis off;
+
+  s3 = subplot(2,2,3);
+  copyobj(get(hAx(1), 'Children'), s3);
+  view([1 0 0]);
+  axis equal;
+  axis off;
+  title('Front')
+
+  s4 = subplot(2,2,4);
+  copyobj(get(hAx(1), 'Children'), s4);
+  view([0 -1 0]);
+  axis equal;
+  axis off;
+  title('Side')
+end

@@ -241,7 +241,7 @@ The obtained =stewart= Matlab structure contains all the information for analysi
 
 The function =displayArchitecture= can be used to display the current Stewart configuration:
 #+begin_src matlab
-  displayArchitecture(stewart);
+  displayArchitecture(stewart, 'views', 'all');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
@@ -1450,6 +1450,7 @@ This Matlab function is accessible [[file:../src/displayArchitecture.m][here]].
   %        - joints    [true/false] - Display the Joints
   %        - labels    [true/false] - Display the Labels
   %        - platforms [true/false] - Display the Platforms
+  %        - views     ['all', 'xy', 'yz', 'xz', 'default'] -
   %
   % Outputs:
 #+end_src
@@ -1471,6 +1472,7 @@ This Matlab function is accessible [[file:../src/displayArchitecture.m][here]].
       args.joints    logical {mustBeNumericOrLogical} = true
       args.labels    logical {mustBeNumericOrLogical} = true
       args.platforms logical {mustBeNumericOrLogical} = true
+      args.views     char    {mustBeMember(args.views,{'all', 'xy', 'xz', 'yz', 'default'})} = 'default'
   end
 #+end_src
 
@@ -1503,7 +1505,12 @@ This Matlab function is accessible [[file:../src/displayArchitecture.m][here]].
 
 The reference frame of the 3d plot corresponds to the frame $\{F\}$.
 #+begin_src matlab
-  figure;
+  if ~strcmp(args.views, 'all')
+    figure;
+  else
+    f = figure('visible', 'off');
+  end
+
   hold on;
 #+end_src
 
@@ -1691,10 +1698,55 @@ Plot the legs connecting the joints of the fixed base to the joints of the mobil
 
 *** Figure parameters
 #+begin_src matlab
-  view([1 -0.6 0.4]);
+  switch args.views
+    case 'default'
+        view([1 -0.6 0.4]);
+    case 'xy'
+        view([0 0 1]);
+    case 'xz'
+        view([0 -1 0]);
+    case 'yz'
+        view([1 0 0]);
+  end
   axis equal;
   axis off;
 #+end_src
+
+*** Subplots
+#+begin_src matlab
+  if strcmp(args.views, 'all')
+    hAx = findobj('type', 'axes');
+
+    figure;
+    s1 = subplot(2,2,1);
+    copyobj(get(hAx(1), 'Children'), s1);
+    view([0 0 1]);
+    axis equal;
+    axis off;
+    title('Top')
+
+    s2 = subplot(2,2,2);
+    copyobj(get(hAx(1), 'Children'), s2);
+    view([1 -0.6 0.4]);
+    axis equal;
+    axis off;
+
+    s3 = subplot(2,2,3);
+    copyobj(get(hAx(1), 'Children'), s3);
+    view([1 0 0]);
+    axis equal;
+    axis off;
+    title('Front')
+
+    s4 = subplot(2,2,4);
+    copyobj(get(hAx(1), 'Children'), s4);
+    view([0 -1 0]);
+    axis equal;
+    axis off;
+    title('Side')
+  end
+#+end_src
+
 
 * Bibliography                                                        :ignore:
 bibliographystyle:unsrt
