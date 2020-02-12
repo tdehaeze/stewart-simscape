@@ -235,4 +235,6 @@ if strcmp(args.views, 'all')
   axis equal;
   axis off;
   title('Side')
+
+  close(f);
 end

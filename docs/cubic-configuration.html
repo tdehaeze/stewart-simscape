@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-12 mer. 11:23 -->
+<!-- 2020-02-12 mer. 18:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -268,37 +268,44 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8c6677e">1. Configuration Analysis - Stiffness Matrix</a>
+<li><a href="#org3d18192">1. Stiffness Matrix for the Cubic configuration</a>
 <ul>
 <li><a href="#orgf6f7ad2">1.1. Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org95af62e">1.5. Conclusion</a></li>
+<li><a href="#org778aab3">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#org7673551">2.2. Conclusion</a></li>
+<li><a href="#org8e940b8">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#orgcad29fd">3.2. Conclusion</a></li>
+<li><a href="#org9d42e84">3.2. Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#org5abef15">4. Dynamic Coupling</a>
+<li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
-<li><a href="#org0d67b92">4.1. Cube&rsquo;s center at the Center of Mass of the Payload</a></li>
-<li><a href="#org876e05f">4.2. Dynamic decoupling between the actuators and sensors</a></li>
-<li><a href="#org213d9b9">4.3. Conclusion</a></li>
+<li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
+<li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
+<li><a href="#org5214dec">4.3. Conclusion</a></li>
 </ul>
 </li>
-<li><a href="#org3044455">5. Functions</a>
+<li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
-<li><a href="#org56504f1">5.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
+<li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
+<li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
+<li><a href="#org0936a8a">5.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#org3044455">6. Functions</a>
+<ul>
+<li><a href="#org56504f1">6.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
 <ul>
 <li><a href="#orga5a9ba8">Function description</a></li>
 <li><a href="#org3253792">Documentation</a></li>
@@ -337,15 +344,13 @@ In this document, the cubic architecture is analyzed:
 <li>In section <a href="#orgda0ee50">1</a>, we study the link between the Stiffness matrix and the cubic architecture and we find what are the conditions to obtain a diagonal stiffness matrix</li>
 <li>In section <a href="#orgb73265d">2</a>, we study cubic configurations where the cube&rsquo;s center is located above the mobile platform</li>
 <li>In section <a href="#org348ec7d">3</a>, we study the effect of the cube&rsquo;s size on the Stewart platform properties</li>
-<li>In section <a href="#orgc379ec8">4</a>, we study the dynamic coupling of the cubic configuration</li>
+<li>In section <a href="#org00d3816">4</a>, we study the dynamic coupling of the cubic configuration in the cartesian frame</li>
+<li>In section <a href="#org5b5c8a9">5</a>, we study the dynamic coupling of the cubic configuration from actuators to sensors of each strut</li>
+<li>In section <a href="#org28ba607">6</a>, function related to the cubic configuration are defined. To generate and study the Stewart platform with a Cubic configuration, the Matlab function <code>generateCubicConfiguration</code> is used (described <a href="#orga8311d3">here</a>).</li>
 </ul>
 
-<p>
-To generate and study the Stewart platform with a Cubic configuration, the Matlab function <code>generateCubicConfiguration</code> is used (described <a href="#orga8311d3">here</a>).
-</p>
-
-<div id="outline-container-org8c6677e" class="outline-2">
-<h2 id="org8c6677e"><span class="section-number-2">1</span> Configuration Analysis - Stiffness Matrix</h2>
+<div id="outline-container-org3d18192" class="outline-2">
+<h2 id="org3d18192"><span class="section-number-2">1</span> Stiffness Matrix for the Cubic configuration</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a id="orgda0ee50"></a>
@@ -831,8 +836,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-org95af62e" class="outline-3">
-<h3 id="org95af62e"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-org778aab3" class="outline-3">
+<h3 id="org778aab3"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -1157,8 +1162,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org7673551" class="outline-3">
-<h3 id="org7673551"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org8e940b8" class="outline-3">
+<h3 id="org8e940b8"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1232,8 +1237,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-orgcad29fd" class="outline-3">
-<h3 id="orgcad29fd"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-org9d42e84" class="outline-3">
+<h3 id="org9d42e84"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1249,37 +1254,506 @@ In order to maximize the rotational stiffness of the Stewart platform, the size 
 </div>
 </div>
 
-<div id="outline-container-org5abef15" class="outline-2">
-<h2 id="org5abef15"><span class="section-number-2">4</span> Dynamic Coupling</h2>
+<div id="outline-container-orgf09da67" class="outline-2">
+<h2 id="orgf09da67"><span class="section-number-2">4</span> Dynamic Coupling in the Cartesian Frame</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="orgc379ec8"></a>
+<a id="org00d3816"></a>
+</p>
+<p>
+In this section, we study the dynamics of the platform in the cartesian frame.
+</p>
+
+<p>
+We here suppose that there is one relative motion sensor in each strut (\(\delta\bm{\mathcal{L}}\) is measured) and we would like to control the position of the top platform pose \(\delta \bm{\mathcal{X}}\).
+</p>
+
+<p>
+Thanks to the Jacobian matrix, we can use the &ldquo;architecture&rdquo; shown in Figure <a href="#org76f24a0">9</a> to obtain the dynamics of the system from forces/torques applied by the actuators on the top platform to translations/rotations of the top platform.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
+  <span class="org-font-latex-sedate">\node</span>[block] (Jt) at (0, 0) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{J}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-T}$</span>};
+  <span class="org-font-latex-sedate">\node</span>[block, right= of Jt] (G) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{G}$</span>};
+  <span class="org-font-latex-sedate">\node</span>[block, right= of G] (J) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{J}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-1}$</span>};
+
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(Jt.west)+(-0.8, 0)$</span>) -- (Jt.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{F}}$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (Jt.east) -- (G.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\tau</span></span><span class="org-font-latex-math">}$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (G.east) -- (J.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\delta\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{L}}$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (J.east) -- ++(0.8, 0) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\delta\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{X}}$</span>};
+<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
+</pre>
+</div>
+
+
+<div id="org76f24a0" class="figure">
+<p><img src="figs/local_to_cartesian_coordinates.png" alt="local_to_cartesian_coordinates.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>From Strut coordinate to Cartesian coordinate using the Jacobian matrix</p>
+</div>
+
+<p>
+We here study the dynamics from \(\bm{\mathcal{F}}\) to \(\delta\bm{\mathcal{X}}\).
+</p>
+
+<p>
+One has to note that when considering the static behavior:
+\[ \bm{G}(s = 0) = \begin{bmatrix}
+  1/k_1 &        & 0 \\
+        & \ddots & 0 \\
+  0     &        & 1/k_6
+  \end{bmatrix}\]
+</p>
+
+<p>
+And thus:
+\[ \frac{\delta\bm{\mathcal{X}}}{\bm{\mathcal{F}}}(s = 0) = \bm{J}^{-1} \bm{G}(s = 0) \bm{J}^{-T} = \bm{K}^{-1} = \bm{C} \]
+</p>
+
+<p>
+We conclude that the <b>static</b> behavior of the platform depends on the stiffness matrix.
+For the cubic configuration, we have a diagonal stiffness matrix is the frames \(\{A\}\) and \(\{B\}\) are coincident with the cube&rsquo;s center.
 </p>
 </div>
-<div id="outline-container-org0d67b92" class="outline-3">
-<h3 id="org0d67b92"><span class="section-number-3">4.1</span> Cube&rsquo;s center at the Center of Mass of the Payload</h3>
+<div id="outline-container-org5fe01ec" class="outline-3">
+<h3 id="org5fe01ec"><span class="section-number-3">4.1</span> Cube&rsquo;s center at the Center of Mass of the mobile platform</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Let&rsquo;s create a Cubic Stewart Platform where the <b>Center of Mass of the mobile platform is located at the center of the cube</b>.
+</p>
+
+<p>
+We define the size of the Stewart platform and the position of frames \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 200e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>10e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+</pre>
 </div>
 
-<div id="outline-container-org876e05f" class="outline-3">
-<h3 id="org876e05f"><span class="section-number-3">4.2</span> Dynamic decoupling between the actuators and sensors</h3>
+<p>
+Now, we set the cube&rsquo;s parameters such that the center of the cube is coincident with \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Hc   = 2.5<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
 </div>
 
-<div id="outline-container-org213d9b9" class="outline-3">
-<h3 id="org213d9b9"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 25e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 25e<span class="org-type">-</span>3);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'C'</span>, 1e1<span class="org-type">*</span>ones(6,1));
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+</pre>
+</div>
+
+<p>
+Now we set the geometry and mass of the mobile platform such that its center of mass is coincident with \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_F.Fa)), ...
+                                                  <span class="org-string">'Mpm'</span>, 10, ...
+                                                  <span class="org-string">'Mph'</span>, 20e<span class="org-type">-</span>3, ...
+                                                  <span class="org-string">'Mpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_M.Mb)));
+</pre>
+</div>
+
+<p>
+And we set small mass for the struts.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalStruts(stewart, <span class="org-string">'Fsm'</span>, 1e<span class="org-type">-</span>3, <span class="org-string">'Msm'</span>, 1e<span class="org-type">-</span>3);
+stewart = initializeInertialSensor(stewart);
+</pre>
+</div>
+
+<p>
+The obtain geometry is shown in figure <a href="#orgc92a65b">10</a>.
+</p>
+
+
+<div id="orgc92a65b" class="figure">
+<p><img src="figs/stewart_cubic_conf_decouple_dynamics.png" alt="stewart_cubic_conf_decouple_dynamics.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>Geometry used for the simulations - The cube&rsquo;s center, the frames \(\{A\}\) and \(\{B\}\) and the Center of mass of the mobile platform are coincident (<a href="./figs/stewart_cubic_conf_decouple_dynamics.png">png</a>, <a href="./figs/stewart_cubic_conf_decouple_dynamics.pdf">pdf</a>)</p>
+</div>
+
+<p>
+We now identify the dynamics from forces applied in each strut \(\bm{\tau}\) to the displacement of each strut \(d \bm{\mathcal{L}}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">open(<span class="org-string">'simulink/stewart_active_damping.slx'</span>)
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_active_damping'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Dm'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Displacement of each leg [m]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G = linearize(mdl, io, options);
+G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G.OutputName = {<span class="org-string">'Dm1'</span>, <span class="org-string">'Dm2'</span>, <span class="org-string">'Dm3'</span>, <span class="org-string">'Dm4'</span>, <span class="org-string">'Dm5'</span>, <span class="org-string">'Dm6'</span>};
+</pre>
+</div>
+
+<p>
+Now, thanks to the Jacobian (Figure <a href="#org76f24a0">9</a>), we compute the transfer function from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Gc = inv(stewart.kinematics.J)<span class="org-type">*</span>G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>);
+Gc.InputName  = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+Gc.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+
+<p>
+The obtain dynamics \(\bm{G}_{c}(s) = \bm{J}^{-T} \bm{G}(s) \bm{J}^{-1}\) is shown in Figure <a href="#orgcb3ac4d">11</a>.
+</p>
+
+
+<div id="orgcb3ac4d" class="figure">
+<p><img src="figs/stewart_cubic_decoupled_dynamics_cartesian.png" alt="stewart_cubic_decoupled_dynamics_cartesian.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>Dynamics from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\) (<a href="./figs/stewart_cubic_decoupled_dynamics_cartesian.png">png</a>, <a href="./figs/stewart_cubic_decoupled_dynamics_cartesian.pdf">pdf</a>)</p>
+</div>
+
+<div class="important">
+<p>
+The dynamics is well decoupled at all frequencies.
+</p>
+
+<p>
+We have the same dynamics for:
+</p>
+<ul class="org-ul">
+<li>\(D_x/F_x\), \(D_y/F_y\) and \(D_z/F_z\)</li>
+<li>\(R_x/M_x\) and \(D_y/F_y\)</li>
+</ul>
+
+<p>
+The Dynamics from \(F_i\) to \(D_i\) is just a 1-dof mass-spring-damper system.
+</p>
+
+<p>
+This is because the Mass, Damping and Stiffness matrices are all diagonal.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4cb2a36" class="outline-3">
+<h3 id="org4cb2a36"><span class="section-number-3">4.2</span> Cube&rsquo;s center not coincident with the Mass of the Mobile platform</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Let&rsquo;s create a Stewart platform with a cubic architecture where the cube&rsquo;s center is at the center of the Stewart platform.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 200e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>100e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+</pre>
+</div>
+
+<p>
+Now, we set the cube&rsquo;s parameters such that the center of the cube is coincident with \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Hc   = 2.5<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 25e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 25e<span class="org-type">-</span>3);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'C'</span>, 1e1<span class="org-type">*</span>ones(6,1));
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+</pre>
+</div>
+
+<p>
+However, the Center of Mass of the mobile platform is <b>not</b> located at the cube&rsquo;s center.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_F.Fa)), ...
+                                                  <span class="org-string">'Mpm'</span>, 10, ...
+                                                  <span class="org-string">'Mph'</span>, 20e<span class="org-type">-</span>3, ...
+                                                  <span class="org-string">'Mpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_M.Mb)));
+</pre>
+</div>
+
+<p>
+And we set small mass for the struts.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalStruts(stewart, <span class="org-string">'Fsm'</span>, 1e<span class="org-type">-</span>3, <span class="org-string">'Msm'</span>, 1e<span class="org-type">-</span>3);
+stewart = initializeInertialSensor(stewart);
+</pre>
+</div>
+
+<p>
+The obtain geometry is shown in figure <a href="#orgfce7805">12</a>.
+</p>
+
+<div id="orgfce7805" class="figure">
+<p><img src="figs/stewart_cubic_conf_mass_above.png" alt="stewart_cubic_conf_mass_above.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>Geometry used for the simulations - The cube&rsquo;s center is coincident with the frames \(\{A\}\) and \(\{B\}\) but not with the Center of mass of the mobile platform (<a href="./figs/stewart_cubic_conf_mass_above.png">png</a>, <a href="./figs/stewart_cubic_conf_mass_above.pdf">pdf</a>)</p>
+</div>
+
+<p>
+We now identify the dynamics from forces applied in each strut \(\bm{\tau}\) to the displacement of each strut \(d \bm{\mathcal{L}}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">open(<span class="org-string">'simulink/stewart_active_damping.slx'</span>)
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_active_damping'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Dm'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Displacement of each leg [m]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G = linearize(mdl, io, options);
+G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G.OutputName = {<span class="org-string">'Dm1'</span>, <span class="org-string">'Dm2'</span>, <span class="org-string">'Dm3'</span>, <span class="org-string">'Dm4'</span>, <span class="org-string">'Dm5'</span>, <span class="org-string">'Dm6'</span>};
+</pre>
+</div>
+
+<p>
+And we use the Jacobian to compute the transfer function from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Gc = inv(stewart.kinematics.J)<span class="org-type">*</span>G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>);
+Gc.InputName  = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+Gc.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+
+<p>
+The obtain dynamics \(\bm{G}_{c}(s) = \bm{J}^{-T} \bm{G}(s) \bm{J}^{-1}\) is shown in Figure <a href="#org7a04d45">13</a>.
+</p>
+
+
+<div id="org7a04d45" class="figure">
+<p><img src="figs/stewart_conf_coupling_mass_matrix.png" alt="stewart_conf_coupling_mass_matrix.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>Obtained Dynamics from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\) (<a href="./figs/stewart_conf_coupling_mass_matrix.png">png</a>, <a href="./figs/stewart_conf_coupling_mass_matrix.pdf">pdf</a>)</p>
+</div>
+
+<div class="important">
+<p>
+The system is decoupled at low frequency (the Stiffness matrix being diagonal), but it is <b>not</b> decoupled at all frequencies.
+</p>
+
+<p>
+This was expected as the mass matrix is not diagonal (the Center of Mass of the mobile platform not being coincident with the frame \(\{B\}\)).
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5214dec" class="outline-3">
+<h3 id="org5214dec"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="important">
+<p>
+Some conclusions can be drawn from the above analysis:
+</p>
+<ul class="org-ul">
+<li>Static Decoupling &lt;=&gt; Diagonal Stiffness matrix &lt;=&gt; {A} and {B} at the cube&rsquo;s center</li>
+<li>Dynamic Decoupling &lt;=&gt; Static Decoupling + CoM of mobile platform coincident with {A} and {B}.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8f26dc0" class="outline-2">
+<h2 id="org8f26dc0"><span class="section-number-2">5</span> Dynamic Coupling between actuators and sensors of each strut</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<a id="org5b5c8a9"></a>
+</p>
+<p>
+From <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>, the cubic configuration &ldquo;<i>minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other)</i>&rdquo;.
+</p>
+
+<p>
+In this section, we wish to study such properties of the cubic architecture.
+</p>
+
+<p>
+We will compare the transfer function from sensors to actuators in each strut for a cubic architecture and for a non-cubic architecture (where the struts are not orthogonal with each other).
+</p>
+</div>
+<div id="outline-container-org6e391c9" class="outline-3">
+<h3 id="org6e391c9"><span class="section-number-3">5.1</span> Coupling between the actuators and sensors - Cubic Architecture</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Let&rsquo;s generate a Cubic architecture where the cube&rsquo;s center and the frames \(\{A\}\) and \(\{B\}\) are coincident.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 200e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>10e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+Hc   = 2.5<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 25e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 25e<span class="org-type">-</span>3);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'C'</span>, 1e1<span class="org-type">*</span>ones(6,1));
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_F.Fa)), ...
+                                                  <span class="org-string">'Mpm'</span>, 10, ...
+                                                  <span class="org-string">'Mph'</span>, 20e<span class="org-type">-</span>3, ...
+                                                  <span class="org-string">'Mpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_M.Mb)));
+stewart = initializeCylindricalStruts(stewart, <span class="org-string">'Fsm'</span>, 1e<span class="org-type">-</span>3, <span class="org-string">'Msm'</span>, 1e<span class="org-type">-</span>3);
+stewart = initializeInertialSensor(stewart);
+</pre>
+</div>
+
+
+<div id="org67d7284" class="figure">
+<p><img src="figs/stewart_architecture_coupling_struts_cubic.png" alt="stewart_architecture_coupling_struts_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 14: </span>Geometry of the generated Stewart platform (<a href="./figs/stewart_architecture_coupling_struts_cubic.png">png</a>, <a href="./figs/stewart_architecture_coupling_struts_cubic.pdf">pdf</a>)</p>
+</div>
+
+<p>
+And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relative motion sensors \(\delta \mathcal{L}_{i}\) (Figure <a href="#orga20cd7d">15</a>) and to the force sensors \(\tau_{m,i}\) (Figure <a href="#org645e6c3">16</a>).
+</p>
+
+
+<div id="orga20cd7d" class="figure">
+<p><img src="figs/coupling_struts_relative_sensor_cubic.png" alt="coupling_struts_relative_sensor_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 15: </span>Dynamics from the force actuators to the relative motion sensors (<a href="./figs/coupling_struts_relative_sensor_cubic.png">png</a>, <a href="./figs/coupling_struts_relative_sensor_cubic.pdf">pdf</a>)</p>
+</div>
+
+
+<div id="org645e6c3" class="figure">
+<p><img src="figs/coupling_struts_force_sensor_cubic.png" alt="coupling_struts_force_sensor_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 16: </span>Dynamics from the force actuators to the force sensors (<a href="./figs/coupling_struts_force_sensor_cubic.png">png</a>, <a href="./figs/coupling_struts_force_sensor_cubic.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgafd808d" class="outline-3">
+<h3 id="orgafd808d"><span class="section-number-3">5.2</span> Coupling between the actuators and sensors - Non-Cubic Architecture</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Now we generate a Stewart platform which is not cubic but with approximately the same size as the previous cubic architecture.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 200e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>10e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateGeneralConfiguration(stewart, <span class="org-string">'FR'</span>, 250e<span class="org-type">-</span>3, <span class="org-string">'MR'</span>, 150e<span class="org-type">-</span>3);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, 1e6<span class="org-type">*</span>ones(6,1), <span class="org-string">'C'</span>, 1e1<span class="org-type">*</span>ones(6,1));
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_F.Fa)), ...
+                                                  <span class="org-string">'Mpm'</span>, 10, ...
+                                                  <span class="org-string">'Mph'</span>, 20e<span class="org-type">-</span>3, ...
+                                                  <span class="org-string">'Mpr'</span>, 1.2<span class="org-type">*</span>max(vecnorm(stewart.platform_M.Mb)));
+stewart = initializeCylindricalStruts(stewart, <span class="org-string">'Fsm'</span>, 1e<span class="org-type">-</span>3, <span class="org-string">'Msm'</span>, 1e<span class="org-type">-</span>3);
+stewart = initializeInertialSensor(stewart);
+</pre>
+</div>
+
+
+<div id="org14d3492" class="figure">
+<p><img src="figs/stewart_architecture_coupling_struts_non_cubic.png" alt="stewart_architecture_coupling_struts_non_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 17: </span>Geometry of the generated Stewart platform (<a href="./figs/stewart_architecture_coupling_struts_non_cubic.png">png</a>, <a href="./figs/stewart_architecture_coupling_struts_non_cubic.pdf">pdf</a>)</p>
+</div>
+
+<p>
+And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relative motion sensors \(\delta \mathcal{L}_{i}\) (Figure <a href="#orgff23a38">18</a>) and to the force sensors \(\tau_{m,i}\) (Figure <a href="#orgd802951">19</a>).
+</p>
+
+
+<div id="orgff23a38" class="figure">
+<p><img src="figs/coupling_struts_relative_sensor_non_cubic.png" alt="coupling_struts_relative_sensor_non_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 18: </span>Dynamics from the force actuators to the relative motion sensors (<a href="./figs/coupling_struts_relative_sensor_non_cubic.png">png</a>, <a href="./figs/coupling_struts_relative_sensor_non_cubic.pdf">pdf</a>)</p>
+</div>
+
+
+<div id="orgd802951" class="figure">
+<p><img src="figs/coupling_struts_force_sensor_non_cubic.png" alt="coupling_struts_force_sensor_non_cubic.png" />
+</p>
+<p><span class="figure-number">Figure 19: </span>Dynamics from the force actuators to the force sensors (<a href="./figs/coupling_struts_force_sensor_non_cubic.png">png</a>, <a href="./figs/coupling_struts_force_sensor_non_cubic.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0936a8a" class="outline-3">
+<h3 id="org0936a8a"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div class="outline-text-3" id="text-5-3">
+<div class="important">
+<p>
+The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut.
+</p>
+
+</div>
+</div>
 </div>
 </div>
 
 <div id="outline-container-org3044455" class="outline-2">
-<h2 id="org3044455"><span class="section-number-2">5</span> Functions</h2>
-<div class="outline-text-2" id="text-5">
+<h2 id="org3044455"><span class="section-number-2">6</span> Functions</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 <a id="org28ba607"></a>
 </p>
 </div>
 
 <div id="outline-container-org56504f1" class="outline-3">
-<h3 id="org56504f1"><span class="section-number-3">5.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
-<div class="outline-text-3" id="text-5-1">
+<h3 id="org56504f1"><span class="section-number-3">6.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
+<div class="outline-text-3" id="text-6-1">
 <p>
 <a id="orga8311d3"></a>
 </p>
@@ -1323,7 +1797,7 @@ This Matlab function is accessible <a href="../src/generateCubicConfiguration.m"
 <div id="org8a7f3d8" class="figure">
 <p><img src="figs/cubic-configuration-definition.png" alt="cubic-configuration-definition.png" />
 </p>
-<p><span class="figure-number">Figure 9: </span>Cubic Configuration</p>
+<p><span class="figure-number">Figure 20: </span>Cubic Configuration</p>
 </div>
 </div>
 </div>
@@ -1428,7 +1902,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-12 mer. 11:23</p>
+<p class="date">Created: 2020-02-12 mer. 18:26</p>
 </div>
 </body>
 </html>

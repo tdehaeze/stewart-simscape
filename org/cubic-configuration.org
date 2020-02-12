@@ -52,11 +52,11 @@ In this document, the cubic architecture is analyzed:
 - In section [[sec:cubic_conf_stiffness]], we study the link between the Stiffness matrix and the cubic architecture and we find what are the conditions to obtain a diagonal stiffness matrix
 - In section [[sec:cubic_conf_above_platform]], we study cubic configurations where the cube's center is located above the mobile platform
 - In section [[sec:cubic_conf_size_analysis]], we study the effect of the cube's size on the Stewart platform properties
-- In section [[sec:cubic_conf_coupling]], we study the dynamic coupling of the cubic configuration
+- In section [[sec:cubic_conf_coupling_cartesian]], we study the dynamic coupling of the cubic configuration in the cartesian frame
+- In section [[sec:cubic_conf_coupling_struts]], we study the dynamic coupling of the cubic configuration from actuators to sensors of each strut
+- In section [[sec:functions]], function related to the cubic configuration are defined. To generate and study the Stewart platform with a Cubic configuration, the Matlab function =generateCubicConfiguration= is used (described [[sec:generateCubicConfiguration][here]]).
 
-To generate and study the Stewart platform with a Cubic configuration, the Matlab function =generateCubicConfiguration= is used (described [[sec:generateCubicConfiguration][here]]).
-
-* Configuration Analysis - Stiffness Matrix
+* Stiffness Matrix for the Cubic configuration
 <<sec:cubic_conf_stiffness>>
 ** Introduction                                                      :ignore:
 First, we have to understand what is the physical meaning of the Stiffness matrix $\bm{K}$.
@@ -552,9 +552,47 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
   In order to maximize the rotational stiffness of the Stewart platform, the size of the cube should be the highest possible.
 #+end_important
 
-* Dynamic Coupling
-<<sec:cubic_conf_coupling>>
+* Dynamic Coupling in the Cartesian Frame
+<<sec:cubic_conf_coupling_cartesian>>
 ** Introduction                                                      :ignore:
+In this section, we study the dynamics of the platform in the cartesian frame.
+
+We here suppose that there is one relative motion sensor in each strut ($\delta\bm{\mathcal{L}}$ is measured) and we would like to control the position of the top platform pose $\delta \bm{\mathcal{X}}$.
+
+Thanks to the Jacobian matrix, we can use the "architecture" shown in Figure [[fig:local_to_cartesian_coordinates]] to obtain the dynamics of the system from forces/torques applied by the actuators on the top platform to translations/rotations of the top platform.
+
+#+begin_src latex :file local_to_cartesian_coordinates.pdf :post pdf2svg(file=*this*, ext="png") :exports both
+  \begin{tikzpicture}
+    \node[block] (Jt) at (0, 0) {$\bm{J}^{-T}$};
+    \node[block, right= of Jt] (G) {$\bm{G}$};
+    \node[block, right= of G] (J) {$\bm{J}^{-1}$};
+
+    \draw[->] ($(Jt.west)+(-0.8, 0)$) -- (Jt.west) node[above left]{$\bm{\mathcal{F}}$};
+    \draw[->] (Jt.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) -- (J.west) node[above left]{$\delta\bm{\mathcal{L}}$};
+    \draw[->] (J.east) -- ++(0.8, 0) node[above left]{$\delta\bm{\mathcal{X}}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:local_to_cartesian_coordinates
+#+caption: From Strut coordinate to Cartesian coordinate using the Jacobian matrix
+#+RESULTS:
+[[file:figs/local_to_cartesian_coordinates.png]]
+
+We here study the dynamics from $\bm{\mathcal{F}}$ to $\delta\bm{\mathcal{X}}$.
+
+One has to note that when considering the static behavior:
+\[ \bm{G}(s = 0) = \begin{bmatrix}
+  1/k_1 &        & 0 \\
+        & \ddots & 0 \\
+  0     &        & 1/k_6
+  \end{bmatrix}\]
+
+And thus:
+\[ \frac{\delta\bm{\mathcal{X}}}{\bm{\mathcal{F}}}(s = 0) = \bm{J}^{-1} \bm{G}(s = 0) \bm{J}^{-T} = \bm{K}^{-1} = \bm{C} \]
+
+We conclude that the *static* behavior of the platform depends on the stiffness matrix.
+For the cubic configuration, we have a diagonal stiffness matrix is the frames $\{A\}$ and $\{B\}$ are coincident with the cube's center.
 
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -569,13 +607,724 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
   simulinkproject('../');
 #+end_src
 
+** Cube's center at the Center of Mass of the mobile platform
+Let's create a Cubic Stewart Platform where the *Center of Mass of the mobile platform is located at the center of the cube*.
 
+We define the size of the Stewart platform and the position of frames $\{A\}$ and $\{B\}$.
+#+begin_src matlab
+  H    = 200e-3; % height of the Stewart platform [m]
+  MO_B = -10e-3;  % Position {B} with respect to {M} [m]
+#+end_src
 
-** Cube's center at the Center of Mass of the Payload
+Now, we set the cube's parameters such that the center of the cube is coincident with $\{A\}$ and $\{B\}$.
+#+begin_src matlab
+  Hc   = 2.5*H;    % Size of the useful part of the cube [m]
+  FOc  = H + MO_B; % Center of the cube with respect to {F}
+#+end_src
 
-** Dynamic decoupling between the actuators and sensors
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
+  stewart = generateCubicConfiguration(stewart, 'Hc', Hc, 'FOc', FOc, 'FHa', 25e-3, 'MHb', 25e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'K', 1e6*ones(6,1), 'C', 1e1*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+Now we set the geometry and mass of the mobile platform such that its center of mass is coincident with $\{A\}$ and $\{B\}$.
+#+begin_src matlab
+  stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 1.2*max(vecnorm(stewart.platform_F.Fa)), ...
+                                                    'Mpm', 10, ...
+                                                    'Mph', 20e-3, ...
+                                                    'Mpr', 1.2*max(vecnorm(stewart.platform_M.Mb)));
+#+end_src
+
+And we set small mass for the struts.
+#+begin_src matlab
+  stewart = initializeCylindricalStruts(stewart, 'Fsm', 1e-3, 'Msm', 1e-3);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+The obtain geometry is shown in figure [[fig:stewart_cubic_conf_decouple_dynamics]].
+
+#+begin_src matlab :exports none
+  displayArchitecture(stewart, 'labels', false, 'view', 'all');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_cubic_conf_decouple_dynamics.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_cubic_conf_decouple_dynamics
+#+caption: Geometry used for the simulations - The cube's center, the frames $\{A\}$ and $\{B\}$ and the Center of mass of the mobile platform are coincident ([[./figs/stewart_cubic_conf_decouple_dynamics.png][png]], [[./figs/stewart_cubic_conf_decouple_dynamics.pdf][pdf]])
+[[file:figs/stewart_cubic_conf_decouple_dynamics.png]]
+
+We now identify the dynamics from forces applied in each strut $\bm{\tau}$ to the displacement of each strut $d \bm{\mathcal{L}}$.
+#+begin_src matlab
+  open('simulink/stewart_active_damping.slx')
+
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+Now, thanks to the Jacobian (Figure [[fig:local_to_cartesian_coordinates]]), we compute the transfer function from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$.
+#+begin_src matlab
+  Gc = inv(stewart.kinematics.J)*G*inv(stewart.kinematics.J');
+  Gc.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+  Gc.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+The obtain dynamics $\bm{G}_{c}(s) = \bm{J}^{-T} \bm{G}(s) \bm{J}^{-1}$ is shown in Figure [[fig:stewart_cubic_decoupled_dynamics_cartesian]].
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 500);
+
+  figure;
+
+  ax1 = subplot(2, 2, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gc(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(2, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(3, 3), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 2, 3);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p4 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(1, 1), freqs, 'Hz'))));
+  p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(2, 2), freqs, 'Hz'))));
+  p3 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(3, 3), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2, p3, p4], {'$D_x/F_x$','$D_y/F_y$',  '$D_z/F_z$', '$D_i/F_j$'})
+
+  ax2 = subplot(2, 2, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gc(4, 4), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(5, 5), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(6, 6), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax4 = subplot(2, 2, 4);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p4 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(4, 4), freqs, 'Hz'))));
+  p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(5, 5), freqs, 'Hz'))));
+  p3 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(6, 6), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2, p3, p4], {'$R_x/M_x$','$R_y/M_y$',  '$R_z/M_z$', '$R_i/M_j$'})
+
+  linkaxes([ax1,ax2,ax3,ax4],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_cubic_decoupled_dynamics_cartesian.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_cubic_decoupled_dynamics_cartesian
+#+caption: Dynamics from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$ ([[./figs/stewart_cubic_decoupled_dynamics_cartesian.png][png]], [[./figs/stewart_cubic_decoupled_dynamics_cartesian.pdf][pdf]])
+[[file:figs/stewart_cubic_decoupled_dynamics_cartesian.png]]
+
+#+begin_important
+The dynamics is well decoupled at all frequencies.
+
+We have the same dynamics for:
+- $D_x/F_x$, $D_y/F_y$ and $D_z/F_z$
+- $R_x/M_x$ and $D_y/F_y$
+
+The Dynamics from $F_i$ to $D_i$ is just a 1-dof mass-spring-damper system.
+
+This is because the Mass, Damping and Stiffness matrices are all diagonal.
+#+end_important
+
+** Cube's center not coincident with the Mass of the Mobile platform
+Let's create a Stewart platform with a cubic architecture where the cube's center is at the center of the Stewart platform.
+#+begin_src matlab
+  H    = 200e-3; % height of the Stewart platform [m]
+  MO_B = -100e-3;  % Position {B} with respect to {M} [m]
+#+end_src
+
+Now, we set the cube's parameters such that the center of the cube is coincident with $\{A\}$ and $\{B\}$.
+#+begin_src matlab
+  Hc   = 2.5*H;    % Size of the useful part of the cube [m]
+  FOc  = H + MO_B; % Center of the cube with respect to {F}
+#+end_src
+
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
+  stewart = generateCubicConfiguration(stewart, 'Hc', Hc, 'FOc', FOc, 'FHa', 25e-3, 'MHb', 25e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'K', 1e6*ones(6,1), 'C', 1e1*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+#+end_src
+
+However, the Center of Mass of the mobile platform is *not* located at the cube's center.
+#+begin_src matlab
+  stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 1.2*max(vecnorm(stewart.platform_F.Fa)), ...
+                                                    'Mpm', 10, ...
+                                                    'Mph', 20e-3, ...
+                                                    'Mpr', 1.2*max(vecnorm(stewart.platform_M.Mb)));
+#+end_src
+
+And we set small mass for the struts.
+#+begin_src matlab
+  stewart = initializeCylindricalStruts(stewart, 'Fsm', 1e-3, 'Msm', 1e-3);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+The obtain geometry is shown in figure [[fig:stewart_cubic_conf_mass_above]].
+#+begin_src matlab :exports none
+  displayArchitecture(stewart, 'labels', false, 'view', 'all');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_cubic_conf_mass_above.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_cubic_conf_mass_above
+#+caption: Geometry used for the simulations - The cube's center is coincident with the frames $\{A\}$ and $\{B\}$ but not with the Center of mass of the mobile platform ([[./figs/stewart_cubic_conf_mass_above.png][png]], [[./figs/stewart_cubic_conf_mass_above.pdf][pdf]])
+[[file:figs/stewart_cubic_conf_mass_above.png]]
+
+We now identify the dynamics from forces applied in each strut $\bm{\tau}$ to the displacement of each strut $d \bm{\mathcal{L}}$.
+#+begin_src matlab
+  open('simulink/stewart_active_damping.slx')
+
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+And we use the Jacobian to compute the transfer function from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$.
+#+begin_src matlab
+  Gc = inv(stewart.kinematics.J)*G*inv(stewart.kinematics.J');
+  Gc.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+  Gc.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+The obtain dynamics $\bm{G}_{c}(s) = \bm{J}^{-T} \bm{G}(s) \bm{J}^{-1}$ is shown in Figure [[fig:stewart_conf_coupling_mass_matrix]].
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 500);
+
+  figure;
+
+  ax1 = subplot(2, 2, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gc(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(2, 2), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(3, 3), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 2, 3);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p4 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(1, 1), freqs, 'Hz'))));
+  p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(2, 2), freqs, 'Hz'))));
+  p3 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(3, 3), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2, p3, p4], {'$D_x/F_x$','$D_y/F_y$',  '$D_z/F_z$', '$D_i/F_j$'})
+
+  ax2 = subplot(2, 2, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gc(4, 4), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(5, 5), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc(6, 6), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax4 = subplot(2, 2, 4);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p4 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(4, 4), freqs, 'Hz'))));
+  p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(5, 5), freqs, 'Hz'))));
+  p3 = plot(freqs, 180/pi*angle(squeeze(freqresp(Gc(6, 6), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2, p3, p4], {'$R_x/M_x$','$R_y/M_y$',  '$R_z/M_z$', '$R_i/M_j$'})
+
+  linkaxes([ax1,ax2,ax3,ax4],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_conf_coupling_mass_matrix.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_conf_coupling_mass_matrix
+#+caption: Obtained Dynamics from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$ ([[./figs/stewart_conf_coupling_mass_matrix.png][png]], [[./figs/stewart_conf_coupling_mass_matrix.pdf][pdf]])
+[[file:figs/stewart_conf_coupling_mass_matrix.png]]
+
+#+begin_important
+The system is decoupled at low frequency (the Stiffness matrix being diagonal), but it is *not* decoupled at all frequencies.
+
+This was expected as the mass matrix is not diagonal (the Center of Mass of the mobile platform not being coincident with the frame $\{B\}$).
+#+end_important
 
 ** Conclusion
+#+begin_important
+Some conclusions can be drawn from the above analysis:
+- Static Decoupling <=> Diagonal Stiffness matrix <=> {A} and {B} at the cube's center
+- Dynamic Decoupling <=> Static Decoupling + CoM of mobile platform coincident with {A} and {B}.
+#+end_important
+
+* Dynamic Coupling between actuators and sensors of each strut
+<<sec:cubic_conf_coupling_struts>>
+** Introduction                                                      :ignore:
+From cite:preumont07_six_axis_singl_stage_activ, the cubic configuration "/minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other)/".
+
+In this section, we wish to study such properties of the cubic architecture.
+
+We will compare the transfer function from sensors to actuators in each strut for a cubic architecture and for a non-cubic architecture (where the struts are not orthogonal with each other).
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+** Coupling between the actuators and sensors - Cubic Architecture
+Let's generate a Cubic architecture where the cube's center and the frames $\{A\}$ and $\{B\}$ are coincident.
+
+#+begin_src matlab
+  H    = 200e-3; % height of the Stewart platform [m]
+  MO_B = -10e-3;  % Position {B} with respect to {M} [m]
+  Hc   = 2.5*H;    % Size of the useful part of the cube [m]
+  FOc  = H + MO_B; % Center of the cube with respect to {F}
+#+end_src
+
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
+  stewart = generateCubicConfiguration(stewart, 'Hc', Hc, 'FOc', FOc, 'FHa', 25e-3, 'MHb', 25e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'K', 1e6*ones(6,1), 'C', 1e1*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 1.2*max(vecnorm(stewart.platform_F.Fa)), ...
+                                                    'Mpm', 10, ...
+                                                    'Mph', 20e-3, ...
+                                                    'Mpr', 1.2*max(vecnorm(stewart.platform_M.Mb)));
+  stewart = initializeCylindricalStruts(stewart, 'Fsm', 1e-3, 'Msm', 1e-3);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab :exports none
+  displayArchitecture(stewart, 'labels', false, 'view', 'all');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_architecture_coupling_struts_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_architecture_coupling_struts_cubic
+#+caption: Geometry of the generated Stewart platform ([[./figs/stewart_architecture_coupling_struts_cubic.png][png]], [[./figs/stewart_architecture_coupling_struts_cubic.pdf][pdf]])
+[[file:figs/stewart_architecture_coupling_struts_cubic.png]]
+
+And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative motion sensors $\delta \mathcal{L}_{i}$ (Figure [[fig:coupling_struts_relative_sensor_cubic]]) and to the force sensors $\tau_{m,i}$ (Figure [[fig:coupling_struts_force_sensor_cubic]]).
+
+#+begin_src matlab :exports none
+  open('simulink/stewart_active_damping.slx')
+
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$L_i/\tau_i$', '$L_i/\tau_j$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/coupling_struts_relative_sensor_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:coupling_struts_relative_sensor_cubic
+#+caption: Dynamics from the force actuators to the relative motion sensors ([[./figs/coupling_struts_relative_sensor_cubic.png][png]], [[./figs/coupling_struts_relative_sensor_cubic.pdf][pdf]])
+[[file:figs/coupling_struts_relative_sensor_cubic.png]]
+
+#+begin_src matlab :exports none
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Fm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 500);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$F_{m,i}/\tau_i$', '$F_{m,i}/\tau_j$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/coupling_struts_force_sensor_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:coupling_struts_force_sensor_cubic
+#+caption: Dynamics from the force actuators to the force sensors ([[./figs/coupling_struts_force_sensor_cubic.png][png]], [[./figs/coupling_struts_force_sensor_cubic.pdf][pdf]])
+[[file:figs/coupling_struts_force_sensor_cubic.png]]
+
+** Coupling between the actuators and sensors - Non-Cubic Architecture
+Now we generate a Stewart platform which is not cubic but with approximately the same size as the previous cubic architecture.
+
+#+begin_src matlab
+  H    = 200e-3; % height of the Stewart platform [m]
+  MO_B = -10e-3;  % Position {B} with respect to {M} [m]
+#+end_src
+
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
+  stewart = generateGeneralConfiguration(stewart, 'FR', 250e-3, 'MR', 150e-3);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, 'K', 1e6*ones(6,1), 'C', 1e1*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 1.2*max(vecnorm(stewart.platform_F.Fa)), ...
+                                                    'Mpm', 10, ...
+                                                    'Mph', 20e-3, ...
+                                                    'Mpr', 1.2*max(vecnorm(stewart.platform_M.Mb)));
+  stewart = initializeCylindricalStruts(stewart, 'Fsm', 1e-3, 'Msm', 1e-3);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab :exports none
+  displayArchitecture(stewart, 'labels', false, 'view', 'all');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/stewart_architecture_coupling_struts_non_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:stewart_architecture_coupling_struts_non_cubic
+#+caption: Geometry of the generated Stewart platform ([[./figs/stewart_architecture_coupling_struts_non_cubic.png][png]], [[./figs/stewart_architecture_coupling_struts_non_cubic.pdf][pdf]])
+[[file:figs/stewart_architecture_coupling_struts_non_cubic.png]]
+
+And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative motion sensors $\delta \mathcal{L}_{i}$ (Figure [[fig:coupling_struts_relative_sensor_non_cubic]]) and to the force sensors $\tau_{m,i}$ (Figure [[fig:coupling_struts_force_sensor_non_cubic]]).
+
+#+begin_src matlab :exports none
+  open('simulink/stewart_active_damping.slx')
+
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_active_damping';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$L_i/\tau_i$', '$L_i/\tau_j$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/coupling_struts_relative_sensor_non_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:coupling_struts_relative_sensor_non_cubic
+#+caption: Dynamics from the force actuators to the relative motion sensors ([[./figs/coupling_struts_relative_sensor_non_cubic.png][png]], [[./figs/coupling_struts_relative_sensor_non_cubic.pdf][pdf]])
+[[file:figs/coupling_struts_relative_sensor_non_cubic.png]]
+
+#+begin_src matlab :exports none
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Fm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 500);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax3 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    for j = i+1:6
+      p2 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'k-');
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  p1 = plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend([p1, p2], {'$F_{m,i}/\tau_i$', '$F_{m,i}/\tau_j$'})
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/coupling_struts_force_sensor_non_cubic.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:coupling_struts_force_sensor_non_cubic
+#+caption: Dynamics from the force actuators to the force sensors ([[./figs/coupling_struts_force_sensor_non_cubic.png][png]], [[./figs/coupling_struts_force_sensor_non_cubic.pdf][pdf]])
+[[file:figs/coupling_struts_force_sensor_non_cubic.png]]
+
+** Conclusion
+#+begin_important
+  The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut.
+#+end_important
 
 * Functions
 <<sec:functions>>
