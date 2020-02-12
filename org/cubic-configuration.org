@@ -431,60 +431,53 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
 |   -8e-17 |        0 |   -3e-17 | -6.1e-19 |    0.094 |       0 |
 | -6.2e-18 |  7.2e-17 |  5.6e-17 |  2.3e-17 |        0 |    0.37 |
 
-* TODO Cubic size analysis                                          :noexport:
-We here study the effect of the size of the cube used for the Stewart configuration.
+* Cubic size analysis
+We here study the effect of the size of the cube used for the Stewart Cubic configuration.
 
-We fix the height of the Stewart platform, the center of the cube is at the center of the Stewart platform.
+We fix the height of the Stewart platform, the center of the cube is at the center of the Stewart platform and the frames $\{A\}$ and $\{B\}$ are also taken at the center of the cube.
 
 We only vary the size of the cube.
 
 #+begin_src matlab :results silent
-  H_cubes = 250:20:350;
-  stewarts = {zeros(length(H_cubes), 1)};
+  Hcs = 1e-3*[250:20:350]; % Heights for the Cube [m]
+  Ks = zeros(6, 6, length(Hcs));
+#+end_src
+
+The height of the Stewart platform is fixed:
+#+begin_src matlab
+  H    = 100e-3; % height of the Stewart platform [m]
+#+end_src
+
+The frames $\{A\}$ and $\{B\}$ are positioned at the Stewart platform center as well as the cube's center:
+#+begin_src matlab
+  MO_B = -50e-3;  % Position {B} with respect to {M} [m]
+  FOc  = H + MO_B; % Center of the cube with respect to {F}
 #+end_src
 
 #+begin_src matlab :results silent
-  for i = 1:length(H_cubes)
-    H_cube = H_cubes(i);
-    H_tot = 100;
-    H = 80;
-
-    opts = struct(...
-        'H_tot', H_tot, ... % Total height of the Hexapod [mm]
-        'L',     H_cube/sqrt(3), ... % Size of the Cube [mm]
-        'H',     H, ... % Height between base joints and platform joints [mm]
-        'H0',    H_cube/2-H/2 ... % Height between the corner of the cube and the plane containing the base joints [mm]
-        );
-    stewart = initializeCubicConfiguration(opts);
-
-    opts = struct(...
-        'Jd_pos', [0, 0, H_cube/2-opts.H0-opts.H_tot], ... % Position of the Jacobian for displacement estimation from the top of the mobile platform [mm]
-        'Jf_pos', [0, 0, H_cube/2-opts.H0-opts.H_tot]  ... % Position of the Jacobian for force location from the top of the mobile platform [mm]
-        );
-    stewart = computeGeometricalProperties(stewart, opts);
-    stewarts(i) = {stewart};
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
+  for i = 1:length(Hcs)
+    Hc = Hcs(i);
+    stewart = generateCubicConfiguration(stewart, 'Hc', Hc, 'FOc', FOc, 'FHa', 0, 'MHb', 0);
+    stewart = computeJointsPose(stewart);
+    stewart = initializeStrutDynamics(stewart, 'K', ones(6,1));
+    stewart = computeJacobian(stewart);
+    Ks(:,:,i) = stewart.kinematics.K;
   end
 #+end_src
 
-The Stiffness matrix is computed for all generated Stewart platforms.
-#+begin_src matlab :results none :exports code
-  Ks = zeros(6, 6, length(H_cube));
-  for i = 1:length(H_cubes)
-    Ks(:, :, i) = stewarts{i}.Jd'*stewarts{i}.Jd;
-  end
-#+end_src
+We find that for all the cube's size, $k_x = k_y = k_z = k$ where $k$ is the strut stiffness.
+We also find that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ are varying with the cube's size (figure [[fig:stiffness_cube_size]]).
 
-The only elements of $K$ that vary are $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$.
-
-Finally, we plot $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$
 #+begin_src matlab :results none :exports code
   figure;
   hold on;
-  plot(H_cubes, squeeze(Ks(4, 4, :)), 'DisplayName', '$k_{\theta_x}$');
-  plot(H_cubes, squeeze(Ks(6, 6, :)), 'DisplayName', '$k_{\theta_z}$');
+  plot(Hcs, squeeze(Ks(4, 4, :)), 'DisplayName', '$k_{\theta_x} = k_{\theta_y}$');
+  plot(Hcs, squeeze(Ks(6, 6, :)), 'DisplayName', '$k_{\theta_z}$');
   hold off;
   legend('location', 'northwest');
-  xlabel('Cube Size [mm]'); ylabel('Rotational stiffnes [normalized]');
+  xlabel('Cube Size [m]'); ylabel('Rotational stiffnes [normalized]');
 #+end_src
 
 #+NAME: fig:stiffness_cube_size
@@ -498,12 +491,10 @@ Finally, we plot $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$
 #+RESULTS: fig:stiffness_cube_size
 [[file:figs/stiffness_cube_size.png]]
 
-
 We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linearly with the cube size.
 
 #+begin_important
   In order to maximize the rotational stiffness of the Stewart platform, the size of the cube should be the highest possible.
-  In that case, the legs will the further separated. Size of the cube is then limited by allowed space.
 #+end_important
 
 * Functions

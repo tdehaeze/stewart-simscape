@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-12 mer. 10:22 -->
+<!-- 2020-02-12 mer. 10:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -278,9 +278,10 @@ for the JavaScript code in this tag.
 <li><a href="#org8afa645">1.6. Having Cube&rsquo;s center above the top platform</a></li>
 </ul>
 </li>
-<li><a href="#org3044455">2. Functions</a>
+<li><a href="#orgcc4ecce">2. Cubic size analysis</a></li>
+<li><a href="#org3044455">3. Functions</a>
 <ul>
-<li><a href="#org56504f1">2.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
+<li><a href="#org56504f1">3.1. <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</a>
 <ul>
 <li><a href="#orga5a9ba8">Function description</a></li>
 <li><a href="#org3253792">Documentation</a></li>
@@ -324,7 +325,7 @@ This topology provides a uniform control capability and a uniform stiffness in a
 </blockquote>
 
 <p>
-To generate and study the Cubic configuration, <code>generateCubicConfiguration</code> is used (description in section <a href="#orga8311d3">2.1</a>).
+To generate and study the Cubic configuration, <code>generateCubicConfiguration</code> is used (description in section <a href="#orga8311d3">3.1</a>).
 The goal is to study the benefits of using a cubic configuration:
 </p>
 <ul class="org-ul">
@@ -1132,17 +1133,105 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org3044455" class="outline-2">
-<h2 id="org3044455"><span class="section-number-2">2</span> Functions</h2>
+<div id="outline-container-orgcc4ecce" class="outline-2">
+<h2 id="orgcc4ecce"><span class="section-number-2">2</span> Cubic size analysis</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+We here study the effect of the size of the cube used for the Stewart Cubic configuration.
+</p>
+
+<p>
+We fix the height of the Stewart platform, the center of the cube is at the center of the Stewart platform and the frames \(\{A\}\) and \(\{B\}\) are also taken at the center of the cube.
+</p>
+
+<p>
+We only vary the size of the cube.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Hcs = 1e<span class="org-type">-</span>3<span class="org-type">*</span>[250<span class="org-type">:</span>20<span class="org-type">:</span>350]; <span class="org-comment">% Heights for the Cube [m]</span>
+Ks = zeros(6, 6, length(Hcs));
+</pre>
+</div>
+
+<p>
+The height of the Stewart platform is fixed:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 100e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+</pre>
+</div>
+
+<p>
+The frames \(\{A\}\) and \(\{B\}\) are positioned at the Stewart platform center as well as the cube&rsquo;s center:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">MO_B = <span class="org-type">-</span>50e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(Hcs)</span>
+  Hc = Hcs(<span class="org-constant">i</span>);
+  stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, ones(6,1));
+  stewart = computeJacobian(stewart);
+  Ks(<span class="org-type">:</span>,<span class="org-type">:</span>,<span class="org-constant">i</span>) = stewart.kinematics.K;
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<p>
+We find that for all the cube&rsquo;s size, \(k_x = k_y = k_z = k\) where \(k\) is the strut stiffness.
+We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varying with the cube&rsquo;s size (figure <a href="#orgf5b4a80">9</a>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-type">figure</span>;
+hold on;
+plot(Hcs, squeeze(Ks(4, 4, <span class="org-type">:</span>)), <span class="org-string">'DisplayName'</span>, <span class="org-string">'$k_{\theta_x} = k_{\theta_y}$'</span>);
+plot(Hcs, squeeze(Ks(6, 6, <span class="org-type">:</span>)), <span class="org-string">'DisplayName'</span>, <span class="org-string">'$k_{\theta_z}$'</span>);
+hold off;
+legend(<span class="org-string">'location'</span>, <span class="org-string">'northwest'</span>);
+xlabel(<span class="org-string">'Cube Size [m]'</span>); ylabel(<span class="org-string">'Rotational stiffnes [normalized]'</span>);
+</pre>
+</div>
+
+
+<div id="orgf5b4a80" class="figure">
+<p><img src="figs/stiffness_cube_size.png" alt="stiffness_cube_size.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>\(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) function of the size of the cube</p>
+</div>
+
+<p>
+We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
+</p>
+
+<div class="important">
+<p>
+In order to maximize the rotational stiffness of the Stewart platform, the size of the cube should be the highest possible.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3044455" class="outline-2">
+<h2 id="org3044455"><span class="section-number-2">3</span> Functions</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 <a id="org28ba607"></a>
 </p>
 </div>
 
 <div id="outline-container-org56504f1" class="outline-3">
-<h3 id="org56504f1"><span class="section-number-3">2.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
-<div class="outline-text-3" id="text-2-1">
+<h3 id="org56504f1"><span class="section-number-3">3.1</span> <code>generateCubicConfiguration</code>: Generate a Cubic Configuration</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 <a id="orga8311d3"></a>
 </p>
@@ -1186,7 +1275,7 @@ This Matlab function is accessible <a href="../src/generateCubicConfiguration.m"
 <div id="org8a7f3d8" class="figure">
 <p><img src="figs/cubic-configuration-definition.png" alt="cubic-configuration-definition.png" />
 </p>
-<p><span class="figure-number">Figure 9: </span>Cubic Configuration</p>
+<p><span class="figure-number">Figure 10: </span>Cubic Configuration</p>
 </div>
 </div>
 </div>
@@ -1291,7 +1380,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-12 mer. 10:22</p>
+<p class="date">Created: 2020-02-12 mer. 10:37</p>
 </div>
 </body>
 </html>
