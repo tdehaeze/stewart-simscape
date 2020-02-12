@@ -91,7 +91,7 @@ We here study what makes the Stiffness matrix diagonal when using a cubic config
 #+end_src
 
 ** Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center
-We create a cubic Stewart platform (figure [[fig:3d-cubic-stewart-aligned]]) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
+We create a cubic Stewart platform (figure [[fig:cubic_conf_centered_J_center]]) in such a way that the center of the cube (black star) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
 
 #+begin_src matlab
@@ -111,10 +111,6 @@ The Jacobian matrix is estimated at the location of the center of the cube.
   stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 175e-3, 'Mpr', 150e-3);
 #+end_src
 
-#+name: fig:3d-cubic-stewart-aligned
-#+caption: Centered cubic configuration
-[[file:figs/3d-cubic-stewart-aligned.png]]
-
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false);
   scatter3(0, 0, FOc, 200, 'kh');
@@ -133,6 +129,8 @@ The Jacobian matrix is estimated at the location of the center of the cube.
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:cubic_conf_centered_J_center
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 | -2.5e-16 |        0 |  2.1e-17 |       0 |
 |        0 |        2 |        0 | -7.8e-19 |        0 |       0 |
@@ -142,7 +140,7 @@ The Jacobian matrix is estimated at the location of the center of the cube.
 |  6.6e-18 | -3.3e-18 |        0 |  1.7e-18 |        0 |    0.06 |
 
 ** Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center
-We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure [[fig:3d-cubic-stewart-aligned]]).
+We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure [[fig:cubic_conf_centered_J_not_center]]).
 The Jacobian matrix is not estimated at the location of the center of the cube.
 
 #+begin_src matlab
@@ -180,6 +178,8 @@ The Jacobian matrix is not estimated at the location of the center of the cube.
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:cubic_conf_centered_J_not_center
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 | -2.5e-16 |        0 | -0.14 |       0 |
 |        0 |        2 |        0 |     0.14 |     0 |       0 |
@@ -227,6 +227,8 @@ The Jacobian is estimated at the cube center.
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:cubic_conf_not_centered_J_center
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 | -1.7e-16 |        0 |  4.9e-17 |        0 |
 |        0 |        2 |        0 | -2.2e-17 |        0 |  2.8e-17 |
@@ -281,6 +283,8 @@ The center of the cube from the top platform is at $z = 110 - 175 = -65$.
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:cubic_conf_not_centered_J_stewart_center
+#+caption: Stiffness Matrix
 #+RESULTS:
 |       2 |        0 |  1.5e-16 |        0 |     0.02 |       0 |
 |       0 |        2 |        0 |    -0.02 |        0 |       0 |
@@ -366,6 +370,8 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:stewart_cubic_conf_type_1
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 | -2.8e-16 |        0 |  2.4e-17 |       0 |
 |        0 |        2 |        0 | -2.3e-17 |        0 |       0 |
@@ -405,6 +411,8 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:stewart_cubic_conf_type_2
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 | -1.9e-16 |        0 | 5.6e-17 |       0 |
 |        0 |        2 |        0 | -7.6e-17 |       0 |       0 |
@@ -444,6 +452,8 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
   data2orgtable(stewart.kinematics.K, {}, {}, ' %.2g ');
 #+end_src
 
+#+name: tab:stewart_cubic_conf_type_3
+#+caption: Stiffness Matrix
 #+RESULTS:
 |        2 |        0 |   -3e-16 |        0 | -8.3e-17 |       0 |
 |        0 |        2 |        0 | -2.2e-17 |        0 | 5.6e-17 |

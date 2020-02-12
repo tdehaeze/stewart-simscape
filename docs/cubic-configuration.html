@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-12 mer. 11:18 -->
+<!-- 2020-02-12 mer. 11:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -274,26 +274,26 @@ for the JavaScript code in this tag.
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#orgd35acc0">1.5. Conclusion</a></li>
+<li><a href="#org95af62e">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#org4576402">2.2. Conclusion</a></li>
+<li><a href="#org7673551">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#org04f1ef6">3.2. Conclusion</a></li>
+<li><a href="#orgcad29fd">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org5abef15">4. Dynamic Coupling</a>
 <ul>
 <li><a href="#org0d67b92">4.1. Cube&rsquo;s center at the Center of Mass of the Payload</a></li>
 <li><a href="#org876e05f">4.2. Dynamic decoupling between the actuators and sensors</a></li>
-<li><a href="#org95af62e">4.3. Conclusion</a></li>
+<li><a href="#org213d9b9">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">5. Functions</a>
@@ -388,7 +388,7 @@ We here study what makes the Stiffness matrix diagonal when using a cubic config
 <h3 id="orgf6f7ad2"><span class="section-number-3">1.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-We create a cubic Stewart platform (figure <a href="#org9454f54">1</a>) in such a way that the center of the cube (black dot) is located at the center of the Stewart platform (blue dot).
+We create a cubic Stewart platform (figure <a href="#orgaba20c8">1</a>) in such a way that the center of the cube (black star) is located at the center of the Stewart platform (blue dot).
 The Jacobian matrix is estimated at the location of the center of the cube.
 </p>
 
@@ -412,21 +412,14 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 
 
-<div id="org9454f54" class="figure">
-<p><img src="figs/3d-cubic-stewart-aligned.png" alt="3d-cubic-stewart-aligned.png" />
-</p>
-<p><span class="figure-number">Figure 1: </span>Centered cubic configuration</p>
-</div>
-
-
 <div id="orgaba20c8" class="figure">
 <p><img src="figs/cubic_conf_centered_J_center.png" alt="cubic_conf_centered_J_center.png" />
 </p>
-<p><span class="figure-number">Figure 2: </span>Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_centered_J_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 1: </span>Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_centered_J_center.pdf">pdf</a>)</p>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org4baf591" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -504,7 +497,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <h3 id="orga88e79a"><span class="section-number-3">1.2</span> Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org9454f54">1</a>).
+We create a cubic Stewart platform with center of the cube located at the center of the Stewart platform (figure <a href="#org47f8142">2</a>).
 The Jacobian matrix is not estimated at the location of the center of the cube.
 </p>
 
@@ -531,11 +524,11 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <div id="org47f8142" class="figure">
 <p><img src="figs/cubic_conf_centered_J_not_center.png" alt="cubic_conf_centered_J_not_center.png" />
 </p>
-<p><span class="figure-number">Figure 3: </span>Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center (<a href="./figs/cubic_conf_centered_J_not_center.png">png</a>, <a href="./figs/cubic_conf_centered_J_not_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 2: </span>Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center (<a href="./figs/cubic_conf_centered_J_not_center.png">png</a>, <a href="./figs/cubic_conf_centered_J_not_center.pdf">pdf</a>)</p>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org5cc2020" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 2:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -613,7 +606,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <h3 id="orge02ec88"><span class="section-number-3">1.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org0235d3a">4</a>).
+Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org0235d3a">3</a>).
 The Jacobian is estimated at the cube center.
 </p>
 
@@ -640,11 +633,11 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <div id="org0235d3a" class="figure">
 <p><img src="figs/cubic_conf_not_centered_J_center.png" alt="cubic_conf_not_centered_J_center.png" />
 </p>
-<p><span class="figure-number">Figure 4: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_not_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 3: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_not_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_center.pdf">pdf</a>)</p>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org6b3d8b1" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 3:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -760,11 +753,11 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <div id="orgbe766b3" class="figure">
 <p><img src="figs/cubic_conf_not_centered_J_stewart_center.png" alt="cubic_conf_not_centered_J_stewart_center.png" />
 </p>
-<p><span class="figure-number">Figure 5: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center (<a href="./figs/cubic_conf_not_centered_J_stewart_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_stewart_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 4: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center (<a href="./figs/cubic_conf_not_centered_J_stewart_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_stewart_center.pdf">pdf</a>)</p>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org846d51c" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 4:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -838,8 +831,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-orgd35acc0" class="outline-3">
-<h3 id="orgd35acc0"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-org95af62e" class="outline-3">
+<h3 id="org95af62e"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -892,9 +885,9 @@ We find the several Cubic configuration for the Stewart platform where the cente
 The differences between the configuration are the cube&rsquo;s size:
 </p>
 <ul class="org-ul">
-<li>Small Cube Size in Figure <a href="#org105635f">6</a></li>
-<li>Medium Cube Size in Figure <a href="#org264ab9c">7</a></li>
-<li>Large Cube Size in Figure <a href="#org52254fe">8</a></li>
+<li>Small Cube Size in Figure <a href="#org105635f">5</a></li>
+<li>Medium Cube Size in Figure <a href="#org264ab9c">6</a></li>
+<li>Large Cube Size in Figure <a href="#org52254fe">7</a></li>
 </ul>
 
 <p>
@@ -912,11 +905,11 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 <div id="org105635f" class="figure">
 <p><img src="figs/stewart_cubic_conf_type_1.png" alt="stewart_cubic_conf_type_1.png" />
 </p>
-<p><span class="figure-number">Figure 6: </span>Cubic Configuration for the Stewart Platform - Small Cube Size (<a href="./figs/stewart_cubic_conf_type_1.png">png</a>, <a href="./figs/stewart_cubic_conf_type_1.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 5: </span>Cubic Configuration for the Stewart Platform - Small Cube Size (<a href="./figs/stewart_cubic_conf_type_1.png">png</a>, <a href="./figs/stewart_cubic_conf_type_1.pdf">pdf</a>)</p>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org91f89e4" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 5:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -998,12 +991,12 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 <div id="org264ab9c" class="figure">
 <p><img src="figs/stewart_cubic_conf_type_2.png" alt="stewart_cubic_conf_type_2.png" />
 </p>
-<p><span class="figure-number">Figure 7: </span>Cubic Configuration for the Stewart Platform - Medium Cube Size (<a href="./figs/stewart_cubic_conf_type_2.png">png</a>, <a href="./figs/stewart_cubic_conf_type_2.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 6: </span>Cubic Configuration for the Stewart Platform - Medium Cube Size (<a href="./figs/stewart_cubic_conf_type_2.png">png</a>, <a href="./figs/stewart_cubic_conf_type_2.pdf">pdf</a>)</p>
 </div>
 
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="orgcf84781" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 6:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -1085,12 +1078,12 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 <div id="org52254fe" class="figure">
 <p><img src="figs/stewart_cubic_conf_type_3.png" alt="stewart_cubic_conf_type_3.png" />
 </p>
-<p><span class="figure-number">Figure 8: </span>Cubic Configuration for the Stewart Platform - Large Cube Size (<a href="./figs/stewart_cubic_conf_type_3.png">png</a>, <a href="./figs/stewart_cubic_conf_type_3.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 7: </span>Cubic Configuration for the Stewart Platform - Large Cube Size (<a href="./figs/stewart_cubic_conf_type_3.png">png</a>, <a href="./figs/stewart_cubic_conf_type_3.pdf">pdf</a>)</p>
 </div>
 
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table id="org02f7789" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 7:</span> Stiffness Matrix</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -1164,8 +1157,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org4576402" class="outline-3">
-<h3 id="org4576402"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org7673551" class="outline-3">
+<h3 id="org7673551"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1227,20 +1220,20 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 
 <p>
 We find that for all the cube&rsquo;s size, \(k_x = k_y = k_z = k\) where \(k\) is the strut stiffness.
-We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varying with the cube&rsquo;s size (figure <a href="#orgf5b4a80">9</a>).
+We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varying with the cube&rsquo;s size (figure <a href="#orgf5b4a80">8</a>).
 </p>
 
 
 <div id="orgf5b4a80" class="figure">
 <p><img src="figs/stiffness_cube_size.png" alt="stiffness_cube_size.png" />
 </p>
-<p><span class="figure-number">Figure 9: </span>\(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) function of the size of the cube</p>
+<p><span class="figure-number">Figure 8: </span>\(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) function of the size of the cube</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org04f1ef6" class="outline-3">
-<h3 id="org04f1ef6"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-orgcad29fd" class="outline-3">
+<h3 id="orgcad29fd"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1271,8 +1264,8 @@ In order to maximize the rotational stiffness of the Stewart platform, the size 
 <h3 id="org876e05f"><span class="section-number-3">4.2</span> Dynamic decoupling between the actuators and sensors</h3>
 </div>
 
-<div id="outline-container-org95af62e" class="outline-3">
-<h3 id="org95af62e"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-org213d9b9" class="outline-3">
+<h3 id="org213d9b9"><span class="section-number-3">4.3</span> Conclusion</h3>
 </div>
 </div>
 
@@ -1330,7 +1323,7 @@ This Matlab function is accessible <a href="../src/generateCubicConfiguration.m"
 <div id="org8a7f3d8" class="figure">
 <p><img src="figs/cubic-configuration-definition.png" alt="cubic-configuration-definition.png" />
 </p>
-<p><span class="figure-number">Figure 10: </span>Cubic Configuration</p>
+<p><span class="figure-number">Figure 9: </span>Cubic Configuration</p>
 </div>
 </div>
 </div>
@@ -1435,7 +1428,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-12 mer. 11:18</p>
+<p class="date">Created: 2020-02-12 mer. 11:23</p>
 </div>
 </body>
 </html>
