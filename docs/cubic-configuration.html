@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 17:52 -->
+<!-- 2020-02-12 mer. 10:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -299,20 +299,29 @@ for the JavaScript code in this tag.
 
 <p>
 The discovery of the Cubic configuration is done in <a class='org-ref-reference' href="#geng94_six_degree_of_freed_activ">geng94_six_degree_of_freed_activ</a>.
-Further analysis is conducted in
 </p>
 
 <p>
-The specificity of the Cubic configuration is that each actuator is orthogonal with the others.
+The specificity of the Cubic configuration is that each actuator is orthogonal with the others:
 </p>
+<blockquote>
+<p>
+the active struts are arranged in a mutually orthogonal configuration connecting the corners of a cube.
+</p>
+</blockquote>
 
 <p>
 The cubic (or orthogonal) configuration of the Stewart platform is now widely used (<a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>,<a class='org-ref-reference' href="#jafari03_orthog_gough_stewar_platf_microm">jafari03_orthog_gough_stewar_platf_microm</a>).
 </p>
 
 <p>
-According to <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>, the cubic configuration provides a uniform stiffness in all directions and <b>minimizes the crosscoupling</b> from actuator to sensor of different legs (being orthogonal to each other).
+According to <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>:
 </p>
+<blockquote>
+<p>
+This topology provides a uniform control capability and a uniform stiffness in all directions, and it minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other).
+</p>
+</blockquote>
 
 <p>
 To generate and study the Cubic configuration, <code>generateCubicConfiguration</code> is used (description in section <a href="#orga8311d3">2.1</a>).
@@ -327,7 +336,37 @@ The goal is to study the benefits of using a cubic configuration:
 <div id="outline-container-org8c6677e" class="outline-2">
 <h2 id="org8c6677e"><span class="section-number-2">1</span> Configuration Analysis - Stiffness Matrix</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+First, we have to understand what is the physical meaning of the Stiffness matrix \(\bm{K}\).
+</p>
+
+<p>
+The Stiffness matrix links forces \(\bm{f}\) and torques \(\bm{n}\) applied on the mobile platform at \(\{B\}\) to the displacement \(\Delta\bm{\mathcal{X}}\) of the mobile platform represented by \(\{B\}\) with respect to \(\{A\}\):
+\[ \bm{\mathcal{F}} = \bm{K} \Delta\bm{\mathcal{X}} \]
+</p>
+
+<p>
+with:
+</p>
+<ul class="org-ul">
+<li>\(\bm{\mathcal{F}} = [\bm{f}\ \bm{n}]^{T}\)</li>
+<li>\(\Delta\bm{\mathcal{X}} = [\delta x, \delta y, \delta z, \delta \theta_{x}, \delta \theta_{y}, \delta \theta_{z}]^{T}\)</li>
+</ul>
+
+<p>
+If the stiffness matrix is inversible, its inverse is the compliance matrix: \(\bm{C} = \bm{K}^{-1\) and:
+\[ \Delta \bm{\mathcal{X}} = C \bm{\mathcal{F}} \]
+</p>
+
+<p>
+Thus, if the stiffness matrix is diagonal, the compliance matrix is also diagonal and a force (resp. torque) \(\bm{\mathcal{F}}_i\) applied on the mobile platform at \(\{B\}\) will induce a pure translation (resp. rotation) of the mobile platform represented by \(\{B\}\) with respect to \(\{A\}\).
+</p>
+
+<p>
+One has to note that this is only valid in a static way.
+</p>
 </div>
+
 <div id="outline-container-orgf6f7ad2" class="outline-3">
 <h3 id="orgf6f7ad2"><span class="section-number-3">1.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-1">
@@ -337,11 +376,19 @@ The Jacobian matrix is estimated at the location of the center of the cube.
 </p>
 
 <div class="org-src-container">
+<pre class="src src-matlab">H = 100e<span class="org-type">-</span>3;     <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>H<span class="org-type">/</span>2;     <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+Hc = H;         <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, <span class="org-type">-</span>50e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 50e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, ones(6,1));
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, ones(6,1));
 stewart = computeJacobian(stewart);
 stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 175e<span class="org-type">-</span>3, <span class="org-string">'Mpr'</span>, 150e<span class="org-type">-</span>3);
 </pre>
@@ -445,11 +492,19 @@ The Jacobian matrix is not estimated at the location of the center of the cube.
 </p>
 
 <div class="org-src-container">
+<pre class="src src-matlab">H    = 100e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = 20e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+Hc   = H;      <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H<span class="org-type">/</span>2;    <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 0);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 50e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, ones(6,1));
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, ones(6,1));
 stewart = computeJacobian(stewart);
 stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 175e<span class="org-type">-</span>3, <span class="org-string">'Mpr'</span>, 150e<span class="org-type">-</span>3);
 </pre>
@@ -483,8 +538,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">2</td>
 <td class="org-right">0</td>
 <td class="org-right">-2.5e-16</td>
-<td class="org-right">1.4e-17</td>
-<td class="org-right">-0.1</td>
+<td class="org-right">0</td>
+<td class="org-right">-0.14</td>
 <td class="org-right">0</td>
 </tr>
 
@@ -492,7 +547,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">0</td>
 <td class="org-right">2</td>
 <td class="org-right">0</td>
-<td class="org-right">0.1</td>
+<td class="org-right">0.14</td>
 <td class="org-right">0</td>
 <td class="org-right">0</td>
 </tr>
@@ -501,35 +556,35 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">-2.5e-16</td>
 <td class="org-right">0</td>
 <td class="org-right">2</td>
-<td class="org-right">3.4e-18</td>
-<td class="org-right">-1.4e-17</td>
+<td class="org-right">-5.3e-19</td>
+<td class="org-right">0</td>
 <td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="org-right">1.4e-17</td>
-<td class="org-right">0.1</td>
-<td class="org-right">3.4e-18</td>
-<td class="org-right">0.02</td>
-<td class="org-right">1.1e-20</td>
-<td class="org-right">3.4e-18</td>
+<td class="org-right">0</td>
+<td class="org-right">0.14</td>
+<td class="org-right">-5.3e-19</td>
+<td class="org-right">0.025</td>
+<td class="org-right">0</td>
+<td class="org-right">8.7e-19</td>
 </tr>
 
 <tr>
-<td class="org-right">-0.1</td>
+<td class="org-right">-0.14</td>
 <td class="org-right">0</td>
-<td class="org-right">-1.4e-17</td>
-<td class="org-right">1.4e-19</td>
-<td class="org-right">0.02</td>
-<td class="org-right">-1.7e-18</td>
+<td class="org-right">2.6e-18</td>
+<td class="org-right">1.6e-19</td>
+<td class="org-right">0.025</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
 <td class="org-right">6.6e-18</td>
 <td class="org-right">-3.3e-18</td>
 <td class="org-right">0</td>
-<td class="org-right">3.6e-18</td>
-<td class="org-right">-1.7e-18</td>
+<td class="org-right">8.9e-19</td>
+<td class="org-right">0</td>
 <td class="org-right">0.06</td>
 </tr>
 </tbody>
@@ -541,23 +596,24 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <h3 id="orge02ec88"><span class="section-number-3">1.3</span> Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org97b319c">4</a>).
+Here, the &ldquo;center&rdquo; of the Stewart platform is not at the cube center (figure <a href="#org0235d3a">4</a>).
 The Jacobian is estimated at the cube center.
 </p>
 
-
-<div id="org97b319c" class="figure">
-<p><img src="figs/3d-cubic-stewart-misaligned.png" alt="3d-cubic-stewart-misaligned.png" />
-</p>
-<p><span class="figure-number">Figure 4: </span>Not centered cubic configuration</p>
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 80e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>30e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+Hc   = 100e<span class="org-type">-</span>3;      <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B;    <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 80e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, <span class="org-type">-</span>40e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 50e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, ones(6,1));
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, ones(6,1));
 stewart = computeJacobian(stewart);
 stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 175e<span class="org-type">-</span>3, <span class="org-string">'Mpr'</span>, 150e<span class="org-type">-</span>3);
 </pre>
@@ -567,7 +623,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <div id="org0235d3a" class="figure">
 <p><img src="figs/cubic_conf_not_centered_J_center.png" alt="cubic_conf_not_centered_J_center.png" />
 </p>
-<p><span class="figure-number">Figure 5: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_not_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 4: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center (<a href="./figs/cubic_conf_not_centered_J_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_center.pdf">pdf</a>)</p>
 </div>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -592,7 +648,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">0</td>
 <td class="org-right">-1.7e-16</td>
 <td class="org-right">0</td>
-<td class="org-right">0.02</td>
+<td class="org-right">4.9e-17</td>
 <td class="org-right">0</td>
 </tr>
 
@@ -600,7 +656,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">0</td>
 <td class="org-right">2</td>
 <td class="org-right">0</td>
-<td class="org-right">-0.02</td>
+<td class="org-right">-2.2e-17</td>
 <td class="org-right">0</td>
 <td class="org-right">2.8e-17</td>
 </tr>
@@ -609,35 +665,35 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">-1.7e-16</td>
 <td class="org-right">0</td>
 <td class="org-right">2</td>
-<td class="org-right">1.2e-19</td>
+<td class="org-right">1.1e-18</td>
 <td class="org-right">-1.4e-17</td>
 <td class="org-right">1.4e-17</td>
 </tr>
 
 <tr>
 <td class="org-right">0</td>
-<td class="org-right">-0.02</td>
-<td class="org-right">1.2e-19</td>
+<td class="org-right">-2.2e-17</td>
+<td class="org-right">1.1e-18</td>
 <td class="org-right">0.015</td>
-<td class="org-right">-4.3e-19</td>
-<td class="org-right">1.7e-18</td>
+<td class="org-right">0</td>
+<td class="org-right">3.5e-18</td>
 </tr>
 
 <tr>
-<td class="org-right">0.02</td>
+<td class="org-right">4.4e-17</td>
 <td class="org-right">0</td>
-<td class="org-right">-7.3e-18</td>
-<td class="org-right">-3.3e-21</td>
+<td class="org-right">-1.4e-17</td>
+<td class="org-right">-5.7e-20</td>
 <td class="org-right">0.015</td>
-<td class="org-right">0</td>
+<td class="org-right">-8.7e-19</td>
 </tr>
 
 <tr>
 <td class="org-right">6.6e-18</td>
 <td class="org-right">2.5e-17</td>
 <td class="org-right">0</td>
-<td class="org-right">2e-18</td>
-<td class="org-right">0</td>
+<td class="org-right">3.5e-18</td>
+<td class="org-right">-8.7e-19</td>
 <td class="org-right">0.06</td>
 </tr>
 </tbody>
@@ -665,13 +721,21 @@ The center of the cube from the top platform is at \(z = 110 - 175 = -65\).
 </p>
 
 <div class="org-src-container">
+<pre class="src src-matlab">H    = 100e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = <span class="org-type">-</span>H<span class="org-type">/</span>2;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+Hc   = 1.5<span class="org-type">*</span>H;      <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H<span class="org-type">/</span>2 <span class="org-type">+</span> 10e<span class="org-type">-</span>3;    <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 80e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, <span class="org-type">-</span>40e<span class="org-type">-</span>3);
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'FOc'</span>, 50e<span class="org-type">-</span>3, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, H, <span class="org-string">'MO_B'</span>, MO_B);
+stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 0, <span class="org-string">'MHb'</span>, 0);
 stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, ones(6,1));
+stewart = initializeStrutDynamics(stewart, <span class="org-string">'K'</span>, ones(6,1));
 stewart = computeJacobian(stewart);
-stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 175e<span class="org-type">-</span>3, <span class="org-string">'Mpr'</span>, 150e<span class="org-type">-</span>3);
+stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'</span>, 215e<span class="org-type">-</span>3, <span class="org-string">'Mpr'</span>, 195e<span class="org-type">-</span>3);
 </pre>
 </div>
 
@@ -679,7 +743,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <div id="orgbe766b3" class="figure">
 <p><img src="figs/cubic_conf_not_centered_J_stewart_center.png" alt="cubic_conf_not_centered_J_stewart_center.png" />
 </p>
-<p><span class="figure-number">Figure 6: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center (<a href="./figs/cubic_conf_not_centered_J_stewart_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_stewart_center.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 5: </span>Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center (<a href="./figs/cubic_conf_not_centered_J_stewart_center.png">png</a>, <a href="./figs/cubic_conf_not_centered_J_stewart_center.pdf">pdf</a>)</p>
 </div>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -702,7 +766,7 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <tr>
 <td class="org-right">2</td>
 <td class="org-right">0</td>
-<td class="org-right">-1.7e-16</td>
+<td class="org-right">1.5e-16</td>
 <td class="org-right">0</td>
 <td class="org-right">0.02</td>
 <td class="org-right">0</td>
@@ -714,43 +778,43 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <td class="org-right">0</td>
 <td class="org-right">-0.02</td>
 <td class="org-right">0</td>
-<td class="org-right">2.8e-17</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="org-right">-1.7e-16</td>
+<td class="org-right">1.5e-16</td>
 <td class="org-right">0</td>
 <td class="org-right">2</td>
-<td class="org-right">1.2e-19</td>
-<td class="org-right">-1.4e-17</td>
-<td class="org-right">1.4e-17</td>
+<td class="org-right">-3e-18</td>
+<td class="org-right">-2.8e-17</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
 <td class="org-right">0</td>
 <td class="org-right">-0.02</td>
-<td class="org-right">1.2e-19</td>
-<td class="org-right">0.015</td>
-<td class="org-right">-4.3e-19</td>
-<td class="org-right">1.7e-18</td>
+<td class="org-right">-3e-18</td>
+<td class="org-right">0.034</td>
+<td class="org-right">-8.7e-19</td>
+<td class="org-right">5.2e-18</td>
 </tr>
 
 <tr>
 <td class="org-right">0.02</td>
 <td class="org-right">0</td>
-<td class="org-right">-7.3e-18</td>
-<td class="org-right">-3.3e-21</td>
-<td class="org-right">0.015</td>
+<td class="org-right">-2.2e-17</td>
+<td class="org-right">-4.4e-19</td>
+<td class="org-right">0.034</td>
 <td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="org-right">6.6e-18</td>
-<td class="org-right">2.5e-17</td>
+<td class="org-right">5.9e-18</td>
+<td class="org-right">-7.5e-18</td>
 <td class="org-right">0</td>
-<td class="org-right">2e-18</td>
+<td class="org-right">3.5e-18</td>
 <td class="org-right">0</td>
-<td class="org-right">0.06</td>
+<td class="org-right">0.14</td>
 </tr>
 </tbody>
 </table>
@@ -761,6 +825,9 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <h3 id="orgd35acc0"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
+<p>
+Here are the conclusion about the Stiffness matrix for the Cubic configuration:
+</p>
 <ul class="org-ul">
 <li>The cubic configuration permits to have \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\)</li>
 <li>The stiffness matrix \(K\) is diagonal for the cubic configuration if the Jacobian is estimated at the cube center.</li>
@@ -774,30 +841,45 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 <h3 id="org8afa645"><span class="section-number-3">1.6</span> Having Cube&rsquo;s center above the top platform</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
-Let&rsquo;s say we want to have a decouple dynamics above the top platform.
+Let&rsquo;s say we want to have a diagonal stiffness matrix when \(\{A\}\) and \(\{B\}\) are located above the top platform.
 Thus, we want the cube&rsquo;s center to be located above the top center.
-This is possible, to do so:
+</p>
+
+<p>
+Let&rsquo;s fix the Height of the Stewart platform and the position of frames \(\{A\}\) and \(\{B\}\):
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">H    = 100e<span class="org-type">-</span>3; <span class="org-comment">% height of the Stewart platform [m]</span>
+MO_B = 20e<span class="org-type">-</span>3;  <span class="org-comment">% Position {B} with respect to {M} [m]</span>
+</pre>
+</div>
+
+<p>
+We find the several Cubic configuration for the Stewart platform where the center of the cube is located at frame \(\{A\}\).
+The differences between the configuration are the cube&rsquo;s size:
 </p>
 <ul class="org-ul">
-<li>The position of the center of the cube should be positioned at A</li>
-<li>The Height of the &ldquo;useful&rdquo; part of the cube should be at least equal to two times the distance from F to A.
-It is possible to have small cube, but then to configuration is a little bit strange.</li>
+<li>Small Cube Size in Figure <a href="#org105635f">6</a></li>
+<li>Medium Cube Size in Figure <a href="#org264ab9c">7</a></li>
+<li>Large Cube Size in Figure <a href="#org52254fe">8</a></li>
 </ul>
 
+<p>
+For each of the configuration, the Stiffness matrix is diagonal with \(k_x = k_y = k_y = 2k\) with \(k\) is the stiffness of each strut.
+However, the rotational stiffnesses are increasing with the cube&rsquo;s size but the required size of the platform is also increasing, so there is a trade-off here.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 100e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 50e<span class="org-type">-</span>3);
-FOc = stewart.H <span class="org-type">+</span> stewart.MO_B(3);
-Hc = 2<span class="org-type">*</span>(stewart.H <span class="org-type">+</span> stewart.MO_B(3));
-stewart = generateCubicConfiguration(stewart, <span class="org-string">'Hc'</span>, Hc, <span class="org-string">'FOc'</span>, FOc, <span class="org-string">'FHa'</span>, 10e<span class="org-type">-</span>3, <span class="org-string">'MHb'</span>, 10e<span class="org-type">-</span>3);
-stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart, <span class="org-string">'Ki'</span>, ones(6,1));
-stewart = initializeJointDynamics(stewart, <span class="org-string">'disable'</span>, <span class="org-constant">true</span>);
-stewart = initializeCylindricalPlatforms(stewart);
-stewart = initializeCylindricalStruts(stewart);
-stewart = computeJacobian(stewart);
-stewart = initializeStewartPose(stewart);
+<pre class="src src-matlab">Hc   = 0.4<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
 </pre>
+</div>
+
+
+<div id="org105635f" class="figure">
+<p><img src="figs/stewart_cubic_conf_type_1.png" alt="stewart_cubic_conf_type_1.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Cubic Configuration for the Stewart Platform - Small Cube Size (<a href="./figs/stewart_cubic_conf_type_1.png">png</a>, <a href="./figs/stewart_cubic_conf_type_1.pdf">pdf</a>)</p>
 </div>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -820,9 +902,9 @@ stewart = initializeStewartPose(stewart);
 <tr>
 <td class="org-right">2</td>
 <td class="org-right">0</td>
-<td class="org-right">-3.2e-16</td>
+<td class="org-right">-2.8e-16</td>
 <td class="org-right">0</td>
-<td class="org-right">3.1e-16</td>
+<td class="org-right">2.4e-17</td>
 <td class="org-right">0</td>
 </tr>
 
@@ -830,52 +912,222 @@ stewart = initializeStewartPose(stewart);
 <td class="org-right">0</td>
 <td class="org-right">2</td>
 <td class="org-right">0</td>
-<td class="org-right">-1.2e-16</td>
+<td class="org-right">-2.3e-17</td>
 <td class="org-right">0</td>
 <td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="org-right">-3.2e-16</td>
+<td class="org-right">-2.8e-16</td>
 <td class="org-right">0</td>
 <td class="org-right">2</td>
-<td class="org-right">5e-18</td>
-<td class="org-right">-5.6e-17</td>
+<td class="org-right">-2.1e-19</td>
+<td class="org-right">0</td>
 <td class="org-right">0</td>
 </tr>
 
 <tr>
 <td class="org-right">0</td>
-<td class="org-right">-1.2e-16</td>
-<td class="org-right">5e-18</td>
-<td class="org-right">0.14</td>
-<td class="org-right">3.5e-18</td>
-<td class="org-right">1.4e-17</td>
+<td class="org-right">-2.3e-17</td>
+<td class="org-right">-2.1e-19</td>
+<td class="org-right">0.0024</td>
+<td class="org-right">-5.4e-20</td>
+<td class="org-right">6.5e-19</td>
 </tr>
 
 <tr>
-<td class="org-right">3e-16</td>
+<td class="org-right">2.4e-17</td>
 <td class="org-right">0</td>
-<td class="org-right">-5.4e-17</td>
-<td class="org-right">2.1e-19</td>
-<td class="org-right">0.14</td>
-<td class="org-right">-6.9e-18</td>
+<td class="org-right">4.9e-19</td>
+<td class="org-right">-2.3e-20</td>
+<td class="org-right">0.0024</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="org-right">7.4e-19</td>
-<td class="org-right">-2.6e-17</td>
+<td class="org-right">-1.2e-18</td>
+<td class="org-right">1.1e-18</td>
 <td class="org-right">0</td>
-<td class="org-right">1.3e-17</td>
-<td class="org-right">-6.9e-18</td>
-<td class="org-right">0.54</td>
+<td class="org-right">6.2e-19</td>
+<td class="org-right">0</td>
+<td class="org-right">0.0096</td>
 </tr>
 </tbody>
 </table>
 
-<p>
-We obtain \(k_x = k_y = k_z\) and \(k_{\theta_x} = k_{\theta_y}\), but the Stiffness matrix is not diagonal.
+<div class="org-src-container">
+<pre class="src src-matlab">Hc   = 1.5<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+
+<div id="org264ab9c" class="figure">
+<p><img src="figs/stewart_cubic_conf_type_2.png" alt="stewart_cubic_conf_type_2.png" />
 </p>
+<p><span class="figure-number">Figure 7: </span>Cubic Configuration for the Stewart Platform - Medium Cube Size (<a href="./figs/stewart_cubic_conf_type_2.png">png</a>, <a href="./figs/stewart_cubic_conf_type_2.pdf">pdf</a>)</p>
+</div>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
+<td class="org-right">-1.9e-16</td>
+<td class="org-right">0</td>
+<td class="org-right">5.6e-17</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
+<td class="org-right">-7.6e-17</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">-1.9e-16</td>
+<td class="org-right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">2.5e-18</td>
+<td class="org-right">2.8e-17</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">-7.6e-17</td>
+<td class="org-right">2.5e-18</td>
+<td class="org-right">0.034</td>
+<td class="org-right">8.7e-19</td>
+<td class="org-right">8.7e-18</td>
+</tr>
+
+<tr>
+<td class="org-right">5.7e-17</td>
+<td class="org-right">0</td>
+<td class="org-right">3.2e-17</td>
+<td class="org-right">2.9e-19</td>
+<td class="org-right">0.034</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">-1e-18</td>
+<td class="org-right">-1.3e-17</td>
+<td class="org-right">5.6e-17</td>
+<td class="org-right">8.4e-18</td>
+<td class="org-right">0</td>
+<td class="org-right">0.14</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Hc   = 2.5<span class="org-type">*</span>H;    <span class="org-comment">% Size of the useful part of the cube [m]</span>
+FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Center of the cube with respect to {F}</span>
+</pre>
+</div>
+
+
+<div id="org52254fe" class="figure">
+<p><img src="figs/stewart_cubic_conf_type_3.png" alt="stewart_cubic_conf_type_3.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Cubic Configuration for the Stewart Platform - Large Cube Size (<a href="./figs/stewart_cubic_conf_type_3.png">png</a>, <a href="./figs/stewart_cubic_conf_type_3.pdf">pdf</a>)</p>
+</div>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
+<td class="org-right">-3e-16</td>
+<td class="org-right">0</td>
+<td class="org-right">-8.3e-17</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
+<td class="org-right">-2.2e-17</td>
+<td class="org-right">0</td>
+<td class="org-right">5.6e-17</td>
+</tr>
+
+<tr>
+<td class="org-right">-3e-16</td>
+<td class="org-right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">-9.3e-19</td>
+<td class="org-right">-2.8e-17</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">-2.2e-17</td>
+<td class="org-right">-9.3e-19</td>
+<td class="org-right">0.094</td>
+<td class="org-right">0</td>
+<td class="org-right">2.1e-17</td>
+</tr>
+
+<tr>
+<td class="org-right">-8e-17</td>
+<td class="org-right">0</td>
+<td class="org-right">-3e-17</td>
+<td class="org-right">-6.1e-19</td>
+<td class="org-right">0.094</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">-6.2e-18</td>
+<td class="org-right">7.2e-17</td>
+<td class="org-right">5.6e-17</td>
+<td class="org-right">2.3e-17</td>
+<td class="org-right">0</td>
+<td class="org-right">0.37</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -934,7 +1186,7 @@ This Matlab function is accessible <a href="../src/generateCubicConfiguration.m"
 <div id="org8a7f3d8" class="figure">
 <p><img src="figs/cubic-configuration-definition.png" alt="cubic-configuration-definition.png" />
 </p>
-<p><span class="figure-number">Figure 7: </span>Cubic Configuration</p>
+<p><span class="figure-number">Figure 9: </span>Cubic Configuration</p>
 </div>
 </div>
 </div>
@@ -1039,7 +1291,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 17:52</p>
+<p class="date">Created: 2020-02-12 mer. 10:22</p>
 </div>
 </body>
 </html>
