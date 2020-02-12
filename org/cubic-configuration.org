@@ -39,27 +39,25 @@
 :END:
 
 * Introduction                                                        :ignore:
-The discovery of the Cubic configuration is done in cite:geng94_six_degree_of_freed_activ.
+The Cubic configuration for the Stewart platform was first proposed in cite:geng94_six_degree_of_freed_activ.
+This configuration is quite specific in the sense that the active struts are arranged in a mutually orthogonal configuration connecting the corners of a cube.
+This configuration is now widely used (cite:preumont07_six_axis_singl_stage_activ,jafari03_orthog_gough_stewar_platf_microm).
 
-The specificity of the Cubic configuration is that each actuator is orthogonal with the others:
-#+begin_quote
-the active struts are arranged in a mutually orthogonal configuration connecting the corners of a cube.
-#+end_quote
-
-The cubic (or orthogonal) configuration of the Stewart platform is now widely used (cite:preumont07_six_axis_singl_stage_activ,jafari03_orthog_gough_stewar_platf_microm).
-
-According to cite:preumont07_six_axis_singl_stage_activ:
+According to cite:preumont07_six_axis_singl_stage_activ, the cubic configuration offers the following advantages:
 #+begin_quote
 This topology provides a uniform control capability and a uniform stiffness in all directions, and it minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other).
 #+end_quote
 
-To generate and study the Cubic configuration, =generateCubicConfiguration= is used (description in section [[sec:generateCubicConfiguration]]).
-The goal is to study the benefits of using a cubic configuration:
-- Equal stiffness in all the degrees of freedom?
-- No coupling between the actuators?
-- Is the center of the cube an important point?
+In this document, the cubic architecture is analyzed:
+- In section [[sec:cubic_conf_stiffness]], we study the link between the Stiffness matrix and the cubic architecture and we find what are the conditions to obtain a diagonal stiffness matrix
+- In section [[sec:cubic_conf_above_platform]], we study cubic configurations where the cube's center is located above the mobile platform
+- In section [[sec:cubic_conf_size_analysis]], we study the effect of the cube's size on the Stewart platform properties
+- In section [[sec:cubic_conf_coupling]], we study the dynamic coupling of the cubic configuration
+
+To generate and study the Stewart platform with a Cubic configuration, the Matlab function =generateCubicConfiguration= is used (described [[sec:generateCubicConfiguration][here]]).
 
 * Configuration Analysis - Stiffness Matrix
+<<sec:cubic_conf_stiffness>>
 ** Introduction                                                      :ignore:
 First, we have to understand what is the physical meaning of the Stiffness matrix $\bm{K}$.
 
@@ -76,6 +74,8 @@ If the stiffness matrix is inversible, its inverse is the compliance matrix: $\b
 Thus, if the stiffness matrix is diagonal, the compliance matrix is also diagonal and a force (resp. torque) $\bm{\mathcal{F}}_i$ applied on the mobile platform at $\{B\}$ will induce a pure translation (resp. rotation) of the mobile platform represented by $\{B\}$ with respect to $\{A\}$.
 
 One has to note that this is only valid in a static way.
+
+We here study what makes the Stiffness matrix diagonal when using a cubic configuration.
 
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -296,6 +296,27 @@ Here are the conclusion about the Stiffness matrix for the Cubic configuration:
 - The stiffness matrix $K$ is diagonal for the cubic configuration if the Jacobian is estimated at the cube center.
 #+end_important
 
+* Configuration with the Cube's center above the mobile platform
+<<sec:cubic_conf_above_platform>>
+** Introduction                                                      :ignore:
+We saw in section [[sec:cubic_conf_stiffness]] that in order to have a diagonal stiffness matrix, we need the cube's center to be located at frames $\{A\}$ and $\{B\}$.
+Or, we usually want to have $\{A\}$ and $\{B\}$ located above the top platform where forces are applied and where displacements are expressed.
+
+We here see if the cubic configuration can provide a diagonal stiffness matrix when $\{A\}$ and $\{B\}$ are above the mobile platform.
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
 ** Having Cube's center above the top platform
 Let's say we want to have a diagonal stiffness matrix when $\{A\}$ and $\{B\}$ are located above the top platform.
 Thus, we want the cube's center to be located above the top center.
@@ -431,13 +452,36 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
 |   -8e-17 |        0 |   -3e-17 | -6.1e-19 |    0.094 |       0 |
 | -6.2e-18 |  7.2e-17 |  5.6e-17 |  2.3e-17 |        0 |    0.37 |
 
+** Conclusion
+#+begin_important
+  We found that we can have a diagonal stiffness matrix using the cubic architecture when $\{A\}$ and $\{B\}$ are located above the top platform.
+  Depending on the cube's size, we obtain 3 different configurations.
+#+end_important
+
 * Cubic size analysis
+<<sec:cubic_conf_size_analysis>>
+** Introduction                                                      :ignore:
 We here study the effect of the size of the cube used for the Stewart Cubic configuration.
 
 We fix the height of the Stewart platform, the center of the cube is at the center of the Stewart platform and the frames $\{A\}$ and $\{B\}$ are also taken at the center of the cube.
 
 We only vary the size of the cube.
 
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+** Analysis
+We initialize the wanted cube's size.
 #+begin_src matlab :results silent
   Hcs = 1e-3*[250:20:350]; % Heights for the Cube [m]
   Ks = zeros(6, 6, length(Hcs));
@@ -454,7 +498,7 @@ The frames $\{A\}$ and $\{B\}$ are positioned at the Stewart platform center as 
   FOc  = H + MO_B; % Center of the cube with respect to {F}
 #+end_src
 
-#+begin_src matlab :results silent
+#+begin_src matlab :exports none
   stewart = initializeStewartPlatform();
   stewart = initializeFramesPositions(stewart, 'H', H, 'MO_B', MO_B);
   for i = 1:length(Hcs)
@@ -470,7 +514,7 @@ The frames $\{A\}$ and $\{B\}$ are positioned at the Stewart platform center as 
 We find that for all the cube's size, $k_x = k_y = k_z = k$ where $k$ is the strut stiffness.
 We also find that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ are varying with the cube's size (figure [[fig:stiffness_cube_size]]).
 
-#+begin_src matlab :results none :exports code
+#+begin_src matlab :exports none
   figure;
   hold on;
   plot(Hcs, squeeze(Ks(4, 4, :)), 'DisplayName', '$k_{\theta_x} = k_{\theta_y}$');
@@ -491,11 +535,37 @@ We also find that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ are varying w
 #+RESULTS: fig:stiffness_cube_size
 [[file:figs/stiffness_cube_size.png]]
 
+** Conclusion
 We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linearly with the cube size.
 
 #+begin_important
   In order to maximize the rotational stiffness of the Stewart platform, the size of the cube should be the highest possible.
 #+end_important
+
+* Dynamic Coupling
+<<sec:cubic_conf_coupling>>
+** Introduction                                                      :ignore:
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+
+
+** Cube's center at the Center of Mass of the Payload
+
+** Dynamic decoupling between the actuators and sensors
+
+** Conclusion
 
 * Functions
 <<sec:functions>>
