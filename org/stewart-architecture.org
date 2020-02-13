@@ -1344,6 +1344,50 @@ Rotational Damping
 
 This Matlab function is accessible [[file:../src/initializeInertialSensor.m][here]].
 
+*** Geophone - Working Principle
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+From the schematic of the Z-axis geophone shown in Figure [[fig:z_axis_geophone]], we can write the transfer function from the support velocity $\dot{w}$ to the relative velocity of the inertial mass $\dot{d}$:
+\[ \frac{\dot{d}}{\dot{w}} = \frac{-\frac{s^2}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+- $\omega_0 = \sqrt{\frac{k}{m}}$
+- $\xi = \frac{1}{2} \sqrt{\frac{m}{k}}$
+
+#+name: fig:z_axis_geophone
+#+caption: Schematic of a Z-Axis geophone
+[[file:figs/inertial_sensor.png]]
+
+We see that at frequencies above $\omega_0$:
+\[ \frac{\dot{d}}{\dot{w}} \approx -1 \]
+
+And thus, the measurement of the relative velocity of the mass with respect to its support gives the absolute velocity of the support.
+
+We generally want to have the smallest resonant frequency $\omega_0$ to measure low frequency absolute velocity, however there is a trade-off between $\omega_0$ and the mass of the inertial mass.
+
+*** Accelerometer - Working Principle
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+From the schematic of the Z-axis accelerometer shown in Figure [[fig:z_axis_accelerometer]], we can write the transfer function from the support acceleration $\ddot{w}$ to the relative position of the inertial mass $d$:
+\[ \frac{d}{\ddot{w}} = \frac{-\frac{1}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
+with:
+- $\omega_0 = \sqrt{\frac{k}{m}}$
+- $\xi = \frac{1}{2} \sqrt{\frac{m}{k}}$
+
+#+name: fig:z_axis_accelerometer
+#+caption: Schematic of a Z-Axis geophone
+[[file:figs/inertial_sensor.png]]
+
+We see that at frequencies below $\omega_0$:
+\[ \frac{d}{\ddot{w}} \approx -\frac{1}{{\omega_0}^2} \]
+
+And thus, the measurement of the relative displacement of the mass with respect to its support gives the absolute acceleration of the support.
+
+Note that there is trade-off between:
+- the highest measurable acceleration $\omega_0$
+- the sensitivity of the accelerometer which is equal to $-\frac{1}{{\omega_0}^2}$
+
 *** Function description
 :PROPERTIES:
 :UNNUMBERED: t
@@ -1744,6 +1788,8 @@ Plot the legs connecting the joints of the fixed base to the joints of the mobil
     axis equal;
     axis off;
     title('Side')
+
+    close(f);
   end
 #+end_src
 

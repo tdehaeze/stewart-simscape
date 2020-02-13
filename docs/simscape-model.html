@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 14:42 -->
+<!-- 2020-02-13 jeu. 15:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -281,30 +281,18 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org3535b6d">6.1. Payload</a>
 <ul>
-<li><a href="#orgf4d7716">Function description</a></li>
-<li><a href="#org071708c">Optional Parameters</a></li>
+<li><a href="#org706f994">Function description</a></li>
+<li><a href="#orgb15b49f">Optional Parameters</a></li>
 <li><a href="#orgeeb8d35">Add Payload Type</a></li>
 <li><a href="#org6d52ffc">Add Stiffness, Damping and Mass properties of the Payload</a></li>
 </ul>
 </li>
 <li><a href="#orgaaed406">6.2. Ground</a>
 <ul>
-<li><a href="#org706f994">Function description</a></li>
-<li><a href="#orgb15b49f">Optional Parameters</a></li>
+<li><a href="#orge7f39a8">Function description</a></li>
+<li><a href="#orgb83df72">Optional Parameters</a></li>
 <li><a href="#orgef7035d">Add Ground Type</a></li>
 <li><a href="#org95633e8">Add Stiffness and Damping properties of the Ground</a></li>
-</ul>
-</li>
-<li><a href="#org4bdfc33">6.3. Z-Axis Geophone</a>
-<ul>
-<li><a href="#orgf6e6126">6.3.1. Working Principle</a></li>
-<li><a href="#org7b9c8ed">6.3.2. Initialization function</a></li>
-</ul>
-</li>
-<li><a href="#org99786f1">6.4. Z-Axis Accelerometer</a>
-<ul>
-<li><a href="#org64fd353">6.4.1. Working Principle</a></li>
-<li><a href="#orge8bb0f7">6.4.2. Initialization function</a></li>
 </ul>
 </li>
 </ul>
@@ -537,9 +525,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </p>
 </div>
 
-<div id="outline-container-orgf4d7716" class="outline-4">
-<h4 id="orgf4d7716">Function description</h4>
-<div class="outline-text-4" id="text-orgf4d7716">
+<div id="outline-container-org706f994" class="outline-4">
+<h4 id="org706f994">Function description</h4>
+<div class="outline-text-4" id="text-org706f994">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[payload]</span> = <span class="org-function-name">initializePayload</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializePayload - Initialize the Payload that can then be used for simulations and analysis</span>
@@ -569,9 +557,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </div>
 </div>
 
-<div id="outline-container-org071708c" class="outline-4">
-<h4 id="org071708c">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org071708c">
+<div id="outline-container-orgb15b49f" class="outline-4">
+<h4 id="orgb15b49f">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgb15b49f">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'solid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
@@ -633,9 +621,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org706f994" class="outline-4">
-<h4 id="org706f994">Function description</h4>
-<div class="outline-text-4" id="text-org706f994">
+<div id="outline-container-orge7f39a8" class="outline-4">
+<h4 id="orge7f39a8">Function description</h4>
+<div class="outline-text-4" id="text-orge7f39a8">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[ground]</span> = <span class="org-function-name">initializeGround</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeGround - Initialize the Ground that can then be used for simulations and analysis</span>
@@ -658,9 +646,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgb15b49f" class="outline-4">
-<h4 id="orgb15b49f">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgb15b49f">
+<div id="outline-container-orgb83df72" class="outline-4">
+<h4 id="orgb83df72">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgb83df72">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'solid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
@@ -700,168 +688,11 @@ ground.C = args.C;
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4bdfc33" class="outline-3">
-<h3 id="org4bdfc33"><span class="section-number-3">6.3</span> Z-Axis Geophone</h3>
-<div class="outline-text-3" id="text-6-3">
-</div>
-<div id="outline-container-orgf6e6126" class="outline-4">
-<h4 id="orgf6e6126"><span class="section-number-4">6.3.1</span> Working Principle</h4>
-<div class="outline-text-4" id="text-6-3-1">
-<p>
-From the schematic of the Z-axis geophone shown in Figure <a href="#org819fba8">5</a>, we can write the transfer function from the support velocity \(\dot{w}\) to the relative velocity of the inertial mass \(\dot{d}\):
-\[ \frac{\dot{d}}{\dot{w}} = \frac{-\frac{s^2}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
-with:
-</p>
-<ul class="org-ul">
-<li>\(\omega_0 = \sqrt{\frac{k}{m}}\)</li>
-<li>\(\xi = \frac{1}{2} \sqrt{\frac{m}{k}}\)</li>
-</ul>
-
-
-<div id="org819fba8" class="figure">
-<p><img src="figs/inertial_sensor.png" alt="inertial_sensor.png" />
-</p>
-<p><span class="figure-number">Figure 5: </span>Schematic of a Z-Axis geophone</p>
-</div>
-
-<p>
-We see that at frequencies above \(\omega_0\):
-\[ \frac{\dot{d}}{\dot{w}} \approx -1 \]
-</p>
-
-<p>
-And thus, the measurement of the relative velocity of the mass with respect to its support gives the absolute velocity of the support.
-</p>
-
-<p>
-We generally want to have the smallest resonant frequency \(\omega_0\) to measure low frequency absolute velocity, however there is a trade-off between \(\omega_0\) and the mass of the inertial mass.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org7b9c8ed" class="outline-4">
-<h4 id="org7b9c8ed"><span class="section-number-4">6.3.2</span> Initialization function</h4>
-<div class="outline-text-4" id="text-6-3-2">
-<p>
-<a id="orgd31bda9"></a>
-</p>
-
-<p>
-This Matlab function is accessible <a href="../src/initializeZAxisGeophone.m">here</a>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[geophone]</span> = <span class="org-function-name">initializeZAxisGeophone</span>(<span class="org-variable-name">args</span>)
-    arguments
-        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 1e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
-        args.freq (1,1) double {mustBeNumeric, mustBePositive} = 1    <span class="org-comment">% [Hz]</span>
-    <span class="org-keyword">end</span>
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%%</span></span>
-    geophone.m = args.mass;
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% The Stiffness is set to have the damping resonance frequency</span></span>
-    geophone.k = geophone.m <span class="org-type">*</span> (2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>args.freq)<span class="org-type">^</span>2;
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% We set the damping value to have critical damping</span></span>
-    geophone.c = 2<span class="org-type">*</span>sqrt(geophone.m <span class="org-type">*</span> geophone.k);
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% Save</span></span>
-    save(<span class="org-string">'./mat/geophone_z_axis.mat'</span>, <span class="org-string">'geophone'</span>);
-<span class="org-keyword">end</span>
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org99786f1" class="outline-3">
-<h3 id="org99786f1"><span class="section-number-3">6.4</span> Z-Axis Accelerometer</h3>
-<div class="outline-text-3" id="text-6-4">
-</div>
-<div id="outline-container-org64fd353" class="outline-4">
-<h4 id="org64fd353"><span class="section-number-4">6.4.1</span> Working Principle</h4>
-<div class="outline-text-4" id="text-6-4-1">
-<p>
-From the schematic of the Z-axis accelerometer shown in Figure <a href="#org1274602">6</a>, we can write the transfer function from the support acceleration \(\ddot{w}\) to the relative position of the inertial mass \(d\):
-\[ \frac{d}{\ddot{w}} = \frac{-\frac{1}{{\omega_0}^2}}{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1} \]
-with:
-</p>
-<ul class="org-ul">
-<li>\(\omega_0 = \sqrt{\frac{k}{m}}\)</li>
-<li>\(\xi = \frac{1}{2} \sqrt{\frac{m}{k}}\)</li>
-</ul>
-
-
-<div id="org1274602" class="figure">
-<p><img src="figs/inertial_sensor.png" alt="inertial_sensor.png" />
-</p>
-<p><span class="figure-number">Figure 6: </span>Schematic of a Z-Axis geophone</p>
-</div>
-
-<p>
-We see that at frequencies below \(\omega_0\):
-\[ \frac{d}{\ddot{w}} \approx -\frac{1}{{\omega_0}^2} \]
-</p>
-
-<p>
-And thus, the measurement of the relative displacement of the mass with respect to its support gives the absolute acceleration of the support.
-</p>
-
-<p>
-Note that there is trade-off between:
-</p>
-<ul class="org-ul">
-<li>the highest measurable acceleration \(\omega_0\)</li>
-<li>the sensitivity of the accelerometer which is equal to \(-\frac{1}{{\omega_0}^2}\)</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orge8bb0f7" class="outline-4">
-<h4 id="orge8bb0f7"><span class="section-number-4">6.4.2</span> Initialization function</h4>
-<div class="outline-text-4" id="text-6-4-2">
-<p>
-<a id="orge91f65f"></a>
-</p>
-
-<p>
-This Matlab function is accessible <a href="../src/initializeZAxisAccelerometer.m">here</a>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[accelerometer]</span> = <span class="org-function-name">initializeZAxisAccelerometer</span>(<span class="org-variable-name">args</span>)
-    arguments
-        args.mass (1,1) double {mustBeNumeric, mustBePositive} = 5e<span class="org-type">-</span>3 <span class="org-comment">% [kg]</span>
-        args.freq (1,1) double {mustBeNumeric, mustBePositive} = 5e3  <span class="org-comment">% [Hz]</span>
-    <span class="org-keyword">end</span>
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%%</span></span>
-    accelerometer.m = args.mass;
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% The Stiffness is set to have the damping resonance frequency</span></span>
-    accelerometer.k = accelerometer.m <span class="org-type">*</span> (2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>args.freq)<span class="org-type">^</span>2;
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% We set the damping value to have critical damping</span></span>
-    accelerometer.c = 2<span class="org-type">*</span>sqrt(accelerometer.m <span class="org-type">*</span> accelerometer.k);
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% Gain correction of the accelerometer to have a unity gain until the resonance</span></span>
-    accelerometer.gain = <span class="org-type">-</span>accelerometer.k<span class="org-type">/</span>accelerometer.m;
-
-    <span class="org-matlab-cellbreak"><span class="org-comment">%% Save</span></span>
-    save(<span class="org-string">'./mat/accelerometer_z_axis.mat'</span>, <span class="org-string">'accelerometer'</span>);
-<span class="org-keyword">end</span>
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 14:42</p>
+<p class="date">Created: 2020-02-13 jeu. 15:47</p>
 </div>
 </body>
 </html>
