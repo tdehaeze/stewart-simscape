@@ -40,6 +40,8 @@
 
 * Compare external forces and forces applied by the actuators
 ** Introduction                                                      :ignore:
+In this section, we wish to compare the effect of forces/torques applied by the actuators with the effect of external forces/torques on the displacement of the mobile platform.
+
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -58,6 +60,7 @@
 #+end_src
 
 ** Comparison with fixed support
+Let's generate a Stewart platform.
 #+begin_src matlab
   stewart = initializeStewartPlatform();
   stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
@@ -72,12 +75,14 @@
   stewart = initializeInertialSensor(stewart, 'type', 'none');
 #+end_src
 
+We don't put any flexibility below the Stewart platform such that *its base is fixed to an inertial frame*.
+We also don't put any payload on top of the Stewart platform.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
 #+end_src
 
-Estimation of the transfer function from $\bm{\tau}$ to $\mathcal{\bm{X}}$:
+The transfer function from actuator forces $\bm{\tau}$ to the relative displacement of the mobile platform $\mathcal{\bm{X}}$ is extracted.
 #+begin_src matlab
   %% Options for Linearized
   options = linearizeOptions;
@@ -97,12 +102,13 @@ Estimation of the transfer function from $\bm{\tau}$ to $\mathcal{\bm{X}}$:
   G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 #+end_src
 
+Using the Jacobian matrix, we compute the transfer function from force/torques applied by the actuators on the frame $\{B\}$ fixed to the mobile platform:
 #+begin_src matlab
   Gc = minreal(G*inv(stewart.kinematics.J'));
   Gc.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
 #+end_src
 
-Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$:
+We also extract the transfer function from external forces $\bm{\mathcal{F}}_{\text{ext}}$ on the frame $\{B\}$ fixed to the mobile platform to the relative displacement $\mathcal{\bm{X}}$ of $\{B\}$ with respect to frame $\{A\}$:
 #+begin_src matlab
   %% Input/Output definition
   clear io; io_i = 1;
@@ -115,6 +121,8 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 #+end_src
 
+The comparison of the two transfer functions is shown in Figure [[fig:comparison_Fext_F_fixed_base]].
+
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
 
@@ -126,7 +134,7 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   plot(freqs, abs(squeeze(freqresp(Gd(1,1), freqs, 'Hz'))), '--');
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -137,26 +145,28 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
+  legend({'$\mathcal{X}_{x}/\mathcal{F}_{x}$', '$\mathcal{X}_{x}/\mathcal{F}_{x,ext}$'});
 
   linkaxes([ax1,ax2],'x');
 #+end_src
 
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/comparison_Fext_F_fixed_base.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:comparison_Fext_F_fixed_base
+#+caption: Comparison of the transfer functions from $\bm{\mathcal{F}}$ to $\mathcal{\bm{X}}$ and from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$ ([[./figs/comparison_Fext_F_fixed_base.png][png]], [[./figs/comparison_Fext_F_fixed_base.pdf][pdf]])
+[[file:figs/comparison_Fext_F_fixed_base.png]]
 
 ** Comparison with a flexible support
-We redo the identification for when the Stewart platform is on a flexible support.
+We now add a flexible support under the Stewart platform.
 #+begin_src matlab
   ground = initializeGround('type', 'flexible');
 #+end_src
 
-Estimation of the transfer function from $\bm{\tau}$ to $\mathcal{\bm{X}}$:
+And we perform again the identification.
 #+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
-  %% Name of the Simulink File
-  mdl = 'stewart_platform_model';
-
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
@@ -166,15 +176,10 @@ Estimation of the transfer function from $\bm{\tau}$ to $\mathcal{\bm{X}}$:
   G = linearize(mdl, io, options);
   G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
   G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
-#+end_src
 
-#+begin_src matlab
   Gc = minreal(G*inv(stewart.kinematics.J'));
   Gc.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
-#+end_src
 
-Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$:
-#+begin_src matlab
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/Disturbances'], 1, 'openinput', [], 'F_ext');  io_i = io_i + 1; % External forces/torques applied on {B}
@@ -185,6 +190,8 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   Gd.InputName  = {'Fex', 'Fey', 'Fez', 'Mex', 'Mey', 'Mez'};
   Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 #+end_src
+
+The comparison between the obtained transfer functions is shown in Figure [[fig:comparison_Fext_F_flexible_base]].
 
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
@@ -197,7 +204,7 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   plot(freqs, abs(squeeze(freqresp(Gd(1,1), freqs, 'Hz'))), '--');
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -208,9 +215,19 @@ Estimation of the transfer function from $\bm{\mathcal{F}}_{\text{ext}}$ to $\ma
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
+  legend({'$\mathcal{X}_{x}/\mathcal{F}_{x}$', '$\mathcal{X}_{x}/\mathcal{F}_{x,ext}$'});
 
   linkaxes([ax1,ax2],'x');
 #+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/comparison_Fext_F_flexible_base.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:comparison_Fext_F_flexible_base
+#+caption: Comparison of the transfer functions from $\bm{\mathcal{F}}$ to $\mathcal{\bm{X}}$ and from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$ ([[./figs/comparison_Fext_F_flexible_base.png][png]], [[./figs/comparison_Fext_F_flexible_base.pdf][pdf]])
+[[file:figs/comparison_Fext_F_flexible_base.png]]
 
 ** Conclusion
 #+begin_important
@@ -219,6 +236,8 @@ The transfer function from forces/torques applied by the actuators on the payloa
 
 * Comparison of the static transfer function and the Compliance matrix
 ** Introduction                                                      :ignore:
+In this section, we see how the Compliance matrix of the Stewart platform is linked to the static relation between $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$.
+
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -252,6 +271,7 @@ Initialization of the Stewart platform.
   stewart = initializeInertialSensor(stewart, 'type', 'none');
 #+end_src
 
+No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
