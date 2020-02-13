@@ -149,6 +149,158 @@ There is two main types of inertial sensor that can be used to measure the absol
 Both inertial sensors are described bellow.
 
 * Other Elements
+** Payload
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializePayload.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializePayload>>
+
+This Matlab function is accessible [[file:../src/initializePayload.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [payload] = initializePayload(args)
+  % initializePayload - Initialize the Payload that can then be used for simulations and analysis
+  %
+  % Syntax: [payload] = initializePayload(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - type - 'none', 'solid', 'flexible', 'cartesian'
+  %        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
+  %                    This also the position where K and C are defined
+  %        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
+  %        - C [6x1] - Damping of the Payload [N/(m/s), N/(rad/s)]
+  %        - m [1x1] - Mass of the Payload [kg]
+  %        - I [3x3] - Inertia matrix for the Payload [kg*m2]
+  %
+  % Outputs:
+  %    - payload - Struture with the following properties:
+  %        - type - 1 (none), 2 (solid), 3 (flexible)
+  %        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
+  %        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
+  %        - C [6x1] - Stiffness of the Payload [N/(m/s), N/(rad/s)]
+  %        - m [1x1] - Mass of the Payload [kg]
+  %        - I [3x3] - Inertia matrix for the Payload [kg*m2]
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+    arguments
+      args.type char {mustBeMember(args.type,{'none', 'solid', 'flexible', 'cartesian'})} = 'none'
+      args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(6,1)
+      args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.h (1,1) double {mustBeNumeric, mustBeNonnegative} = 100e-3
+      args.m (1,1) double {mustBeNumeric, mustBeNonnegative} = 10
+      args.I (3,3) double {mustBeNumeric, mustBeNonnegative} = 1*eye(3)
+    end
+#+end_src
+
+*** Add Payload Type
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  switch args.type
+    case 'none'
+      payload.type = 1;
+    case 'solid'
+      payload.type = 2;
+    case 'flexible'
+      payload.type = 3;
+    case 'cartesian'
+      payload.type = 4;
+  end
+#+end_src
+
+*** Add Stiffness, Damping and Mass properties of the Payload
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  payload.K = args.K;
+  payload.C = args.C;
+  payload.m = args.m;
+  payload.I = args.I;
+
+  payload.h = args.h;
+#+end_src
+
+** Ground
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeGround.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeGround>>
+
+This Matlab function is accessible [[file:../src/initializeGround.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [ground] = initializeGround(args)
+  % initializeGround - Initialize the Ground that can then be used for simulations and analysis
+  %
+  % Syntax: [ground] = initializeGround(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - type - 'none', 'solid', 'flexible'
+  %        - K [3x1] - Translation Stiffness of the Ground [N/m]
+  %        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
+  %
+  % Outputs:
+  %    - ground - Struture with the following properties:
+  %        - type - 1 (none), 2 (solid), 3 (flexible)
+  %        - K [3x1] - Translation Stiffness of the Ground [N/m]
+  %        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+    arguments
+      args.type char {mustBeMember(args.type,{'none', 'solid', 'flexible'})} = 'none'
+      args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(3,1)
+      args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(3,1)
+    end
+#+end_src
+
+*** Add Ground Type
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  switch args.type
+    case 'none'
+      ground.type = 1;
+    case 'solid'
+      ground.type = 2;
+    case 'flexible'
+      ground.type = 3;
+  end
+#+end_src
+
+*** Add Stiffness and Damping properties of the Ground
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  ground.K = args.K;
+  ground.C = args.C;
+#+end_src
+
 ** Z-Axis Geophone
 *** Working Principle
 From the schematic of the Z-axis geophone shown in Figure [[fig:z_axis_geophone]], we can write the transfer function from the support velocity $\dot{w}$ to the relative velocity of the inertial mass $\dot{d}$:
