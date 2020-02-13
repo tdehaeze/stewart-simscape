@@ -1,11 +1,16 @@
+%% Clear Workspace and Close figures
+clear; close all; clc;
 
+%% Intialize Laplace variable
+s = zpk('s');
 
-simulinkproject('./');
+simulinkproject('../');
 
 % Stewart architecture definition
 % We first define some general Stewart architecture.
 
-stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -29,7 +34,7 @@ Ls_exact = zeros(6, length(Xrs));
 
 for i = 1:length(Xrs)
   Xr = Xrs(i);
-  L_approx(:, i) = stewart.J*[Xr; 0; 0; 0; 0; 0;];
+  L_approx(:, i) = stewart.kinematics.J*[Xr; 0; 0; 0; 0; 0;];
   [~, L_exact(:, i)] = inverseKinematics(stewart, 'AP', [Xr; 0; 0]);
 end
 

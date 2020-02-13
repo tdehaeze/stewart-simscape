@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 15:01 -->
+<!-- 2020-02-13 jeu. 16:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -274,33 +274,33 @@ for the JavaScript code in this tag.
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org510da86">1.5. Conclusion</a></li>
+<li><a href="#orgaaa4012">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#org949a403">2.2. Conclusion</a></li>
+<li><a href="#orge4b07dd">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#orgfc7135f">3.2. Conclusion</a></li>
+<li><a href="#orga34a399">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
 <li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
 <li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
-<li><a href="#org2e09bcb">4.3. Conclusion</a></li>
+<li><a href="#org2a36f1e">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
 <li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
 <li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
-<li><a href="#org8c1a310">5.3. Conclusion</a></li>
+<li><a href="#orgbde7788">5.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">6. Functions</a>
@@ -355,6 +355,17 @@ In this document, the cubic architecture is analyzed:
 <p>
 <a id="orgda0ee50"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/cubic_conf_stiffnessl.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run cubic_conf_stiffness.m</code>.
+</p>
+
+</div>
 <p>
 First, we have to understand what is the physical meaning of the Stiffness matrix \(\bm{K}\).
 </p>
@@ -389,6 +400,7 @@ One has to note that this is only valid in a static way.
 We here study what makes the Stiffness matrix diagonal when using a cubic configuration.
 </p>
 </div>
+
 <div id="outline-container-orgf6f7ad2" class="outline-3">
 <h3 id="orgf6f7ad2"><span class="section-number-3">1.1</span> Cubic Stewart platform centered with the cube center - Jacobian estimated at the cube center</h3>
 <div class="outline-text-3" id="text-1-1">
@@ -836,8 +848,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-org510da86" class="outline-3">
-<h3 id="org510da86"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-orgaaa4012" class="outline-3">
+<h3 id="orgaaa4012"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -859,6 +871,17 @@ Here are the conclusion about the Stiffness matrix for the Cubic configuration:
 <p>
 <a id="orgb73265d"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/cubic_conf_above_platforml.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run cubic_conf_above_platform.m</code>.
+</p>
+
+</div>
 <p>
 We saw in section <a href="#orgda0ee50">1</a> that in order to have a diagonal stiffness matrix, we need the cube&rsquo;s center to be located at frames \(\{A\}\) and \(\{B\}\).
 Or, we usually want to have \(\{A\}\) and \(\{B\}\) located above the top platform where forces are applied and where displacements are expressed.
@@ -868,6 +891,7 @@ Or, we usually want to have \(\{A\}\) and \(\{B\}\) located above the top platfo
 We here see if the cubic configuration can provide a diagonal stiffness matrix when \(\{A\}\) and \(\{B\}\) are above the mobile platform.
 </p>
 </div>
+
 <div id="outline-container-org8afa645" class="outline-3">
 <h3 id="org8afa645"><span class="section-number-3">2.1</span> Having Cube&rsquo;s center above the top platform</h3>
 <div class="outline-text-3" id="text-2-1">
@@ -1162,8 +1186,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org949a403" class="outline-3">
-<h3 id="org949a403"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-orge4b07dd" class="outline-3">
+<h3 id="orge4b07dd"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1182,6 +1206,17 @@ Depending on the cube&rsquo;s size, we obtain 3 different configurations.
 <p>
 <a id="org348ec7d"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/cubic_conf_size_analysisl.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run cubic_conf_size_analysis.m</code>.
+</p>
+
+</div>
 <p>
 We here study the effect of the size of the cube used for the Stewart Cubic configuration.
 </p>
@@ -1194,6 +1229,7 @@ We fix the height of the Stewart platform, the center of the cube is at the cent
 We only vary the size of the cube.
 </p>
 </div>
+
 <div id="outline-container-org0029d8c" class="outline-3">
 <h3 id="org0029d8c"><span class="section-number-3">3.1</span> Analysis</h3>
 <div class="outline-text-3" id="text-3-1">
@@ -1237,8 +1273,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-orgfc7135f" class="outline-3">
-<h3 id="orgfc7135f"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-orga34a399" class="outline-3">
+<h3 id="orga34a399"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1260,6 +1296,17 @@ In order to maximize the rotational stiffness of the Stewart platform, the size 
 <p>
 <a id="org00d3816"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/cubic_conf_coupling_cartesianl.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run cubic_conf_coupling_cartesian.m</code>.
+</p>
+
+</div>
 <p>
 In this section, we study the dynamics of the platform in the cartesian frame.
 </p>
@@ -1316,6 +1363,7 @@ We conclude that the <b>static</b> behavior of the platform depends on the stiff
 For the cubic configuration, we have a diagonal stiffness matrix is the frames \(\{A\}\) and \(\{B\}\) are coincident with the cube&rsquo;s center.
 </p>
 </div>
+
 <div id="outline-container-org5fe01ec" class="outline-3">
 <h3 id="org5fe01ec"><span class="section-number-3">4.1</span> Cube&rsquo;s center at the Center of Mass of the mobile platform</h3>
 <div class="outline-text-3" id="text-4-1">
@@ -1595,8 +1643,8 @@ This was expected as the mass matrix is not diagonal (the Center of Mass of the 
 </div>
 </div>
 
-<div id="outline-container-org2e09bcb" class="outline-3">
-<h3 id="org2e09bcb"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-org2a36f1e" class="outline-3">
+<h3 id="org2a36f1e"><span class="section-number-3">4.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="important">
 <p>
@@ -1618,6 +1666,17 @@ Some conclusions can be drawn from the above analysis:
 <p>
 <a id="org5b5c8a9"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/cubic_conf_coupling_strutsl.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run cubic_conf_coupling_struts.m</code>.
+</p>
+
+</div>
 <p>
 From <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>, the cubic configuration &ldquo;<i>minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other)</i>&rdquo;.
 </p>
@@ -1630,6 +1689,7 @@ In this section, we wish to study such properties of the cubic architecture.
 We will compare the transfer function from sensors to actuators in each strut for a cubic architecture and for a non-cubic architecture (where the struts are not orthogonal with each other).
 </p>
 </div>
+
 <div id="outline-container-org6e391c9" class="outline-3">
 <h3 id="org6e391c9"><span class="section-number-3">5.1</span> Coupling between the actuators and sensors - Cubic Architecture</h3>
 <div class="outline-text-3" id="text-5-1">
@@ -1766,8 +1826,8 @@ And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relati
 </div>
 </div>
 
-<div id="outline-container-org8c1a310" class="outline-3">
-<h3 id="org8c1a310"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div id="outline-container-orgbde7788" class="outline-3">
+<h3 id="orgbde7788"><span class="section-number-3">5.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="important">
 <p>
@@ -1938,7 +1998,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 15:01</p>
+<p class="date">Created: 2020-02-13 jeu. 16:46</p>
 </div>
 </body>
 </html>

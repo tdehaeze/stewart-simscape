@@ -49,7 +49,8 @@ The current document is divided in the following sections:
 - Section [[sec:jacobian_analysis]]: The Jacobian matrix is derived from the geometry of the Stewart platform. Then it is shown that the Jacobian can link velocities and forces present in the system, and thus this matrix can be very useful for both analysis and control of the Stewart platform.
 - Section [[sec:stiffness_analysis]]: The stiffness and compliance matrices are derived from the Jacobian matrix and the stiffness of each strut.
 - Section [[sec:forward_inverse_kinematics]]: The Forward and Inverse kinematic problems are presented.
-- Section [[sec:required_actuator_stroke]]: The Inverse kinematic solution is used to estimate required actuator stroke from the wanted mobility of the Stewart platform.
+- Section [[sec:kinematic_study_approximation_validity]]: The approximate solution of the Inverse kinematic problem is compared with the exact solution in order to determine the validity of the approximation.
+- Section [[sec:kinematic_study_required_actuator_stroke]]: The Inverse kinematic solution is used to estimate required actuator stroke from the wanted mobility of the Stewart platform.
  
 * Jacobian Analysis
 <<sec:jacobian_analysis>>
@@ -213,14 +214,20 @@ As the inverse kinematic can be easily solved exactly this is not much useful, h
 
 The function =forwardKinematicsApprox= (described [[sec:forwardKinematicsApprox][here]]) can be used to solve the forward kinematic problem using the Jacobian matrix.
 
-** Estimation of the range validity of the approximate inverse kinematics
+* Estimation of the range validity of the approximate inverse kinematics
 :PROPERTIES:
-:header-args:matlab+: :tangle ../matlab/approximate_inverse_kinematics_validity.m
+:header-args:matlab+: :tangle ../matlab/kinematic_study_approximation_validity.m
 :header-args:matlab+: :comments org :mkdirp yes
 :END:
-<<sec:approximate_inverse_kinematics_validity>>
+<<sec:kinematic_study_approximation_validity>>
 
-*** Introduction                                                    :ignore:
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/kinematic_study_approximation_validity.m][here]].
+
+To run the script, open the Simulink Project, and type =run kinematic_study_approximation_validity.m=.
+#+end_note
+
+** Introduction                                                      :ignore:
 As we know how to exactly solve the Inverse kinematic problem, we can compare the exact solution with the approximate solution using the Jacobian matrix.
 For small displacements, the approximate solution is expected to work well.
 We would like here to determine up to what displacement this approximation can be considered as correct.
@@ -228,7 +235,7 @@ We would like here to determine up to what displacement this approximation can b
 Then, we can determine the range for which the approximate inverse kinematic is valid.
 This will also gives us the range for which the approximate forward kinematic is valid.
 
-*** Matlab Init                                            :noexport:ignore:
+** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
 #+end_src
@@ -241,7 +248,7 @@ This will also gives us the range for which the approximate forward kinematic is
   simulinkproject('../');
 #+end_src
 
-*** Stewart architecture definition
+** Stewart architecture definition
 We first define some general Stewart architecture.
 #+begin_src matlab
   stewart = initializeStewartPlatform();
@@ -256,7 +263,7 @@ We first define some general Stewart architecture.
   stewart = computeJacobian(stewart);
 #+end_src
 
-*** Comparison for "pure" translations
+** Comparison for "pure" translations
 Let's first compare the perfect and approximate solution of the inverse for pure $x$ translations.
 
 We compute the approximate and exact required strut stroke to have the wanted mobile platform $x$ displacement.
@@ -320,17 +327,24 @@ The relative strut length displacement is shown in Figure [[fig:inverse_kinemati
 #+CAPTION: Relative length error by using the Approximate solution of the Inverse kinematic problem ([[./figs/inverse_kinematics_approx_validity_x_translation_relative.png][png]], [[./figs/inverse_kinematics_approx_validity_x_translation_relative.pdf][pdf]])
 [[file:figs/inverse_kinematics_approx_validity_x_translation_relative.png]]
 
-*** Conclusion
+** Conclusion
 #+begin_important
 For small wanted displacements (up to $\approx 1\%$ of the size of the Hexapod), the approximate inverse kinematic solution using the Jacobian matrix is quite correct.
 #+end_important
 
 * Estimated required actuator stroke from specified platform mobility
 :PROPERTIES:
-:header-args:matlab+: :tangle ../matlab/required_stroke_from_mobility.m
+:header-args:matlab+: :tangle ../matlab/kinematic_study_required_actuator_stroke.m
 :header-args:matlab+: :comments org :mkdirp yes
 :END:
-<<sec:required_actuator_stroke>>
+<<sec:kinematic_study_required_actuator_stroke>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/kinematic_study_required_actuator_stroke.m][here]].
+
+To run the script, open the Simulink Project, and type =run kinematic_study_required_actuator_stroke.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 Let's say one want to design a Stewart platform with some specified mobility (position and orientation).
 One may want to determine the required actuator stroke required to obtain the specified mobility.
@@ -483,10 +497,17 @@ This is probably a much realistic estimation of the required actuator stroke.
 
 * Estimated platform mobility from specified actuator stroke
 :PROPERTIES:
-:header-args:matlab+: :tangle ../matlab/mobility_from_actuator_stroke.m
+:header-args:matlab+: :tangle ../matlab/kinematic_study_mobility.m
 :header-args:matlab+: :comments org :mkdirp yes
 :END:
-<<sec:obtained_mobility_from_stroke>>
+<<sec:kinematic_study_mobility>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/kinematic_study_mobility.m][here]].
+
+To run the script, open the Simulink Project, and type =run kinematic_study_mobility.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 Here, from some value of the actuator stroke, we would like to estimate the mobility of the Stewart platform.
 

@@ -1,17 +1,22 @@
+%% Clear Workspace and Close figures
+clear; close all; clc;
 
+%% Intialize Laplace variable
+s = zpk('s');
 
-simulinkproject('./');
+simulinkproject('../');
 
 % Stewart architecture definition
 % Let's first define the Stewart platform architecture that we want to study.
 
-stewart = initializeFramesPositions('H', 90e-3, 'MO_B', 45e-3);
+stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
-stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+stewart = initializeStrutDynamics(stewart);
 stewart = initializeJointDynamics(stewart);
 stewart = computeJacobian(stewart);
 
@@ -44,7 +49,7 @@ for i = 1:length(thetas)
     Ty = sin(thetas(i))*sin(phis(j));
     Tz = cos(thetas(i));
 
-    dL = stewart.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
+    dL = stewart.kinematics.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
 
     rs(i, j) = max([dL(dL<0)*L_min; dL(dL>0)*L_max]);
   end

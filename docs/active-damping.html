@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 14:50 -->
+<!-- 2020-02-13 jeu. 16:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Decentralized Active Damping</title>
@@ -271,25 +271,25 @@ for the JavaScript code in this tag.
 <li><a href="#orgd59c804">1. Inertial Control</a>
 <ul>
 <li><a href="#org5f749c8">1.1. Identification of the Dynamics</a></li>
-<li><a href="#orgd5c2ca3">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#org2123b01">1.3. Obtained Damping</a></li>
-<li><a href="#org3471687">1.4. Conclusion</a></li>
+<li><a href="#org07e81b1">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#org53a0870">1.3. Obtained Damping</a></li>
+<li><a href="#org51b20eb">1.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org74c7eb4">2. Integral Force Feedback</a>
 <ul>
-<li><a href="#org79e6a47">2.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#orgf71d9f1">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#orgaaed0b1">2.3. Obtained Damping</a></li>
-<li><a href="#orgf95ef97">2.4. Conclusion</a></li>
+<li><a href="#org9e45139">2.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#org494bb35">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#org947ca92">2.3. Obtained Damping</a></li>
+<li><a href="#orgade2418">2.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org08917d6">3. Direct Velocity Feedback</a>
 <ul>
-<li><a href="#orgc7446b0">3.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#orged14fce">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#orga745203">3.3. Obtained Damping</a></li>
-<li><a href="#org711b15d">3.4. Conclusion</a></li>
+<li><a href="#orgcaa6199">3.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#orgd637197">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#orgd895eeb">3.3. Obtained Damping</a></li>
+<li><a href="#orgeaf5ef8">3.4. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -311,6 +311,17 @@ The following decentralized active damping techniques are briefly studied:
 <p>
 <a id="orgeb37c7d"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/active_damping_inertial.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run active_damping_inertial.m</code>.
+</p>
+
+</div>
 </div>
 
 <div id="outline-container-org5f749c8" class="outline-3">
@@ -369,8 +380,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-orgd5c2ca3" class="outline-3">
-<h3 id="orgd5c2ca3"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-org07e81b1" class="outline-3">
+<h3 id="org07e81b1"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -406,8 +417,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-org2123b01" class="outline-3">
-<h3 id="org2123b01"><span class="section-number-3">1.3</span> Obtained Damping</h3>
+<div id="outline-container-org53a0870" class="outline-3">
+<h3 id="org53a0870"><span class="section-number-3">1.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -432,8 +443,8 @@ The root locus is shown in figure <a href="#org9af9e33">3</a>.
 </div>
 </div>
 
-<div id="outline-container-org3471687" class="outline-3">
-<h3 id="org3471687"><span class="section-number-3">1.4</span> Conclusion</h3>
+<div id="outline-container-org51b20eb" class="outline-3">
+<h3 id="org51b20eb"><span class="section-number-3">1.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-4">
 <div class="important">
 <p>
@@ -451,10 +462,21 @@ We do not have guaranteed stability with Inertial control. This is because of th
 <p>
 <a id="orgab5e6b5"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/active_damping_iff.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run active_damping_iff.m</code>.
+</p>
+
+</div>
 </div>
 
-<div id="outline-container-org79e6a47" class="outline-3">
-<h3 id="org79e6a47"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-org9e45139" class="outline-3">
+<h3 id="org9e45139"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -515,8 +537,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-orgf71d9f1" class="outline-3">
-<h3 id="orgf71d9f1"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-org494bb35" class="outline-3">
+<h3 id="org494bb35"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -552,8 +574,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-orgaaed0b1" class="outline-3">
-<h3 id="orgaaed0b1"><span class="section-number-3">2.3</span> Obtained Damping</h3>
+<div id="outline-container-org947ca92" class="outline-3">
+<h3 id="org947ca92"><span class="section-number-3">2.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -585,8 +607,8 @@ The root locus is shown in figure <a href="#orge21bbea">6</a> and the obtained p
 </div>
 </div>
 
-<div id="outline-container-orgf95ef97" class="outline-3">
-<h3 id="orgf95ef97"><span class="section-number-3">2.4</span> Conclusion</h3>
+<div id="outline-container-orgade2418" class="outline-3">
+<h3 id="orgade2418"><span class="section-number-3">2.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="important">
 <p>
@@ -605,10 +627,21 @@ Thus, if Integral Force Feedback is to be used in a Stewart platform with flexib
 <p>
 <a id="org0aa816a"></a>
 </p>
+
+<div class="note">
+<p>
+The Matlab script corresponding to this section is accessible <a href="../matlab/active_damping_dvf.m">here</a>.
+</p>
+
+<p>
+To run the script, open the Simulink Project, and type <code>run active_damping_dvf.m</code>.
+</p>
+
+</div>
 </div>
 
-<div id="outline-container-orgc7446b0" class="outline-3">
-<h3 id="orgc7446b0"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-orgcaa6199" class="outline-3">
+<h3 id="orgcaa6199"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -670,8 +703,8 @@ The transfer function from actuator forces to relative motion sensors is shown i
 </div>
 
 
-<div id="outline-container-orged14fce" class="outline-3">
-<h3 id="orged14fce"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-orgd637197" class="outline-3">
+<h3 id="orgd637197"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -707,8 +740,8 @@ The new dynamics from force actuator to relative motion sensor is shown in Figur
 </div>
 </div>
 
-<div id="outline-container-orga745203" class="outline-3">
-<h3 id="orga745203"><span class="section-number-3">3.3</span> Obtained Damping</h3>
+<div id="outline-container-orgd895eeb" class="outline-3">
+<h3 id="orgd895eeb"><span class="section-number-3">3.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -733,8 +766,8 @@ The root locus is shown in figure <a href="#org277d60d">10</a>.
 </div>
 </div>
 
-<div id="outline-container-org711b15d" class="outline-3">
-<h3 id="org711b15d"><span class="section-number-3">3.4</span> Conclusion</h3>
+<div id="outline-container-orgeaf5ef8" class="outline-3">
+<h3 id="orgeaf5ef8"><span class="section-number-3">3.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="important">
 <p>
@@ -748,7 +781,7 @@ Joint stiffness does increase the resonance frequencies of the system but does n
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 14:50</p>
+<p class="date">Created: 2020-02-13 jeu. 16:46</p>
 </div>
 </body>
 </html>

@@ -51,6 +51,12 @@ The following decentralized active damping techniques are briefly studied:
 :END:
 <<sec:active_damping_inertial>>
 
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/active_damping_inertial.m][here]].
+
+To run the script, open the Simulink Project, and type =run active_damping_inertial.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -273,6 +279,12 @@ The root locus is shown in figure [[fig:root_locus_inertial_rot_stiffness]].
 :header-args:matlab+: :comments org :mkdirp yes
 :END:
 <<sec:active_damping_iff>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/active_damping_iff.m][here]].
+
+To run the script, open the Simulink Project, and type =run active_damping_iff.m=.
+#+end_note
 
 ** Introduction                                                      :ignore:
 ** Matlab Init                                             :noexport:ignore:
@@ -536,6 +548,12 @@ The root locus is shown in figure [[fig:root_locus_iff_rot_stiffness]] and the o
 :header-args:matlab+: :comments org :mkdirp yes
 :END:
 <<sec:active_damping_dvf>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/active_damping_dvf.m][here]].
+
+To run the script, open the Simulink Project, and type =run active_damping_dvf.m=.
+#+end_note
 
 ** Introduction                                                      :ignore:
 ** Matlab Init                                             :noexport:ignore:

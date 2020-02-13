@@ -57,7 +57,18 @@ In this document, the cubic architecture is analyzed:
 - In section [[sec:functions]], function related to the cubic configuration are defined. To generate and study the Stewart platform with a Cubic configuration, the Matlab function =generateCubicConfiguration= is used (described [[sec:generateCubicConfiguration][here]]).
 
 * Stiffness Matrix for the Cubic configuration
+:PROPERTIES:
+:header-args:matlab+: :tangle ../matlab/cubic_conf_stiffnessl.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:cubic_conf_stiffness>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/cubic_conf_stiffnessl.m][here]].
+
+To run the script, open the Simulink Project, and type =run cubic_conf_stiffness.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 First, we have to understand what is the physical meaning of the Stiffness matrix $\bm{K}$.
 
@@ -301,7 +312,18 @@ Here are the conclusion about the Stiffness matrix for the Cubic configuration:
 #+end_important
 
 * Configuration with the Cube's center above the mobile platform
+:PROPERTIES:
+:header-args:matlab+: :tangle ../matlab/cubic_conf_above_platforml.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:cubic_conf_above_platform>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/cubic_conf_above_platforml.m][here]].
+
+To run the script, open the Simulink Project, and type =run cubic_conf_above_platform.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 We saw in section [[sec:cubic_conf_stiffness]] that in order to have a diagonal stiffness matrix, we need the cube's center to be located at frames $\{A\}$ and $\{B\}$.
 Or, we usually want to have $\{A\}$ and $\{B\}$ located above the top platform where forces are applied and where displacements are expressed.
@@ -469,7 +491,18 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
 #+end_important
 
 * Cubic size analysis
+:PROPERTIES:
+:header-args:matlab+: :tangle ../matlab/cubic_conf_size_analysisl.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:cubic_conf_size_analysis>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/cubic_conf_size_analysisl.m][here]].
+
+To run the script, open the Simulink Project, and type =run cubic_conf_size_analysis.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 We here study the effect of the size of the cube used for the Stewart Cubic configuration.
 
@@ -553,7 +586,18 @@ We observe that $k_{\theta_x} = k_{\theta_y}$ and $k_{\theta_z}$ increase linear
 #+end_important
 
 * Dynamic Coupling in the Cartesian Frame
+:PROPERTIES:
+:header-args:matlab+: :tangle ../matlab/cubic_conf_coupling_cartesianl.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:cubic_conf_coupling_cartesian>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/cubic_conf_coupling_cartesianl.m][here]].
+
+To run the script, open the Simulink Project, and type =run cubic_conf_coupling_cartesian.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 In this section, we study the dynamics of the platform in the cartesian frame.
 
@@ -980,7 +1024,18 @@ Some conclusions can be drawn from the above analysis:
 #+end_important
 
 * Dynamic Coupling between actuators and sensors of each strut
+:PROPERTIES:
+:header-args:matlab+: :tangle ../matlab/cubic_conf_coupling_strutsl.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:cubic_conf_coupling_struts>>
+
+#+begin_note
+The Matlab script corresponding to this section is accessible [[file:../matlab/cubic_conf_coupling_strutsl.m][here]].
+
+To run the script, open the Simulink Project, and type =run cubic_conf_coupling_struts.m=.
+#+end_note
+
 ** Introduction                                                      :ignore:
 From cite:preumont07_six_axis_singl_stage_activ, the cubic configuration "/minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other)/".
 
