@@ -270,7 +270,7 @@ The relative strut length displacement is shown in Figure [[fig:inverse_kinemati
 
   for i = 1:length(Xrs)
     Xr = Xrs(i);
-    L_approx(:, i) = stewart.J*[Xr; 0; 0; 0; 0; 0;];
+    L_approx(:, i) = stewart.kinematics.J*[Xr; 0; 0; 0; 0; 0;];
     [~, L_exact(:, i)] = inverseKinematics(stewart, 'AP', [Xr; 0; 0]);
   end
 #+end_src
@@ -321,7 +321,9 @@ The relative strut length displacement is shown in Figure [[fig:inverse_kinemati
 [[file:figs/inverse_kinematics_approx_validity_x_translation_relative.png]]
 
 *** Conclusion
+#+begin_important
 For small wanted displacements (up to $\approx 1\%$ of the size of the Hexapod), the approximate inverse kinematic solution using the Jacobian matrix is quite correct.
+#+end_important
 
 * Estimated required actuator stroke from specified platform mobility
 :PROPERTIES:
@@ -357,7 +359,7 @@ Let's first define the Stewart platform architecture that we want to study.
   stewart = initializeStewartPose(stewart);
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
-  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeStrutDynamics(stewart);
   stewart = initializeJointDynamics(stewart);
   stewart = computeJacobian(stewart);
 #+end_src
@@ -378,12 +380,12 @@ As a first estimation, we estimate the needed actuator stroke for "pure" rotatio
 We do that using either the Inverse Kinematic solution or the Jacobian matrix as an approximation.
 
 #+begin_src matlab
-  LTx = stewart.J*[Tx_max 0 0 0 0 0]';
-  LTy = stewart.J*[0 Ty_max 0 0 0 0]';
-  LTz = stewart.J*[0 0 Tz_max 0 0 0]';
-  LRx = stewart.J*[0 0 0 Rx_max 0 0]';
-  LRy = stewart.J*[0 0 0 0 Ry_max 0]';
-  LRz = stewart.J*[0 0 0 0 0 Rz_max]';
+  LTx = stewart.kinematics.J*[Tx_max 0 0 0 0 0]';
+  LTy = stewart.kinematics.J*[0 Ty_max 0 0 0 0]';
+  LTz = stewart.kinematics.J*[0 0 Tz_max 0 0 0]';
+  LRx = stewart.kinematics.J*[0 0 0 Rx_max 0 0]';
+  LRy = stewart.kinematics.J*[0 0 0 0 Ry_max 0]';
+  LRz = stewart.kinematics.J*[0 0 0 0 0 Rz_max]';
 #+end_src
 
 The obtain required stroke is:
@@ -514,7 +516,7 @@ Let's first define the Stewart platform architecture that we want to study.
   stewart = initializeStewartPose(stewart);
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
-  stewart = initializeStrutDynamics(stewart, 'Ki', 1e6*ones(6,1), 'Ci', 1e2*ones(6,1));
+  stewart = initializeStrutDynamics(stewart);
   stewart = initializeJointDynamics(stewart);
   stewart = computeJacobian(stewart);
 #+end_src
@@ -547,7 +549,7 @@ For each possible value of $(\theta, \phi)$, we compute the maximum radius $r$ a
       Ty = sin(thetas(i))*sin(phis(j));
       Tz = cos(thetas(i));
 
-      dL = stewart.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
+      dL = stewart.kinematics.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
 
       rs(i, j) = max([dL(dL<0)*L_min; dL(dL>0)*L_max]);
     end
