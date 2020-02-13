@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 17:52 -->
+<!-- 2020-02-13 jeu. 14:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Control Study</title>
@@ -301,14 +301,22 @@ for the JavaScript code in this tag.
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart);
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 </pre>
 </div>
 </div>
@@ -326,12 +334,12 @@ options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_control'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/tau'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/L'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -382,7 +390,7 @@ Kl = Kl <span class="org-type">*</span> eye(6);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 17:52</p>
+<p class="date">Created: 2020-02-13 jeu. 14:51</p>
 </div>
 </body>
 </html>

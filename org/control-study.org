@@ -76,14 +76,21 @@
 ** Initialize the Stewart platform
 #+begin_src matlab
   stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart);
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
   stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
 #+end_src
 
 ** Identification of the plant
@@ -94,12 +101,12 @@ Let's identify the transfer function from $\bm{\tau}}$ to $\bm{L}$.
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_platform_control';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/tau'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/L'], 1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
