@@ -647,6 +647,12 @@ And we set small mass for the struts.
   stewart = initializeInertialSensor(stewart);
 #+end_src
 
+No flexibility below the Stewart platform and no payload.
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 The obtain geometry is shown in figure [[fig:stewart_cubic_conf_decouple_dynamics]].
 
 #+begin_src matlab :exports none
@@ -664,19 +670,19 @@ The obtain geometry is shown in figure [[fig:stewart_cubic_conf_decouple_dynamic
 
 We now identify the dynamics from forces applied in each strut $\bm{\tau}$ to the displacement of each strut $d \bm{\mathcal{L}}$.
 #+begin_src matlab
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 
   %% Options for Linearized
   options = linearizeOptions;
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -826,6 +832,12 @@ And we set small mass for the struts.
   stewart = initializeInertialSensor(stewart);
 #+end_src
 
+No flexibility below the Stewart platform and no payload.
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 The obtain geometry is shown in figure [[fig:stewart_cubic_conf_mass_above]].
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false, 'view', 'all');
@@ -842,19 +854,19 @@ The obtain geometry is shown in figure [[fig:stewart_cubic_conf_mass_above]].
 
 We now identify the dynamics from forces applied in each strut $\bm{\tau}$ to the displacement of each strut $d \bm{\mathcal{L}}$.
 #+begin_src matlab
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 
   %% Options for Linearized
   options = linearizeOptions;
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -1016,6 +1028,12 @@ Let's generate a Cubic architecture where the cube's center and the frames $\{A\
   stewart = initializeInertialSensor(stewart);
 #+end_src
 
+No flexibility below the Stewart platform and no payload.
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false, 'view', 'all');
 #+end_src
@@ -1032,19 +1050,19 @@ Let's generate a Cubic architecture where the cube's center and the frames $\{A\
 And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative motion sensors $\delta \mathcal{L}_{i}$ (Figure [[fig:coupling_struts_relative_sensor_cubic]]) and to the force sensors $\tau_{m,i}$ (Figure [[fig:coupling_struts_force_sensor_cubic]]).
 
 #+begin_src matlab :exports none
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 
   %% Options for Linearized
   options = linearizeOptions;
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -1101,8 +1119,8 @@ And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative
 #+begin_src matlab :exports none
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Fm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Taum'); io_i = io_i + 1; % Force Sensor Outputs [N]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -1181,6 +1199,12 @@ Now we generate a Stewart platform which is not cubic but with approximately the
   stewart = initializeInertialSensor(stewart);
 #+end_src
 
+No flexibility below the Stewart platform and no payload.
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false, 'view', 'all');
 #+end_src
@@ -1197,19 +1221,19 @@ Now we generate a Stewart platform which is not cubic but with approximately the
 And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative motion sensors $\delta \mathcal{L}_{i}$ (Figure [[fig:coupling_struts_relative_sensor_non_cubic]]) and to the force sensors $\tau_{m,i}$ (Figure [[fig:coupling_struts_force_sensor_non_cubic]]).
 
 #+begin_src matlab :exports none
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 
   %% Options for Linearized
   options = linearizeOptions;
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Dm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -1266,8 +1290,8 @@ And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative
 #+begin_src matlab :exports none
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Fm'],  1, 'openoutput'); io_i = io_i + 1; % Displacement of each leg [m]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Taum'); io_i = io_i + 1; % Force Sensor Outputs [N]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -1323,7 +1347,7 @@ And we identify the dynamics from the actuator forces $\tau_{i}$ to the relative
 
 ** Conclusion
 #+begin_important
-  The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut.
+  The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut and thus provides no advantages for decentralized control.
 #+end_important
 
 * Functions

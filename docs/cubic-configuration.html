@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-12 mer. 18:26 -->
+<!-- 2020-02-13 jeu. 15:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -274,33 +274,33 @@ for the JavaScript code in this tag.
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org778aab3">1.5. Conclusion</a></li>
+<li><a href="#org510da86">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#org8e940b8">2.2. Conclusion</a></li>
+<li><a href="#org949a403">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#org9d42e84">3.2. Conclusion</a></li>
+<li><a href="#orgfc7135f">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
 <li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
 <li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
-<li><a href="#org5214dec">4.3. Conclusion</a></li>
+<li><a href="#org2e09bcb">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
 <li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
 <li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
-<li><a href="#org0936a8a">5.3. Conclusion</a></li>
+<li><a href="#org8c1a310">5.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">6. Functions</a>
@@ -836,8 +836,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-org778aab3" class="outline-3">
-<h3 id="org778aab3"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-org510da86" class="outline-3">
+<h3 id="org510da86"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -1162,8 +1162,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org8e940b8" class="outline-3">
-<h3 id="org8e940b8"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org949a403" class="outline-3">
+<h3 id="org949a403"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1237,8 +1237,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-org9d42e84" class="outline-3">
-<h3 id="org9d42e84"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-orgfc7135f" class="outline-3">
+<h3 id="orgfc7135f"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1374,6 +1374,15 @@ stewart = initializeInertialSensor(stewart);
 </div>
 
 <p>
+No flexibility below the Stewart platform and no payload.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
+<p>
 The obtain geometry is shown in figure <a href="#orgc92a65b">10</a>.
 </p>
 
@@ -1388,19 +1397,19 @@ The obtain geometry is shown in figure <a href="#orgc92a65b">10</a>.
 We now identify the dynamics from forces applied in each strut \(\bm{\tau}\) to the displacement of each strut \(d \bm{\mathcal{L}}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'simulink/stewart_active_damping.slx'</span>)
+<pre class="src src-matlab">open(<span class="org-string">'stewart_platform_model.slx'</span>)
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_active_damping'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Dm'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Displacement of each leg [m]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -1509,6 +1518,15 @@ stewart = initializeInertialSensor(stewart);
 </div>
 
 <p>
+No flexibility below the Stewart platform and no payload.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
+<p>
 The obtain geometry is shown in figure <a href="#orgfce7805">12</a>.
 </p>
 
@@ -1522,19 +1540,19 @@ The obtain geometry is shown in figure <a href="#orgfce7805">12</a>.
 We now identify the dynamics from forces applied in each strut \(\bm{\tau}\) to the displacement of each strut \(d \bm{\mathcal{L}}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'simulink/stewart_active_damping.slx'</span>)
+<pre class="src src-matlab">open(<span class="org-string">'stewart_platform_model.slx'</span>)
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_active_damping'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Dm'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Displacement of each leg [m]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -1577,8 +1595,8 @@ This was expected as the mass matrix is not diagonal (the Center of Mass of the 
 </div>
 </div>
 
-<div id="outline-container-org5214dec" class="outline-3">
-<h3 id="org5214dec"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-org2e09bcb" class="outline-3">
+<h3 id="org2e09bcb"><span class="section-number-3">4.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="important">
 <p>
@@ -1645,6 +1663,15 @@ stewart = initializeInertialSensor(stewart);
 </pre>
 </div>
 
+<p>
+No flexibility below the Stewart platform and no payload.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
 
 <div id="org67d7284" class="figure">
 <p><img src="figs/stewart_architecture_coupling_struts_cubic.png" alt="stewart_architecture_coupling_struts_cubic.png" />
@@ -1703,6 +1730,15 @@ stewart = initializeInertialSensor(stewart);
 </pre>
 </div>
 
+<p>
+No flexibility below the Stewart platform and no payload.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
 
 <div id="org14d3492" class="figure">
 <p><img src="figs/stewart_architecture_coupling_struts_non_cubic.png" alt="stewart_architecture_coupling_struts_non_cubic.png" />
@@ -1730,12 +1766,12 @@ And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relati
 </div>
 </div>
 
-<div id="outline-container-org0936a8a" class="outline-3">
-<h3 id="org0936a8a"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div id="outline-container-org8c1a310" class="outline-3">
+<h3 id="org8c1a310"><span class="section-number-3">5.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="important">
 <p>
-The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut.
+The Cubic architecture seems to not have any significant effect on the coupling between actuator and sensors of each strut and thus provides no advantages for decentralized control.
 </p>
 
 </div>
@@ -1902,7 +1938,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-12 mer. 18:26</p>
+<p class="date">Created: 2020-02-13 jeu. 15:01</p>
 </div>
 </body>
 </html>
