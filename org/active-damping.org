@@ -66,7 +66,7 @@ The following decentralized active damping techniques are briefly studied:
 #+end_src
 
 #+begin_src matlab
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 #+end_src
 
 ** Identification of the Dynamics
@@ -85,17 +85,22 @@ The following decentralized active damping techniques are briefly studied:
 #+end_src
 
 #+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
+#+begin_src matlab
   %% Options for Linearized
   options = linearizeOptions;
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Vm'],  1, 'openoutput'); io_i = io_i + 1; % Absolute velocity of each leg [m/s]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Vm'); io_i = io_i + 1; % Absolute velocity of each leg [m/s]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -284,7 +289,7 @@ The root locus is shown in figure [[fig:root_locus_inertial_rot_stiffness]].
 #+end_src
 
 #+begin_src matlab
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 #+end_src
 
 ** Identification of the Dynamics with perfect Joints
@@ -303,6 +308,11 @@ We first initialize the Stewart platform without joint stiffness.
   stewart = initializeInertialSensor(stewart, 'type', 'none');
 #+end_src
 
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 And we identify the dynamics from force actuators to force sensors.
 #+begin_src matlab
   %% Options for Linearized
@@ -310,12 +320,12 @@ And we identify the dynamics from force actuators to force sensors.
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput'); io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Fm'], 1, 'openoutput'); io_i = io_i + 1; % Force Sensor Outputs [N]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Taum'); io_i = io_i + 1; % Force Sensor Outputs [N]
 
   %% Run the linearization
   G = linearize(mdl, io, options);
@@ -542,7 +552,7 @@ The root locus is shown in figure [[fig:root_locus_iff_rot_stiffness]] and the o
 #+end_src
 
 #+begin_src matlab
-  open('simulink/stewart_active_damping.slx')
+  open('stewart_platform_model.slx')
 #+end_src
 
 ** Identification of the Dynamics with perfect Joints
@@ -561,6 +571,11 @@ We first initialize the Stewart platform without joint stiffness.
   stewart = initializeInertialSensor(stewart, 'type', 'none');
 #+end_src
 
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
 And we identify the dynamics from force actuators to force sensors.
 #+begin_src matlab
   %% Options for Linearized
@@ -568,12 +583,12 @@ And we identify the dynamics from force actuators to force sensors.
   options.SampleTime = 0;
 
   %% Name of the Simulink File
-  mdl = 'stewart_active_damping';
+  mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'],   1, 'openinput'); io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Dm'], 1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [N]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
   %% Run the linearization
   G = linearize(mdl, io, options);

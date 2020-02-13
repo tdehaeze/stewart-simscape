@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 18:04 -->
+<!-- 2020-02-13 jeu. 14:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Decentralized Active Damping</title>
@@ -271,25 +271,25 @@ for the JavaScript code in this tag.
 <li><a href="#orgd59c804">1. Inertial Control</a>
 <ul>
 <li><a href="#org5f749c8">1.1. Identification of the Dynamics</a></li>
-<li><a href="#orgec430e2">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#orgaa11f3d">1.3. Obtained Damping</a></li>
-<li><a href="#orgcd93557">1.4. Conclusion</a></li>
+<li><a href="#orgd5c2ca3">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#org2123b01">1.3. Obtained Damping</a></li>
+<li><a href="#org3471687">1.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org74c7eb4">2. Integral Force Feedback</a>
 <ul>
-<li><a href="#orga217cbb">2.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#org5ab90ff">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#org8dd8d32">2.3. Obtained Damping</a></li>
-<li><a href="#org14503d2">2.4. Conclusion</a></li>
+<li><a href="#org79e6a47">2.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#orgf71d9f1">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#orgaaed0b1">2.3. Obtained Damping</a></li>
+<li><a href="#orgf95ef97">2.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org08917d6">3. Direct Velocity Feedback</a>
 <ul>
-<li><a href="#org025d6da">3.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#org6dd3dfd">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#orge3fb12b">3.3. Obtained Damping</a></li>
-<li><a href="#org049f0ec">3.4. Conclusion</a></li>
+<li><a href="#orgc7446b0">3.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#orged14fce">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#orga745203">3.3. Obtained Damping</a></li>
+<li><a href="#org711b15d">3.4. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -332,17 +332,23 @@ stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</spa
 </div>
 
 <div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_active_damping'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Vm'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute velocity of each leg [m/s]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'Vm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute velocity of each leg [m/s]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -363,8 +369,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-orgec430e2" class="outline-3">
-<h3 id="orgec430e2"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-orgd5c2ca3" class="outline-3">
+<h3 id="orgd5c2ca3"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -400,8 +406,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-orgaa11f3d" class="outline-3">
-<h3 id="orgaa11f3d"><span class="section-number-3">1.3</span> Obtained Damping</h3>
+<div id="outline-container-org2123b01" class="outline-3">
+<h3 id="org2123b01"><span class="section-number-3">1.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -426,8 +432,8 @@ The root locus is shown in figure <a href="#org9af9e33">3</a>.
 </div>
 </div>
 
-<div id="outline-container-orgcd93557" class="outline-3">
-<h3 id="orgcd93557"><span class="section-number-3">1.4</span> Conclusion</h3>
+<div id="outline-container-org3471687" class="outline-3">
+<h3 id="org3471687"><span class="section-number-3">1.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-4">
 <div class="important">
 <p>
@@ -447,8 +453,8 @@ We do not have guaranteed stability with Inertial control. This is because of th
 </p>
 </div>
 
-<div id="outline-container-orga217cbb" class="outline-3">
-<h3 id="orga217cbb"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-org79e6a47" class="outline-3">
+<h3 id="org79e6a47"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -468,6 +474,12 @@ stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</spa
 </pre>
 </div>
 
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
 <p>
 And we identify the dynamics from force actuators to force sensors.
 </p>
@@ -477,12 +489,12 @@ options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_active_damping'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Fm'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Force Sensor Outputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'Taum'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Force Sensor Outputs [N]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -503,8 +515,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-org5ab90ff" class="outline-3">
-<h3 id="org5ab90ff"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-orgf71d9f1" class="outline-3">
+<h3 id="orgf71d9f1"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -540,8 +552,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-org8dd8d32" class="outline-3">
-<h3 id="org8dd8d32"><span class="section-number-3">2.3</span> Obtained Damping</h3>
+<div id="outline-container-orgaaed0b1" class="outline-3">
+<h3 id="orgaaed0b1"><span class="section-number-3">2.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -573,8 +585,8 @@ The root locus is shown in figure <a href="#orge21bbea">6</a> and the obtained p
 </div>
 </div>
 
-<div id="outline-container-org14503d2" class="outline-3">
-<h3 id="org14503d2"><span class="section-number-3">2.4</span> Conclusion</h3>
+<div id="outline-container-orgf95ef97" class="outline-3">
+<h3 id="orgf95ef97"><span class="section-number-3">2.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="important">
 <p>
@@ -595,8 +607,8 @@ Thus, if Integral Force Feedback is to be used in a Stewart platform with flexib
 </p>
 </div>
 
-<div id="outline-container-org025d6da" class="outline-3">
-<h3 id="org025d6da"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-orgc7446b0" class="outline-3">
+<h3 id="orgc7446b0"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -616,6 +628,12 @@ stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</spa
 </pre>
 </div>
 
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
 <p>
 And we identify the dynamics from force actuators to force sensors.
 </p>
@@ -625,12 +643,12 @@ options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_active_damping'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>],   1, <span class="org-string">'openinput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Dm'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io, options);
@@ -652,8 +670,8 @@ The transfer function from actuator forces to relative motion sensors is shown i
 </div>
 
 
-<div id="outline-container-org6dd3dfd" class="outline-3">
-<h3 id="org6dd3dfd"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-orged14fce" class="outline-3">
+<h3 id="orged14fce"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -689,8 +707,8 @@ The new dynamics from force actuator to relative motion sensor is shown in Figur
 </div>
 </div>
 
-<div id="outline-container-orge3fb12b" class="outline-3">
-<h3 id="orge3fb12b"><span class="section-number-3">3.3</span> Obtained Damping</h3>
+<div id="outline-container-orga745203" class="outline-3">
+<h3 id="orga745203"><span class="section-number-3">3.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -715,8 +733,8 @@ The root locus is shown in figure <a href="#org277d60d">10</a>.
 </div>
 </div>
 
-<div id="outline-container-org049f0ec" class="outline-3">
-<h3 id="org049f0ec"><span class="section-number-3">3.4</span> Conclusion</h3>
+<div id="outline-container-org711b15d" class="outline-3">
+<h3 id="org711b15d"><span class="section-number-3">3.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="important">
 <p>
@@ -730,7 +748,7 @@ Joint stiffness does increase the resonance frequencies of the system but does n
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 18:04</p>
+<p class="date">Created: 2020-02-13 jeu. 14:50</p>
 </div>
 </body>
 </html>
