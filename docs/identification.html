@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 17:51 -->
+<!-- 2020-02-13 jeu. 15:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -268,233 +268,65 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org36eeb29">1. Identification</a>
+<li><a href="#orgcb2f4c2">1. Modal Analysis of the Stewart Platform</a>
 <ul>
-<li><a href="#orgb4842a1">1.1. Simscape Model</a></li>
-<li><a href="#org4240dd7">1.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org5695094">1.3. Identification</a></li>
+<li><a href="#org66d09e9">1.1. Initialize the Stewart Platform</a></li>
+<li><a href="#org8b1c587">1.2. Identification</a></li>
+<li><a href="#orge68adea">1.3. Coordinate transformation</a></li>
+<li><a href="#org4973ae1">1.4. Analysis</a></li>
+<li><a href="#orge7b97c8">1.5. Visualizing the modes</a></li>
 </ul>
 </li>
-<li><a href="#orge464de2">2. States as the motion of the mobile platform</a>
-<ul>
-<li><a href="#org8d12d8c">2.1. Initialize the Stewart Platform</a></li>
-<li><a href="#orgef8d225">2.2. Identification</a></li>
-<li><a href="#orge68adea">2.3. Coordinate transformation</a></li>
-<li><a href="#org4973ae1">2.4. Analysis</a></li>
-<li><a href="#orge7b97c8">2.5. Visualizing the modes</a></li>
-<li><a href="#org009b696">2.6. Identification</a></li>
-<li><a href="#orgf7a52cb">2.7. Change of states</a></li>
-</ul>
-</li>
-<li><a href="#org23d7e7b">3. Simple Model without any sensor</a>
-<ul>
-<li><a href="#org2ad9d50">3.1. Simscape Model</a></li>
-<li><a href="#orgbc1f736">3.2. Initialize the Stewart Platform</a></li>
-<li><a href="#org43f8fc6">3.3. Identification</a></li>
-</ul>
-</li>
-<li><a href="#org0502cd2">4. Cartesian Plot</a></li>
-<li><a href="#org32e2eb3">5. From a force to force sensor</a></li>
-<li><a href="#org8ddfd2c">6. From a force applied in the leg to the displacement of the leg</a></li>
-<li><a href="#org5685537">7. Transmissibility</a></li>
-<li><a href="#org3335d1e">8. Compliance</a></li>
-<li><a href="#org5ca7af8">9. Inertial</a></li>
 </ul>
 </div>
 </div>
 
-<p>
-We would like to extract a state space model of the Stewart Platform from the Simscape model.
-</p>
-
-<p>
-The inputs are:
-</p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">Symbol</th>
-<th scope="col" class="org-left">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">\(\bm{\mathcal{F}}_{d}\)</td>
-<td class="org-left">External forces applied in {B}</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{\tau}\)</td>
-<td class="org-left">Joint forces</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{\mathcal{F}}\)</td>
-<td class="org-left">Cartesian forces applied by the Joints</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{D}_{w}\)</td>
-<td class="org-left">Fixed Based translation and rotations around {A}</td>
-</tr>
-</tbody>
-</table>
-
-<p>
-The outputs are:
-</p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">Symbol</th>
-<th scope="col" class="org-left">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">\(\bm{\mathcal{X}}\)</td>
-<td class="org-left">Relative Motion of {B} with respect to {A}</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{\mathcal{L}}\)</td>
-<td class="org-left">Joint Displacement</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{F}_{m}\)</td>
-<td class="org-left">Force Sensors in each strut</td>
-</tr>
-
-<tr>
-<td class="org-left">\(\bm{v}_{m}\)</td>
-<td class="org-left">Inertial Sensors located at \(b_i\) measuring in the direction of the strut</td>
-</tr>
-</tbody>
-</table>
-
-
-<blockquote>
-<p>
-An important difference from basic Simulink models is that the states in a physical network are not independent in general, because some states have dependencies on other states through constraints.
-</p>
-</blockquote>
-
-
-
-<div id="outline-container-org36eeb29" class="outline-2">
-<h2 id="org36eeb29"><span class="section-number-2">1</span> Identification</h2>
+<div id="outline-container-orgcb2f4c2" class="outline-2">
+<h2 id="orgcb2f4c2"><span class="section-number-2">1</span> Modal Analysis of the Stewart Platform</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgb4842a1" class="outline-3">
-<h3 id="orgb4842a1"><span class="section-number-3">1.1</span> Simscape Model</h3>
+<div id="outline-container-org66d09e9" class="outline-3">
+<h3 id="org66d09e9"><span class="section-number-3">1.1</span> Initialize the Stewart Platform</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart);
+</pre>
 </div>
 
-<div id="outline-container-org4240dd7" class="outline-3">
-<h3 id="org4240dd7"><span class="section-number-3">1.2</span> Initialize the Stewart Platform</h3>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8b1c587" class="outline-3">
+<h3 id="org8b1c587"><span class="section-number-3">1.2</span> Identification</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart);
-stewart = generateGeneralConfiguration(stewart);
-stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart);
-stewart = initializeCylindricalPlatforms(stewart);
-stewart = initializeCylindricalStruts(stewart);
-stewart = computeJacobian(stewart);
-stewart = initializeStewartPose(stewart);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5695094" class="outline-3">
-<h3 id="org5695094"><span class="section-number-3">1.3</span> Identification</h3>
-<div class="outline-text-3" id="text-1-3">
-<div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
 options = linearizeOptions;
 options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_identification'</span>;
+mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/tau'</span>],  1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Fext'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/X'</span>],    1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Vm'</span>],   1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Taum'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Lm'</span>],   1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
-G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'tau1'</span>, <span class="org-string">'tau2'</span>, <span class="org-string">'tau3'</span>, <span class="org-string">'tau4'</span>, <span class="org-string">'tau5'</span>, <span class="org-string">'tau6'</span>, ...
-                <span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
-
-G.OutputName = {<span class="org-string">'Xdx'</span>, <span class="org-string">'Xdy'</span>, <span class="org-string">'Xdz'</span>, <span class="org-string">'Xrx'</span>, <span class="org-string">'Xry'</span>, <span class="org-string">'Xrz'</span>, ...
-                <span class="org-string">'Vm1'</span>, <span class="org-string">'Vm2'</span>, <span class="org-string">'Vm3'</span>, <span class="org-string">'Vm4'</span>, <span class="org-string">'Vm5'</span>, <span class="org-string">'Vm6'</span>, ...
-                <span class="org-string">'taum1'</span>, <span class="org-string">'taum2'</span>, <span class="org-string">'taum3'</span>, <span class="org-string">'taum4'</span>, <span class="org-string">'taum5'</span>, <span class="org-string">'taum6'</span>, ...
-                <span class="org-string">'Lm1'</span>, <span class="org-string">'Lm2'</span>, <span class="org-string">'Lm3'</span>, <span class="org-string">'Lm4'</span>, <span class="org-string">'Lm5'</span>, <span class="org-string">'Lm6'</span>};
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge464de2" class="outline-2">
-<h2 id="orge464de2"><span class="section-number-2">2</span> States as the motion of the mobile platform</h2>
-<div class="outline-text-2" id="text-2">
-</div>
-<div id="outline-container-org8d12d8c" class="outline-3">
-<h3 id="org8d12d8c"><span class="section-number-3">2.1</span> Initialize the Stewart Platform</h3>
-<div class="outline-text-3" id="text-2-1">
-<div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart);
-stewart = generateGeneralConfiguration(stewart);
-stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart);
-stewart = initializeCylindricalPlatforms(stewart);
-stewart = initializeCylindricalStruts(stewart);
-stewart = computeJacobian(stewart);
-stewart = initializeStewartPose(stewart);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgef8d225" class="outline-3">
-<h3 id="orgef8d225"><span class="section-number-3">2.2</span> Identification</h3>
-<div class="outline-text-3" id="text-2-2">
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
-options = linearizeOptions;
-options.SampleTime = 0;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_identification_simple'</span>;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/tau'</span>],  1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/X'</span>],    1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Xdot'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  2, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Velocity of {B} w.r.t. {A}</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 G = linearize(mdl, io);
@@ -541,8 +373,8 @@ And indeed, we obtain 12 states.
 </div>
 
 <div id="outline-container-orge68adea" class="outline-3">
-<h3 id="orge68adea"><span class="section-number-3">2.3</span> Coordinate transformation</h3>
-<div class="outline-text-3" id="text-2-3">
+<h3 id="orge68adea"><span class="section-number-3">1.3</span> Coordinate transformation</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 We can perform the following transformation using the <code>ss2ss</code> command.
 </p>
@@ -577,8 +409,8 @@ Gt = ss(At, Bt, Ct, Dt);
 </div>
 
 <div id="outline-container-org4973ae1" class="outline-3">
-<h3 id="org4973ae1"><span class="section-number-3">2.4</span> Analysis</h3>
-<div class="outline-text-3" id="text-2-4">
+<h3 id="org4973ae1"><span class="section-number-3">1.4</span> Analysis</h3>
+<div class="outline-text-3" id="text-1-4">
 <div class="org-src-container">
 <pre class="src src-matlab">[V,D] = eig(Gt.A);
 </pre>
@@ -604,38 +436,38 @@ Gt = ss(At, Bt, Ct, Dt);
 <tbody>
 <tr>
 <td class="org-right">1.0</td>
-<td class="org-right">174.5</td>
-<td class="org-right">0.9</td>
+<td class="org-right">780.6</td>
+<td class="org-right">0.4</td>
 </tr>
 
 <tr>
 <td class="org-right">2.0</td>
-<td class="org-right">174.5</td>
-<td class="org-right">0.7</td>
+<td class="org-right">780.6</td>
+<td class="org-right">0.3</td>
 </tr>
 
 <tr>
 <td class="org-right">3.0</td>
-<td class="org-right">202.1</td>
-<td class="org-right">0.7</td>
+<td class="org-right">903.9</td>
+<td class="org-right">0.3</td>
 </tr>
 
 <tr>
 <td class="org-right">4.0</td>
-<td class="org-right">237.3</td>
-<td class="org-right">0.6</td>
+<td class="org-right">1061.4</td>
+<td class="org-right">0.3</td>
 </tr>
 
 <tr>
 <td class="org-right">5.0</td>
-<td class="org-right">237.3</td>
-<td class="org-right">0.5</td>
+<td class="org-right">1061.4</td>
+<td class="org-right">0.2</td>
 </tr>
 
 <tr>
 <td class="org-right">6.0</td>
-<td class="org-right">283.8</td>
-<td class="org-right">0.5</td>
+<td class="org-right">1269.6</td>
+<td class="org-right">0.2</td>
 </tr>
 </tbody>
 </table>
@@ -643,8 +475,8 @@ Gt = ss(At, Bt, Ct, Dt);
 </div>
 
 <div id="outline-container-orge7b97c8" class="outline-3">
-<h3 id="orge7b97c8"><span class="section-number-3">2.5</span> Visualizing the modes</h3>
-<div class="outline-text-3" id="text-2-5">
+<h3 id="orge7b97c8"><span class="section-number-3">1.5</span> Visualizing the modes</h3>
+<div class="outline-text-3" id="text-1-5">
 <p>
 To visualize the i&rsquo;th mode, we may excite the system using the inputs \(U_i\) such that \(B U_i\) is co-linear to \(\xi_i\) (the mode we want to excite).
 </p>
@@ -744,359 +576,11 @@ Save the movie of the mode shape.
 </div>
 </div>
 </div>
-
-<div id="outline-container-org009b696" class="outline-3">
-<h3 id="org009b696"><span class="section-number-3">2.6</span> Identification</h3>
-<div class="outline-text-3" id="text-2-6">
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
-options = linearizeOptions;
-options.SampleTime = 0;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_identification'</span>;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/tau'</span>],  1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Lm'</span>],    1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
-G = linearize(mdl, io, options);
-<span class="org-comment">% G.InputName  = {'tau1', 'tau2', 'tau3', 'tau4', 'tau5', 'tau6'};</span>
-<span class="org-comment">% G.OutputName = {'Xdx', 'Xdy', 'Xdz', 'Xrx', 'Xry', 'Xrz', 'Vdx', 'Vdy', 'Vdz', 'Vrx', 'Vry', 'Vrz'};</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">size(G)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgf7a52cb" class="outline-3">
-<h3 id="orgf7a52cb"><span class="section-number-3">2.7</span> Change of states</h3>
-<div class="outline-text-3" id="text-2-7">
-<div class="org-src-container">
-<pre class="src src-matlab">At = G.C<span class="org-type">*</span>G.A<span class="org-type">*</span>pinv(G.C);
-
-Bt = G.C<span class="org-type">*</span>G.B;
-
-Ct = eye(12);
-Dt = zeros(12, 6);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">Gt = ss(At, Bt, Ct, Dt);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">size(Gt)
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org23d7e7b" class="outline-2">
-<h2 id="org23d7e7b"><span class="section-number-2">3</span> Simple Model without any sensor</h2>
-<div class="outline-text-2" id="text-3">
-</div>
-<div id="outline-container-org2ad9d50" class="outline-3">
-<h3 id="org2ad9d50"><span class="section-number-3">3.1</span> Simscape Model</h3>
-<div class="outline-text-3" id="text-3-1">
-<div class="org-src-container">
-<pre class="src src-matlab">open <span class="org-string">'stewart_identification_simple.slx'</span>
-</pre>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-orgbc1f736" class="outline-3">
-<h3 id="orgbc1f736"><span class="section-number-3">3.2</span> Initialize the Stewart Platform</h3>
-<div class="outline-text-3" id="text-3-2">
-<div class="org-src-container">
-<pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart);
-stewart = generateGeneralConfiguration(stewart);
-stewart = computeJointsPose(stewart);
-stewart = initializeStrutDynamics(stewart);
-stewart = initializeCylindricalPlatforms(stewart);
-stewart = initializeCylindricalStruts(stewart);
-stewart = computeJacobian(stewart);
-stewart = initializeStewartPose(stewart);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org43f8fc6" class="outline-3">
-<h3 id="org43f8fc6"><span class="section-number-3">3.3</span> Identification</h3>
-<div class="outline-text-3" id="text-3-3">
-<div class="org-src-container">
-<pre class="src src-matlab">stateorder = {...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_1_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_2_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_3_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_4_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_5_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple/Solver Configuration/EVAL_KEY/INPUT_6_1_1'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Rz.q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Pz.p'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Rz.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.cylindrical_joint.Pz.v'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.spherical_joint_F.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_2.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_3.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_4.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_5.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_6.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_F.S.w'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_M.S.Q'</span>,...
-    <span class="org-string">'stewart_platform_identification_simple.Stewart_Platform.Strut_1.Subsystem.spherical_joint_M.S.w'</span>};
-</pre>
-</div>
-
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
-options = linearizeOptions;
-options.SampleTime = 0;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_identification_simple'</span>;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/tau'</span>],  1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/X'</span>],     1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Xdot'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
-G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'tau1'</span>, <span class="org-string">'tau2'</span>, <span class="org-string">'tau3'</span>, <span class="org-string">'tau4'</span>, <span class="org-string">'tau5'</span>, <span class="org-string">'tau6'</span>};
-
-G.OutputName = {<span class="org-string">'Xdx'</span>, <span class="org-string">'Xdy'</span>, <span class="org-string">'Xdz'</span>, <span class="org-string">'Xrx'</span>, <span class="org-string">'Xry'</span>, <span class="org-string">'Xrz'</span>, <span class="org-string">'Vdx'</span>, <span class="org-string">'Vdy'</span>, <span class="org-string">'Vdz'</span>, <span class="org-string">'Vrx'</span>, <span class="org-string">'Vry'</span>, <span class="org-string">'Vrz'</span>};
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">size(G)
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">G.StateName
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org0502cd2" class="outline-2">
-<h2 id="org0502cd2"><span class="section-number-2">4</span> Cartesian Plot</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-From a force applied in the Cartesian frame to a displacement in the Cartesian frame.
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_cart(1, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_cart(2, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_cart(3, 1), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude'</span>);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-bode(G.G_cart, freqs);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org32e2eb3" class="outline-2">
-<h2 id="org32e2eb3"><span class="section-number-2">5</span> From a force to force sensor</h2>
-<div class="outline-text-2" id="text-5">
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_forc(1, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$F_{m_i}/F_{i}$'</span>);
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [N/N]'</span>);
-legend(<span class="org-string">'location'</span>, <span class="org-string">'southeast'</span>);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_forc(1, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$F_{m_i}/F_{i}$'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_forc(2, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$F_{m_j}/F_{i}$'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_forc(3, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_forc(4, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_forc(5, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_forc(6, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [N/N]'</span>);
-legend(<span class="org-string">'location'</span>, <span class="org-string">'southeast'</span>);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8ddfd2c" class="outline-2">
-<h2 id="org8ddfd2c"><span class="section-number-2">6</span> From a force applied in the leg to the displacement of the leg</h2>
-<div class="outline-text-2" id="text-6">
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_legs(1, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$D_{i}/F_{i}$'</span>);
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/N]'</span>);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_legs(1, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$D_{i}/F_{i}$'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_legs(2, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'DisplayName'</span>, <span class="org-string">'$D_{j}/F_{i}$'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_legs(3, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_legs(4, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_legs(5, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-plot(freqs, abs(squeeze(freqresp(G.G_legs(6, 1), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k--'</span>, <span class="org-string">'HandleVisibility'</span>, <span class="org-string">'off'</span>);
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/N]'</span>);
-legend(<span class="org-string">'location'</span>, <span class="org-string">'northeast'</span>);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5685537" class="outline-2">
-<h2 id="org5685537"><span class="section-number-2">7</span> Transmissibility</h2>
-<div class="outline-text-2" id="text-7">
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(2, 2), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(3, 3), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/m]'</span>);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_tran(4, 4), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(5, 5), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(6, 6), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [$\frac{rad/s}{rad/s}$]'</span>);
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 2), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_tran(1, 3), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/m]'</span>);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org3335d1e" class="outline-2">
-<h2 id="org3335d1e"><span class="section-number-2">8</span> Compliance</h2>
-<div class="outline-text-2" id="text-8">
-<p>
-From a force applied in the Cartesian frame to a relative displacement of the mobile platform with respect to the base.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_comp(1, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_comp(2, 2), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_comp(3, 3), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/N]'</span>);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5ca7af8" class="outline-2">
-<h2 id="org5ca7af8"><span class="section-number-2">9</span> Inertial</h2>
-<div class="outline-text-2" id="text-9">
-<p>
-From a force applied on the Cartesian frame to the absolute displacement of the mobile platform.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-hold on;
-plot(freqs, abs(squeeze(freqresp(G.G_iner(1, 1), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_iner(2, 2), freqs, <span class="org-string">'Hz'</span>))));
-plot(freqs, abs(squeeze(freqresp(G.G_iner(3, 3), freqs, <span class="org-string">'Hz'</span>))));
-hold off;
-<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
-xlabel(<span class="org-string">'Frequency [Hz]'</span>); ylabel(<span class="org-string">'Amplitude [m/N]'</span>);
-</pre>
-</div>
-</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 17:51</p>
+<p class="date">Created: 2020-02-13 jeu. 15:44</p>
 </div>
 </body>
 </html>
