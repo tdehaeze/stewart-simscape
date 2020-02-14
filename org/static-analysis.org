@@ -41,7 +41,7 @@
 * Coupling
 What causes the coupling from $F_i$ to $X_i$ ?
 
-#+begin_src latex :file coupling.pdf :post pdf2svg(file=*this*, ext="png") :exports both
+#+begin_src latex :file coupling.pdf
   \begin{tikzpicture}
     \node[block] (Jt) at (0, 0) {$J^{-T}$};
     \node[block, right= of Jt] (G) {$G$};

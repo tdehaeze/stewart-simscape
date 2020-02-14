@@ -449,7 +449,7 @@ This Matlab function is accessible [[file:../src/generateGeneralConfiguration.m]
 Joints are positions on a circle centered with the Z axis of {F} and {M} and at a chosen distance from {F} and {M}.
 The radius of the circles can be chosen as well as the angles where the joints are located (see Figure [[fig:joint_position_general]]).
 
-#+begin_src latex :file stewart_bottom_plate.pdf :exports results
+#+begin_src latex :file stewart_bottom_plate.pdf
   \begin{tikzpicture}
     % Internal and external limit
     \draw[fill=white!80!black] (0, 0) circle [radius=3];
@@ -993,7 +993,7 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:actuator_
 - $v_{m}$ represents the absolute velocity of the top part of the actuator
 - $d_{m}$ represents the total relative displacement of the actuator
 
-#+begin_src latex :file actuator_model_simple.pdf :post pdf2svg(file=*this*, ext="png") :exports results
+#+begin_src latex :file actuator_model_simple.pdf
   \begin{tikzpicture}
     \draw (-1, 0) -- (1, 0);
 
@@ -1094,7 +1094,7 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
 - $v_{m,i}$ represents the absolute velocity of the top part of the actuator
 - $d_{m,i}$ represents the total relative displacement of the actuator
 
-#+begin_src latex :file iff_1dof.pdf :post pdf2svg(file=*this*, ext="png") :exports results
+#+begin_src latex :file iff_1dof.pdf
   \begin{tikzpicture}
     % Ground
     \draw (-1.2, 0) -- (1, 0);

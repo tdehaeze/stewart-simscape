@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-11 mar. 17:52 -->
+<!-- 2020-02-14 ven. 14:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Static Analysis</title>
@@ -280,20 +280,6 @@ for the JavaScript code in this tag.
 What causes the coupling from \(F_i\) to \(X_i\) ?
 </p>
 
-<div class="org-src-container">
-<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
-  <span class="org-font-latex-sedate">\node</span>[block] (Jt) at (0, 0) {<span class="org-font-latex-math">$J</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-T}$</span>};
-  <span class="org-font-latex-sedate">\node</span>[block, right= of Jt] (G) {<span class="org-font-latex-math">$G$</span>};
-  <span class="org-font-latex-sedate">\node</span>[block, right= of G] (J) {<span class="org-font-latex-math">$J</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-1}$</span>};
-
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(Jt.west)+(-0.8, 0)$</span>) -- (Jt.west) node[above left]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">i$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (Jt.east) -- (G.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\tau</span></span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">i$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (G.east) -- (J.west) node[above left]{<span class="org-font-latex-math">$q</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">i$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (J.east) -- ++(0.8, 0) node[above left]{<span class="org-font-latex-math">$X</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">i$</span>};
-<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
-</pre>
-</div>
-
 
 <div id="org41430df" class="figure">
 <p><img src="figs/coupling.png" alt="coupling.png" />
@@ -317,7 +303,7 @@ Thus, the system is uncoupled if \(G\) and \(K\) are diagonal.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-11 mar. 17:52</p>
+<p class="date">Created: 2020-02-14 ven. 14:11</p>
 </div>
 </body>
 </html>

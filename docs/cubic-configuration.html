@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 16:46 -->
+<!-- 2020-02-14 ven. 14:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -274,33 +274,33 @@ for the JavaScript code in this tag.
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#orgaaa4012">1.5. Conclusion</a></li>
+<li><a href="#orgbde7788">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#orge4b07dd">2.2. Conclusion</a></li>
+<li><a href="#orgc0314ec">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#orga34a399">3.2. Conclusion</a></li>
+<li><a href="#orgb3ca361">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
 <li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
 <li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
-<li><a href="#org2a36f1e">4.3. Conclusion</a></li>
+<li><a href="#orge33568e">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
 <li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
 <li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
-<li><a href="#orgbde7788">5.3. Conclusion</a></li>
+<li><a href="#org1a90044">5.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">6. Functions</a>
@@ -333,7 +333,7 @@ According to <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage
 </p>
 <blockquote>
 <p>
-This topology provides a uniform control capability and a uniform stiffness in all directions, and it minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other).
+This topology provides a <b>uniform control capability</b> and a <b>uniform stiffness</b> in all directions, and it <b>minimizes the cross-coupling amongst actuators and sensors of different legs</b> (being orthogonal to each other).
 </p>
 </blockquote>
 
@@ -341,11 +341,11 @@ This topology provides a uniform control capability and a uniform stiffness in a
 In this document, the cubic architecture is analyzed:
 </p>
 <ul class="org-ul">
-<li>In section <a href="#orgda0ee50">1</a>, we study the link between the Stiffness matrix and the cubic architecture and we find what are the conditions to obtain a diagonal stiffness matrix</li>
-<li>In section <a href="#orgb73265d">2</a>, we study cubic configurations where the cube&rsquo;s center is located above the mobile platform</li>
+<li>In section <a href="#orgda0ee50">1</a>, we study the <b>uniform stiffness</b> of such configuration and we find the conditions to obtain a diagonal stiffness matrix</li>
+<li>In section <a href="#orgb73265d">2</a>, we find cubic configurations where the cube&rsquo;s center is located above the mobile platform</li>
 <li>In section <a href="#org348ec7d">3</a>, we study the effect of the cube&rsquo;s size on the Stewart platform properties</li>
-<li>In section <a href="#org00d3816">4</a>, we study the dynamic coupling of the cubic configuration in the cartesian frame</li>
-<li>In section <a href="#org5b5c8a9">5</a>, we study the dynamic coupling of the cubic configuration from actuators to sensors of each strut</li>
+<li>In section <a href="#org00d3816">4</a>, we study the dynamics of the cubic configuration in the cartesian frame</li>
+<li>In section <a href="#org5b5c8a9">5</a>, we study the dynamic <b>cross-coupling</b> of the cubic configuration from actuators to sensors of each strut</li>
 <li>In section <a href="#org28ba607">6</a>, function related to the cubic configuration are defined. To generate and study the Stewart platform with a Cubic configuration, the Matlab function <code>generateCubicConfiguration</code> is used (described <a href="#orga8311d3">here</a>).</li>
 </ul>
 
@@ -848,8 +848,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-orgaaa4012" class="outline-3">
-<h3 id="orgaaa4012"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-orgbde7788" class="outline-3">
+<h3 id="orgbde7788"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -1186,8 +1186,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-orge4b07dd" class="outline-3">
-<h3 id="orge4b07dd"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-orgc0314ec" class="outline-3">
+<h3 id="orgc0314ec"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1273,8 +1273,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-orga34a399" class="outline-3">
-<h3 id="orga34a399"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-orgb3ca361" class="outline-3">
+<h3 id="orgb3ca361"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1318,20 +1318,6 @@ We here suppose that there is one relative motion sensor in each strut (\(\delta
 <p>
 Thanks to the Jacobian matrix, we can use the &ldquo;architecture&rdquo; shown in Figure <a href="#org76f24a0">9</a> to obtain the dynamics of the system from forces/torques applied by the actuators on the top platform to translations/rotations of the top platform.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
-  <span class="org-font-latex-sedate">\node</span>[block] (Jt) at (0, 0) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{J}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-T}$</span>};
-  <span class="org-font-latex-sedate">\node</span>[block, right= of Jt] (G) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{G}$</span>};
-  <span class="org-font-latex-sedate">\node</span>[block, right= of G] (J) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{J}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">^</span></span><span class="org-font-latex-math">{-1}$</span>};
-
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(Jt.west)+(-0.8, 0)$</span>) -- (Jt.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{F}}$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (Jt.east) -- (G.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\tau</span></span><span class="org-font-latex-math">}$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (G.east) -- (J.west) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\delta\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{L}}$</span>};
-  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (J.east) -- ++(0.8, 0) node[above left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\delta\bm</span></span><span class="org-font-latex-math">{</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\mathcal</span></span><span class="org-font-latex-math">{X}}$</span>};
-<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
-</pre>
-</div>
 
 
 <div id="org76f24a0" class="figure">
@@ -1643,8 +1629,8 @@ This was expected as the mass matrix is not diagonal (the Center of Mass of the 
 </div>
 </div>
 
-<div id="outline-container-org2a36f1e" class="outline-3">
-<h3 id="org2a36f1e"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-orge33568e" class="outline-3">
+<h3 id="orge33568e"><span class="section-number-3">4.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="important">
 <p>
@@ -1826,8 +1812,8 @@ And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relati
 </div>
 </div>
 
-<div id="outline-container-orgbde7788" class="outline-3">
-<h3 id="orgbde7788"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div id="outline-container-org1a90044" class="outline-3">
+<h3 id="org1a90044"><span class="section-number-3">5.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="important">
 <p>
@@ -1998,7 +1984,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 16:46</p>
+<p class="date">Created: 2020-02-14 ven. 14:11</p>
 </div>
 </body>
 </html>

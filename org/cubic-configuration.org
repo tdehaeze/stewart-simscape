@@ -45,15 +45,15 @@ This configuration is now widely used (cite:preumont07_six_axis_singl_stage_acti
 
 According to cite:preumont07_six_axis_singl_stage_activ, the cubic configuration offers the following advantages:
 #+begin_quote
-This topology provides a uniform control capability and a uniform stiffness in all directions, and it minimizes the cross-coupling amongst actuators and sensors of different legs (being orthogonal to each other).
+This topology provides a *uniform control capability* and a *uniform stiffness* in all directions, and it *minimizes the cross-coupling amongst actuators and sensors of different legs* (being orthogonal to each other).
 #+end_quote
 
 In this document, the cubic architecture is analyzed:
-- In section [[sec:cubic_conf_stiffness]], we study the link between the Stiffness matrix and the cubic architecture and we find what are the conditions to obtain a diagonal stiffness matrix
-- In section [[sec:cubic_conf_above_platform]], we study cubic configurations where the cube's center is located above the mobile platform
+- In section [[sec:cubic_conf_stiffness]], we study the *uniform stiffness* of such configuration and we find the conditions to obtain a diagonal stiffness matrix
+- In section [[sec:cubic_conf_above_platform]], we find cubic configurations where the cube's center is located above the mobile platform
 - In section [[sec:cubic_conf_size_analysis]], we study the effect of the cube's size on the Stewart platform properties
-- In section [[sec:cubic_conf_coupling_cartesian]], we study the dynamic coupling of the cubic configuration in the cartesian frame
-- In section [[sec:cubic_conf_coupling_struts]], we study the dynamic coupling of the cubic configuration from actuators to sensors of each strut
+- In section [[sec:cubic_conf_coupling_cartesian]], we study the dynamics of the cubic configuration in the cartesian frame
+- In section [[sec:cubic_conf_coupling_struts]], we study the dynamic *cross-coupling* of the cubic configuration from actuators to sensors of each strut
 - In section [[sec:functions]], function related to the cubic configuration are defined. To generate and study the Stewart platform with a Cubic configuration, the Matlab function =generateCubicConfiguration= is used (described [[sec:generateCubicConfiguration][here]]).
 
 * Stiffness Matrix for the Cubic configuration
@@ -605,7 +605,7 @@ We here suppose that there is one relative motion sensor in each strut ($\delta\
 
 Thanks to the Jacobian matrix, we can use the "architecture" shown in Figure [[fig:local_to_cartesian_coordinates]] to obtain the dynamics of the system from forces/torques applied by the actuators on the top platform to translations/rotations of the top platform.
 
-#+begin_src latex :file local_to_cartesian_coordinates.pdf :post pdf2svg(file=*this*, ext="png") :exports both
+#+begin_src latex :file local_to_cartesian_coordinates.pdf
   \begin{tikzpicture}
     \node[block] (Jt) at (0, 0) {$\bm{J}^{-T}$};
     \node[block, right= of Jt] (G) {$\bm{G}$};
