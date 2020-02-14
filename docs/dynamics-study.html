@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 15:36 -->
+<!-- 2020-02-14 ven. 14:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Dynamics Study</title>
@@ -272,13 +272,13 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org4509b7d">1.1. Comparison with fixed support</a></li>
 <li><a href="#org8662186">1.2. Comparison with a flexible support</a></li>
-<li><a href="#org230655f">1.3. Conclusion</a></li>
+<li><a href="#org1cbdf9a">1.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org81ab204">2. Comparison of the static transfer function and the Compliance matrix</a>
 <ul>
 <li><a href="#orge7e7242">2.1. Analysis</a></li>
-<li><a href="#org1cbdf9a">2.2. Conclusion</a></li>
+<li><a href="#org03b2957">2.2. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -382,6 +382,17 @@ The comparison of the two transfer functions is shown in Figure <a href="#orgbf9
 </p>
 <p><span class="figure-number">Figure 1: </span>Comparison of the transfer functions from \(\bm{\mathcal{F}}\) to \(\mathcal{\bm{X}}\) and from \(\bm{\mathcal{F}}_{\text{ext}}\) to \(\mathcal{\bm{X}}\) (<a href="./figs/comparison_Fext_F_fixed_base.png">png</a>, <a href="./figs/comparison_Fext_F_fixed_base.pdf">pdf</a>)</p>
 </div>
+
+<p>
+This can be understood from figure <a href="#org8bd3e63">2</a> where \(\mathcal{F}_{x}\) and \(\mathcal{F}_{x,\text{ext}}\) have clearly the same effect on \(\mathcal{X}_{x}\).
+</p>
+
+
+<div id="org8bd3e63" class="figure">
+<p><img src="figs/1dof_actuator_external_forces.png" alt="1dof_actuator_external_forces.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Schematic representation of the stewart platform on a rigid support</p>
+</div>
 </div>
 </div>
 
@@ -426,20 +437,34 @@ Gd.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string"
 </div>
 
 <p>
-The comparison between the obtained transfer functions is shown in Figure <a href="#orga2f2bd5">2</a>.
+The comparison between the obtained transfer functions is shown in Figure <a href="#orga2f2bd5">3</a>.
 </p>
 
 
 <div id="orga2f2bd5" class="figure">
 <p><img src="figs/comparison_Fext_F_flexible_base.png" alt="comparison_Fext_F_flexible_base.png" />
 </p>
-<p><span class="figure-number">Figure 2: </span>Comparison of the transfer functions from \(\bm{\mathcal{F}}\) to \(\mathcal{\bm{X}}\) and from \(\bm{\mathcal{F}}_{\text{ext}}\) to \(\mathcal{\bm{X}}\) (<a href="./figs/comparison_Fext_F_flexible_base.png">png</a>, <a href="./figs/comparison_Fext_F_flexible_base.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 3: </span>Comparison of the transfer functions from \(\bm{\mathcal{F}}\) to \(\mathcal{\bm{X}}\) and from \(\bm{\mathcal{F}}_{\text{ext}}\) to \(\mathcal{\bm{X}}\) (<a href="./figs/comparison_Fext_F_flexible_base.png">png</a>, <a href="./figs/comparison_Fext_F_flexible_base.pdf">pdf</a>)</p>
+</div>
+
+<p>
+The addition of a flexible support can be schematically represented in Figure <a href="#orgee3ecbe">4</a>.
+We see that \(\mathcal{F}_{x}\) applies a force both on \(m\) and \(m^{\prime}\) whereas \(\mathcal{F}_{x,\text{ext}}\) only applies a force on \(m\).
+And thus \(\mathcal{F}_{x}\) and \(\mathcal{F}_{x,\text{ext}}\) have clearly <b>not</b> the same effect on \(\mathcal{X}_{x}\).
+</p>
+
+
+<div id="orgee3ecbe" class="figure">
+<p><img src="figs/2dof_actuator_external_forces.png" alt="2dof_actuator_external_forces.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Schematic representation of the stewart platform on top of a flexible support</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org230655f" class="outline-3">
-<h3 id="org230655f"><span class="section-number-3">1.3</span> Conclusion</h3>
+
+<div id="outline-container-org1cbdf9a" class="outline-3">
+<h3 id="org1cbdf9a"><span class="section-number-3">1.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="important">
 <p>
@@ -677,8 +702,8 @@ And now at the Compliance matrix.
 </div>
 </div>
 
-<div id="outline-container-org1cbdf9a" class="outline-3">
-<h3 id="org1cbdf9a"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org03b2957" class="outline-3">
+<h3 id="org03b2957"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -692,7 +717,7 @@ The low frequency transfer function matrix from \(\mathcal{\bm{F}}\) to \(\mathc
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 15:36</p>
+<p class="date">Created: 2020-02-14 ven. 14:11</p>
 </div>
 </body>
 </html>

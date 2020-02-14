@@ -159,6 +159,29 @@ The comparison of the two transfer functions is shown in Figure [[fig:comparison
 #+caption: Comparison of the transfer functions from $\bm{\mathcal{F}}$ to $\mathcal{\bm{X}}$ and from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$ ([[./figs/comparison_Fext_F_fixed_base.png][png]], [[./figs/comparison_Fext_F_fixed_base.pdf][pdf]])
 [[file:figs/comparison_Fext_F_fixed_base.png]]
 
+This can be understood from figure [[fig:1dof_actuator_external_forces]] where $\mathcal{F}_{x}$ and $\mathcal{F}_{x,\text{ext}}$ have clearly the same effect on $\mathcal{X}_{x}$.
+
+#+begin_src latex :file 1dof_actuator_external_forces.pdf
+  \begin{tikzpicture}
+    \draw[ground] (-1, 0) -- (1, 0);
+
+    \draw[spring]   (-0.6, 0) -- (-0.6, 1.5) node[midway, left=0.1]{$k$};
+    \draw[actuator] ( 0.6, 0) -- ( 0.6, 1.5) node[midway, left=0.1](F){$\mathcal{F}_{x}$};
+
+    \draw[fill=white] (-1, 1.5) rectangle (1, 2) node[pos=0.5]{$m$};
+
+    \draw[dashed] (1, 2) -- ++(0.5, 0);
+    \draw[->] (1.5, 2) -- ++(0, 0.5) node[right]{$\mathcal{X}_{x}$};
+
+    \draw[->] (0, 2) node[]{$\bullet$} -- (0, 2.8) node[below right]{$\mathcal{F}_{x,\text{ext}}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:1dof_actuator_external_forces
+#+caption: Schematic representation of the stewart platform on a rigid support
+#+RESULTS:
+[[file:figs/1dof_actuator_external_forces.png]]
+
 ** Comparison with a flexible support
 We now add a flexible support under the Stewart platform.
 #+begin_src matlab
@@ -228,6 +251,35 @@ The comparison between the obtained transfer functions is shown in Figure [[fig:
 #+name: fig:comparison_Fext_F_flexible_base
 #+caption: Comparison of the transfer functions from $\bm{\mathcal{F}}$ to $\mathcal{\bm{X}}$ and from $\bm{\mathcal{F}}_{\text{ext}}$ to $\mathcal{\bm{X}}$ ([[./figs/comparison_Fext_F_flexible_base.png][png]], [[./figs/comparison_Fext_F_flexible_base.pdf][pdf]])
 [[file:figs/comparison_Fext_F_flexible_base.png]]
+
+The addition of a flexible support can be schematically represented in Figure [[fig:2dof_actuator_external_forces]].
+We see that $\mathcal{F}_{x}$ applies a force both on $m$ and $m^{\prime}$ whereas $\mathcal{F}_{x,\text{ext}}$ only applies a force on $m$.
+And thus $\mathcal{F}_{x}$ and $\mathcal{F}_{x,\text{ext}}$ have clearly *not* the same effect on $\mathcal{X}_{x}$.
+
+#+begin_src latex :file 2dof_actuator_external_forces.pdf
+  \begin{tikzpicture}
+    \draw[ground] (-1, 0) -- (1, 0);
+
+    \draw[spring]   (0, 0) -- (0, 1.5) node[midway, left=0.1]{$k^{\prime}$};
+    \draw[fill=white] (-1, 1.5) rectangle (1, 2) node[pos=0.5]{$m^{\prime}$};
+
+    \draw[spring]   (-0.6, 2) -- (-0.6, 3.5) node[midway, left=0.1]{$k$};
+    \draw[actuator] ( 0.6, 2) -- ( 0.6, 3.5) node[midway, left=0.1](F){$\mathcal{F}_{x}$};
+
+    \draw[fill=white] (-1, 3.5) rectangle (1, 4) node[pos=0.5]{$m$};
+
+    \draw[dashed] (1, 4) -- ++(0.5, 0);
+    \draw[->] (1.5, 4) -- ++(0, 0.5) node[right]{$\mathcal{X}_{x}$};
+
+    \draw[->] (0, 4) node[]{$\bullet$} -- (0, 4.8) node[below right]{$\mathcal{F}_{x,\text{ext}}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:2dof_actuator_external_forces
+#+caption: Schematic representation of the stewart platform on top of a flexible support
+#+RESULTS:
+[[file:figs/2dof_actuator_external_forces.png]]
+
 
 ** Conclusion
 #+begin_important
