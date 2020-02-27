@@ -170,7 +170,7 @@ This Matlab function is accessible [[file:../src/initializePayload.m][here]].
   %
   % Inputs:
   %    - args - Structure with the following fields:
-  %        - type - 'none', 'solid', 'flexible', 'cartesian'
+  %        - type - 'none', 'rigid', 'flexible', 'cartesian'
   %        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
   %                    This also the position where K and C are defined
   %        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
@@ -180,7 +180,7 @@ This Matlab function is accessible [[file:../src/initializePayload.m][here]].
   %
   % Outputs:
   %    - payload - Struture with the following properties:
-  %        - type - 1 (none), 2 (solid), 3 (flexible)
+  %        - type - 1 (none), 2 (rigid), 3 (flexible)
   %        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
   %        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
   %        - C [6x1] - Stiffness of the Payload [N/(m/s), N/(rad/s)]
@@ -194,7 +194,7 @@ This Matlab function is accessible [[file:../src/initializePayload.m][here]].
 :END:
 #+begin_src matlab
     arguments
-      args.type char {mustBeMember(args.type,{'none', 'solid', 'flexible', 'cartesian'})} = 'none'
+      args.type char {mustBeMember(args.type,{'none', 'rigid', 'flexible', 'cartesian'})} = 'none'
       args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(6,1)
       args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
       args.h (1,1) double {mustBeNumeric, mustBeNonnegative} = 100e-3
@@ -211,7 +211,7 @@ This Matlab function is accessible [[file:../src/initializePayload.m][here]].
   switch args.type
     case 'none'
       payload.type = 1;
-    case 'solid'
+    case 'rigid'
       payload.type = 2;
     case 'flexible'
       payload.type = 3;
@@ -255,12 +255,13 @@ This Matlab function is accessible [[file:../src/initializeGround.m][here]].
   % Inputs:
   %    - args - Structure with the following fields:
   %        - type - 'none', 'solid', 'flexible'
+  %        - rot_point [3x1] - Rotation point for the ground motion [m]
   %        - K [3x1] - Translation Stiffness of the Ground [N/m]
   %        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
   %
   % Outputs:
   %    - ground - Struture with the following properties:
-  %        - type - 1 (none), 2 (solid), 3 (flexible)
+  %        - type - 1 (none), 2 (rigid), 3 (flexible)
   %        - K [3x1] - Translation Stiffness of the Ground [N/m]
   %        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
 #+end_src
@@ -270,11 +271,12 @@ This Matlab function is accessible [[file:../src/initializeGround.m][here]].
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-    arguments
-      args.type char {mustBeMember(args.type,{'none', 'solid', 'flexible'})} = 'none'
-      args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(3,1)
-      args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(3,1)
-    end
+  arguments
+    args.type char {mustBeMember(args.type,{'none', 'rigid', 'flexible'})} = 'none'
+    args.rot_point (3,1) double {mustBeNumeric} = zeros(3,1)
+    args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(3,1)
+    args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(3,1)
+  end
 #+end_src
 
 *** Add Ground Type
@@ -285,7 +287,7 @@ This Matlab function is accessible [[file:../src/initializeGround.m][here]].
   switch args.type
     case 'none'
       ground.type = 1;
-    case 'solid'
+    case 'rigid'
       ground.type = 2;
     case 'flexible'
       ground.type = 3;
@@ -301,3 +303,10 @@ This Matlab function is accessible [[file:../src/initializeGround.m][here]].
   ground.C = args.C;
 #+end_src
 
+*** Rotation Point
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  ground.rot_point = args.rot_point;
+#+end_src
