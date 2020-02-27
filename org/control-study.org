@@ -259,241 +259,27 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
 
   linkaxes([ax1,ax2],'x');
 #+end_src
-* Transmissibility Analysis
-** Matlab Init                                                     :noexport:
-#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
-  <<matlab-dir>>
-#+end_src
 
-#+begin_src matlab :exports none :results silent :noweb yes
-  <<matlab-init>>
-#+end_src
-
-#+begin_src matlab
-  simulinkproject('../');
-#+end_src
-
-#+begin_src matlab
-  open('stewart_platform_model.slx')
-#+end_src
-
-** Initialize the Stewart platform
-#+begin_src matlab
-  stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
-  stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
-#+end_src
-
-We set the rotation point of the ground to be at the same point at frames $\{A\}$ and $\{B\}$.
-#+begin_src matlab
-  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
-  payload = initializePayload('type', 'rigid');
-#+end_src
-
-** Transmissibility
-#+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
-  %% Name of the Simulink File
-  mdl = 'stewart_platform_model';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Disturbances/D_w'],        1, 'openinput');  io_i = io_i + 1; % Base Motion [m, rad]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
-
-  %% Run the linearization
-  T = linearize(mdl, io, options);
-  T.InputName = {'Wdx', 'Wdy', 'Wdz', 'Wrx', 'Wry', 'Wrz'};
-  T.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
-#+end_src
-
-#+begin_src matlab
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-  for ix = 1:6
-    for iy = 1:6
-      subplot(6, 6, (ix-1)*6 + iy);
-      hold on;
-      plot(freqs, abs(squeeze(freqresp(T(ix, iy), freqs, 'Hz'))), 'k-');
-      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-      ylim([1e-5, 10]);
-      xlim([freqs(1), freqs(end)]);
-      if ix < 6
-        xticklabels({});
-      end
-      if iy > 1
-        yticklabels({});
-      end
-    end
-  end
-#+end_src
-
-From cite:preumont07_six_axis_singl_stage_activ, one can use the Frobenius norm of the transmissibility matrix to obtain a scalar indicator of the transmissibility performance of the system:
-\begin{align*}
-  \| \bm{T}(\omega) \| &= \sqrt{\text{Trace}[\bm{T}(\omega) \bm{T}(\omega)^H]}\\
-                       &= \sqrt{\Sigma_{i=1}^6 \Sigma_{j=1}^6 |T_{ij}|^2}
-\end{align*}
-
-#+begin_src matlab
-  freqs = logspace(1, 4, 1000);
-
-  T_norm = zeros(length(freqs), 1);
-
-  for i = 1:length(freqs)
-    T_norm(i) = sqrt(trace(freqresp(T, freqs(i), 'Hz')*freqresp(T, freqs(i), 'Hz')'));
-  end
-#+end_src
-
-And we normalize by a factor $\sqrt{6}$ to obtain a performance metric comparable to the transmissibility of a one-axis isolator:
-\[ \Gamma(\omega) = \|\bm{T}(\omega)\| / \sqrt{6} \]
-
-#+begin_src matlab
-  Gamma = T_norm/sqrt(6);
-#+end_src
-
-#+begin_src matlab
-  figure;
-  plot(freqs, Gamma)
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-#+end_src
-
-* Compliance Analysis
-** Matlab Init                                                     :noexport:
-#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
-  <<matlab-dir>>
-#+end_src
-
-#+begin_src matlab :exports none :results silent :noweb yes
-  <<matlab-init>>
-#+end_src
-
-#+begin_src matlab
-  simulinkproject('../');
-#+end_src
-
-#+begin_src matlab
-  open('stewart_platform_model.slx')
-#+end_src
-
-** Initialize the Stewart platform
-#+begin_src matlab
-  stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
-  stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
-#+end_src
-
-We set the rotation point of the ground to be at the same point at frames $\{A\}$ and $\{B\}$.
-#+begin_src matlab
-  ground = initializeGround('type', 'none');
-  payload = initializePayload('type', 'rigid');
-#+end_src
-
-** Compliance
-#+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
-  %% Name of the Simulink File
-  mdl = 'stewart_platform_model';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Disturbances/F_ext'],        1, 'openinput');  io_i = io_i + 1; % Base Motion [m, rad]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
-
-  %% Run the linearization
-  C = linearize(mdl, io, options);
-  C.InputName = {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'};
-  C.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
-#+end_src
-
-#+begin_src matlab
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-  for ix = 1:6
-    for iy = 1:6
-      subplot(6, 6, (ix-1)*6 + iy);
-      hold on;
-      plot(freqs, abs(squeeze(freqresp(C(ix, iy), freqs, 'Hz'))), 'k-');
-      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-      ylim([1e-10, 1e-3]);
-      xlim([freqs(1), freqs(end)]);
-      if ix < 6
-        xticklabels({});
-      end
-      if iy > 1
-        yticklabels({});
-      end
-    end
-  end
-#+end_src
-
-We can try to use the Frobenius norm to obtain a scalar value representing the 6-dof compliance of the Stewart platform.
-
-#+begin_src matlab
-  freqs = logspace(1, 4, 1000);
-
-  C_norm = zeros(length(freqs), 1);
-
-  for i = 1:length(freqs)
-    C_norm(i) = sqrt(trace(freqresp(C, freqs(i), 'Hz')*freqresp(C, freqs(i), 'Hz')'));
-  end
-#+end_src
-
-#+begin_src matlab
-  figure;
-  plot(freqs, C_norm)
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-#+end_src
 * Functions
-** Compute the Transmissibility
+** =initializeController=: Initialize the Controller
 :PROPERTIES:
-:header-args:matlab+: :tangle ../src/computeTransmissibility.m
+:header-args:matlab+: :tangle ../src/initializeController.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
 :END:
-<<sec:computeTransmissibility>>
+<<sec:initializeController>>
 
 *** Function description
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  function [T, T_norm, freqs] = computeTransmissibility(args)
-  % computeTransmissibility -
+  function [controller] = initializeController(args)
+  % initializeController - Initialize the Controller
   %
-  % Syntax: [T, T_norm, freqs] = computeTransmissibility(args)
+  % Syntax: [] = initializeController(args)
   %
   % Inputs:
-  %    - args - Structure with the following fields:
-  %        - plots [true/false] - Should plot the transmissilibty matrix and its Frobenius norm
-  %        - freqs [] - Frequency vector to estimate the Frobenius norm
-  %
-  % Outputs:
-  %    - T      [6x6 ss] - Transmissibility matrix
-  %    - T_norm [length(freqs)x1] - Frobenius norm of the Transmissibility matrix
-  %    - freqs  [length(freqs)x1] - Frequency vector in [Hz]
+  %    - args - Can have the following fields:
 #+end_src
 
 *** Optional Parameters
@@ -501,216 +287,30 @@ We can try to use the Frobenius norm to obtain a scalar value representing the 6
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-    arguments
-      args.plots logical {mustBeNumericOrLogical} = false
-      args.freqs double {mustBeNumeric, mustBeNonnegative} = logspace(1,4,1000)
-    end
-#+end_src
-
-#+begin_src matlab
-  freqs = args.freqs;
-#+end_src
-
-*** Identification of the Transmissibility Matrix
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
-  %% Name of the Simulink File
-  mdl = 'stewart_platform_model';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Disturbances/D_w'],        1, 'openinput');  io_i = io_i + 1; % Base Motion [m, rad]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
-
-  %% Run the linearization
-  T = linearize(mdl, io, options);
-  T.InputName = {'Wdx', 'Wdy', 'Wdz', 'Wrx', 'Wry', 'Wrz'};
-  T.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
-#+end_src
-
-If wanted, the 6x6 transmissibility matrix is plotted.
-#+begin_src matlab
-  p_handle = zeros(6*6,1);
-
-  if args.plots
-    fig = figure;
-    for ix = 1:6
-      for iy = 1:6
-        p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
-        hold on;
-        plot(freqs, abs(squeeze(freqresp(T(ix, iy), freqs, 'Hz'))), 'k-');
-        set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-        if ix < 6
-            xticklabels({});
-        end
-        if iy > 1
-            yticklabels({});
-        end
-      end
-    end
-
-    linkaxes(p_handle, 'xy')
-    xlim([freqs(1), freqs(end)]);
-    ylim([1e-5, 1e2]);
-
-    han = axes(fig, 'visible', 'off');
-    han.XLabel.Visible = 'on';
-    han.YLabel.Visible = 'on';
-    ylabel(han, 'Frequency [Hz]');
-    xlabel(han, 'Transmissibility [m/m]');
+  arguments
+    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf'})} = 'open-loop'
   end
 #+end_src
 
-*** Computation of the Frobenius norm
+*** Structure initialization
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  T_norm = zeros(length(freqs), 1);
-
-  for i = 1:length(freqs)
-    T_norm(i) = sqrt(trace(freqresp(T, freqs(i), 'Hz')*freqresp(T, freqs(i), 'Hz')'));
-  end
+  controller = struct();
 #+end_src
 
-#+begin_src matlab
-  T_norm = T_norm/sqrt(6);
-#+end_src
-
-#+begin_src matlab
-  if args.plots
-    figure;
-    plot(freqs, T_norm)
-    set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-    xlabel('Frequency [Hz]');
-    ylabel('Transmissibility - Frobenius Norm');
-  end
-#+end_src
-
-** Compute the Compliance
-:PROPERTIES:
-:header-args:matlab+: :tangle ../src/computeCompliance.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
-:END:
-<<sec:computeCompliance>>
-
-*** Function description
+*** Add Type
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  function [C, C_norm, freqs] = computeCompliance(args)
-  % computeCompliance -
-  %
-  % Syntax: [C, C_norm, freqs] = computeCompliance(args)
-  %
-  % Inputs:
-  %    - args - Structure with the following fields:
-  %        - plots [true/false] - Should plot the transmissilibty matrix and its Frobenius norm
-  %        - freqs [] - Frequency vector to estimate the Frobenius norm
-  %
-  % Outputs:
-  %    - C      [6x6 ss] - Compliance matrix
-  %    - C_norm [length(freqs)x1] - Frobenius norm of the Compliance matrix
-  %    - freqs  [length(freqs)x1] - Frequency vector in [Hz]
-#+end_src
-
-*** Optional Parameters
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-    arguments
-      args.plots logical {mustBeNumericOrLogical} = false
-      args.freqs double {mustBeNumeric, mustBeNonnegative} = logspace(1,4,1000)
-    end
-#+end_src
-
-#+begin_src matlab
-  freqs = args.freqs;
-#+end_src
-
-*** Identification of the Compliance Matrix
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
-  %% Name of the Simulink File
-  mdl = 'stewart_platform_model';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Disturbances/F_ext'],      1, 'openinput');  io_i = io_i + 1; % External forces [N, N*m]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
-
-  %% Run the linearization
-  C = linearize(mdl, io, options);
-  C.InputName  = {'Fdx', 'Fdy', 'Fdz', 'Mdx', 'Mdy', 'Mdz'};
-  C.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
-#+end_src
-
-If wanted, the 6x6 transmissibility matrix is plotted.
-#+begin_src matlab
-  p_handle = zeros(6*6,1);
-
-  if args.plots
-    fig = figure;
-    for ix = 1:6
-      for iy = 1:6
-        p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
-        hold on;
-        plot(freqs, abs(squeeze(freqresp(C(ix, iy), freqs, 'Hz'))), 'k-');
-        set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-        if ix < 6
-            xticklabels({});
-        end
-        if iy > 1
-            yticklabels({});
-        end
-      end
-    end
-
-    linkaxes(p_handle, 'xy')
-    xlim([freqs(1), freqs(end)]);
-
-    han = axes(fig, 'visible', 'off');
-    han.XLabel.Visible = 'on';
-    han.YLabel.Visible = 'on';
-    xlabel(han, 'Frequency [Hz]');
-    ylabel(han, 'Compliance [m/N, rad/(N*m)]');
-  end
-#+end_src
-
-*** Computation of the Frobenius norm
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-#+begin_src matlab
-  freqs = args.freqs;
-
-  C_norm = zeros(length(freqs), 1);
-
-  for i = 1:length(freqs)
-    C_norm(i) = sqrt(trace(freqresp(C, freqs(i), 'Hz')*freqresp(C, freqs(i), 'Hz')'));
-  end
-#+end_src
-
-#+begin_src matlab
-  if args.plots
-    figure;
-    plot(freqs, C_norm)
-    set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-    xlabel('Frequency [Hz]');
-    ylabel('Compliance - Frobenius Norm');
+  switch args.type
+    case 'open-loop'
+      controller.type = 0;
+    case 'iff'
+      controller.type = 1;
+    case 'dvf'
+      controller.type = 2;
   end
 #+end_src

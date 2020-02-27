@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 15:44 -->
+<!-- 2020-02-27 jeu. 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -277,13 +255,58 @@ for the JavaScript code in this tag.
 <li><a href="#orge7b97c8">1.5. Visualizing the modes</a></li>
 </ul>
 </li>
+<li><a href="#org2891722">2. Transmissibility Analysis</a>
+<ul>
+<li><a href="#org8c667e9">2.1. Initialize the Stewart platform</a></li>
+<li><a href="#org5338f20">2.2. Transmissibility</a></li>
+</ul>
+</li>
+<li><a href="#orgc94edbd">3. Compliance Analysis</a>
+<ul>
+<li><a href="#orgc8e1f51">3.1. Initialize the Stewart platform</a></li>
+<li><a href="#org1177029">3.2. Compliance</a></li>
+</ul>
+</li>
+<li><a href="#org68ca336">4. Functions</a>
+<ul>
+<li><a href="#org487c4d4">4.1. Compute the Transmissibility</a>
+<ul>
+<li><a href="#org851f84d">Function description</a></li>
+<li><a href="#orgf5e24cd">Optional Parameters</a></li>
+<li><a href="#org4629501">Identification of the Transmissibility Matrix</a></li>
+<li><a href="#org989379a">Computation of the Frobenius norm</a></li>
+</ul>
+</li>
+<li><a href="#org50e35a6">4.2. Compute the Compliance</a>
+<ul>
+<li><a href="#org64fc1e2">Function description</a></li>
+<li><a href="#org54cab00">Optional Parameters</a></li>
+<li><a href="#orgef06b63">Identification of the Compliance Matrix</a></li>
+<li><a href="#org6f63d37">Computation of the Frobenius norm</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
+<p>
+In this document, we discuss the various methods to identify the behavior of the Stewart platform.
+</p>
+
+<ul class="org-ul">
+<li><a href="#org7981e88">1</a></li>
+<li><a href="#orga989615">2</a></li>
+<li><a href="#org4579374">3</a></li>
+</ul>
+
 <div id="outline-container-orgcb2f4c2" class="outline-2">
 <h2 id="orgcb2f4c2"><span class="section-number-2">1</span> Modal Analysis of the Stewart Platform</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+<a id="org7981e88"></a>
+</p>
 </div>
 <div id="outline-container-org66d09e9" class="outline-3">
 <h3 id="org66d09e9"><span class="section-number-3">1.1</span> Initialize the Stewart Platform</h3>
@@ -577,10 +600,521 @@ Save the movie of the mode shape.
 </div>
 </div>
 </div>
+
+<div id="outline-container-org2891722" class="outline-2">
+<h2 id="org2891722"><span class="section-number-2">2</span> Transmissibility Analysis</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a id="orga989615"></a>
+</p>
+</div>
+<div id="outline-container-org8c667e9" class="outline-3">
+<h3 id="org8c667e9"><span class="section-number-3">2.1</span> Initialize the Stewart platform</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+</pre>
+</div>
+
+<p>
+We set the rotation point of the ground to be at the same point at frames \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'rot_point'</span>, stewart.platform_F.FO_A);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5338f20" class="outline-3">
+<h3 id="org5338f20"><span class="section-number-3">2.2</span> Transmissibility</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/D_w'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Base Motion [m, rad]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+T = linearize(mdl, io, options);
+T.InputName = {<span class="org-string">'Wdx'</span>, <span class="org-string">'Wdy'</span>, <span class="org-string">'Wdz'</span>, <span class="org-string">'Wrx'</span>, <span class="org-string">'Wry'</span>, <span class="org-string">'Wrz'</span>};
+T.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(1, 4, 1000);
+
+<span class="org-type">figure</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">ix</span> = <span class="org-constant">1:6</span>
+  <span class="org-keyword">for</span> <span class="org-variable-name">iy</span> = <span class="org-constant">1:6</span>
+    subplot(6, 6, (ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy);
+    hold on;
+    plot(freqs, abs(squeeze(freqresp(T(ix, iy), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>);
+    <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+    ylim([1e<span class="org-type">-</span>5, 10]);
+    xlim([freqs(1), freqs(end)]);
+    <span class="org-keyword">if</span> ix <span class="org-type">&lt;</span> 6
+      xticklabels({});
+    <span class="org-keyword">end</span>
+    <span class="org-keyword">if</span> iy <span class="org-type">&gt;</span> 1
+      yticklabels({});
+    <span class="org-keyword">end</span>
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<p>
+From <a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a>, one can use the Frobenius norm of the transmissibility matrix to obtain a scalar indicator of the transmissibility performance of the system:
+</p>
+\begin{align*}
+  \| \bm{T}(\omega) \| &= \sqrt{\text{Trace}[\bm{T}(\omega) \bm{T}(\omega)^H]}\\
+                       &= \sqrt{\Sigma_{i=1}^6 \Sigma_{j=1}^6 |T_{ij}|^2}
+\end{align*}
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(1, 4, 1000);
+
+T_norm = zeros(length(freqs), 1);
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(freqs)</span>
+  T_norm(<span class="org-constant">i</span>) = sqrt(trace(freqresp(T, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">*</span>freqresp(T, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">'</span>));
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<p>
+And we normalize by a factor \(\sqrt{6}\) to obtain a performance metric comparable to the transmissibility of a one-axis isolator:
+\[ \Gamma(\omega) = \|\bm{T}(\omega)\| / \sqrt{6} \]
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Gamma = T_norm<span class="org-type">/</span>sqrt(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-type">figure</span>;
+plot(freqs, Gamma)
+<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc94edbd" class="outline-2">
+<h2 id="orgc94edbd"><span class="section-number-2">3</span> Compliance Analysis</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<a id="org4579374"></a>
+</p>
+</div>
+<div id="outline-container-orgc8e1f51" class="outline-3">
+<h3 id="orgc8e1f51"><span class="section-number-3">3.1</span> Initialize the Stewart platform</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+</pre>
+</div>
+
+<p>
+We set the rotation point of the ground to be at the same point at frames \(\{A\}\) and \(\{B\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1177029" class="outline-3">
+<h3 id="org1177029"><span class="section-number-3">3.2</span> Compliance</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/F_ext'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Base Motion [m, rad]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+C = linearize(mdl, io, options);
+C.InputName = {<span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>, <span class="org-string">'Fdz'</span>, <span class="org-string">'Mdx'</span>, <span class="org-string">'Mdy'</span>, <span class="org-string">'Mdz'</span>};
+C.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(1, 4, 1000);
+
+<span class="org-type">figure</span>;
+<span class="org-keyword">for</span> <span class="org-variable-name">ix</span> = <span class="org-constant">1:6</span>
+  <span class="org-keyword">for</span> <span class="org-variable-name">iy</span> = <span class="org-constant">1:6</span>
+    subplot(6, 6, (ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy);
+    hold on;
+    plot(freqs, abs(squeeze(freqresp(C(ix, iy), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>);
+    <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+    ylim([1e<span class="org-type">-</span>10, 1e<span class="org-type">-</span>3]);
+    xlim([freqs(1), freqs(end)]);
+    <span class="org-keyword">if</span> ix <span class="org-type">&lt;</span> 6
+      xticklabels({});
+    <span class="org-keyword">end</span>
+    <span class="org-keyword">if</span> iy <span class="org-type">&gt;</span> 1
+      yticklabels({});
+    <span class="org-keyword">end</span>
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<p>
+We can try to use the Frobenius norm to obtain a scalar value representing the 6-dof compliance of the Stewart platform.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(1, 4, 1000);
+
+C_norm = zeros(length(freqs), 1);
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(freqs)</span>
+  C_norm(<span class="org-constant">i</span>) = sqrt(trace(freqresp(C, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">*</span>freqresp(C, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">'</span>));
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-type">figure</span>;
+plot(freqs, C_norm)
+<span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org68ca336" class="outline-2">
+<h2 id="org68ca336"><span class="section-number-2">4</span> Functions</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org487c4d4" class="outline-3">
+<h3 id="org487c4d4"><span class="section-number-3">4.1</span> Compute the Transmissibility</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<a id="orgbca579c"></a>
+</p>
+</div>
+
+<div id="outline-container-org851f84d" class="outline-4">
+<h4 id="org851f84d">Function description</h4>
+<div class="outline-text-4" id="text-org851f84d">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[T, T_norm, freqs]</span> = <span class="org-function-name">computeTransmissibility</span>(<span class="org-variable-name">args</span>)
+<span class="org-comment">% computeTransmissibility -</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [T, T_norm, freqs] = computeTransmissibility(args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - args - Structure with the following fields:</span>
+<span class="org-comment">%        - plots [true/false] - Should plot the transmissilibty matrix and its Frobenius norm</span>
+<span class="org-comment">%        - freqs [] - Frequency vector to estimate the Frobenius norm</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - T      [6x6 ss] - Transmissibility matrix</span>
+<span class="org-comment">%    - T_norm [length(freqs)x1] - Frobenius norm of the Transmissibility matrix</span>
+<span class="org-comment">%    - freqs  [length(freqs)x1] - Frequency vector in [Hz]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf5e24cd" class="outline-4">
+<h4 id="orgf5e24cd">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgf5e24cd">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+  args.plots logical {mustBeNumericOrLogical} = <span class="org-constant">false</span>
+  args.freqs double {mustBeNumeric, mustBeNonnegative} = logspace(1,4,1000)
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = args.freqs;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4629501" class="outline-4">
+<h4 id="org4629501">Identification of the Transmissibility Matrix</h4>
+<div class="outline-text-4" id="text-org4629501">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/D_w'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Base Motion [m, rad]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+T = linearize(mdl, io, options);
+T.InputName = {<span class="org-string">'Wdx'</span>, <span class="org-string">'Wdy'</span>, <span class="org-string">'Wdz'</span>, <span class="org-string">'Wrx'</span>, <span class="org-string">'Wry'</span>, <span class="org-string">'Wrz'</span>};
+T.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+</pre>
+</div>
+
+<p>
+If wanted, the 6x6 transmissibility matrix is plotted.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">p_handle = zeros(6<span class="org-type">*</span>6,1);
+
+<span class="org-keyword">if</span> args.plots
+  fig = <span class="org-type">figure</span>;
+  <span class="org-keyword">for</span> <span class="org-variable-name">ix</span> = <span class="org-constant">1:6</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">iy</span> = <span class="org-constant">1:6</span>
+      p_handle((ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy) = subplot(6, 6, (ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy);
+      hold on;
+      plot(freqs, abs(squeeze(freqresp(T(ix, iy), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>);
+      <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+      <span class="org-keyword">if</span> ix <span class="org-type">&lt;</span> 6
+          xticklabels({});
+      <span class="org-keyword">end</span>
+      <span class="org-keyword">if</span> iy <span class="org-type">&gt;</span> 1
+          yticklabels({});
+      <span class="org-keyword">end</span>
+    <span class="org-keyword">end</span>
+  <span class="org-keyword">end</span>
+
+  linkaxes(p_handle, <span class="org-string">'xy'</span>)
+  xlim([freqs(1), freqs(end)]);
+  ylim([1e<span class="org-type">-</span>5, 1e2]);
+
+  han = <span class="org-type">axes</span>(fig, <span class="org-string">'visible'</span>, <span class="org-string">'off'</span>);
+  han.XLabel.Visible = <span class="org-string">'on'</span>;
+  han.YLabel.Visible = <span class="org-string">'on'</span>;
+  ylabel(han, <span class="org-string">'Frequency [Hz]'</span>);
+  xlabel(han, <span class="org-string">'Transmissibility [m/m]'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org989379a" class="outline-4">
+<h4 id="org989379a">Computation of the Frobenius norm</h4>
+<div class="outline-text-4" id="text-org989379a">
+<div class="org-src-container">
+<pre class="src src-matlab">T_norm = zeros(length(freqs), 1);
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(freqs)</span>
+  T_norm(<span class="org-constant">i</span>) = sqrt(trace(freqresp(T, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">*</span>freqresp(T, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">'</span>));
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">T_norm = T_norm<span class="org-type">/</span>sqrt(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">if</span> args.plots
+  <span class="org-type">figure</span>;
+  plot(freqs, T_norm)
+  <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+  xlabel(<span class="org-string">'Frequency [Hz]'</span>);
+  ylabel(<span class="org-string">'Transmissibility - Frobenius Norm'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org50e35a6" class="outline-3">
+<h3 id="org50e35a6"><span class="section-number-3">4.2</span> Compute the Compliance</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+<a id="org0a73574"></a>
+</p>
+</div>
+
+<div id="outline-container-org64fc1e2" class="outline-4">
+<h4 id="org64fc1e2">Function description</h4>
+<div class="outline-text-4" id="text-org64fc1e2">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[C, C_norm, freqs]</span> = <span class="org-function-name">computeCompliance</span>(<span class="org-variable-name">args</span>)
+<span class="org-comment">% computeCompliance -</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [C, C_norm, freqs] = computeCompliance(args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - args - Structure with the following fields:</span>
+<span class="org-comment">%        - plots [true/false] - Should plot the transmissilibty matrix and its Frobenius norm</span>
+<span class="org-comment">%        - freqs [] - Frequency vector to estimate the Frobenius norm</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Outputs:</span>
+<span class="org-comment">%    - C      [6x6 ss] - Compliance matrix</span>
+<span class="org-comment">%    - C_norm [length(freqs)x1] - Frobenius norm of the Compliance matrix</span>
+<span class="org-comment">%    - freqs  [length(freqs)x1] - Frequency vector in [Hz]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54cab00" class="outline-4">
+<h4 id="org54cab00">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org54cab00">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+  args.plots logical {mustBeNumericOrLogical} = <span class="org-constant">false</span>
+  args.freqs double {mustBeNumeric, mustBeNonnegative} = logspace(1,4,1000)
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = args.freqs;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgef06b63" class="outline-4">
+<h4 id="orgef06b63">Identification of the Compliance Matrix</h4>
+<div class="outline-text-4" id="text-orgef06b63">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+options = linearizeOptions;
+options.SampleTime = 0;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/F_ext'</span>],      1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% External forces [N, N*m]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+C = linearize(mdl, io, options);
+C.InputName  = {<span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>, <span class="org-string">'Fdz'</span>, <span class="org-string">'Mdx'</span>, <span class="org-string">'Mdy'</span>, <span class="org-string">'Mdz'</span>};
+C.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+</pre>
+</div>
+
+<p>
+If wanted, the 6x6 transmissibility matrix is plotted.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">p_handle = zeros(6<span class="org-type">*</span>6,1);
+
+<span class="org-keyword">if</span> args.plots
+  fig = <span class="org-type">figure</span>;
+  <span class="org-keyword">for</span> <span class="org-variable-name">ix</span> = <span class="org-constant">1:6</span>
+    <span class="org-keyword">for</span> <span class="org-variable-name">iy</span> = <span class="org-constant">1:6</span>
+      p_handle((ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy) = subplot(6, 6, (ix<span class="org-type">-</span>1)<span class="org-type">*</span>6 <span class="org-type">+</span> iy);
+      hold on;
+      plot(freqs, abs(squeeze(freqresp(C(ix, iy), freqs, <span class="org-string">'Hz'</span>))), <span class="org-string">'k-'</span>);
+      <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+      <span class="org-keyword">if</span> ix <span class="org-type">&lt;</span> 6
+          xticklabels({});
+      <span class="org-keyword">end</span>
+      <span class="org-keyword">if</span> iy <span class="org-type">&gt;</span> 1
+          yticklabels({});
+      <span class="org-keyword">end</span>
+    <span class="org-keyword">end</span>
+  <span class="org-keyword">end</span>
+
+  linkaxes(p_handle, <span class="org-string">'xy'</span>)
+  xlim([freqs(1), freqs(end)]);
+
+  han = <span class="org-type">axes</span>(fig, <span class="org-string">'visible'</span>, <span class="org-string">'off'</span>);
+  han.XLabel.Visible = <span class="org-string">'on'</span>;
+  han.YLabel.Visible = <span class="org-string">'on'</span>;
+  xlabel(han, <span class="org-string">'Frequency [Hz]'</span>);
+  ylabel(han, <span class="org-string">'Compliance [m/N, rad/(N*m)]'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6f63d37" class="outline-4">
+<h4 id="org6f63d37">Computation of the Frobenius norm</h4>
+<div class="outline-text-4" id="text-org6f63d37">
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = args.freqs;
+
+C_norm = zeros(length(freqs), 1);
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(freqs)</span>
+  C_norm(<span class="org-constant">i</span>) = sqrt(trace(freqresp(C, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">*</span>freqresp(C, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>)<span class="org-type">'</span>));
+<span class="org-keyword">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">if</span> args.plots
+  <span class="org-type">figure</span>;
+  plot(freqs, C_norm)
+  <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'XScale'</span>, <span class="org-string">'log'</span>); <span class="org-type">set</span>(<span class="org-variable-name">gca</span>, <span class="org-string">'YScale'</span>, <span class="org-string">'log'</span>);
+  xlabel(<span class="org-string">'Frequency [Hz]'</span>);
+  ylabel(<span class="org-string">'Compliance - Frobenius Norm'</span>);
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 15:44</p>
+<p class="date">Created: 2020-02-27 jeu. 14:16</p>
 </div>
 </body>
 </html>

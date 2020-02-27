@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 15:47 -->
+<!-- 2020-02-27 jeu. 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -281,18 +259,19 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org3535b6d">6.1. Payload</a>
 <ul>
-<li><a href="#org706f994">Function description</a></li>
-<li><a href="#orgb15b49f">Optional Parameters</a></li>
+<li><a href="#orge7f39a8">Function description</a></li>
+<li><a href="#orgb83df72">Optional Parameters</a></li>
 <li><a href="#orgeeb8d35">Add Payload Type</a></li>
 <li><a href="#org6d52ffc">Add Stiffness, Damping and Mass properties of the Payload</a></li>
 </ul>
 </li>
 <li><a href="#orgaaed406">6.2. Ground</a>
 <ul>
-<li><a href="#orge7f39a8">Function description</a></li>
-<li><a href="#orgb83df72">Optional Parameters</a></li>
+<li><a href="#org5d402b9">Function description</a></li>
+<li><a href="#orgc0da5ca">Optional Parameters</a></li>
 <li><a href="#orgef7035d">Add Ground Type</a></li>
 <li><a href="#org95633e8">Add Stiffness and Damping properties of the Ground</a></li>
+<li><a href="#org14ff2fc">Rotation Point</a></li>
 </ul>
 </li>
 </ul>
@@ -525,9 +504,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </p>
 </div>
 
-<div id="outline-container-org706f994" class="outline-4">
-<h4 id="org706f994">Function description</h4>
-<div class="outline-text-4" id="text-org706f994">
+<div id="outline-container-orge7f39a8" class="outline-4">
+<h4 id="orge7f39a8">Function description</h4>
+<div class="outline-text-4" id="text-orge7f39a8">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[payload]</span> = <span class="org-function-name">initializePayload</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializePayload - Initialize the Payload that can then be used for simulations and analysis</span>
@@ -536,7 +515,7 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 <span class="org-comment">%</span>
 <span class="org-comment">% Inputs:</span>
 <span class="org-comment">%    - args - Structure with the following fields:</span>
-<span class="org-comment">%        - type - 'none', 'solid', 'flexible', 'cartesian'</span>
+<span class="org-comment">%        - type - 'none', 'rigid', 'flexible', 'cartesian'</span>
 <span class="org-comment">%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]</span>
 <span class="org-comment">%                    This also the position where K and C are defined</span>
 <span class="org-comment">%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]</span>
@@ -546,7 +525,7 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 <span class="org-comment">%</span>
 <span class="org-comment">% Outputs:</span>
 <span class="org-comment">%    - payload - Struture with the following properties:</span>
-<span class="org-comment">%        - type - 1 (none), 2 (solid), 3 (flexible)</span>
+<span class="org-comment">%        - type - 1 (none), 2 (rigid), 3 (flexible)</span>
 <span class="org-comment">%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]</span>
 <span class="org-comment">%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]</span>
 <span class="org-comment">%        - C [6x1] - Stiffness of the Payload [N/(m/s), N/(rad/s)]</span>
@@ -557,12 +536,12 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </div>
 </div>
 
-<div id="outline-container-orgb15b49f" class="outline-4">
-<h4 id="orgb15b49f">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgb15b49f">
+<div id="outline-container-orgb83df72" class="outline-4">
+<h4 id="orgb83df72">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgb83df72">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
-  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'solid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
+  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
   args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e8<span class="org-type">*</span>ones(6,1)
   args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1<span class="org-type">*</span>ones(6,1)
   args.h (1,1) double {mustBeNumeric, mustBeNonnegative} = 100e<span class="org-type">-</span>3
@@ -581,7 +560,7 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 <pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
   <span class="org-keyword">case</span> <span class="org-string">'none'</span>
     payload.type = 1;
-  <span class="org-keyword">case</span> <span class="org-string">'solid'</span>
+  <span class="org-keyword">case</span> <span class="org-string">'rigid'</span>
     payload.type = 2;
   <span class="org-keyword">case</span> <span class="org-string">'flexible'</span>
     payload.type = 3;
@@ -621,9 +600,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orge7f39a8" class="outline-4">
-<h4 id="orge7f39a8">Function description</h4>
-<div class="outline-text-4" id="text-orge7f39a8">
+<div id="outline-container-org5d402b9" class="outline-4">
+<h4 id="org5d402b9">Function description</h4>
+<div class="outline-text-4" id="text-org5d402b9">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[ground]</span> = <span class="org-function-name">initializeGround</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeGround - Initialize the Ground that can then be used for simulations and analysis</span>
@@ -633,12 +612,13 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 <span class="org-comment">% Inputs:</span>
 <span class="org-comment">%    - args - Structure with the following fields:</span>
 <span class="org-comment">%        - type - 'none', 'solid', 'flexible'</span>
+<span class="org-comment">%        - rot_point [3x1] - Rotation point for the ground motion [m]</span>
 <span class="org-comment">%        - K [3x1] - Translation Stiffness of the Ground [N/m]</span>
 <span class="org-comment">%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]</span>
 <span class="org-comment">%</span>
 <span class="org-comment">% Outputs:</span>
 <span class="org-comment">%    - ground - Struture with the following properties:</span>
-<span class="org-comment">%        - type - 1 (none), 2 (solid), 3 (flexible)</span>
+<span class="org-comment">%        - type - 1 (none), 2 (rigid), 3 (flexible)</span>
 <span class="org-comment">%        - K [3x1] - Translation Stiffness of the Ground [N/m]</span>
 <span class="org-comment">%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]</span>
 </pre>
@@ -646,12 +626,13 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgb83df72" class="outline-4">
-<h4 id="orgb83df72">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgb83df72">
+<div id="outline-container-orgc0da5ca" class="outline-4">
+<h4 id="orgc0da5ca">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgc0da5ca">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
-  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'solid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
+  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
+  args.rot_point (3,1) double {mustBeNumeric} = zeros(3,1)
   args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8<span class="org-type">*</span>ones(3,1)
   args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1<span class="org-type">*</span>ones(3,1)
 <span class="org-keyword">end</span>
@@ -667,7 +648,7 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 <pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
   <span class="org-keyword">case</span> <span class="org-string">'none'</span>
     ground.type = 1;
-  <span class="org-keyword">case</span> <span class="org-string">'solid'</span>
+  <span class="org-keyword">case</span> <span class="org-string">'rigid'</span>
     ground.type = 2;
   <span class="org-keyword">case</span> <span class="org-string">'flexible'</span>
     ground.type = 3;
@@ -687,12 +668,22 @@ ground.C = args.C;
 </div>
 </div>
 </div>
+
+<div id="outline-container-org14ff2fc" class="outline-4">
+<h4 id="org14ff2fc">Rotation Point</h4>
+<div class="outline-text-4" id="text-org14ff2fc">
+<div class="org-src-container">
+<pre class="src src-matlab">ground.rot_point = args.rot_point;
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 15:47</p>
+<p class="date">Created: 2020-02-27 jeu. 14:16</p>
 </div>
 </body>
 </html>

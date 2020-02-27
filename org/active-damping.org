@@ -91,7 +91,7 @@ To run the script, open the Simulink Project, and type =run active_damping_inert
 #+end_src
 
 #+begin_src matlab
-  ground = initializeGround('type', 'none');
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
 #+end_src
 
@@ -321,8 +321,12 @@ We first initialize the Stewart platform without joint stiffness.
 #+end_src
 
 #+begin_src matlab
-  ground = initializeGround('type', 'none');
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 And we identify the dynamics from force actuators to force sensors.
@@ -590,7 +594,7 @@ We first initialize the Stewart platform without joint stiffness.
 #+end_src
 
 #+begin_src matlab
-  ground = initializeGround('type', 'none');
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
 #+end_src
 
@@ -773,3 +777,170 @@ The root locus is shown in figure [[fig:root_locus_dvf_rot_stiffness]].
 #+begin_important
   Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
 #+end_important
+* Compliance and Transmissibility Comparison
+** Initialization
+We first initialize the Stewart platform without joint stiffness.
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'none');
+#+end_src
+
+The rotation point of the ground is located at the origin of frame $\{A\}$.
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
+  payload = initializePayload('type', 'none');
+#+end_src
+
+** Identification
+Let's first identify the transmissibility and compliance in the open-loop case.
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+  [T_ol, T_norm_ol, freqs] = computeTransmissibility();
+  [C_ol, C_norm_ol, freqs] = computeCompliance();
+#+end_src
+
+Now, let's identify the transmissibility and compliance for the Integral Force Feedback architecture.
+#+begin_src matlab
+  controller = initializeController('type', 'iff');
+  G_iff = (2e4/s)*eye(6);
+
+  [T_iff, T_norm_iff, ~] = computeTransmissibility();
+  [C_iff, C_norm_iff, ~] = computeCompliance();
+#+end_src
+
+And for the Direct Velocity Feedback.
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  G_dvf = 1e4*s/(1+s/2/pi/5000)*eye(6);
+
+  [T_dvf, T_norm_dvf, ~] = computeTransmissibility();
+  [C_dvf, C_norm_dvf, ~] = computeCompliance();
+#+end_src
+
+** Results
+#+begin_src matlab :exports none
+  p_handle = zeros(6*6,1);
+
+  fig = figure;
+  for ix = 1:6
+    for iy = 1:6
+      p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
+      hold on;
+      set(gca,'ColorOrderIndex',1);
+      plot(freqs, abs(squeeze(freqresp(T_ol(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',2);
+      plot(freqs, abs(squeeze(freqresp(T_iff(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',3);
+      plot(freqs, abs(squeeze(freqresp(T_dvf(ix, iy), freqs, 'Hz'))));
+      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+      if ix < 6
+          xticklabels({});
+      end
+      if iy > 1
+          yticklabels({});
+      end
+    end
+  end
+
+  linkaxes(p_handle, 'xy')
+  xlim([freqs(1), freqs(end)]);
+
+  han = axes(fig, 'visible', 'off');
+  han.XLabel.Visible = 'on';
+  han.YLabel.Visible = 'on';
+  ylabel(han, 'Frequency [Hz]');
+  xlabel(han, 'Transmissibility');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/transmissibility_iff_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:transmissibility_iff_dvf
+#+caption: Obtained transmissibility for Open-Loop Control (Blue), Integral Force Feedback (Red) and Direct Velocity Feedback (Yellow) ([[./figs/transmissibility_iff_dvf.png][png]], [[./figs/transmissibility_iff_dvf.pdf][pdf]])
+[[file:figs/transmissibility_iff_dvf.png]]
+
+#+begin_src matlab :exports none
+  p_handle = zeros(6*6,1);
+
+  fig = figure;
+  for ix = 1:6
+    for iy = 1:6
+      p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
+      hold on;
+      set(gca,'ColorOrderIndex',1);
+      plot(freqs, abs(squeeze(freqresp(C_ol(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',2);
+      plot(freqs, abs(squeeze(freqresp(C_iff(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',3);
+      plot(freqs, abs(squeeze(freqresp(C_dvf(ix, iy), freqs, 'Hz'))));
+      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+      if ix < 6
+          xticklabels({});
+      end
+      if iy > 1
+          yticklabels({});
+      end
+    end
+  end
+
+  linkaxes(p_handle, 'xy')
+  xlim([freqs(1), freqs(end)]);
+
+  han = axes(fig, 'visible', 'off');
+  han.XLabel.Visible = 'on';
+  han.YLabel.Visible = 'on';
+  ylabel(han, 'Frequency [Hz]');
+  xlabel(han, 'Compliance');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/compliance_iff_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:compliance_iff_dvf
+#+caption: Obtained compliance for Open-Loop Control (Blue), Integral Force Feedback (Red) and Direct Velocity Feedback (Yellow) ([[./figs/compliance_iff_dvf.png][png]], [[./figs/compliance_iff_dvf.pdf][pdf]])
+[[file:figs/compliance_iff_dvf.png]]
+
+#+begin_src matlab :exports none
+  figure;
+
+  subplot(1,2,1);
+  hold on;
+  plot(freqs, T_norm_ol)
+  plot(freqs, T_norm_iff)
+  plot(freqs, T_norm_dvf)
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Transmissibility - Frobenius Norm');
+
+  subplot(1,2,2);
+  hold on;
+  plot(freqs, C_norm_ol, 'DisplayName', 'OL')
+  plot(freqs, C_norm_iff, 'DisplayName', 'IFF')
+  plot(freqs, C_norm_dvf, 'DisplayName', 'DVF')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Compliance - Frobenius Norm');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/frobenius_norm_T_C_iff_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:frobenius_norm_T_C_iff_dvf
+#+caption: Frobenius norm of the Transmissibility and Compliance Matrices ([[./figs/frobenius_norm_T_C_iff_dvf.png][png]], [[./figs/frobenius_norm_T_C_iff_dvf.pdf][pdf]])
+[[file:figs/frobenius_norm_T_C_iff_dvf.png]]

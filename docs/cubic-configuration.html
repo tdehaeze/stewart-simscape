@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-14 ven. 14:11 -->
+<!-- 2020-02-27 jeu. 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -274,33 +252,33 @@ for the JavaScript code in this tag.
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#orgbde7788">1.5. Conclusion</a></li>
+<li><a href="#orgd6c60aa">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#orgc0314ec">2.2. Conclusion</a></li>
+<li><a href="#org78f0f9c">2.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#orgb3ca361">3.2. Conclusion</a></li>
+<li><a href="#org53a1ab8">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
 <li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
 <li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
-<li><a href="#orge33568e">4.3. Conclusion</a></li>
+<li><a href="#orga0d81dc">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
 <li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
 <li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
-<li><a href="#org1a90044">5.3. Conclusion</a></li>
+<li><a href="#org3e2b41c">5.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">6. Functions</a>
@@ -848,8 +826,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-orgbde7788" class="outline-3">
-<h3 id="orgbde7788"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-orgd6c60aa" class="outline-3">
+<h3 id="orgd6c60aa"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -1186,8 +1164,8 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-orgc0314ec" class="outline-3">
-<h3 id="orgc0314ec"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org78f0f9c" class="outline-3">
+<h3 id="org78f0f9c"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -1273,8 +1251,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-orgb3ca361" class="outline-3">
-<h3 id="orgb3ca361"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-org53a1ab8" class="outline-3">
+<h3 id="org53a1ab8"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1629,8 +1607,8 @@ This was expected as the mass matrix is not diagonal (the Center of Mass of the 
 </div>
 </div>
 
-<div id="outline-container-orge33568e" class="outline-3">
-<h3 id="orge33568e"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-orga0d81dc" class="outline-3">
+<h3 id="orga0d81dc"><span class="section-number-3">4.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="important">
 <p>
@@ -1812,8 +1790,8 @@ And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relati
 </div>
 </div>
 
-<div id="outline-container-org1a90044" class="outline-3">
-<h3 id="org1a90044"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div id="outline-container-org3e2b41c" class="outline-3">
+<h3 id="org3e2b41c"><span class="section-number-3">5.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="important">
 <p>
@@ -1984,7 +1962,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-14 ven. 14:11</p>
+<p class="date">Created: 2020-02-27 jeu. 14:16</p>
 </div>
 </body>
 </html>

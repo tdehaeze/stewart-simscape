@@ -340,11 +340,6 @@ Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/F'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/X'], 1, 'openoutput'); io_i = io_i + 1;
-
-  %% Input/Output definition
-  clear io; io_i = 1;
   io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
   io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 

@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 14:51 -->
+<!-- 2020-02-27 jeu. 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Control Study</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -275,6 +253,18 @@ for the JavaScript code in this tag.
 <li><a href="#org4493ec7">1.3. Identification of the plant</a></li>
 <li><a href="#org72dad5c">1.4. Plant Analysis</a></li>
 <li><a href="#orga9fb0f5">1.5. Controller Design</a></li>
+</ul>
+</li>
+<li><a href="#org1ce6b23">2. Functions</a>
+<ul>
+<li><a href="#org9b036f8">2.1. <code>initializeController</code>: Initialize the Controller</a>
+<ul>
+<li><a href="#org89608d1">Function description</a></li>
+<li><a href="#orgb457316">Optional Parameters</a></li>
+<li><a href="#orgad0bd08">Structure initialization</a></li>
+<li><a href="#org05c3878">Add Type</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -387,10 +377,79 @@ Kl = Kl <span class="org-type">*</span> eye(6);
 </div>
 </div>
 </div>
+
+<div id="outline-container-org1ce6b23" class="outline-2">
+<h2 id="org1ce6b23"><span class="section-number-2">2</span> Functions</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org9b036f8" class="outline-3">
+<h3 id="org9b036f8"><span class="section-number-3">2.1</span> <code>initializeController</code>: Initialize the Controller</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<a id="org339969f"></a>
+</p>
+</div>
+
+<div id="outline-container-org89608d1" class="outline-4">
+<h4 id="org89608d1">Function description</h4>
+<div class="outline-text-4" id="text-org89608d1">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[controller]</span> = <span class="org-function-name">initializeController</span>(<span class="org-variable-name">args</span>)
+<span class="org-comment">% initializeController - Initialize the Controller</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [] = initializeController(args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - args - Can have the following fields:</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb457316" class="outline-4">
+<h4 id="orgb457316">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgb457316">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+  args.type   char   {mustBeMember(args.type, {<span class="org-string">'open-loop'</span>, <span class="org-string">'iff'</span>, <span class="org-string">'dvf'</span>})} = <span class="org-string">'open-loop'</span>
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad0bd08" class="outline-4">
+<h4 id="orgad0bd08">Structure initialization</h4>
+<div class="outline-text-4" id="text-orgad0bd08">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = struct();
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org05c3878" class="outline-4">
+<h4 id="org05c3878">Add Type</h4>
+<div class="outline-text-4" id="text-org05c3878">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
+  <span class="org-keyword">case</span> <span class="org-string">'open-loop'</span>
+    controller.type = 0;
+  <span class="org-keyword">case</span> <span class="org-string">'iff'</span>
+    controller.type = 1;
+  <span class="org-keyword">case</span> <span class="org-string">'dvf'</span>
+    controller.type = 2;
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 14:51</p>
+<p class="date">Created: 2020-02-27 jeu. 14:16</p>
 </div>
 </body>
 </html>

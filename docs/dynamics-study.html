@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-14 ven. 14:11 -->
+<!-- 2020-02-27 jeu. 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Dynamics Study</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -272,13 +250,13 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org4509b7d">1.1. Comparison with fixed support</a></li>
 <li><a href="#org8662186">1.2. Comparison with a flexible support</a></li>
-<li><a href="#org1cbdf9a">1.3. Conclusion</a></li>
+<li><a href="#org03b2957">1.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org81ab204">2. Comparison of the static transfer function and the Compliance matrix</a>
 <ul>
 <li><a href="#orge7e7242">2.1. Analysis</a></li>
-<li><a href="#org03b2957">2.2. Conclusion</a></li>
+<li><a href="#org920d3c4">2.2. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -463,8 +441,8 @@ And thus \(\mathcal{F}_{x}\) and \(\mathcal{F}_{x,\text{ext}}\) have clearly <b>
 </div>
 
 
-<div id="outline-container-org1cbdf9a" class="outline-3">
-<h3 id="org1cbdf9a"><span class="section-number-3">1.3</span> Conclusion</h3>
+<div id="outline-container-org03b2957" class="outline-3">
+<h3 id="org03b2957"><span class="section-number-3">1.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="important">
 <p>
@@ -524,11 +502,6 @@ options.SampleTime = 0;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
 mdl = <span class="org-string">'stewart_platform_model'</span>;
-
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/F'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/X'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
@@ -702,8 +675,8 @@ And now at the Compliance matrix.
 </div>
 </div>
 
-<div id="outline-container-org03b2957" class="outline-3">
-<h3 id="org03b2957"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org920d3c4" class="outline-3">
+<h3 id="org920d3c4"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -717,7 +690,7 @@ The low frequency transfer function matrix from \(\mathcal{\bm{F}}\) to \(\mathc
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-14 ven. 14:11</p>
+<p class="date">Created: 2020-02-27 jeu. 14:16</p>
 </div>
 </body>
 </html>
