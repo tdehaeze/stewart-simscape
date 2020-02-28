@@ -695,6 +695,7 @@ No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 The obtain geometry is shown in figure [[fig:stewart_cubic_conf_decouple_dynamics]].
@@ -880,6 +881,7 @@ No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 The obtain geometry is shown in figure [[fig:stewart_cubic_conf_mass_above]].
@@ -1087,6 +1089,7 @@ No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 #+begin_src matlab :exports none
@@ -1258,6 +1261,7 @@ No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 #+begin_src matlab :exports none

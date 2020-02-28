@@ -4,10 +4,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-27 jeu. 14:16 -->
+<!-- 2020-02-28 ven. 17:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Stewart Platform - Control Study</title>
+<title>Stewart Platform - Vibration Isolation</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
 <style type="text/css">
@@ -241,23 +241,71 @@
  |
  <a accesskey="H" href="./index.html"> HOME </a>
 </div><div id="content">
-<h1 class="title">Stewart Platform - Control Study</h1>
+<h1 class="title">Stewart Platform - Vibration Isolation</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc1805a8">1. First Control Architecture</a>
+<li><a href="#org272e7f8">1. HAC-LAC (Cascade) Control - Integral Control</a>
 <ul>
-<li><a href="#org066d914">1.1. Control Schematic</a></li>
-<li><a href="#org64f6d6b">1.2. Initialize the Stewart platform</a></li>
-<li><a href="#org4493ec7">1.3. Identification of the plant</a></li>
-<li><a href="#org72dad5c">1.4. Plant Analysis</a></li>
-<li><a href="#orga9fb0f5">1.5. Controller Design</a></li>
+<li><a href="#orga5c9b98">1.1. Introduction</a></li>
+<li><a href="#org9ad2582">1.2. Initialization</a></li>
+<li><a href="#org03823a6">1.3. Identification</a>
+<ul>
+<li><a href="#org4d582a9">1.3.1. HAC - Without LAC</a></li>
+<li><a href="#orge0108ff">1.3.2. HAC - IFF</a></li>
+<li><a href="#org1afe87f">1.3.3. HAC - DVF</a></li>
 </ul>
 </li>
-<li><a href="#org1ce6b23">2. Functions</a>
+<li><a href="#org61a6098">1.4. Control Architecture</a></li>
+<li><a href="#orgdca8b1b">1.5. 6x6 Plant Comparison</a></li>
+<li><a href="#orgc2459c7">1.6. HAC - DVF</a>
 <ul>
-<li><a href="#org9b036f8">2.1. <code>initializeController</code>: Initialize the Controller</a>
+<li><a href="#org54f5bbf">1.6.1. Plant</a></li>
+<li><a href="#orga9fb0f5">1.6.2. Controller Design</a></li>
+<li><a href="#orgf520b4e">1.6.3. Obtained Performance</a></li>
+</ul>
+</li>
+<li><a href="#org8c50a0f">1.7. HAC - IFF</a>
+<ul>
+<li><a href="#orgd015268">1.7.1. Plant</a></li>
+<li><a href="#orgb1bd3ac">1.7.2. Controller Design</a></li>
+<li><a href="#orgdcdc645">1.7.3. Obtained Performance</a></li>
+</ul>
+</li>
+<li><a href="#org9224c01">1.8. Comparison</a></li>
+</ul>
+</li>
+<li><a href="#orgde62390">2. MIMO Analysis</a>
+<ul>
+<li><a href="#org550055f">2.1. Initialization</a></li>
+<li><a href="#org23449b8">2.2. Identification</a>
+<ul>
+<li><a href="#orgd47a3c0">2.2.1. HAC - Without LAC</a></li>
+<li><a href="#org1c3609b">2.2.2. HAC - DVF</a></li>
+<li><a href="#orgf7913d5">2.2.3. Cartesian Frame</a></li>
+</ul>
+</li>
+<li><a href="#orgf9a6267">2.3. Singular Value Decomposition</a></li>
+</ul>
+</li>
+<li><a href="#orgebf6121">3. Diagonal Control based on the damped plant</a>
+<ul>
+<li><a href="#org7d2e4bb">3.1. Initialization</a></li>
+<li><a href="#orgb047e7e">3.2. Identification</a></li>
+<li><a href="#orgab6bc6f">3.3. Steady State Decoupling</a>
+<ul>
+<li><a href="#orga589a4a">3.3.1. Pre-Compensator Design</a></li>
+<li><a href="#org9eaf88f">3.3.2. Diagonal Control Design</a></li>
+<li><a href="#orge195d88">3.3.3. Results</a></li>
+</ul>
+</li>
+<li><a href="#org7af13df">3.4. Decoupling at Crossover</a></li>
+</ul>
+</li>
+<li><a href="#org1ce6b23">4. Functions</a>
+<ul>
+<li><a href="#org9b036f8">4.1. <code>initializeController</code>: Initialize the Controller</a>
 <ul>
 <li><a href="#org89608d1">Function description</a></li>
 <li><a href="#orgb457316">Optional Parameters</a></li>
@@ -271,120 +319,858 @@
 </div>
 </div>
 
-<div id="outline-container-orgc1805a8" class="outline-2">
-<h2 id="orgc1805a8"><span class="section-number-2">1</span> First Control Architecture</h2>
+<div id="outline-container-org272e7f8" class="outline-2">
+<h2 id="org272e7f8"><span class="section-number-2">1</span> HAC-LAC (Cascade) Control - Integral Control</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org066d914" class="outline-3">
-<h3 id="org066d914"><span class="section-number-3">1.1</span> Control Schematic</h3>
+<div id="outline-container-orga5c9b98" class="outline-3">
+<h3 id="orga5c9b98"><span class="section-number-3">1.1</span> Introduction</h3>
 <div class="outline-text-3" id="text-1-1">
-
-<div class="figure">
-<p><img src="figs/control_measure_rotating_2dof.png" alt="control_measure_rotating_2dof.png" />
+<p>
+In this section, we wish to study the use of the High Authority Control - Low Authority Control (HAC-LAC) architecture on the Stewart platform.
 </p>
+
+<p>
+The control architectures are shown in Figures <a href="#orgf85634b">1</a> and <a href="#orgd068ad1">2</a>.
+</p>
+
+<p>
+First, the LAC loop is closed (the LAC control is described <a href="active-damping.html">here</a>), and then the HAC controller is designed and the outer loop is closed.
+</p>
+
+
+<div id="orgf85634b" class="figure">
+<p><img src="figs/control_arch_hac_iff.png" alt="control_arch_hac_iff.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>HAC-LAC architecture with IFF</p>
+</div>
+
+
+
+<div id="orgd068ad1" class="figure">
+<p><img src="figs/control_arch_hac_dvf.png" alt="control_arch_hac_dvf.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>HAC-LAC architecture with DVF</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org64f6d6b" class="outline-3">
-<h3 id="org64f6d6b"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-org9ad2582" class="outline-3">
+<h3 id="org9ad2582"><span class="section-number-3">1.2</span> Initialization</h3>
 <div class="outline-text-3" id="text-1-2">
+<p>
+We first initialize the Stewart platform.
+</p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
 stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 </pre>
 </div>
 
+<p>
+The rotation point of the ground is located at the origin of frame \(\{A\}\).
+</p>
 <div class="org-src-container">
-<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'rot_point'</span>, stewart.platform_F.FO_A);
 payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4493ec7" class="outline-3">
-<h3 id="org4493ec7"><span class="section-number-3">1.3</span> Identification of the plant</h3>
+<div id="outline-container-org03823a6" class="outline-3">
+<h3 id="org03823a6"><span class="section-number-3">1.3</span> Identification</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-Let&rsquo;s identify the transfer function from \(\bm{\tau}}\) to \(\bm{L}\).
+We identify the transfer function from the actuator forces \(\bm{\tau}\) to the absolute displacement of the mobile platform \(\bm{\mathcal{X}}\) in three different cases:
 </p>
-<div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
-options = linearizeOptions;
-options.SampleTime = 0;
+<ul class="org-ul">
+<li>Open Loop plant</li>
+<li>Already damped plant using Integral Force Feedback</li>
+<li>Already damped plant using Direct velocity feedback</li>
+</ul>
+</div>
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+<div id="outline-container-org4d582a9" class="outline-4">
+<h4 id="org4d582a9"><span class="section-number-4">1.3.1</span> HAC - Without LAC</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
 mdl = <span class="org-string">'stewart_platform_model'</span>;
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
-G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'L2'</span>, <span class="org-string">'L3'</span>, <span class="org-string">'L4'</span>, <span class="org-string">'L5'</span>, <span class="org-string">'L6'</span>};
+G_ol = linearize(mdl, io);
+G_ol.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org72dad5c" class="outline-3">
-<h3 id="org72dad5c"><span class="section-number-3">1.4</span> Plant Analysis</h3>
+<div id="outline-container-orge0108ff" class="outline-4">
+<h4 id="orge0108ff"><span class="section-number-4">1.3.2</span> HAC - IFF</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'iff'</span>);
+K_iff = <span class="org-type">-</span>(1e4<span class="org-type">/</span>s)<span class="org-type">*</span>eye(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G_iff = linearize(mdl, io);
+G_iff.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_iff.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1afe87f" class="outline-4">
+<h4 id="org1afe87f"><span class="section-number-4">1.3.3</span> HAC - DVF</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
+K_dvf = <span class="org-type">-</span>1e4<span class="org-type">*</span>s<span class="org-type">/</span>(1<span class="org-type">+</span>s<span class="org-type">/</span>2<span class="org-type">/</span><span class="org-constant">pi</span><span class="org-type">/</span>5000)<span class="org-type">*</span>eye(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G_dvf = linearize(mdl, io);
+G_dvf.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org61a6098" class="outline-3">
+<h3 id="org61a6098"><span class="section-number-3">1.4</span> Control Architecture</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
-Diagonal terms
-Compare to off-diagonal terms
-</p>
-</div>
-</div>
-<div id="outline-container-orga9fb0f5" class="outline-3">
-<h3 id="orga9fb0f5"><span class="section-number-3">1.5</span> Controller Design</h3>
-<div class="outline-text-3" id="text-1-5">
-<p>
-One integrator should be present in the controller.
-</p>
-
-<p>
-A lead is added around the crossover frequency which is set to be around 500Hz.
+We use the Jacobian to express the actuator forces in the cartesian frame, and thus we obtain the transfer functions from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-comment">% wint = 2*pi*100; % Integrate until [rad]</span>
-<span class="org-comment">% wlead = 2*pi*500; % Location of the lead [rad]</span>
-<span class="org-comment">% hlead = 2; % Lead strengh</span>
+<pre class="src src-matlab">Gc_ol = minreal(G_ol)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
+Gc_ol.InputName = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
 
-<span class="org-comment">% Kl = 1e6 * ... % Gain</span>
-<span class="org-comment">%      (s + wint)/(s) * ... % Integrator until 100Hz</span>
-<span class="org-comment">%      (1 + s/(wlead/hlead)/(1 + s/(wlead*hlead))); % Lead</span>
+Gc_iff = minreal(G_iff)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
+Gc_iff.InputName = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
 
-wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>100;
-Kl = 1<span class="org-type">/</span>abs(freqresp(G(1,1), wc)) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> 1<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(3<span class="org-type">*</span>wc));
-Kl = Kl <span class="org-type">*</span> eye(6);
+Gc_dvf = minreal(G_dvf)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
+Gc_dvf.InputName = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
 </pre>
 </div>
+
+<p>
+We then design a controller based on the transfer functions from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\), finally, we will pre-multiply the controller by \(\bm{J}^{-T}\).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdca8b1b" class="outline-3">
+<h3 id="orgdca8b1b"><span class="section-number-3">1.5</span> 6x6 Plant Comparison</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<div id="org4aa226f" class="figure">
+<p><img src="figs/hac_lac_coupling_jacobian.png" alt="hac_lac_coupling_jacobian.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Norm of the transfer functions from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\) (<a href="./figs/hac_lac_coupling_jacobian.png">png</a>, <a href="./figs/hac_lac_coupling_jacobian.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc2459c7" class="outline-3">
+<h3 id="orgc2459c7"><span class="section-number-3">1.6</span> HAC - DVF</h3>
+<div class="outline-text-3" id="text-1-6">
+</div>
+<div id="outline-container-org54f5bbf" class="outline-4">
+<h4 id="org54f5bbf"><span class="section-number-4">1.6.1</span> Plant</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<div id="orgbe936ef" class="figure">
+<p><img src="figs/hac_lac_plant_dvf.png" alt="hac_lac_plant_dvf.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Diagonal elements of the plant for HAC control when DVF is previously applied (<a href="./figs/hac_lac_plant_dvf.png">png</a>, <a href="./figs/hac_lac_plant_dvf.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga9fb0f5" class="outline-4">
+<h4 id="orga9fb0f5"><span class="section-number-4">1.6.2</span> Controller Design</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+We design a diagonal controller with equal bandwidth for the 6 terms.
+The controller is a pure integrator with a small lead near the crossover.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>300; <span class="org-comment">% Wanted Bandwidth [rad/s]</span>
+
+h = 1.2;
+H_lead = 1<span class="org-type">/</span>h<span class="org-type">*</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">/</span>h))<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">*</span>h));
+
+Kd_dvf = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="org-type">/</span>s<span class="org-type">*</span>Gc_dvf, wc)))) <span class="org-type">.*</span> H_lead <span class="org-type">.*</span> 1<span class="org-type">/</span>s;
+</pre>
+</div>
+
+
+<div id="org6fb90ba" class="figure">
+<p><img src="figs/hac_lac_loop_gain_dvf.png" alt="hac_lac_loop_gain_dvf.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Diagonal elements of the Loop Gain for the HAC control (<a href="./figs/hac_lac_loop_gain_dvf.png">png</a>, <a href="./figs/hac_lac_loop_gain_dvf.pdf">pdf</a>)</p>
+</div>
+
+
+<p>
+Finally, we pre-multiply the diagonal controller by \(\bm{J}^{-T}\) prior implementation.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">K_hac_dvf = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class="org-type">*</span>Kd_dvf;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf520b4e" class="outline-4">
+<h4 id="orgf520b4e"><span class="section-number-4">1.6.3</span> Obtained Performance</h4>
+<div class="outline-text-4" id="text-1-6-3">
+<p>
+We identify the transmissibility and compliance of the system.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+[T_ol, T_norm_ol, freqs] = computeTransmissibility();
+[C_ol, C_norm_ol, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
+[T_dvf, T_norm_dvf, <span class="org-type">~</span>] = computeTransmissibility();
+[C_dvf, C_norm_dvf, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'hac-dvf'</span>);
+[T_hac_dvf, T_norm_hac_dvf, <span class="org-type">~</span>] = computeTransmissibility();
+[C_hac_dvf, C_norm_hac_dvf, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+
+<div id="orge8167aa" class="figure">
+<p><img src="figs/hac_lac_C_T_dvf.png" alt="hac_lac_C_T_dvf.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Obtained Compliance and Transmissibility (<a href="./figs/hac_lac_C_T_dvf.png">png</a>, <a href="./figs/hac_lac_C_T_dvf.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8c50a0f" class="outline-3">
+<h3 id="org8c50a0f"><span class="section-number-3">1.7</span> HAC - IFF</h3>
+<div class="outline-text-3" id="text-1-7">
+</div>
+<div id="outline-container-orgd015268" class="outline-4">
+<h4 id="orgd015268"><span class="section-number-4">1.7.1</span> Plant</h4>
+<div class="outline-text-4" id="text-1-7-1">
+
+<div id="orgcb10b82" class="figure">
+<p><img src="figs/hac_lac_plant_iff.png" alt="hac_lac_plant_iff.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Diagonal elements of the plant for HAC control when IFF is previously applied (<a href="./figs/hac_lac_plant_iff.png">png</a>, <a href="./figs/hac_lac_plant_iff.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb1bd3ac" class="outline-4">
+<h4 id="orgb1bd3ac"><span class="section-number-4">1.7.2</span> Controller Design</h4>
+<div class="outline-text-4" id="text-1-7-2">
+<p>
+We design a diagonal controller with equal bandwidth for the 6 terms.
+The controller is a pure integrator with a small lead near the crossover.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>300; <span class="org-comment">% Wanted Bandwidth [rad/s]</span>
+
+h = 1.2;
+H_lead = 1<span class="org-type">/</span>h<span class="org-type">*</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">/</span>h))<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">*</span>h));
+
+Kd_iff = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="org-type">/</span>s<span class="org-type">*</span>Gc_iff, wc)))) <span class="org-type">.*</span> H_lead <span class="org-type">.*</span> 1<span class="org-type">/</span>s;
+</pre>
+</div>
+
+
+<div id="org5ef2d56" class="figure">
+<p><img src="figs/hac_lac_loop_gain_iff.png" alt="hac_lac_loop_gain_iff.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Diagonal elements of the Loop Gain for the HAC control (<a href="./figs/hac_lac_loop_gain_iff.png">png</a>, <a href="./figs/hac_lac_loop_gain_iff.pdf">pdf</a>)</p>
+</div>
+
+
+<p>
+Finally, we pre-multiply the diagonal controller by \(\bm{J}^{-T}\) prior implementation.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">K_hac_iff = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class="org-type">*</span>Kd_iff;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcdc645" class="outline-4">
+<h4 id="orgdcdc645"><span class="section-number-4">1.7.3</span> Obtained Performance</h4>
+<div class="outline-text-4" id="text-1-7-3">
+<p>
+We identify the transmissibility and compliance of the system.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+[T_ol, T_norm_ol, freqs] = computeTransmissibility();
+[C_ol, C_norm_ol, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'iff'</span>);
+[T_iff, T_norm_iff, <span class="org-type">~</span>] = computeTransmissibility();
+[C_iff, C_norm_iff, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'hac-iff'</span>);
+[T_hac_iff, T_norm_hac_iff, <span class="org-type">~</span>] = computeTransmissibility();
+[C_hac_iff, C_norm_hac_iff, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+
+<div id="orgfd7029e" class="figure">
+<p><img src="figs/hac_lac_C_T_iff.png" alt="hac_lac_C_T_iff.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>Obtained Compliance and Transmissibility (<a href="./figs/hac_lac_C_T_iff.png">png</a>, <a href="./figs/hac_lac_C_T_iff.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9224c01" class="outline-3">
+<h3 id="org9224c01"><span class="section-number-3">1.8</span> Comparison</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<div id="org77494cc" class="figure">
+<p><img src="figs/hac_lac_C_full_comparison.png" alt="hac_lac_C_full_comparison.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>Comparison of the norm of the Compliance matrices for the HAC-LAC architecture (<a href="./figs/hac_lac_C_full_comparison.png">png</a>, <a href="./figs/hac_lac_C_full_comparison.pdf">pdf</a>)</p>
+</div>
+
+
+<div id="org41b4aec" class="figure">
+<p><img src="figs/hac_lac_T_full_comparison.png" alt="hac_lac_T_full_comparison.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>Comparison of the norm of the Transmissibility matrices for the HAC-LAC architecture (<a href="./figs/hac_lac_T_full_comparison.png">png</a>, <a href="./figs/hac_lac_T_full_comparison.pdf">pdf</a>)</p>
+</div>
+
+
+<div id="orgddec129" class="figure">
+<p><img src="figs/hac_lac_C_T_comparison.png" alt="hac_lac_C_T_comparison.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>Comparison of the Frobenius norm of the Compliance and Transmissibility for the HAC-LAC architecture with both IFF and DVF (<a href="./figs/hac_lac_C_T_comparison.png">png</a>, <a href="./figs/hac_lac_C_T_comparison.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgde62390" class="outline-2">
+<h2 id="orgde62390"><span class="section-number-2">2</span> MIMO Analysis</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Let&rsquo;s define the system as shown in figure <a href="#orgba6519a">13</a>.
+</p>
+
+
+<div id="orgba6519a" class="figure">
+<p><img src="figs/general_control_names.png" alt="general_control_names.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>General Control Architecture</p>
+</div>
+
+<table id="org1daae94" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> Signals definition for the generalized plant</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left"><b>Exogenous Inputs</b></th>
+<th scope="col" class="org-left">\(\bm{\mathcal{X}}_w\)</th>
+<th scope="col" class="org-left">Ground motion</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">\(\bm{\mathcal{F}}_d\)</th>
+<th scope="col" class="org-left">External Forces applied to the Payload</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">\(\bm{r}\)</th>
+<th scope="col" class="org-left">Reference signal for tracking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>Exogenous Outputs</b></td>
+<td class="org-left">\(\bm{\mathcal{X}}\)</td>
+<td class="org-left">Absolute Motion of the Payload</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\bm{\tau}\)</td>
+<td class="org-left">Actuator Rate</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b>Sensed Outputs</b></td>
+<td class="org-left">\(\bm{\tau}_m\)</td>
+<td class="org-left">Force Sensors in each leg</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\delta \bm{\mathcal{L}}_m\)</td>
+<td class="org-left">Measured displacement of each leg</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\bm{\mathcal{X}}\)</td>
+<td class="org-left">Absolute Motion of the Payload</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b>Control Signals</b></td>
+<td class="org-left">\(\bm{\tau}\)</td>
+<td class="org-left">Actuator Inputs</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-org550055f" class="outline-3">
+<h3 id="org550055f"><span class="section-number-3">2.1</span> Initialization</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+We first initialize the Stewart platform.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
+<p>
+The rotation point of the ground is located at the origin of frame \(\{A\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'rot_point'</span>, stewart.platform_F.FO_A);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23449b8" class="outline-3">
+<h3 id="org23449b8"><span class="section-number-3">2.2</span> Identification</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-orgd47a3c0" class="outline-4">
+<h4 id="orgd47a3c0"><span class="section-number-4">2.2.1</span> HAC - Without LAC</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G_ol = linearize(mdl, io);
+G_ol.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1c3609b" class="outline-4">
+<h4 id="org1c3609b"><span class="section-number-4">2.2.2</span> HAC - DVF</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
+K_dvf = <span class="org-type">-</span>1e4<span class="org-type">*</span>s<span class="org-type">/</span>(1<span class="org-type">+</span>s<span class="org-type">/</span>2<span class="org-type">/</span><span class="org-constant">pi</span><span class="org-type">/</span>5000)<span class="org-type">*</span>eye(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G_dvf = linearize(mdl, io);
+G_dvf.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf7913d5" class="outline-4">
+<h4 id="orgf7913d5"><span class="section-number-4">2.2.3</span> Cartesian Frame</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<div class="org-src-container">
+<pre class="src src-matlab">Gc_ol = minreal(G_ol)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
+Gc_ol.InputName = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+
+Gc_dvf = minreal(G_dvf)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
+Gc_dvf.InputName = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf9a6267" class="outline-3">
+<h3 id="orgf9a6267"><span class="section-number-3">2.3</span> Singular Value Decomposition</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(1, 4, 1000);
+
+U_ol = zeros(6,6,length(freqs));
+S_ol = zeros(6,length(freqs));
+V_ol = zeros(6,6,length(freqs));
+
+U_dvf = zeros(6,6,length(freqs));
+S_dvf = zeros(6,length(freqs));
+V_dvf = zeros(6,6,length(freqs));
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(freqs)</span>
+  [U,S,V] = svd(freqresp(Gc_ol, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>));
+  U_ol(<span class="org-type">:</span>,<span class="org-type">:</span>,<span class="org-constant">i</span>) = U;
+  S_ol(<span class="org-type">:</span>,<span class="org-constant">i</span>) = diag(S);
+  V_ol(<span class="org-type">:</span>,<span class="org-type">:</span>,<span class="org-constant">i</span>) = V;
+
+  [U,S,V] = svd(freqresp(Gc_dvf, freqs(<span class="org-constant">i</span>), <span class="org-string">'Hz'</span>));
+  U_dvf(<span class="org-type">:</span>,<span class="org-type">:</span>,<span class="org-constant">i</span>) = U;
+  S_dvf(<span class="org-type">:</span>,<span class="org-constant">i</span>) = diag(S);
+  V_dvf(<span class="org-type">:</span>,<span class="org-type">:</span>,<span class="org-constant">i</span>) = V;
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgebf6121" class="outline-2">
+<h2 id="orgebf6121"><span class="section-number-2">3</span> Diagonal Control based on the damped plant</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+From <a class='org-ref-reference' href="#skogestad07_multiv_feedb_contr">skogestad07_multiv_feedb_contr</a>, a simple approach to multivariable control is the following two-step procedure:
+</p>
+<ol class="org-ol">
+<li><b>Design a pre-compensator</b> \(W_1\), which counteracts the interactions in the plant and results in a new <b>shaped plant</b> \(G_S(s) = G(s) W_1(s)\) which is <b>more diagonal and easier to control</b> than the original plant \(G(s)\).</li>
+<li><b>Design a diagonal controller</b> \(K_S(s)\) for the shaped plant using methods similar to those for SISO systems.</li>
+</ol>
+
+<p>
+The overall controller is then:
+\[ K(s) = W_1(s)K_s(s) \]
+</p>
+
+<p>
+There are mainly three different cases:
+</p>
+<ol class="org-ol">
+<li><b>Dynamic decoupling</b>: \(G_S(s)\) is diagonal at all frequencies. For that we can choose \(W_1(s) = G^{-1}(s)\) and this is an inverse-based controller.</li>
+<li><b>Steady-state decoupling</b>: \(G_S(0)\) is diagonal. This can be obtained by selecting \(W_1(s) = G^{-1}(0)\).</li>
+<li><b>Approximate decoupling at frequency \(\w_0\)</b>: \(G_S(j\w_0)\) is as diagonal as possible. Decoupling the system at \(\w_0\) is a good choice because the effect on performance of reducing interaction is normally greatest at this frequency.</li>
+</ol>
+</div>
+
+<div id="outline-container-org7d2e4bb" class="outline-3">
+<h3 id="org7d2e4bb"><span class="section-number-3">3.1</span> Initialization</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+We first initialize the Stewart platform.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+
+<p>
+The rotation point of the ground is located at the origin of frame \(\{A\}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'rot_point'</span>, stewart.platform_F.FO_A);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb047e7e" class="outline-3">
+<h3 id="orgb047e7e"><span class="section-number-3">3.2</span> Identification</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
+K_dvf = <span class="org-type">-</span>1e4<span class="org-type">*</span>s<span class="org-type">/</span>(1<span class="org-type">+</span>s<span class="org-type">/</span>2<span class="org-type">/</span><span class="org-constant">pi</span><span class="org-type">/</span>5000)<span class="org-type">*</span>eye(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);      io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Sensor [m, rad]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G_dvf = linearize(mdl, io);
+G_dvf.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab6bc6f" class="outline-3">
+<h3 id="orgab6bc6f"><span class="section-number-3">3.3</span> Steady State Decoupling</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-orga589a4a" class="outline-4">
+<h4 id="orga589a4a"><span class="section-number-4">3.3.1</span> Pre-Compensator Design</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+We choose \(W_1 = G^{-1}(0)\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">W1 = inv(freqresp(G_dvf, 0));
+</pre>
+</div>
+
+<p>
+The (static) decoupled plant is \(G_s(s) = G(s) W_1\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Gs = G_dvf<span class="org-type">*</span>W1;
+</pre>
+</div>
+
+<p>
+In the case of the Stewart platform, the pre-compensator for static decoupling is equal to \(\mathcal{K} \bm{J}\):
+</p>
+\begin{align*}
+  W_1 &= \left( \frac{\bm{\mathcal{X}}}{\bm{\tau}}(s=0) \right)^{-1}\\
+      &= \left( \frac{\bm{\mathcal{X}}}{\bm{\tau}}(s=0) \bm{J}^T \right)^{-1}\\
+      &= \left( \bm{C} \bm{J}^T \right)^{-1}\\
+      &= \left( \bm{J}^{-1} \mathcal{K}^{-1} \right)^{-1}\\
+      &= \mathcal{K} \bm{J}
+\end{align*}
+
+<p>
+The static decoupled plant is schematic shown in Figure <a href="#org2d65021">14</a> and the bode plots of its diagonal elements are shown in Figure <a href="#org4a3c33d">15</a>.
+</p>
+
+
+<div id="org2d65021" class="figure">
+<p><img src="figs/control_arch_static_decoupling.png" alt="control_arch_static_decoupling.png" />
+</p>
+<p><span class="figure-number">Figure 14: </span>Static Decoupling of the Stewart platform</p>
+</div>
+
+
+<div id="org4a3c33d" class="figure">
+<p><img src="figs/static_decoupling_diagonal_plant.png" alt="static_decoupling_diagonal_plant.png" />
+</p>
+<p><span class="figure-number">Figure 15: </span>Bode plot of the diagonal elements of \(G_s(s)\) (<a href="./figs/static_decoupling_diagonal_plant.png">png</a>, <a href="./figs/static_decoupling_diagonal_plant.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9eaf88f" class="outline-4">
+<h4 id="org9eaf88f"><span class="section-number-4">3.3.2</span> Diagonal Control Design</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+We design a diagonal controller \(K_s(s)\) that consist of a pure integrator and a lead around the crossover.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>300; <span class="org-comment">% Wanted Bandwidth [rad/s]</span>
+
+h = 1.5;
+H_lead = 1<span class="org-type">/</span>h<span class="org-type">*</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">/</span>h))<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>(wc<span class="org-type">*</span>h));
+
+Ks_dvf = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="org-type">/</span>s<span class="org-type">*</span>Gs, wc)))) <span class="org-type">.*</span> H_lead <span class="org-type">.*</span> 1<span class="org-type">/</span>s;
+</pre>
+</div>
+
+<p>
+The overall controller is then \(K(s) = W_1 K_s(s)\) as shown in Figure <a href="#org6068962">16</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">K_hac_dvf = W1 <span class="org-type">*</span> Ks_dvf;
+</pre>
+</div>
+
+
+<div id="org6068962" class="figure">
+<p><img src="figs/control_arch_static_decoupling_K.png" alt="control_arch_static_decoupling_K.png" />
+</p>
+<p><span class="figure-number">Figure 16: </span>Controller including the static decoupling matrix</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge195d88" class="outline-4">
+<h4 id="orge195d88"><span class="section-number-4">3.3.3</span> Results</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+We identify the transmissibility and compliance of the Stewart platform under open-loop and closed-loop control.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+[T_ol, T_norm_ol, freqs] = computeTransmissibility();
+[C_ol, C_norm_ol, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'hac-dvf'</span>);
+[T_hac_dvf, T_norm_hac_dvf, <span class="org-type">~</span>] = computeTransmissibility();
+[C_hac_dvf, C_norm_hac_dvf, <span class="org-type">~</span>] = computeCompliance();
+</pre>
+</div>
+
+<p>
+The results are shown in figure
+</p>
+
+
+<div id="orgedc3353" class="figure">
+<p><img src="figs/static_decoupling_C_T_frobenius_norm.png" alt="static_decoupling_C_T_frobenius_norm.png" />
+</p>
+<p><span class="figure-number">Figure 17: </span>Frobenius norm of the Compliance and transmissibility matrices (<a href="./figs/static_decoupling_C_T_frobenius_norm.png">png</a>, <a href="./figs/static_decoupling_C_T_frobenius_norm.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7af13df" class="outline-3">
+<h3 id="org7af13df"><span class="section-number-3">3.4</span> Decoupling at Crossover</h3>
+<div class="outline-text-3" id="text-3-4">
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Find a method for real approximation of a complex matrix</li>
+</ul>
 </div>
 </div>
 </div>
 
 <div id="outline-container-org1ce6b23" class="outline-2">
-<h2 id="org1ce6b23"><span class="section-number-2">2</span> Functions</h2>
-<div class="outline-text-2" id="text-2">
+<h2 id="org1ce6b23"><span class="section-number-2">4</span> Functions</h2>
+<div class="outline-text-2" id="text-4">
 </div>
 <div id="outline-container-org9b036f8" class="outline-3">
-<h3 id="org9b036f8"><span class="section-number-3">2.1</span> <code>initializeController</code>: Initialize the Controller</h3>
-<div class="outline-text-3" id="text-2-1">
+<h3 id="org9b036f8"><span class="section-number-3">4.1</span> <code>initializeController</code>: Initialize the Controller</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 <a id="org339969f"></a>
 </p>
@@ -411,7 +1197,7 @@ Kl = Kl <span class="org-type">*</span> eye(6);
 <div class="outline-text-4" id="text-orgb457316">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
-  args.type   char   {mustBeMember(args.type, {<span class="org-string">'open-loop'</span>, <span class="org-string">'iff'</span>, <span class="org-string">'dvf'</span>})} = <span class="org-string">'open-loop'</span>
+  args.type   char   {mustBeMember(args.type, {<span class="org-string">'open-loop'</span>, <span class="org-string">'iff'</span>, <span class="org-string">'dvf'</span>, <span class="org-string">'hac-iff'</span>, <span class="org-string">'hac-dvf'</span>})} = <span class="org-string">'open-loop'</span>
 <span class="org-keyword">end</span>
 </pre>
 </div>
@@ -439,6 +1225,10 @@ Kl = Kl <span class="org-type">*</span> eye(6);
     controller.type = 1;
   <span class="org-keyword">case</span> <span class="org-string">'dvf'</span>
     controller.type = 2;
+  <span class="org-keyword">case</span> <span class="org-string">'hac-iff'</span>
+    controller.type = 3;
+  <span class="org-keyword">case</span> <span class="org-string">'hac-dvf'</span>
+    controller.type = 4;
 <span class="org-keyword">end</span>
 </pre>
 </div>
@@ -449,7 +1239,7 @@ Kl = Kl <span class="org-type">*</span> eye(6);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-27 jeu. 14:16</p>
+<p class="date">Created: 2020-02-28 ven. 17:34</p>
 </div>
 </body>
 </html>

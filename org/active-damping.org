@@ -93,6 +93,7 @@ To run the script, open the Simulink Project, and type =run active_damping_inert
 #+begin_src matlab
   ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 #+begin_src matlab
@@ -323,18 +324,11 @@ We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
   ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
-#+end_src
-
-#+begin_src matlab
   controller = initializeController('type', 'open-loop');
 #+end_src
 
 And we identify the dynamics from force actuators to force sensors.
 #+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
-
   %% Name of the Simulink File
   mdl = 'stewart_platform_model';
 
@@ -344,7 +338,7 @@ And we identify the dynamics from force actuators to force sensors.
   io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Taum'); io_i = io_i + 1; % Force Sensor Outputs [N]
 
   %% Run the linearization
-  G = linearize(mdl, io, options);
+  G = linearize(mdl, io);
   G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
   G.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
 #+end_src
@@ -398,7 +392,7 @@ The transfer function from actuator forces to force sensors is shown in Figure [
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
 #+begin_src matlab
   stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
-  Gf = linearize(mdl, io, options);
+  Gf = linearize(mdl, io);
   Gf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
   Gf.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
 #+end_src
@@ -406,7 +400,7 @@ We add some stiffness and damping in the flexible joints and we re-identify the 
 We now use the amplified actuators and re-identify the dynamics
 #+begin_src matlab
   stewart = initializeAmplifiedStrutDynamics(stewart);
-  Ga = linearize(mdl, io, options);
+  Ga = linearize(mdl, io);
   Ga.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
   Ga.OutputName = {'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
 #+end_src
@@ -596,6 +590,7 @@ We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
   ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 And we identify the dynamics from force actuators to force sensors.
@@ -778,6 +773,24 @@ The root locus is shown in figure [[fig:root_locus_dvf_rot_stiffness]].
   Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
 #+end_important
 * Compliance and Transmissibility Comparison
+** Introduction                                                      :ignore:
+** Matlab Init                                             :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+#+begin_src matlab
+  open('stewart_platform_model.slx')
+#+end_src
+
 ** Initialization
 We first initialize the Stewart platform without joint stiffness.
 #+begin_src matlab
@@ -798,6 +811,7 @@ The rotation point of the ground is located at the origin of frame $\{A\}$.
 #+begin_src matlab
   ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 ** Identification
@@ -811,7 +825,7 @@ Let's first identify the transmissibility and compliance in the open-loop case.
 Now, let's identify the transmissibility and compliance for the Integral Force Feedback architecture.
 #+begin_src matlab
   controller = initializeController('type', 'iff');
-  G_iff = (2e4/s)*eye(6);
+  K_iff = (1e4/s)*eye(6);
 
   [T_iff, T_norm_iff, ~] = computeTransmissibility();
   [C_iff, C_norm_iff, ~] = computeCompliance();
@@ -820,7 +834,7 @@ Now, let's identify the transmissibility and compliance for the Integral Force F
 And for the Direct Velocity Feedback.
 #+begin_src matlab
   controller = initializeController('type', 'dvf');
-  G_dvf = 1e4*s/(1+s/2/pi/5000)*eye(6);
+  K_dvf = 1e4*s/(1+s/2/pi/5000)*eye(6);
 
   [T_dvf, T_norm_dvf, ~] = computeTransmissibility();
   [C_dvf, C_norm_dvf, ~] = computeCompliance();
@@ -857,8 +871,8 @@ And for the Direct Velocity Feedback.
   han = axes(fig, 'visible', 'off');
   han.XLabel.Visible = 'on';
   han.YLabel.Visible = 'on';
-  ylabel(han, 'Frequency [Hz]');
-  xlabel(han, 'Transmissibility');
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Transmissibility');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
@@ -900,8 +914,8 @@ And for the Direct Velocity Feedback.
   han = axes(fig, 'visible', 'off');
   han.XLabel.Visible = 'on';
   han.YLabel.Visible = 'on';
-  ylabel(han, 'Frequency [Hz]');
-  xlabel(han, 'Compliance');
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Compliance');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes

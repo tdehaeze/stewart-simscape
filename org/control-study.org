@@ -1,4 +1,4 @@
-#+TITLE: Stewart Platform - Control Study
+#+TITLE: Stewart Platform - Vibration Isolation
 :DRAWER:
 #+STARTUP: overview
 
@@ -38,7 +38,81 @@
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
-* First Control Architecture
+* HAC-LAC (Cascade) Control - Integral Control
+** Introduction
+In this section, we wish to study the use of the High Authority Control - Low Authority Control (HAC-LAC) architecture on the Stewart platform.
+
+The control architectures are shown in Figures [[fig:control_arch_hac_iff]] and [[fig:control_arch_hac_dvf]].
+
+First, the LAC loop is closed (the LAC control is described [[file:active-damping.org][here]]), and then the HAC controller is designed and the outer loop is closed.
+
+#+begin_src latex :file control_arch_hac_iff.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block={2.0cm}{2.0cm}] (P) {};
+    \node[above] at (P.north) {Plant};
+    \node[block, below=0.7 of P] (Kiff) {$\bm{K}_\text{IFF}$};
+    \node[block, below=0.7 of Kiff] (Khac) {$\bm{K}_\text{HAC}$};
+
+    % Add
+    \node[addb, left=1 of P] (add) {};
+
+    \node[block, left=1 of add] (J) {$\bm{J}^{-T}$};
+
+    % Input and outputs coordinates
+    \coordinate[] (outputhac) at ($(P.south east)!0.75!(P.north east)$);
+    \coordinate[] (outputiff) at ($(P.south east)!0.25!(P.north east)$);
+
+    \draw[->] (outputiff) node[above right]{$\bm{\tau}_m$} -- ++(0.8, 0) |- (Kiff.east);
+    \draw[->] (outputhac) node[above right]{$\bm{\mathcal{X}}$} -- ++(1.6, 0) |- (Khac.east);
+
+    \draw[->] (Kiff.west) -| (add.south);
+
+    \draw[->] (J.east) -- (add.west);
+    \draw[<-] (J.west) node[above left]{$\bm{\mathcal{F}}$} -- ++(-0.8, 0) |- (Khac.west);
+    \draw[->] (add.east) -- (P.west) node[above left]{$\bm{\tau}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:control_arch_hac_iff
+#+caption: HAC-LAC architecture with IFF
+#+RESULTS:
+[[file:figs/control_arch_hac_iff.png]]
+
+
+#+begin_src latex :file control_arch_hac_dvf.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block={2.0cm}{2.0cm}] (P) {};
+    \node[above] at (P.north) {Plant};
+    \node[block, below=0.7 of P] (Kdvf) {$\bm{K}_\text{DVF}$};
+    \node[block, below=0.7 of Kdvf] (Khac) {$\bm{K}_\text{HAC}$};
+
+    % Add
+    \node[addb, left=1 of P] (add) {};
+
+    \node[block, left=1 of add] (J) {$\bm{J}^{-T}$};
+
+    % Input and outputs coordinates
+    \coordinate[] (outputhac) at ($(P.south east)!0.75!(P.north east)$);
+    \coordinate[] (outputdvf) at ($(P.south east)!0.25!(P.north east)$);
+
+    \draw[->] (outputdvf) node[above right]{$\delta \bm{\mathcal{L}}_m$} -- ++(0.8, 0) |- (Kdvf.east);
+    \draw[->] (outputhac) node[above right]{$\bm{\mathcal{X}}$} -- ++(1.6, 0) |- (Khac.east);
+
+    \draw[->] (Kdvf.west) -| (add.south);
+
+    \draw[->] (J.east) -- (add.west);
+    \draw[<-] (J.west) node[above left]{$\bm{\mathcal{F}}$} -- ++(-0.8, 0) |- (Khac.west);
+    \draw[->] (add.east) -- (P.west) node[above left]{$\bm{\tau}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:control_arch_hac_dvf
+#+caption: HAC-LAC architecture with DVF
+#+RESULTS:
+[[file:figs/control_arch_hac_dvf.png]]
+
 ** Matlab Init                                                     :noexport:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -52,169 +126,189 @@
   simulinkproject('../');
 #+end_src
 
-** Control Schematic
-#+begin_src latex :file control_measure_rotating_2dof.pdf
-  \begin{tikzpicture}
-    % Blocs
-    \node[block] (J) at (0, 0) {$J$};
-    \node[addb={+}{}{}{}{-}, right=1 of J] (subr) {};
-    \node[block, right=0.8 of subr] (K) {$K_{L}$};
-    \node[block, right=1 of K] (G) {$G_{L}$};
-
-    % Connections and labels
-    \draw[<-] (J.west)node[above left]{$\bm{r}_{n}$} -- ++(-1, 0);
-    \draw[->] (J.east) -- (subr.west) node[above left]{$\bm{r}_{L}$};
-    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{L}$};
-    \draw[->] (K.east) -- (G.west) node[above left]{$\bm{\tau}$};
-    \draw[->] (G.east) node[above right]{$\bm{L}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
-  \end{tikzpicture}
+#+begin_src matlab
+  open('stewart_platform_model.slx')
 #+end_src
 
-#+RESULTS:
-[[file:figs/control_measure_rotating_2dof.png]]
-
-** Initialize the Stewart platform
+** Initialization
+We first initialize the Stewart platform.
 #+begin_src matlab
   stewart = initializeStewartPlatform();
   stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
   stewart = generateGeneralConfiguration(stewart);
   stewart = computeJointsPose(stewart);
   stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
   stewart = initializeCylindricalPlatforms(stewart);
   stewart = initializeCylindricalStruts(stewart);
   stewart = computeJacobian(stewart);
   stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+  stewart = initializeInertialSensor(stewart, 'type', 'none');
 #+end_src
 
+The rotation point of the ground is located at the origin of frame $\{A\}$.
 #+begin_src matlab
-  ground = initializeGround('type', 'none');
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'none');
 #+end_src
 
-** Identification of the plant
-Let's identify the transfer function from $\bm{\tau}}$ to $\bm{L}$.
-#+begin_src matlab
-  %% Options for Linearized
-  options = linearizeOptions;
-  options.SampleTime = 0;
+** Identification
+*** Introduction                                                    :ignore:
+We identify the transfer function from the actuator forces $\bm{\tau}$ to the absolute displacement of the mobile platform $\bm{\mathcal{X}}$ in three different cases:
+- Open Loop plant
+- Already damped plant using Integral Force Feedback
+- Already damped plant using Direct velocity feedback
 
+*** HAC - Without LAC
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
   %% Name of the Simulink File
   mdl = 'stewart_platform_model';
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
-  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
 
   %% Run the linearization
-  G = linearize(mdl, io, options);
-  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
-  G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+  G_ol = linearize(mdl, io);
+  G_ol.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_ol.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
 #+end_src
 
-** Plant Analysis
-Diagonal terms
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
-  hold on;
-  for i = 1:6
-    plot(freqs, abs(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
-  end
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
-
-  ax2 = subplot(2, 1, 2);
-  hold on;
-  for i = 1:6
-    plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
-  end
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
-  ylim([-180, 180]);
-  yticks([-180, -90, 0, 90, 180]);
-
-  linkaxes([ax1,ax2],'x');
+*** HAC - IFF
+#+begin_src matlab
+  controller = initializeController('type', 'iff');
+  K_iff = -(1e4/s)*eye(6);
 #+end_src
-
-Compare to off-diagonal terms
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
-  hold on;
-  for i = 1:5
-    for j = i+1:6
-      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
-    end
-  end
-  set(gca,'ColorOrderIndex',1);
-  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
-
-  ax2 = subplot(2, 1, 2);
-  hold on;
-  for i = 1:5
-    for j = i+1:6
-      plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
-    end
-  end
-  set(gca,'ColorOrderIndex',1);
-  plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
-  ylim([-180, 180]);
-  yticks([-180, -90, 0, 90, 180]);
-
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-** Controller Design
-One integrator should be present in the controller.
-
-A lead is added around the crossover frequency which is set to be around 500Hz.
 
 #+begin_src matlab
-  % wint = 2*pi*100; % Integrate until [rad]
-  % wlead = 2*pi*500; % Location of the lead [rad]
-  % hlead = 2; % Lead strengh
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
 
-  % Kl = 1e6 * ... % Gain
-  %      (s + wint)/(s) * ... % Integrator until 100Hz
-  %      (1 + s/(wlead/hlead)/(1 + s/(wlead*hlead))); % Lead
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
 
-  wc = 2*pi*100;
-  Kl = 1/abs(freqresp(G(1,1), wc)) * wc/s * 1/(1 + s/(3*wc));
-  Kl = Kl * eye(6);
+  %% Run the linearization
+  G_iff = linearize(mdl, io);
+  G_iff.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_iff.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
 #+end_src
 
+*** HAC - DVF
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  K_dvf = -1e4*s/(1+s/2/pi/5000)*eye(6);
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_dvf = linearize(mdl, io);
+  G_dvf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_dvf.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+** Control Architecture
+We use the Jacobian to express the actuator forces in the cartesian frame, and thus we obtain the transfer functions from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$.
+
+#+begin_src matlab
+  Gc_ol = minreal(G_ol)/stewart.kinematics.J';
+  Gc_ol.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+
+  Gc_iff = minreal(G_iff)/stewart.kinematics.J';
+  Gc_iff.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+
+  Gc_dvf = minreal(G_dvf)/stewart.kinematics.J';
+  Gc_dvf.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+We then design a controller based on the transfer functions from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$, finally, we will pre-multiply the controller by $\bm{J}^{-T}$.
+
+** 6x6 Plant Comparison
 #+begin_src matlab :exports none
-  freqs = logspace(1, 3, 1000);
+  p_handle = zeros(6*6,1);
+
+  fig = figure;
+  for ix = 1:6
+    for iy = 1:6
+      p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
+      hold on;
+      set(gca,'ColorOrderIndex',1);
+      plot(freqs, abs(squeeze(freqresp(Gc_ol(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',2);
+      plot(freqs, abs(squeeze(freqresp(Gc_iff(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',3);
+      plot(freqs, abs(squeeze(freqresp(Gc_dvf(ix, iy), freqs, 'Hz'))));
+      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+      if ix < 6
+          xticklabels({});
+      end
+      if iy > 1
+          yticklabels({});
+      end
+    end
+  end
+
+  linkaxes(p_handle, 'xy')
+  xlim([freqs(1), freqs(end)]);
+  ylim([1e-9 1e-3]);
+
+  han = axes(fig, 'visible', 'off');
+  han.XLabel.Visible = 'on';
+  han.YLabel.Visible = 'on';
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Plant');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_coupling_jacobian.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_coupling_jacobian
+#+caption: Norm of the transfer functions from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$ ([[./figs/hac_lac_coupling_jacobian.png][png]], [[./figs/hac_lac_coupling_jacobian.pdf][pdf]])
+[[file:figs/hac_lac_coupling_jacobian.png]]
+
+** HAC - DVF
+*** Plant
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
 
   figure;
 
   ax1 = subplot(2, 1, 1);
   hold on;
-  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Dx', 'Fx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Dy', 'Fy'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Dz', 'Fz'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Rx', 'Mx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Ry', 'My'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Dx', 'Fx'), freqs, 'Hz'))), 'DisplayName', 'Dx/Fx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Dy', 'Fy'), freqs, 'Hz'))), 'DisplayName', 'Dy/Fy');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Dz', 'Fz'), freqs, 'Hz'))), 'DisplayName', 'Dz/Fz');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Rx', 'Mx'), freqs, 'Hz'))), 'DisplayName', 'Rx/Mx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Ry', 'My'), freqs, 'Hz'))), 'DisplayName', 'Ry/My');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))), 'DisplayName', 'Rz/Mz');
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
@@ -222,6 +316,29 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
   yticks([-180, -90, 0, 90, 180]);
 
   linkaxes([ax1,ax2],'x');
+  legend('location', 'northeast');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_plant_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_plant_dvf
+#+caption: Diagonal elements of the plant for HAC control when DVF is previously applied ([[./figs/hac_lac_plant_dvf.png][png]], [[./figs/hac_lac_plant_dvf.pdf][pdf]])
+[[file:figs/hac_lac_plant_dvf.png]]
+
+*** Controller Design
+We design a diagonal controller with equal bandwidth for the 6 terms.
+The controller is a pure integrator with a small lead near the crossover.
+
+#+begin_src matlab
+  wc = 2*pi*300; % Wanted Bandwidth [rad/s]
+
+  h = 1.2;
+  H_lead = 1/h*(1 + s/(wc/h))/(1 + s/(wc*h));
+
+  Kd_dvf = diag(1./abs(diag(freqresp(1/s*Gc_dvf, wc)))) .* H_lead .* 1/s;
 #+end_src
 
 #+begin_src matlab :exports none
@@ -231,26 +348,730 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
 
   ax1 = subplot(2, 1, 1);
   hold on;
-  for i = 1:5
-    for j = i+1:6
-      plot(freqs, abs(squeeze(freqresp(Kl(i,i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(1,1)*Gc_dvf('Dx', 'Fx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(2,2)*Gc_dvf('Dy', 'Fy'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(3,3)*Gc_dvf('Dz', 'Fz'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(4,4)*Gc_dvf('Rx', 'Mx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(5,5)*Gc_dvf('Ry', 'My'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_dvf(6,6)*Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(1,1)*Gc_dvf('Dx', 'Fx'), freqs, 'Hz'))), 'DisplayName', 'Dx/Fx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(2,2)*Gc_dvf('Dy', 'Fy'), freqs, 'Hz'))), 'DisplayName', 'Dy/Fy');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(3,3)*Gc_dvf('Dz', 'Fz'), freqs, 'Hz'))), 'DisplayName', 'Dz/Fz');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(4,4)*Gc_dvf('Rx', 'Mx'), freqs, 'Hz'))), 'DisplayName', 'Rx/Mx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(5,5)*Gc_dvf('Ry', 'My'), freqs, 'Hz'))), 'DisplayName', 'Ry/My');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_dvf(6,6)*Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))), 'DisplayName', 'Rz/Mz');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+  legend('location', 'northeast');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_loop_gain_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_loop_gain_dvf
+#+caption: Diagonal elements of the Loop Gain for the HAC control ([[./figs/hac_lac_loop_gain_dvf.png][png]], [[./figs/hac_lac_loop_gain_dvf.pdf][pdf]])
+[[file:figs/hac_lac_loop_gain_dvf.png]]
+
+
+Finally, we pre-multiply the diagonal controller by $\bm{J}^{-T}$ prior implementation.
+#+begin_src matlab
+  K_hac_dvf = inv(stewart.kinematics.J')*Kd_dvf;
+#+end_src
+
+*** Obtained Performance
+We identify the transmissibility and compliance of the system.
+
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+  [T_ol, T_norm_ol, freqs] = computeTransmissibility();
+  [C_ol, C_norm_ol, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  [T_dvf, T_norm_dvf, ~] = computeTransmissibility();
+  [C_dvf, C_norm_dvf, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'hac-dvf');
+  [T_hac_dvf, T_norm_hac_dvf, ~] = computeTransmissibility();
+  [C_hac_dvf, C_norm_hac_dvf, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  subplot(1,2,1);
+  hold on;
+  plot(freqs, T_norm_ol)
+  plot(freqs, T_norm_dvf)
+  plot(freqs, T_norm_hac_dvf)
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Transmissibility - Frobenius Norm');
+
+  subplot(1,2,2);
+  hold on;
+  plot(freqs, C_norm_ol, 'DisplayName', 'OL')
+  plot(freqs, C_norm_dvf, 'DisplayName', 'DVF')
+  plot(freqs, C_norm_hac_dvf, 'DisplayName', 'HAC-DVF')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Compliance - Frobenius Norm');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_C_T_dvf.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_C_T_dvf
+#+caption: Obtained Compliance and Transmissibility ([[./figs/hac_lac_C_T_dvf.png][png]], [[./figs/hac_lac_C_T_dvf.pdf][pdf]])
+[[file:figs/hac_lac_C_T_dvf.png]]
+
+** HAC - IFF
+*** Plant
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Dx', 'Fx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Dy', 'Fy'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Dz', 'Fz'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Rx', 'Mx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Ry', 'My'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gc_iff('Rz', 'Mz'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Dx', 'Fx'), freqs, 'Hz'))), 'DisplayName', 'Dx/Fx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Dy', 'Fy'), freqs, 'Hz'))), 'DisplayName', 'Dy/Fy');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Dz', 'Fz'), freqs, 'Hz'))), 'DisplayName', 'Dz/Fz');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Rx', 'Mx'), freqs, 'Hz'))), 'DisplayName', 'Rx/Mx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Ry', 'My'), freqs, 'Hz'))), 'DisplayName', 'Ry/My');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gc_iff('Rz', 'Mz'), freqs, 'Hz'))), 'DisplayName', 'Rz/Mz');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+  legend('location', 'northeast');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_plant_iff.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_plant_iff
+#+caption: Diagonal elements of the plant for HAC control when IFF is previously applied ([[./figs/hac_lac_plant_iff.png][png]], [[./figs/hac_lac_plant_iff.pdf][pdf]])
+[[file:figs/hac_lac_plant_iff.png]]
+
+*** Controller Design
+We design a diagonal controller with equal bandwidth for the 6 terms.
+The controller is a pure integrator with a small lead near the crossover.
+
+#+begin_src matlab
+  wc = 2*pi*300; % Wanted Bandwidth [rad/s]
+
+  h = 1.2;
+  H_lead = 1/h*(1 + s/(wc/h))/(1 + s/(wc*h));
+
+  Kd_iff = diag(1./abs(diag(freqresp(1/s*Gc_iff, wc)))) .* H_lead .* 1/s;
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(1,1)*Gc_iff('Dx', 'Fx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(2,2)*Gc_iff('Dy', 'Fy'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(3,3)*Gc_iff('Dz', 'Fz'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(4,4)*Gc_iff('Rx', 'Mx'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(5,5)*Gc_iff('Ry', 'My'), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Kd_iff(6,6)*Gc_iff('Rz', 'Mz'), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(1,1)*Gc_iff('Dx', 'Fx'), freqs, 'Hz'))), 'DisplayName', 'Dx/Fx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(2,2)*Gc_iff('Dy', 'Fy'), freqs, 'Hz'))), 'DisplayName', 'Dy/Fy');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(3,3)*Gc_iff('Dz', 'Fz'), freqs, 'Hz'))), 'DisplayName', 'Dz/Fz');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(4,4)*Gc_iff('Rx', 'Mx'), freqs, 'Hz'))), 'DisplayName', 'Rx/Mx');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(5,5)*Gc_iff('Ry', 'My'), freqs, 'Hz'))), 'DisplayName', 'Ry/My');
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kd_iff(6,6)*Gc_iff('Rz', 'Mz'), freqs, 'Hz'))), 'DisplayName', 'Rz/Mz');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+  legend('location', 'northeast');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_loop_gain_iff.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_loop_gain_iff
+#+caption: Diagonal elements of the Loop Gain for the HAC control ([[./figs/hac_lac_loop_gain_iff.png][png]], [[./figs/hac_lac_loop_gain_iff.pdf][pdf]])
+[[file:figs/hac_lac_loop_gain_iff.png]]
+
+
+Finally, we pre-multiply the diagonal controller by $\bm{J}^{-T}$ prior implementation.
+#+begin_src matlab
+  K_hac_iff = inv(stewart.kinematics.J')*Kd_iff;
+#+end_src
+
+*** Obtained Performance
+We identify the transmissibility and compliance of the system.
+
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+  [T_ol, T_norm_ol, freqs] = computeTransmissibility();
+  [C_ol, C_norm_ol, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'iff');
+  [T_iff, T_norm_iff, ~] = computeTransmissibility();
+  [C_iff, C_norm_iff, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'hac-iff');
+  [T_hac_iff, T_norm_hac_iff, ~] = computeTransmissibility();
+  [C_hac_iff, C_norm_hac_iff, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  subplot(1,2,1);
+  hold on;
+  plot(freqs, T_norm_ol)
+  plot(freqs, T_norm_iff)
+  plot(freqs, T_norm_hac_iff)
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Transmissibility - Frobenius Norm');
+
+  subplot(1,2,2);
+  hold on;
+  plot(freqs, C_norm_ol, 'DisplayName', 'OL')
+  plot(freqs, C_norm_iff, 'DisplayName', 'IFF')
+  plot(freqs, C_norm_hac_iff, 'DisplayName', 'HAC-IFF')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Compliance - Frobenius Norm');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_C_T_iff.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_C_T_iff
+#+caption: Obtained Compliance and Transmissibility ([[./figs/hac_lac_C_T_iff.png][png]], [[./figs/hac_lac_C_T_iff.pdf][pdf]])
+[[file:figs/hac_lac_C_T_iff.png]]
+
+** Comparison
+#+begin_src matlab :exports none
+  p_handle = zeros(6*6,1);
+
+  fig = figure;
+  for ix = 1:6
+    for iy = 1:6
+      p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
+      hold on;
+      set(gca,'ColorOrderIndex',1);
+      plot(freqs, abs(squeeze(freqresp(C_ol(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',2);
+      plot(freqs, abs(squeeze(freqresp(C_hac_dvf(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',3);
+      plot(freqs, abs(squeeze(freqresp(C_hac_iff(ix, iy), freqs, 'Hz'))));
+      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+      if ix < 6
+        xticklabels({});
+      end
+      if iy > 1
+        yticklabels({});
+      end
     end
   end
-  set(gca,'ColorOrderIndex',1);
-  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+
+  linkaxes(p_handle, 'xy')
+  ylim([1e-10, 1e-3]);
+  xlim([freqs(1), freqs(end)]);
+
+  han = axes(fig, 'visible', 'off');
+  han.XLabel.Visible = 'on';
+  han.YLabel.Visible = 'on';
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Compliance');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_C_full_comparison.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_C_full_comparison
+#+caption: Comparison of the norm of the Compliance matrices for the HAC-LAC architecture ([[./figs/hac_lac_C_full_comparison.png][png]], [[./figs/hac_lac_C_full_comparison.pdf][pdf]])
+[[file:figs/hac_lac_C_full_comparison.png]]
+
+#+begin_src matlab :exports none
+  p_handle = zeros(6*6,1);
+
+  fig = figure;
+  for ix = 1:6
+    for iy = 1:6
+      p_handle((ix-1)*6 + iy) = subplot(6, 6, (ix-1)*6 + iy);
+      hold on;
+      set(gca,'ColorOrderIndex',1);
+      plot(freqs, abs(squeeze(freqresp(T_ol(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',2);
+      plot(freqs, abs(squeeze(freqresp(T_hac_dvf(ix, iy), freqs, 'Hz'))));
+      set(gca,'ColorOrderIndex',3);
+      plot(freqs, abs(squeeze(freqresp(T_hac_iff(ix, iy), freqs, 'Hz'))));
+      set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+      if ix < 6
+        xticklabels({});
+      end
+      if iy > 1
+        yticklabels({});
+      end
+    end
+  end
+
+  linkaxes(p_handle, 'xy')
+  ylim([1e-5, 10]);
+  xlim([freqs(1), freqs(end)]);
+
+  han = axes(fig, 'visible', 'off');
+  han.XLabel.Visible = 'on';
+  han.YLabel.Visible = 'on';
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Transmissibility');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_T_full_comparison.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_T_full_comparison
+#+caption: Comparison of the norm of the Transmissibility matrices for the HAC-LAC architecture ([[./figs/hac_lac_T_full_comparison.png][png]], [[./figs/hac_lac_T_full_comparison.pdf][pdf]])
+[[file:figs/hac_lac_T_full_comparison.png]]
+
+#+begin_src matlab :exports none
+  figure;
+
+  subplot(1,2,1);
+  hold on;
+  plot(freqs, T_norm_ol)
+  plot(freqs, T_norm_hac_dvf)
+  plot(freqs, T_norm_hac_iff)
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Transmissibility - Frobenius Norm');
+
+  subplot(1,2,2);
+  hold on;
+  plot(freqs, C_norm_ol, 'DisplayName', 'OL')
+  plot(freqs, C_norm_hac_dvf, 'DisplayName', 'HAC-DVF')
+  plot(freqs, C_norm_hac_iff, 'DisplayName', 'HAC-IFF')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Compliance - Frobenius Norm');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hac_lac_C_T_comparison.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hac_lac_C_T_comparison
+#+caption: Comparison of the Frobenius norm of the Compliance and Transmissibility for the HAC-LAC architecture with both IFF and DVF ([[./figs/hac_lac_C_T_comparison.png][png]], [[./figs/hac_lac_C_T_comparison.pdf][pdf]])
+[[file:figs/hac_lac_C_T_comparison.png]]
+
+* MIMO Analysis
+** Introduction                                                      :ignore:
+Let's define the system as shown in figure [[fig:general_control_names]].
+
+#+begin_src latex :file general_control_names.pdf
+  \begin{tikzpicture}
+
+    % Blocs
+    \node[block={2.0cm}{2.0cm}] (P) {$P$};
+    \node[block={1.5cm}{1.5cm}, below=0.7 of P] (K) {$K$};
+
+    % Input and outputs coordinates
+    \coordinate[] (inputw)  at ($(P.south west)!0.75!(P.north west)$);
+    \coordinate[] (inputu)  at ($(P.south west)!0.25!(P.north west)$);
+    \coordinate[] (outputz) at ($(P.south east)!0.75!(P.north east)$);
+    \coordinate[] (outputv) at ($(P.south east)!0.25!(P.north east)$);
+
+    % Connections and labels
+    \draw[<-] (inputw) node[above left, align=right]{(weighted)\\exogenous inputs\\$w$} -- ++(-1.5, 0);
+    \draw[<-] (inputu) -- ++(-0.8, 0) |- node[left, near start, align=right]{control signals\\$u$} (K.west);
+
+    \draw[->] (outputz) node[above right, align=left]{(weighted)\\exogenous outputs\\$z$} -- ++(1.5, 0);
+    \draw[->] (outputv) -- ++(0.8, 0) |- node[right, near start, align=left]{sensed output\\$v$} (K.east);
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:general_control_names
+#+caption: General Control Architecture
+#+RESULTS:
+[[file:figs/general_control_names.png]]
+
+#+name: tab:general_plant_signals
+#+caption: Signals definition for the generalized plant
+| *Exogenous Inputs*  | $\bm{\mathcal{X}}_w$        | Ground motion                          |
+|                     | $\bm{\mathcal{F}}_d$        | External Forces applied to the Payload |
+|                     | $\bm{r}$                    | Reference signal for tracking          |
+|---------------------+-----------------------------+----------------------------------------|
+| *Exogenous Outputs* | $\bm{\mathcal{X}}$          | Absolute Motion of the Payload         |
+|                     | $\bm{\tau}$                 | Actuator Rate                          |
+|---------------------+-----------------------------+----------------------------------------|
+| *Sensed Outputs*    | $\bm{\tau}_m$               | Force Sensors in each leg              |
+|                     | $\delta \bm{\mathcal{L}}_m$ | Measured displacement of each leg      |
+|                     | $\bm{\mathcal{X}}$          | Absolute Motion of the Payload         |
+|---------------------+-----------------------------+----------------------------------------|
+| *Control Signals*   | $\bm{\tau}$                 | Actuator Inputs                        |
+
+** Matlab Init                                                     :noexport:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+#+begin_src matlab
+  open('stewart_platform_model.slx')
+#+end_src
+
+** Initialization
+We first initialize the Stewart platform.
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'none');
+#+end_src
+
+The rotation point of the ground is located at the origin of frame $\{A\}$.
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
+  payload = initializePayload('type', 'none');
+#+end_src
+
+** Identification
+*** HAC - Without LAC
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_ol = linearize(mdl, io);
+  G_ol.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_ol.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+*** HAC - DVF
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  K_dvf = -1e4*s/(1+s/2/pi/5000)*eye(6);
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_dvf = linearize(mdl, io);
+  G_dvf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_dvf.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+*** Cartesian Frame
+#+begin_src matlab
+  Gc_ol = minreal(G_ol)/stewart.kinematics.J';
+  Gc_ol.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+
+  Gc_dvf = minreal(G_dvf)/stewart.kinematics.J';
+  Gc_dvf.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+** Singular Value Decomposition
+#+begin_src matlab
+  freqs = logspace(1, 4, 1000);
+
+  U_ol = zeros(6,6,length(freqs));
+  S_ol = zeros(6,length(freqs));
+  V_ol = zeros(6,6,length(freqs));
+
+  U_dvf = zeros(6,6,length(freqs));
+  S_dvf = zeros(6,length(freqs));
+  V_dvf = zeros(6,6,length(freqs));
+
+  for i = 1:length(freqs)
+    [U,S,V] = svd(freqresp(Gc_ol, freqs(i), 'Hz'));
+    U_ol(:,:,i) = U;
+    S_ol(:,i) = diag(S);
+    V_ol(:,:,i) = V;
+
+    [U,S,V] = svd(freqresp(Gc_dvf, freqs(i), 'Hz'));
+    U_dvf(:,:,i) = U;
+    S_dvf(:,i) = diag(S);
+    V_dvf(:,:,i) = V;
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  ax1 = subplot(1,2,1);
+  hold on;
+  plot(freqs, S_ol(1,:), '-');
+  plot(freqs, S_ol(2,:), '--');
+  plot(freqs, S_ol(3,:), '-.');
+  plot(freqs, S_ol(4,:), '--');
+  plot(freqs, S_ol(5,:), '-');
+  plot(freqs, S_ol(6,:), '-.');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Singular Values');
+  title('Undamped Plant');
+
+  ax2 = subplot(1,2,2);
+  hold on;
+  plot(freqs, S_dvf(1,:), '-' , 'DisplayName', '$\sigma_1$');
+  plot(freqs, S_dvf(2,:), '--', 'DisplayName', '$\sigma_2$');
+  plot(freqs, S_dvf(3,:), '-.', 'DisplayName', '$\sigma_3$');
+  plot(freqs, S_dvf(4,:), '-' , 'DisplayName', '$\sigma_4$');
+  plot(freqs, S_dvf(5,:), '--', 'DisplayName', '$\sigma_5$');
+  plot(freqs, S_dvf(6,:), '-.', 'DisplayName', '$\sigma_6$');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Singular Values');
+  title('Damped Plant - DVF');
+
+  linkaxes([ax1, ax2], 'xy');
+  legend();
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  ax1 = subplot(1,2,1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(V_ol(i,1,:))), '-' , 'DisplayName', Gc_ol.InputName{i});
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [Hz]');
+  ylabel('Singular Values');
+  legend();
+
+  ax2 = subplot(1,2,2);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(U_ol(i,1,:))), '-' , 'DisplayName', Gc_ol.OutputName{i});
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [Hz]');
+  ylabel('Singular Values');
+  legend();
+
+  linkaxes([ax1,ax2], 'x');
+#+end_src
+
+* Diagonal Control based on the damped plant
+** Introduction                                                      :ignore:
+From cite:skogestad07_multiv_feedb_contr, a simple approach to multivariable control is the following two-step procedure:
+1. *Design a pre-compensator* $W_1$, which counteracts the interactions in the plant and results in a new *shaped plant* $G_S(s) = G(s) W_1(s)$ which is *more diagonal and easier to control* than the original plant $G(s)$.
+2. *Design a diagonal controller* $K_S(s)$ for the shaped plant using methods similar to those for SISO systems.
+
+The overall controller is then:
+\[ K(s) = W_1(s)K_s(s) \]
+
+There are mainly three different cases:
+1. *Dynamic decoupling*: $G_S(s)$ is diagonal at all frequencies. For that we can choose $W_1(s) = G^{-1}(s)$ and this is an inverse-based controller.
+2. *Steady-state decoupling*: $G_S(0)$ is diagonal. This can be obtained by selecting $W_1(s) = G^{-1}(0)$.
+3. *Approximate decoupling at frequency $\w_0$*: $G_S(j\w_0)$ is as diagonal as possible. Decoupling the system at $\w_0$ is a good choice because the effect on performance of reducing interaction is normally greatest at this frequency.
+
+** Initialization
+We first initialize the Stewart platform.
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'none');
+#+end_src
+
+The rotation point of the ground is located at the origin of frame $\{A\}$.
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
+  payload = initializePayload('type', 'none');
+#+end_src
+
+** Identification
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  K_dvf = -1e4*s/(1+s/2/pi/5000)*eye(6);
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_dvf = linearize(mdl, io);
+  G_dvf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_dvf.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+** Steady State Decoupling
+*** Pre-Compensator Design
+We choose $W_1 = G^{-1}(0)$.
+#+begin_src matlab
+  W1 = inv(freqresp(G_dvf, 0));
+#+end_src
+
+The (static) decoupled plant is $G_s(s) = G(s) W_1$.
+#+begin_src matlab
+  Gs = G_dvf*W1;
+#+end_src
+
+In the case of the Stewart platform, the pre-compensator for static decoupling is equal to $\mathcal{K} \bm{J}$:
+\begin{align*}
+  W_1 &= \left( \frac{\bm{\mathcal{X}}}{\bm{\tau}}(s=0) \right)^{-1}\\
+      &= \left( \frac{\bm{\mathcal{X}}}{\bm{\tau}}(s=0) \bm{J}^T \right)^{-1}\\
+      &= \left( \bm{C} \bm{J}^T \right)^{-1}\\
+      &= \left( \bm{J}^{-1} \mathcal{K}^{-1} \right)^{-1}\\
+      &= \mathcal{K} \bm{J}
+\end{align*}
+
+The static decoupled plant is schematic shown in Figure [[fig:control_arch_static_decoupling]] and the bode plots of its diagonal elements are shown in Figure [[fig:static_decoupling_diagonal_plant]].
+
+#+begin_src latex :file control_arch_static_decoupling.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block] (G) {$G(s)$};
+    \node[block, left=1 of G] (J) {$\mathcal{K}\bm{J}$};
+    \node[block, left=1 of J] (Ks) {$\bm{K}_s(s)$};
+
+    \draw[->] (Ks.east) -- (J.west);
+    \draw[->] (J.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ++(0.8, -0.8) -| ($(Ks.west) + (-0.8, 0)$) -- (Ks.west);
+
+    \begin{scope}[on background layer]
+      \node[fit={(J.north west) (G.south east)}, inner sep=4pt, draw, dashed, fill=black!20!white, label={$G_s(s)$}] {};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:control_arch_static_decoupling
+#+caption: Static Decoupling of the Stewart platform
+#+RESULTS:
+[[file:figs/control_arch_static_decoupling.png]]
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Gs(i, i), freqs, 'Hz'))));
+  end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  for i = 1:5
-    for j = i+1:6
-      plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(i, i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
-    end
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gs(i, i), freqs, 'Hz'))));
   end
-  set(gca,'ColorOrderIndex',1);
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
@@ -260,6 +1081,105 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
   linkaxes([ax1,ax2],'x');
 #+end_src
 
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/static_decoupling_diagonal_plant.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:static_decoupling_diagonal_plant
+#+caption: Bode plot of the diagonal elements of $G_s(s)$ ([[./figs/static_decoupling_diagonal_plant.png][png]], [[./figs/static_decoupling_diagonal_plant.pdf][pdf]])
+[[file:figs/static_decoupling_diagonal_plant.png]]
+
+*** Diagonal Control Design
+We design a diagonal controller $K_s(s)$ that consist of a pure integrator and a lead around the crossover.
+
+#+begin_src matlab
+  wc = 2*pi*300; % Wanted Bandwidth [rad/s]
+
+  h = 1.5;
+  H_lead = 1/h*(1 + s/(wc/h))/(1 + s/(wc*h));
+
+  Ks_dvf = diag(1./abs(diag(freqresp(1/s*Gs, wc)))) .* H_lead .* 1/s;
+#+end_src
+
+The overall controller is then $K(s) = W_1 K_s(s)$ as shown in Figure [[fig:control_arch_static_decoupling_K]].
+
+#+begin_src matlab
+  K_hac_dvf = W1 * Ks_dvf;
+#+end_src
+
+#+begin_src latex :file control_arch_static_decoupling_K.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block] (G) {$G(s)$};
+    \node[block, left=1 of G] (J) {$\mathcal{K}\bm{J}$};
+    \node[block, left=1 of J] (Ks) {$\bm{K}_s(s)$};
+
+    \draw[->] (Ks.east) -- (J.west);
+    \draw[->] (J.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ++(0.8, -0.8) -| ($(Ks.west) + (-0.8, 0)$) -- (Ks.west);
+
+    \begin{scope}[on background layer]
+      \node[fit={(Ks.north west) (J.south east)}, inner sep=4pt, draw, dashed, fill=black!20!white, label={$K(s)$}] {};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:control_arch_static_decoupling_K
+#+caption: Controller including the static decoupling matrix
+#+RESULTS:
+[[file:figs/control_arch_static_decoupling_K.png]]
+
+*** Results
+We identify the transmissibility and compliance of the Stewart platform under open-loop and closed-loop control.
+
+#+begin_src matlab
+  controller = initializeController('type', 'open-loop');
+  [T_ol, T_norm_ol, freqs] = computeTransmissibility();
+  [C_ol, C_norm_ol, ~] = computeCompliance();
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'hac-dvf');
+  [T_hac_dvf, T_norm_hac_dvf, ~] = computeTransmissibility();
+  [C_hac_dvf, C_norm_hac_dvf, ~] = computeCompliance();
+#+end_src
+
+The results are shown in figure
+
+#+begin_src matlab :exports none
+  figure;
+
+  subplot(1,2,1);
+  hold on;
+  plot(freqs, T_norm_ol)
+  plot(freqs, T_norm_hac_dvf)
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Transmissibility - Frobenius Norm');
+
+  subplot(1,2,2);
+  hold on;
+  plot(freqs, C_norm_ol, 'DisplayName', 'OL')
+  plot(freqs, C_norm_hac_dvf, 'DisplayName', 'HAC-DVF - Static decoupl.')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  xlabel('Frequency [Hz]');
+  ylabel('Compliance - Frobenius Norm');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/static_decoupling_C_T_frobenius_norm.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:static_decoupling_C_T_frobenius_norm
+#+caption: Frobenius norm of the Compliance and transmissibility matrices ([[./figs/static_decoupling_C_T_frobenius_norm.png][png]], [[./figs/static_decoupling_C_T_frobenius_norm.pdf][pdf]])
+[[file:figs/static_decoupling_C_T_frobenius_norm.png]]
+
+** Decoupling at Crossover
+- [ ] Find a method for real approximation of a complex matrix
+ 
 * Functions
 ** =initializeController=: Initialize the Controller
 :PROPERTIES:
@@ -288,7 +1208,7 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
 :END:
 #+begin_src matlab
   arguments
-    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf'})} = 'open-loop'
+    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf', 'hac-iff', 'hac-dvf'})} = 'open-loop'
   end
 #+end_src
 
@@ -312,5 +1232,9 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
       controller.type = 1;
     case 'dvf'
       controller.type = 2;
+    case 'hac-iff'
+      controller.type = 3;
+    case 'hac-dvf'
+      controller.type = 4;
   end
 #+end_src

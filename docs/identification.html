@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-27 jeu. 14:16 -->
+<!-- 2020-02-28 ven. 17:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Identification of the Stewart Platform using Simscape</title>
@@ -257,13 +257,13 @@
 </li>
 <li><a href="#org2891722">2. Transmissibility Analysis</a>
 <ul>
-<li><a href="#org8c667e9">2.1. Initialize the Stewart platform</a></li>
+<li><a href="#orgc8e1f51">2.1. Initialize the Stewart platform</a></li>
 <li><a href="#org5338f20">2.2. Transmissibility</a></li>
 </ul>
 </li>
 <li><a href="#orgc94edbd">3. Compliance Analysis</a>
 <ul>
-<li><a href="#orgc8e1f51">3.1. Initialize the Stewart platform</a></li>
+<li><a href="#org55d2544">3.1. Initialize the Stewart platform</a></li>
 <li><a href="#org1177029">3.2. Compliance</a></li>
 </ul>
 </li>
@@ -271,18 +271,18 @@
 <ul>
 <li><a href="#org487c4d4">4.1. Compute the Transmissibility</a>
 <ul>
-<li><a href="#org851f84d">Function description</a></li>
-<li><a href="#orgf5e24cd">Optional Parameters</a></li>
+<li><a href="#org64fc1e2">Function description</a></li>
+<li><a href="#org54cab00">Optional Parameters</a></li>
 <li><a href="#org4629501">Identification of the Transmissibility Matrix</a></li>
-<li><a href="#org989379a">Computation of the Frobenius norm</a></li>
+<li><a href="#org6f63d37">Computation of the Frobenius norm</a></li>
 </ul>
 </li>
 <li><a href="#org50e35a6">4.2. Compute the Compliance</a>
 <ul>
-<li><a href="#org64fc1e2">Function description</a></li>
-<li><a href="#org54cab00">Optional Parameters</a></li>
+<li><a href="#org3cf1d13">Function description</a></li>
+<li><a href="#org726b57d">Optional Parameters</a></li>
 <li><a href="#orgef06b63">Identification of the Compliance Matrix</a></li>
-<li><a href="#org6f63d37">Computation of the Frobenius norm</a></li>
+<li><a href="#org1019eaf">Computation of the Frobenius norm</a></li>
 </ul>
 </li>
 </ul>
@@ -329,6 +329,7 @@ stewart = initializeInertialSensor(stewart);
 <div class="org-src-container">
 <pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
 </pre>
 </div>
 </div>
@@ -608,8 +609,8 @@ Save the movie of the mode shape.
 <a id="orga989615"></a>
 </p>
 </div>
-<div id="outline-container-org8c667e9" class="outline-3">
-<h3 id="org8c667e9"><span class="section-number-3">2.1</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orgc8e1f51" class="outline-3">
+<h3 id="orgc8e1f51"><span class="section-number-3">2.1</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -632,6 +633,7 @@ We set the rotation point of the ground to be at the same point at frames \(\{A\
 <div class="org-src-container">
 <pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'rot_point'</span>, stewart.platform_F.FO_A);
 payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
+controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
 </pre>
 </div>
 </div>
@@ -729,8 +731,8 @@ plot(freqs, Gamma)
 <a id="org4579374"></a>
 </p>
 </div>
-<div id="outline-container-orgc8e1f51" class="outline-3">
-<h3 id="orgc8e1f51"><span class="section-number-3">3.1</span> Initialize the Stewart platform</h3>
+<div id="outline-container-org55d2544" class="outline-3">
+<h3 id="org55d2544"><span class="section-number-3">3.1</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -753,6 +755,7 @@ We set the rotation point of the ground to be at the same point at frames \(\{A\
 <div class="org-src-container">
 <pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
+controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
 </pre>
 </div>
 </div>
@@ -841,9 +844,9 @@ plot(freqs, C_norm)
 </p>
 </div>
 
-<div id="outline-container-org851f84d" class="outline-4">
-<h4 id="org851f84d">Function description</h4>
-<div class="outline-text-4" id="text-org851f84d">
+<div id="outline-container-org64fc1e2" class="outline-4">
+<h4 id="org64fc1e2">Function description</h4>
+<div class="outline-text-4" id="text-org64fc1e2">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[T, T_norm, freqs]</span> = <span class="org-function-name">computeTransmissibility</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% computeTransmissibility -</span>
@@ -864,9 +867,9 @@ plot(freqs, C_norm)
 </div>
 </div>
 
-<div id="outline-container-orgf5e24cd" class="outline-4">
-<h4 id="orgf5e24cd">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgf5e24cd">
+<div id="outline-container-org54cab00" class="outline-4">
+<h4 id="org54cab00">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org54cab00">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.plots logical {mustBeNumericOrLogical} = <span class="org-constant">false</span>
@@ -896,7 +899,7 @@ mdl = <span class="org-string">'stewart_platform_model'</span>;
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
 io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/D_w'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Base Motion [m, rad]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'output'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 T = linearize(mdl, io, options);
@@ -935,17 +938,17 @@ If wanted, the 6x6 transmissibility matrix is plotted.
   han = <span class="org-type">axes</span>(fig, <span class="org-string">'visible'</span>, <span class="org-string">'off'</span>);
   han.XLabel.Visible = <span class="org-string">'on'</span>;
   han.YLabel.Visible = <span class="org-string">'on'</span>;
-  ylabel(han, <span class="org-string">'Frequency [Hz]'</span>);
-  xlabel(han, <span class="org-string">'Transmissibility [m/m]'</span>);
+  xlabel(han, <span class="org-string">'Frequency [Hz]'</span>);
+  ylabel(han, <span class="org-string">'Transmissibility [m/m]'</span>);
 <span class="org-keyword">end</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org989379a" class="outline-4">
-<h4 id="org989379a">Computation of the Frobenius norm</h4>
-<div class="outline-text-4" id="text-org989379a">
+<div id="outline-container-org6f63d37" class="outline-4">
+<h4 id="org6f63d37">Computation of the Frobenius norm</h4>
+<div class="outline-text-4" id="text-org6f63d37">
 <div class="org-src-container">
 <pre class="src src-matlab">T_norm = zeros(length(freqs), 1);
 
@@ -982,9 +985,9 @@ If wanted, the 6x6 transmissibility matrix is plotted.
 </p>
 </div>
 
-<div id="outline-container-org64fc1e2" class="outline-4">
-<h4 id="org64fc1e2">Function description</h4>
-<div class="outline-text-4" id="text-org64fc1e2">
+<div id="outline-container-org3cf1d13" class="outline-4">
+<h4 id="org3cf1d13">Function description</h4>
+<div class="outline-text-4" id="text-org3cf1d13">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[C, C_norm, freqs]</span> = <span class="org-function-name">computeCompliance</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% computeCompliance -</span>
@@ -1005,9 +1008,9 @@ If wanted, the 6x6 transmissibility matrix is plotted.
 </div>
 </div>
 
-<div id="outline-container-org54cab00" class="outline-4">
-<h4 id="org54cab00">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org54cab00">
+<div id="outline-container-org726b57d" class="outline-4">
+<h4 id="org726b57d">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org726b57d">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.plots logical {mustBeNumericOrLogical} = <span class="org-constant">false</span>
@@ -1037,7 +1040,7 @@ mdl = <span class="org-string">'stewart_platform_model'</span>;
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
 clear io; io_i = 1;
 io(io_i) = linio([mdl, <span class="org-string">'/Disturbances/F_ext'</span>],      1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% External forces [N, N*m]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Absolute Motion Sensor'</span>],  1, <span class="org-string">'output'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Absolute Motion [m, rad]</span>
 
 <span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
 C = linearize(mdl, io, options);
@@ -1083,9 +1086,9 @@ If wanted, the 6x6 transmissibility matrix is plotted.
 </div>
 </div>
 
-<div id="outline-container-org6f63d37" class="outline-4">
-<h4 id="org6f63d37">Computation of the Frobenius norm</h4>
-<div class="outline-text-4" id="text-org6f63d37">
+<div id="outline-container-org1019eaf" class="outline-4">
+<h4 id="org1019eaf">Computation of the Frobenius norm</h4>
+<div class="outline-text-4" id="text-org1019eaf">
 <div class="org-src-container">
 <pre class="src src-matlab">freqs = args.freqs;
 
@@ -1114,7 +1117,7 @@ C_norm = zeros(length(freqs), 1);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-27 jeu. 14:16</p>
+<p class="date">Created: 2020-02-28 ven. 17:34</p>
 </div>
 </body>
 </html>

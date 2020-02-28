@@ -30,7 +30,7 @@ mdl = 'stewart_platform_model';
 %% Input/Output definition
 clear io; io_i = 1;
 io(io_i) = linio([mdl, '/Disturbances/D_w'],        1, 'openinput');  io_i = io_i + 1; % Base Motion [m, rad]
-io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
+io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'output'); io_i = io_i + 1; % Absolute Motion [m, rad]
 
 %% Run the linearization
 T = linearize(mdl, io, options);
@@ -63,8 +63,8 @@ if args.plots
   han = axes(fig, 'visible', 'off');
   han.XLabel.Visible = 'on';
   han.YLabel.Visible = 'on';
-  ylabel(han, 'Frequency [Hz]');
-  xlabel(han, 'Transmissibility [m/m]');
+  xlabel(han, 'Frequency [Hz]');
+  ylabel(han, 'Transmissibility [m/m]');
 end
 
 T_norm = zeros(length(freqs), 1);

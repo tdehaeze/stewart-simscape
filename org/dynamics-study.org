@@ -80,6 +80,7 @@ We also don't put any payload on top of the Stewart platform.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 The transfer function from actuator forces $\bm{\tau}$ to the relative displacement of the mobile platform $\mathcal{\bm{X}}$ is extracted.
@@ -327,6 +328,7 @@ No flexibility below the Stewart platform and no payload.
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 Estimation of the transfer function from $\mathcal{\bm{F}}$ to $\mathcal{\bm{X}}$:

@@ -1,0 +1,257 @@
+#+TITLE: Stewart Platform - Tracking Control
+:DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports results
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
+:END:
+
+* First Control Architecture
+** Matlab Init                                                     :noexport:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+** Control Schematic
+#+begin_src latex :file control_measure_rotating_2dof.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block] (J) at (0, 0) {$J$};
+    \node[addb={+}{}{}{}{-}, right=1 of J] (subr) {};
+    \node[block, right=0.8 of subr] (K) {$K_{L}$};
+    \node[block, right=1 of K] (G) {$G_{L}$};
+
+    % Connections and labels
+    \draw[<-] (J.west)node[above left]{$\bm{r}_{n}$} -- ++(-1, 0);
+    \draw[->] (J.east) -- (subr.west) node[above left]{$\bm{r}_{L}$};
+    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{L}$};
+    \draw[->] (K.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{L}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+  \end{tikzpicture}
+#+end_src
+
+#+RESULTS:
+[[file:figs/control_measure_rotating_2dof.png]]
+
+** Initialize the Stewart platform
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'none');
+#+end_src
+
+** Identification of the plant
+Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+#+end_src
+
+** Plant Analysis
+Diagonal terms
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+Compare to off-diagonal terms
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+** Controller Design
+One integrator should be present in the controller.
+
+A lead is added around the crossover frequency which is set to be around 500Hz.
+
+#+begin_src matlab
+  % wint = 2*pi*100; % Integrate until [rad]
+  % wlead = 2*pi*500; % Location of the lead [rad]
+  % hlead = 2; % Lead strengh
+
+  % Kl = 1e6 * ... % Gain
+  %      (s + wint)/(s) * ... % Integrator until 100Hz
+  %      (1 + s/(wlead/hlead)/(1 + s/(wlead*hlead))); % Lead
+
+  wc = 2*pi*100;
+  Kl = 1/abs(freqresp(G(1,1), wc)) * wc/s * 1/(1 + s/(3*wc));
+  Kl = Kl * eye(6);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Kl(i,i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(i, i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src

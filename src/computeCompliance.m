@@ -30,7 +30,7 @@ mdl = 'stewart_platform_model';
 %% Input/Output definition
 clear io; io_i = 1;
 io(io_i) = linio([mdl, '/Disturbances/F_ext'],      1, 'openinput');  io_i = io_i + 1; % External forces [N, N*m]
-io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
+io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'output'); io_i = io_i + 1; % Absolute Motion [m, rad]
 
 %% Run the linearization
 C = linearize(mdl, io, options);

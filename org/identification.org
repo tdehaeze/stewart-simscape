@@ -83,6 +83,7 @@ In this document, we discuss the various methods to identify the behavior of the
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 ** Identification
@@ -284,6 +285,7 @@ We set the rotation point of the ground to be at the same point at frames $\{A\}
 #+begin_src matlab
   ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
   payload = initializePayload('type', 'rigid');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 ** Transmissibility
@@ -396,6 +398,7 @@ We set the rotation point of the ground to be at the same point at frames $\{A\}
 #+begin_src matlab
   ground = initializeGround('type', 'none');
   payload = initializePayload('type', 'rigid');
+  controller = initializeController('type', 'open-loop');
 #+end_src
 
 ** Compliance
@@ -517,7 +520,7 @@ We can try to use the Frobenius norm to obtain a scalar value representing the 6
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/Disturbances/D_w'],        1, 'openinput');  io_i = io_i + 1; % Base Motion [m, rad]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'output'); io_i = io_i + 1; % Absolute Motion [m, rad]
 
   %% Run the linearization
   T = linearize(mdl, io, options);
@@ -553,8 +556,8 @@ If wanted, the 6x6 transmissibility matrix is plotted.
     han = axes(fig, 'visible', 'off');
     han.XLabel.Visible = 'on';
     han.YLabel.Visible = 'on';
-    ylabel(han, 'Frequency [Hz]');
-    xlabel(han, 'Transmissibility [m/m]');
+    xlabel(han, 'Frequency [Hz]');
+    ylabel(han, 'Transmissibility [m/m]');
   end
 #+end_src
 
@@ -642,7 +645,7 @@ If wanted, the 6x6 transmissibility matrix is plotted.
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/Disturbances/F_ext'],      1, 'openinput');  io_i = io_i + 1; % External forces [N, N*m]
-  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Motion [m, rad]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'output'); io_i = io_i + 1; % Absolute Motion [m, rad]
 
   %% Run the linearization
   C = linearize(mdl, io, options);
