@@ -1,29 +1,8 @@
 #+TITLE: Stewart Platforms - Matlab/Simscape Toolbox
-#+AUTHOR:    Dehaeze Thomas
-#+EMAIL:     dehaeze.thomas@gmail.com
+#+AUTHOR:  Dehaeze Thomas
+#+EMAIL:   dehaeze.thomas@gmail.com
 #+OPTIONS: num:nil toc:nil todo:nil
-#+EXPORT_EXCLUDE_TAGS: exclude noexport
 
 The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
 
 The documentation of this toolbox is available [[https://tdehaeze.github.io/stewart-simscape/][here]].
-
-* Org Publish Configuration                                         :noexport:
-#+begin_src emacs-lisp :results none
-  (setq org-publish-project-alist
-        '(("stewart-simscape"
-           :base-directory "~/Cloud/thesis/matlab/stewart-simscape/org/"
-           :base-extension "org"
-           :publishing-directory "~/Cloud/thesis/matlab/stewart-simscape/docs/"
-           :author "Dehaeze Thomas"
-           :email "dehaeze.thomas@gmail.com/"
-           :recursive nil
-           :publishing-function org-html-publish-to-html
-           :auto-preamble t
-           :auto-sitemap nil
-           :html-link-up "index.html"
-           :html-link-home "index.html"
-           :with-todo-keywords nil
-           :html-wrap-src-lines nil
-           :table-of-contents nil)))
-#+end_src
