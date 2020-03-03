@@ -7,7 +7,7 @@
 #+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
 #+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
-#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/}{config.tex}")
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/org/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
