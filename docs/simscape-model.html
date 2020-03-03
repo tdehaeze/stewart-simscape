@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-27 jeu. 14:16 -->
+<!-- 2020-03-02 lun. 17:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -259,16 +259,16 @@
 <ul>
 <li><a href="#org3535b6d">6.1. Payload</a>
 <ul>
-<li><a href="#orge7f39a8">Function description</a></li>
-<li><a href="#orgb83df72">Optional Parameters</a></li>
+<li><a href="#org5d402b9">Function description</a></li>
+<li><a href="#orgc0da5ca">Optional Parameters</a></li>
 <li><a href="#orgeeb8d35">Add Payload Type</a></li>
 <li><a href="#org6d52ffc">Add Stiffness, Damping and Mass properties of the Payload</a></li>
 </ul>
 </li>
 <li><a href="#orgaaed406">6.2. Ground</a>
 <ul>
-<li><a href="#org5d402b9">Function description</a></li>
-<li><a href="#orgc0da5ca">Optional Parameters</a></li>
+<li><a href="#org1211163">Function description</a></li>
+<li><a href="#org0d8dc7e">Optional Parameters</a></li>
 <li><a href="#orgef7035d">Add Ground Type</a></li>
 <li><a href="#org95633e8">Add Stiffness and Damping properties of the Ground</a></li>
 <li><a href="#org14ff2fc">Rotation Point</a></li>
@@ -504,9 +504,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </p>
 </div>
 
-<div id="outline-container-orge7f39a8" class="outline-4">
-<h4 id="orge7f39a8">Function description</h4>
-<div class="outline-text-4" id="text-orge7f39a8">
+<div id="outline-container-org5d402b9" class="outline-4">
+<h4 id="org5d402b9">Function description</h4>
+<div class="outline-text-4" id="text-org5d402b9">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[payload]</span> = <span class="org-function-name">initializePayload</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializePayload - Initialize the Payload that can then be used for simulations and analysis</span>
@@ -536,9 +536,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </div>
 </div>
 
-<div id="outline-container-orgb83df72" class="outline-4">
-<h4 id="orgb83df72">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgb83df72">
+<div id="outline-container-orgc0da5ca" class="outline-4">
+<h4 id="orgc0da5ca">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgc0da5ca">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
@@ -600,9 +600,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org5d402b9" class="outline-4">
-<h4 id="org5d402b9">Function description</h4>
-<div class="outline-text-4" id="text-org5d402b9">
+<div id="outline-container-org1211163" class="outline-4">
+<h4 id="org1211163">Function description</h4>
+<div class="outline-text-4" id="text-org1211163">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[ground]</span> = <span class="org-function-name">initializeGround</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeGround - Initialize the Ground that can then be used for simulations and analysis</span>
@@ -626,9 +626,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgc0da5ca" class="outline-4">
-<h4 id="orgc0da5ca">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgc0da5ca">
+<div id="outline-container-org0d8dc7e" class="outline-4">
+<h4 id="org0d8dc7e">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org0d8dc7e">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
@@ -683,7 +683,7 @@ ground.C = args.C;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-27 jeu. 14:16</p>
+<p class="date">Created: 2020-03-02 lun. 17:57</p>
 </div>
 </body>
 </html>

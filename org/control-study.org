@@ -299,7 +299,7 @@ We then design a controller based on the transfer functions from $\bm{\mathcal{F
   plot(freqs, abs(squeeze(freqresp(Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -356,7 +356,7 @@ The controller is a pure integrator with a small lead near the crossover.
   plot(freqs, abs(squeeze(freqresp(Kd_dvf(6,6)*Gc_dvf('Rz', 'Mz'), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -461,7 +461,7 @@ We identify the transmissibility and compliance of the system.
   plot(freqs, abs(squeeze(freqresp(Gc_iff('Rz', 'Mz'), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -518,7 +518,7 @@ The controller is a pure integrator with a small lead near the crossover.
   plot(freqs, abs(squeeze(freqresp(Kd_iff(6,6)*Gc_iff('Rz', 'Mz'), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [N/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;

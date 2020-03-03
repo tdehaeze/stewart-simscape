@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-28 ven. 17:33 -->
+<!-- 2020-03-02 lun. 17:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Decentralized Active Damping</title>
@@ -249,25 +249,25 @@
 <li><a href="#orgd59c804">1. Inertial Control</a>
 <ul>
 <li><a href="#org5f749c8">1.1. Identification of the Dynamics</a></li>
-<li><a href="#org3014959">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#orga144352">1.3. Obtained Damping</a></li>
-<li><a href="#org004b094">1.4. Conclusion</a></li>
+<li><a href="#orgd0f78f7">1.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#org3f64d96">1.3. Obtained Damping</a></li>
+<li><a href="#org8e1ece7">1.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org74c7eb4">2. Integral Force Feedback</a>
 <ul>
-<li><a href="#org7313778">2.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#org462c581">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#org943bf7b">2.3. Obtained Damping</a></li>
-<li><a href="#orga677c7d">2.4. Conclusion</a></li>
+<li><a href="#orgcd99b62">2.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#org1b7a953">2.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#org1d362f0">2.3. Obtained Damping</a></li>
+<li><a href="#org63f9110">2.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org08917d6">3. Direct Velocity Feedback</a>
 <ul>
-<li><a href="#orgcd99b62">3.1. Identification of the Dynamics with perfect Joints</a></li>
-<li><a href="#orgd0f78f7">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
-<li><a href="#org3f64d96">3.3. Obtained Damping</a></li>
-<li><a href="#org8e1ece7">3.4. Conclusion</a></li>
+<li><a href="#org5364f58">3.1. Identification of the Dynamics with perfect Joints</a></li>
+<li><a href="#org81b6713">3.2. Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</a></li>
+<li><a href="#orge328103">3.3. Obtained Damping</a></li>
+<li><a href="#org48c963f">3.4. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org183f3f2">4. Compliance and Transmissibility Comparison</a>
@@ -366,8 +366,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-org3014959" class="outline-3">
-<h3 id="org3014959"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-orgd0f78f7" class="outline-3">
+<h3 id="orgd0f78f7"><span class="section-number-3">1.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -403,8 +403,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-orga144352" class="outline-3">
-<h3 id="orga144352"><span class="section-number-3">1.3</span> Obtained Damping</h3>
+<div id="outline-container-org3f64d96" class="outline-3">
+<h3 id="org3f64d96"><span class="section-number-3">1.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -429,8 +429,8 @@ The root locus is shown in figure <a href="#org9af9e33">3</a>.
 </div>
 </div>
 
-<div id="outline-container-org004b094" class="outline-3">
-<h3 id="org004b094"><span class="section-number-3">1.4</span> Conclusion</h3>
+<div id="outline-container-org8e1ece7" class="outline-3">
+<h3 id="org8e1ece7"><span class="section-number-3">1.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-4">
 <div class="important">
 <p>
@@ -461,8 +461,8 @@ To run the script, open the Simulink Project, and type <code>run active_damping_
 </div>
 </div>
 
-<div id="outline-container-org7313778" class="outline-3">
-<h3 id="org7313778"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-orgcd99b62" class="outline-3">
+<h3 id="orgcd99b62"><span class="section-number-3">2.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -520,8 +520,8 @@ The transfer function from actuator forces to force sensors is shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-org462c581" class="outline-3">
-<h3 id="org462c581"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-org1b7a953" class="outline-3">
+<h3 id="org1b7a953"><span class="section-number-3">2.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -557,8 +557,8 @@ The new dynamics from force actuator to force sensor is shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-org943bf7b" class="outline-3">
-<h3 id="org943bf7b"><span class="section-number-3">2.3</span> Obtained Damping</h3>
+<div id="outline-container-org1d362f0" class="outline-3">
+<h3 id="org1d362f0"><span class="section-number-3">2.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -590,8 +590,8 @@ The root locus is shown in figure <a href="#orge21bbea">6</a> and the obtained p
 </div>
 </div>
 
-<div id="outline-container-orga677c7d" class="outline-3">
-<h3 id="orga677c7d"><span class="section-number-3">2.4</span> Conclusion</h3>
+<div id="outline-container-org63f9110" class="outline-3">
+<h3 id="org63f9110"><span class="section-number-3">2.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="important">
 <p>
@@ -623,8 +623,8 @@ To run the script, open the Simulink Project, and type <code>run active_damping_
 </div>
 </div>
 
-<div id="outline-container-orgcd99b62" class="outline-3">
-<h3 id="orgcd99b62"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
+<div id="outline-container-org5364f58" class="outline-3">
+<h3 id="org5364f58"><span class="section-number-3">3.1</span> Identification of the Dynamics with perfect Joints</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We first initialize the Stewart platform without joint stiffness.
@@ -687,8 +687,8 @@ The transfer function from actuator forces to relative motion sensors is shown i
 </div>
 
 
-<div id="outline-container-orgd0f78f7" class="outline-3">
-<h3 id="orgd0f78f7"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
+<div id="outline-container-org81b6713" class="outline-3">
+<h3 id="org81b6713"><span class="section-number-3">3.2</span> Effect of the Flexible Joint stiffness and Actuator amplification on the Dynamics</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We add some stiffness and damping in the flexible joints and we re-identify the dynamics.
@@ -724,8 +724,8 @@ The new dynamics from force actuator to relative motion sensor is shown in Figur
 </div>
 </div>
 
-<div id="outline-container-org3f64d96" class="outline-3">
-<h3 id="org3f64d96"><span class="section-number-3">3.3</span> Obtained Damping</h3>
+<div id="outline-container-orge328103" class="outline-3">
+<h3 id="orge328103"><span class="section-number-3">3.3</span> Obtained Damping</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The control is a performed in a decentralized manner.
@@ -750,8 +750,8 @@ The root locus is shown in figure <a href="#org277d60d">10</a>.
 </div>
 </div>
 
-<div id="outline-container-org8e1ece7" class="outline-3">
-<h3 id="org8e1ece7"><span class="section-number-3">3.4</span> Conclusion</h3>
+<div id="outline-container-org48c963f" class="outline-3">
+<h3 id="org48c963f"><span class="section-number-3">3.4</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="important">
 <p>
@@ -867,7 +867,7 @@ K_dvf = 1e4<span class="org-type">*</span>s<span class="org-type">/</span>(1<spa
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-28 ven. 17:33</p>
+<p class="date">Created: 2020-03-02 lun. 17:57</p>
 </div>
 </body>
 </html>

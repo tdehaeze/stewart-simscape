@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-13 jeu. 16:46 -->
+<!-- 2020-03-02 lun. 17:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kinematic Study of the Stewart Platform</title>
@@ -201,50 +201,28 @@
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script>
       MathJax = {
@@ -289,14 +267,14 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#org86b4b35">4. Estimation of the range validity of the approximate inverse kinematics</a>
 <ul>
-<li><a href="#org4c04fb5">4.1. Stewart architecture definition</a></li>
+<li><a href="#org7423428">4.1. Stewart architecture definition</a></li>
 <li><a href="#orgd83ccf3">4.2. Comparison for &ldquo;pure&rdquo; translations</a></li>
 <li><a href="#org4871c83">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org63255f9">5. Estimated required actuator stroke from specified platform mobility</a>
 <ul>
-<li><a href="#org62824e9">5.1. Stewart architecture definition</a></li>
+<li><a href="#org3e1d400">5.1. Stewart architecture definition</a></li>
 <li><a href="#orgde50dd3">5.2. Wanted translations and rotations</a></li>
 <li><a href="#org24e45ca">5.3. Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
 <li><a href="#orgf6ba90c">5.4. Needed stroke for &ldquo;combined&rdquo; rotations or translations</a></li>
@@ -304,7 +282,7 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#orgbbbf7b3">6. Estimated platform mobility from specified actuator stroke</a>
 <ul>
-<li><a href="#org7423428">6.1. Stewart architecture definition</a></li>
+<li><a href="#org53d6532">6.1. Stewart architecture definition</a></li>
 <li><a href="#org2c6819e">6.2. Pure translations</a></li>
 </ul>
 </li>
@@ -312,8 +290,8 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org26e8b28">7.1. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
 <ul>
-<li><a href="#orgd29f673">Function description</a></li>
-<li><a href="#org4bcb03f">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgd0d007d">Function description</a></li>
+<li><a href="#orge1b5b04">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0cd57b5">Compute Jacobian Matrix</a></li>
 <li><a href="#orge21dcfc">Compute Stiffness Matrix</a></li>
 <li><a href="#orgae76071">Compute Compliance Matrix</a></li>
@@ -323,17 +301,17 @@ for the JavaScript code in this tag.
 <li><a href="#orgb82066f">7.2. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
 <ul>
 <li><a href="#org89930b7">Theory</a></li>
-<li><a href="#org9c9b2ba">Function description</a></li>
-<li><a href="#orgd8e2476">Optional Parameters</a></li>
-<li><a href="#org8d85541">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#org755b2ae">Function description</a></li>
+<li><a href="#org867b3a0">Optional Parameters</a></li>
+<li><a href="#org318eb5f">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0d64c23">Compute</a></li>
 </ul>
 </li>
 <li><a href="#orgf5d8f0b">7.3. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
 <ul>
-<li><a href="#orgd0d007d">Function description</a></li>
-<li><a href="#org867b3a0">Optional Parameters</a></li>
-<li><a href="#orge1b5b04">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgba3bc64">Function description</a></li>
+<li><a href="#org7af7974">Optional Parameters</a></li>
+<li><a href="#org2ba5e64">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#orge5ade24">Computation</a></li>
 </ul>
 </li>
@@ -679,8 +657,8 @@ This will also gives us the range for which the approximate forward kinematic is
 </p>
 </div>
 
-<div id="outline-container-org4c04fb5" class="outline-3">
-<h3 id="org4c04fb5"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org7423428" class="outline-3">
+<h3 id="org7423428"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 We first define some general Stewart architecture.
@@ -780,8 +758,8 @@ This is what is analyzed in this section.
 </p>
 </div>
 
-<div id="outline-container-org62824e9" class="outline-3">
-<h3 id="org62824e9"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org3e1d400" class="outline-3">
+<h3 id="org3e1d400"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
@@ -1200,8 +1178,8 @@ However, for small displacements, we can use the Jacobian as an approximate solu
 </p>
 </div>
 
-<div id="outline-container-org7423428" class="outline-3">
-<h3 id="org7423428"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org53d6532" class="outline-3">
+<h3 id="org53d6532"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
@@ -1332,9 +1310,9 @@ This Matlab function is accessible <a href="../src/computeJacobian.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orgd29f673" class="outline-4">
-<h4 id="orgd29f673">Function description</h4>
-<div class="outline-text-4" id="text-orgd29f673">
+<div id="outline-container-orgd0d007d" class="outline-4">
+<h4 id="orgd0d007d">Function description</h4>
+<div class="outline-text-4" id="text-orgd0d007d">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">computeJacobian</span>(<span class="org-variable-name">stewart</span>)
 <span class="org-comment">% computeJacobian -</span>
@@ -1357,9 +1335,9 @@ This Matlab function is accessible <a href="../src/computeJacobian.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org4bcb03f" class="outline-4">
-<h4 id="org4bcb03f">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org4bcb03f">
+<div id="outline-container-orge1b5b04" class="outline-4">
+<h4 id="orge1b5b04">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orge1b5b04">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'As'</span>),   <span class="org-string">'stewart.geometry should have attribute As'</span>)
 As = stewart.geometry.As;
@@ -1467,9 +1445,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org9c9b2ba" class="outline-4">
-<h4 id="org9c9b2ba">Function description</h4>
-<div class="outline-text-4" id="text-org9c9b2ba">
+<div id="outline-container-org755b2ae" class="outline-4">
+<h4 id="org755b2ae">Function description</h4>
+<div class="outline-text-4" id="text-org755b2ae">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[Li, dLi]</span> = <span class="org-function-name">inverseKinematics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}</span>
@@ -1493,9 +1471,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-orgd8e2476" class="outline-4">
-<h4 id="orgd8e2476">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgd8e2476">
+<div id="outline-container-org867b3a0" class="outline-4">
+<h4 id="org867b3a0">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org867b3a0">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1507,9 +1485,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org8d85541" class="outline-4">
-<h4 id="org8d85541">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org8d85541">
+<div id="outline-container-org318eb5f" class="outline-4">
+<h4 id="org318eb5f">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org318eb5f">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'Aa'</span>),   <span class="org-string">'stewart.geometry should have attribute Aa'</span>)
 Aa = stewart.geometry.Aa;
@@ -1553,9 +1531,9 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </p>
 </div>
 
-<div id="outline-container-orgd0d007d" class="outline-4">
-<h4 id="orgd0d007d">Function description</h4>
-<div class="outline-text-4" id="text-orgd0d007d">
+<div id="outline-container-orgba3bc64" class="outline-4">
+<h4 id="orgba3bc64">Function description</h4>
+<div class="outline-text-4" id="text-orgba3bc64">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[P, R]</span> = <span class="org-function-name">forwardKinematicsApprox</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
 <span class="org-comment">% forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using</span>
@@ -1577,9 +1555,9 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </div>
 </div>
 
-<div id="outline-container-org867b3a0" class="outline-4">
-<h4 id="org867b3a0">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org867b3a0">
+<div id="outline-container-org7af7974" class="outline-4">
+<h4 id="org7af7974">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org7af7974">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1590,9 +1568,9 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </div>
 </div>
 
-<div id="outline-container-orge1b5b04" class="outline-4">
-<h4 id="orge1b5b04">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orge1b5b04">
+<div id="outline-container-org2ba5e64" class="outline-4">
+<h4 id="org2ba5e64">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org2ba5e64">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.kinematics, <span class="org-string">'J'</span>),   <span class="org-string">'stewart.kinematics should have attribute J'</span>)
 J = stewart.kinematics.J;
@@ -1655,7 +1633,7 @@ We then compute the corresponding rotation matrix.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-02-13 jeu. 16:46</p>
+<p class="date">Created: 2020-03-02 lun. 17:57</p>
 </div>
 </body>
 </html>

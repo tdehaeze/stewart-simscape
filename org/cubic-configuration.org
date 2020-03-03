@@ -488,6 +488,12 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
 #+begin_important
   We found that we can have a diagonal stiffness matrix using the cubic architecture when $\{A\}$ and $\{B\}$ are located above the top platform.
   Depending on the cube's size, we obtain 3 different configurations.
+
+  | Cube's Size | Paper with the corresponding cubic architecture  |
+  |-------------+--------------------------------------------------|
+  | Small       | cite:furutani04_nanom_cuttin_machin_using_stewar |
+  | Medium      | cite:yang19_dynam_model_decoup_contr_flexib      |
+  | Large       |                                                  |
 #+end_important
 
 * Cubic size analysis
@@ -738,6 +744,7 @@ We now identify the dynamics from forces applied in each strut $\bm{\tau}$ to th
 Now, thanks to the Jacobian (Figure [[fig:local_to_cartesian_coordinates]]), we compute the transfer function from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$.
 #+begin_src matlab
   Gc = inv(stewart.kinematics.J)*G*inv(stewart.kinematics.J');
+  Gc = inv(stewart.kinematics.J)*G*stewart.kinematics.J;
   Gc.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
   Gc.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
 #+end_src
@@ -826,6 +833,26 @@ The obtain dynamics $\bm{G}_{c}(s) = \bm{J}^{-T} \bm{G}(s) \bm{J}^{-1}$ is shown
 #+name: fig:stewart_cubic_decoupled_dynamics_cartesian
 #+caption: Dynamics from $\bm{\mathcal{F}}$ to $\bm{\mathcal{X}}$ ([[./figs/stewart_cubic_decoupled_dynamics_cartesian.png][png]], [[./figs/stewart_cubic_decoupled_dynamics_cartesian.pdf][pdf]])
 [[file:figs/stewart_cubic_decoupled_dynamics_cartesian.png]]
+
+It is interesting to note here that the system shown in Figure [[fig:local_to_cartesian_coordinates_bis]] also yield a decoupled system (explained in section 1.3.3 in cite:li01_simul_fault_vibrat_isolat_point).
+
+#+begin_src latex :file local_to_cartesian_coordinates_bis.pdf
+  \begin{tikzpicture}
+    \node[block] (Jt) at (0, 0) {$\bm{J}$};
+    \node[block, right= of Jt] (G) {$\bm{G}$};
+    \node[block, right= of G] (J) {$\bm{J}^{-1}$};
+
+    \draw[->] ($(Jt.west)+(-0.8, 0)$) -- (Jt.west);
+    \draw[->] (Jt.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) -- (J.west) node[above left]{$\delta\bm{\mathcal{L}}$};
+    \draw[->] (J.east) -- ++(0.8, 0) node[above left]{$\delta\bm{\mathcal{X}}$};
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:local_to_cartesian_coordinates_bis
+#+caption: Alternative way to decouple the system
+#+RESULTS:
+[[file:figs/local_to_cartesian_coordinates_bis.png]]
 
 #+begin_important
 The dynamics is well decoupled at all frequencies.
