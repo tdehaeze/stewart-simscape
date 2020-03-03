@@ -80,3 +80,5 @@ The cubic configuration is a special class of Stewart platform that has interest
 
 These properties are studied in [[file:cubic-configuration.org][this]] document.
 
+* Bibliography ([[file:bibliography.org][link]])
+Many text books, PhD thesis and articles related to parallel robots and Stewart platforms are gathered in [[file:bibliography.org][this]] document.
