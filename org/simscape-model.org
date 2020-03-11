@@ -118,14 +118,13 @@ As always, the parameters that define the geometry are taken from the =stewart= 
 
 * Subsystem - Struts
 <<sec:struts>>
-** Strut Configuration
 For the Stewart platform, the 6 struts are identical.
 Thus, all the struts used in the Stewart platform are referring to the same subsystem called =stewart_strut.slx= and shown in Figure [[fig:simscape_strut]].
 
-This strut as the following structure:
-- *Universal Joint** connected on the Fixed base
-- *Prismatic Joint** for the actuator
-- *Spherical Joint** connected on the Mobile platform
+This strut has the following structure:
+- *Universal Joint* connected on the Fixed base
+- *Prismatic Joint* for the actuator
+- *Spherical Joint* connected on the Mobile platform
 
 This configuration is called *UPS*.
 
@@ -309,4 +308,128 @@ This Matlab function is accessible [[file:../src/initializeGround.m][here]].
 :END:
 #+begin_src matlab
   ground.rot_point = args.rot_point;
+#+end_src
+* Initialize Disturbances
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeDisturbances.m
+:header-args:matlab+: :comments none :mkdirp yes
+:header-args:matlab+: :eval no :results none
+:END:
+<<sec:initializeDisturbances>>
+
+** Function Declaration and Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [disturbances] = initializeDisturbances(args)
+  % initializeDisturbances - Initialize the disturbances
+  %
+  % Syntax: [disturbances] = initializeDisturbances(args)
+  %
+  % Inputs:
+  %    - args -
+
+#+end_src
+
+** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+    args.Fd     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
+    args.Fd_t   double  {mustBeNumeric, mustBeReal} = 0
+    args.Dw     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
+    args.Dw_t   double  {mustBeNumeric, mustBeReal} = 0
+  end
+#+end_src
+
+
+** Structure initialization
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  disturbances = struct();
+#+end_src
+
+** Ground Motion
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  disturbances.Dw = timeseries([args.Dw], args.Dw_t);
+#+end_src
+
+** Direct Forces
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  disturbances.Fd = timeseries([args.Fd], args.Fd_t);
+#+end_src
+
+* Initialize References
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeReferences.m
+:header-args:matlab+: :comments none :mkdirp yes
+:header-args:matlab+: :eval no :results none
+:END:
+<<sec:initializeReferences>>
+
+** Function Declaration and Documentation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [references] = initializeReferences(stewart, args)
+  % initializeReferences - Initialize the references
+  %
+  % Syntax: [references] = initializeReferences(args)
+  %
+  % Inputs:
+  %    - args -
+
+#+end_src
+
+** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+    stewart
+    args.t double {mustBeNumeric, mustBeReal} = 0
+    args.r double {mustBeNumeric, mustBeReal} = zeros(6, 1)
+  end
+#+end_src
+
+** Compute the corresponding strut length
+#+begin_src matlab
+  rL = zeros(6, length(args.t));
+
+  for i = 1:length(args.t)
+    R = [cos(args.r(6,i)) -sin(args.r(6,i))  0;
+         sin(args.r(6,i))  cos(args.r(6,i))  0;
+         0           0           1] * ...
+        [cos(args.r(5,i))  0           sin(args.r(5,i));
+         0           1           0;
+        -sin(args.r(5,i))  0           cos(args.r(5,i))] * ...
+        [1           0           0;
+         0           cos(args.r(4,i)) -sin(args.r(4,i));
+         0           sin(args.r(4,i))  cos(args.r(4,i))];
+
+   [Li, dLi] = inverseKinematics(stewart, 'AP', [args.r(1,i); args.r(2,i); args.r(3,i)], 'ARB', R);
+   rL(:, i) = dLi;
+  end
+#+end_src
+
+** References
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  references.r  = timeseries(args.r, args.t);
+  references.rL = timeseries(rL, args.t);
 #+end_src
