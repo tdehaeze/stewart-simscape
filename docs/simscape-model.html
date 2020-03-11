@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-02 lun. 17:57 -->
+<!-- 2020-03-11 mer. 18:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
@@ -250,30 +250,43 @@
 <li><a href="#org66977e8">2. Simulation Configuration - Configuration reference</a></li>
 <li><a href="#orgb2362eb">3. Subsystem Reference</a></li>
 <li><a href="#orgdfad86d">4. Subsystem - Fixed base and Mobile Platform</a></li>
-<li><a href="#org9d4af75">5. Subsystem - Struts</a>
-<ul>
-<li><a href="#org45d9234">5.1. Strut Configuration</a></li>
-</ul>
-</li>
+<li><a href="#org9d4af75">5. Subsystem - Struts</a></li>
 <li><a href="#org7e2c432">6. Other Elements</a>
 <ul>
 <li><a href="#org3535b6d">6.1. Payload</a>
 <ul>
-<li><a href="#org5d402b9">Function description</a></li>
-<li><a href="#orgc0da5ca">Optional Parameters</a></li>
+<li><a href="#org1211163">Function description</a></li>
+<li><a href="#org0d8dc7e">Optional Parameters</a></li>
 <li><a href="#orgeeb8d35">Add Payload Type</a></li>
 <li><a href="#org6d52ffc">Add Stiffness, Damping and Mass properties of the Payload</a></li>
 </ul>
 </li>
 <li><a href="#orgaaed406">6.2. Ground</a>
 <ul>
-<li><a href="#org1211163">Function description</a></li>
-<li><a href="#org0d8dc7e">Optional Parameters</a></li>
+<li><a href="#org0bee981">Function description</a></li>
+<li><a href="#orgeaeb9aa">Optional Parameters</a></li>
 <li><a href="#orgef7035d">Add Ground Type</a></li>
 <li><a href="#org95633e8">Add Stiffness and Damping properties of the Ground</a></li>
 <li><a href="#org14ff2fc">Rotation Point</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#orgae6907a">7. Initialize Disturbances</a>
+<ul>
+<li><a href="#org0eae33e">Function Declaration and Documentation</a></li>
+<li><a href="#orge03b19d">Optional Parameters</a></li>
+<li><a href="#org30dc07c">Structure initialization</a></li>
+<li><a href="#org0755155">Ground Motion</a></li>
+<li><a href="#org7617a55">Direct Forces</a></li>
+</ul>
+</li>
+<li><a href="#orgd45a07f">8. Initialize References</a>
+<ul>
+<li><a href="#org7f187c4">Function Declaration and Documentation</a></li>
+<li><a href="#org28b782e">Optional Parameters</a></li>
+<li><a href="#orgc274320">8.1. Compute the corresponding strut length</a></li>
+<li><a href="#org36ac3fa">References</a></li>
 </ul>
 </li>
 </ul>
@@ -429,23 +442,17 @@ As always, the parameters that define the geometry are taken from the <code>stew
 <div class="outline-text-2" id="text-5">
 <p>
 <a id="orgdb5206f"></a>
-</p>
-</div>
-<div id="outline-container-org45d9234" class="outline-3">
-<h3 id="org45d9234"><span class="section-number-3">5.1</span> Strut Configuration</h3>
-<div class="outline-text-3" id="text-5-1">
-<p>
 For the Stewart platform, the 6 struts are identical.
 Thus, all the struts used in the Stewart platform are referring to the same subsystem called <code>stewart_strut.slx</code> and shown in Figure <a href="#org1dc8fce">4</a>.
 </p>
 
 <p>
-This strut as the following structure:
+This strut has the following structure:
 </p>
 <ul class="org-ul">
-<li><b>Universal Joint*</b> connected on the Fixed base</li>
-<li><b>Prismatic Joint*</b> for the actuator</li>
-<li><b>Spherical Joint*</b> connected on the Mobile platform</li>
+<li><b>Universal Joint</b> connected on the Fixed base</li>
+<li><b>Prismatic Joint</b> for the actuator</li>
+<li><b>Spherical Joint</b> connected on the Mobile platform</li>
 </ul>
 
 <p>
@@ -486,7 +493,6 @@ Both inertial sensors are described bellow.
 </p>
 </div>
 </div>
-</div>
 
 <div id="outline-container-org7e2c432" class="outline-2">
 <h2 id="org7e2c432"><span class="section-number-2">6</span> Other Elements</h2>
@@ -504,9 +510,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </p>
 </div>
 
-<div id="outline-container-org5d402b9" class="outline-4">
-<h4 id="org5d402b9">Function description</h4>
-<div class="outline-text-4" id="text-org5d402b9">
+<div id="outline-container-org1211163" class="outline-4">
+<h4 id="org1211163">Function description</h4>
+<div class="outline-text-4" id="text-org1211163">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[payload]</span> = <span class="org-function-name">initializePayload</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializePayload - Initialize the Payload that can then be used for simulations and analysis</span>
@@ -536,9 +542,9 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </div>
 </div>
 
-<div id="outline-container-orgc0da5ca" class="outline-4">
-<h4 id="orgc0da5ca">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgc0da5ca">
+<div id="outline-container-org0d8dc7e" class="outline-4">
+<h4 id="org0d8dc7e">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org0d8dc7e">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
@@ -600,9 +606,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org1211163" class="outline-4">
-<h4 id="org1211163">Function description</h4>
-<div class="outline-text-4" id="text-org1211163">
+<div id="outline-container-org0bee981" class="outline-4">
+<h4 id="org0bee981">Function description</h4>
+<div class="outline-text-4" id="text-org0bee981">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[ground]</span> = <span class="org-function-name">initializeGround</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeGround - Initialize the Ground that can then be used for simulations and analysis</span>
@@ -626,9 +632,9 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org0d8dc7e" class="outline-4">
-<h4 id="org0d8dc7e">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org0d8dc7e">
+<div id="outline-container-orgeaeb9aa" class="outline-4">
+<h4 id="orgeaeb9aa">Optional Parameters</h4>
+<div class="outline-text-4" id="text-orgeaeb9aa">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
@@ -680,10 +686,157 @@ ground.C = args.C;
 </div>
 </div>
 </div>
+<div id="outline-container-orgae6907a" class="outline-2">
+<h2 id="orgae6907a"><span class="section-number-2">7</span> Initialize Disturbances</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<a id="org96254bf"></a>
+</p>
+</div>
+
+<div id="outline-container-org0eae33e" class="outline-3">
+<h3 id="org0eae33e">Function Declaration and Documentation</h3>
+<div class="outline-text-3" id="text-org0eae33e">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[disturbances]</span> = <span class="org-function-name">initializeDisturbances</span>(<span class="org-variable-name">args</span>)
+<span class="org-comment">% initializeDisturbances - Initialize the disturbances</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [disturbances] = initializeDisturbances(args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - args -</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge03b19d" class="outline-3">
+<h3 id="orge03b19d">Optional Parameters</h3>
+<div class="outline-text-3" id="text-orge03b19d">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+  args.Fd     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
+  args.Fd_t   double  {mustBeNumeric, mustBeReal} = 0
+  args.Dw     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
+  args.Dw_t   double  {mustBeNumeric, mustBeReal} = 0
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org30dc07c" class="outline-3">
+<h3 id="org30dc07c">Structure initialization</h3>
+<div class="outline-text-3" id="text-org30dc07c">
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = struct();
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0755155" class="outline-3">
+<h3 id="org0755155">Ground Motion</h3>
+<div class="outline-text-3" id="text-org0755155">
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances.Dw = timeseries([args.Dw], args.Dw_t);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7617a55" class="outline-3">
+<h3 id="org7617a55">Direct Forces</h3>
+<div class="outline-text-3" id="text-org7617a55">
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances.Fd = timeseries([args.Fd], args.Fd_t);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd45a07f" class="outline-2">
+<h2 id="orgd45a07f"><span class="section-number-2">8</span> Initialize References</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+<a id="org7e762f4"></a>
+</p>
+</div>
+
+<div id="outline-container-org7f187c4" class="outline-3">
+<h3 id="org7f187c4">Function Declaration and Documentation</h3>
+<div class="outline-text-3" id="text-org7f187c4">
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[references]</span> = <span class="org-function-name">initializeReferences</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
+<span class="org-comment">% initializeReferences - Initialize the references</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Syntax: [references] = initializeReferences(args)</span>
+<span class="org-comment">%</span>
+<span class="org-comment">% Inputs:</span>
+<span class="org-comment">%    - args -</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org28b782e" class="outline-3">
+<h3 id="org28b782e">Optional Parameters</h3>
+<div class="outline-text-3" id="text-org28b782e">
+<div class="org-src-container">
+<pre class="src src-matlab">arguments
+  stewart
+  args.t double {mustBeNumeric, mustBeReal} = 0
+  args.r double {mustBeNumeric, mustBeReal} = zeros(6, 1)
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc274320" class="outline-3">
+<h3 id="orgc274320"><span class="section-number-3">8.1</span> Compute the corresponding strut length</h3>
+<div class="outline-text-3" id="text-8-1">
+<div class="org-src-container">
+<pre class="src src-matlab">rL = zeros(6, length(args.t));
+
+<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(args.t)</span>
+  R = [cos(args.r(6,<span class="org-constant">i</span>)) <span class="org-type">-</span>sin(args.r(6,<span class="org-constant">i</span>))  0;
+       sin(args.r(6,<span class="org-constant">i</span>))  cos(args.r(6,<span class="org-constant">i</span>))  0;
+       0           0           1] <span class="org-type">*</span> ...
+      [cos(args.r(5,<span class="org-constant">i</span>))  0           sin(args.r(5,<span class="org-constant">i</span>));
+       0           1           0;
+      <span class="org-type">-</span>sin(args.r(5,<span class="org-constant">i</span>))  0           cos(args.r(5,<span class="org-constant">i</span>))] <span class="org-type">*</span> ...
+      [1           0           0;
+       0           cos(args.r(4,<span class="org-constant">i</span>)) <span class="org-type">-</span>sin(args.r(4,<span class="org-constant">i</span>));
+       0           sin(args.r(4,<span class="org-constant">i</span>))  cos(args.r(4,<span class="org-constant">i</span>))];
+
+ [Li, dLi] = inverseKinematics(stewart, <span class="org-string">'AP'</span>, [args.r(1,<span class="org-constant">i</span>); args.r(2,<span class="org-constant">i</span>); args.r(3,<span class="org-constant">i</span>)], <span class="org-string">'ARB'</span>, R);
+ rL(<span class="org-type">:</span>, <span class="org-constant">i</span>) = dLi;
+<span class="org-keyword">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org36ac3fa" class="outline-3">
+<h3 id="org36ac3fa">References</h3>
+<div class="outline-text-3" id="text-org36ac3fa">
+<div class="org-src-container">
+<pre class="src src-matlab">references.r  = timeseries(args.r, args.t);
+references.rL = timeseries(rL, args.t);
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-02 lun. 17:57</p>
+<p class="date">Created: 2020-03-11 mer. 18:59</p>
 </div>
 </body>
 </html>

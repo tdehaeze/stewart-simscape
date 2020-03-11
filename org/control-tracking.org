@@ -989,7 +989,7 @@ The control architecture is shown in Figure [[fig:centralized_reference_tracking
 
 *** Plant Analysis
 The plant is pre-multiplied by $\bm{G}^{-1}(\omega = 0)$.
-The diagonal elements of the shaped plant are shown in Figure [[fig:centralized_reference_tracking_SD]].
+The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centralized_diagonal_SD]].
 
 #+begin_src matlab
   G0 = G*inv(freqresp(G, 0));
