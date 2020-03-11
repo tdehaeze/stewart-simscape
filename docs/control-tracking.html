@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-11 mer. 19:00 -->
+<!-- 2020-03-11 mer. 19:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Tracking Control</title>
@@ -248,42 +248,42 @@
 <ul>
 <li><a href="#orgd7b25e5">1. Decentralized Control Architecture using Strut Length</a>
 <ul>
-<li><a href="#org49467e8">1.1. Control Schematic</a></li>
-<li><a href="#org67db718">1.2. Initialize the Stewart platform</a></li>
-<li><a href="#org641cba6">1.3. Identification of the plant</a></li>
-<li><a href="#orgd9d7b44">1.4. Plant Analysis</a></li>
-<li><a href="#orgfaf80fa">1.5. Controller Design</a></li>
-<li><a href="#org8c10905">1.6. Simulation</a></li>
+<li><a href="#orgf22ae1f">1.1. Control Schematic</a></li>
+<li><a href="#orgfbc962f">1.2. Initialize the Stewart platform</a></li>
+<li><a href="#org5b50e6c">1.3. Identification of the plant</a></li>
+<li><a href="#org127af6e">1.4. Plant Analysis</a></li>
+<li><a href="#org64fe247">1.5. Controller Design</a></li>
+<li><a href="#org30afd72">1.6. Simulation</a></li>
 <li><a href="#org974b430">1.7. Results</a></li>
-<li><a href="#org2c54a80">1.8. Conclusion</a></li>
+<li><a href="#orge3e2e02">1.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orga519721">2. Centralized Control Architecture using Pose Measurement</a>
 <ul>
-<li><a href="#org54419d3">2.1. Control Schematic</a></li>
-<li><a href="#orgfbc962f">2.2. Initialize the Stewart platform</a></li>
-<li><a href="#org5b50e6c">2.3. Identification of the plant</a></li>
+<li><a href="#org3846e3e">2.1. Control Schematic</a></li>
+<li><a href="#orga001fab">2.2. Initialize the Stewart platform</a></li>
+<li><a href="#orgdff5afa">2.3. Identification of the plant</a></li>
 <li><a href="#org2223469">2.4. Diagonal Control - Leg&rsquo;s Frame</a>
 <ul>
-<li><a href="#org8ff61f7">2.4.1. Control Architecture</a></li>
-<li><a href="#org7d457dc">2.4.2. Plant Analysis</a></li>
-<li><a href="#orge101512">2.4.3. Controller Design</a></li>
-<li><a href="#orgb422b25">2.4.4. Simulation</a></li>
+<li><a href="#org224a0bb">2.4.1. Control Architecture</a></li>
+<li><a href="#org7cd17a1">2.4.2. Plant Analysis</a></li>
+<li><a href="#orgfe68d27">2.4.3. Controller Design</a></li>
+<li><a href="#org2481134">2.4.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#org26a8857">2.5. Diagonal Control - Cartesian Frame</a>
 <ul>
-<li><a href="#orgcad4c0f">2.5.1. Control Architecture</a></li>
-<li><a href="#orga0f64cf">2.5.2. Plant Analysis</a></li>
-<li><a href="#orgc665ea1">2.5.3. Controller Design</a></li>
-<li><a href="#org30afd72">2.5.4. Simulation</a></li>
+<li><a href="#org0831ba6">2.5.1. Control Architecture</a></li>
+<li><a href="#orga750816">2.5.2. Plant Analysis</a></li>
+<li><a href="#org925664d">2.5.3. Controller Design</a></li>
+<li><a href="#org42d3b74">2.5.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#orgad7bc54">2.6. Diagonal Control - Steady State Decoupling</a>
 <ul>
-<li><a href="#org224a0bb">2.6.1. Control Architecture</a></li>
-<li><a href="#org127af6e">2.6.2. Plant Analysis</a></li>
-<li><a href="#org64fe247">2.6.3. Controller Design</a></li>
+<li><a href="#org51231d3">2.6.1. Control Architecture</a></li>
+<li><a href="#org0328e3c">2.6.2. Plant Analysis</a></li>
+<li><a href="#orge8a14d5">2.6.3. Controller Design</a></li>
 </ul>
 </li>
 <li><a href="#orga2eadeb">2.7. Comparison</a>
@@ -292,12 +292,12 @@
 <li><a href="#org23ae479">2.7.2. Simulation Results</a></li>
 </ul>
 </li>
-<li><a href="#orge3e2e02">2.8. Conclusion</a></li>
+<li><a href="#org94c3e48">2.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org4b8c360">3. Hybrid Control Architecture - HAC-LAC with relative DVF</a>
 <ul>
-<li><a href="#orgf22ae1f">3.1. Control Schematic</a></li>
+<li><a href="#org2183826">3.1. Control Schematic</a></li>
 </ul>
 </li>
 <li><a href="#org445f7a9">4. Position Error computation</a></li>
@@ -325,8 +325,8 @@ Depending of the measured quantity, different control architectures can be used:
 <a id="orgea7df6c"></a>
 </p>
 </div>
-<div id="outline-container-org49467e8" class="outline-3">
-<h3 id="org49467e8"><span class="section-number-3">1.1</span> Control Schematic</h3>
+<div id="outline-container-orgf22ae1f" class="outline-3">
+<h3 id="orgf22ae1f"><span class="section-number-3">1.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The control architecture is shown in Figure <a href="#org4f704a1">1</a>.
@@ -349,8 +349,8 @@ Then, a diagonal (decentralized) controller \(\bm{K}_\mathcal{L}\) is used such 
 </div>
 </div>
 
-<div id="outline-container-org67db718" class="outline-3">
-<h3 id="org67db718"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orgfbc962f" class="outline-3">
+<h3 id="orgfbc962f"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -382,8 +382,8 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-org641cba6" class="outline-3">
-<h3 id="org641cba6"><span class="section-number-3">1.3</span> Identification of the plant</h3>
+<div id="outline-container-org5b50e6c" class="outline-3">
+<h3 id="org5b50e6c"><span class="section-number-3">1.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
@@ -406,8 +406,8 @@ G.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'
 </div>
 </div>
 
-<div id="outline-container-orgd9d7b44" class="outline-3">
-<h3 id="orgd9d7b44"><span class="section-number-3">1.4</span> Plant Analysis</h3>
+<div id="outline-container-org127af6e" class="outline-3">
+<h3 id="org127af6e"><span class="section-number-3">1.4</span> Plant Analysis</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The diagonal terms of the plant is shown in Figure <a href="#org8c82316">2</a>.
@@ -441,8 +441,8 @@ We see that the plant is decoupled at low frequency which indicate that decentra
 </div>
 </div>
 
-<div id="outline-container-orgfaf80fa" class="outline-3">
-<h3 id="orgfaf80fa"><span class="section-number-3">1.5</span> Controller Design</h3>
+<div id="outline-container-org64fe247" class="outline-3">
+<h3 id="org64fe247"><span class="section-number-3">1.5</span> Controller Design</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 The controller consists of:
@@ -472,8 +472,8 @@ Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(G, wc)))) <span cla
 </div>
 </div>
 
-<div id="outline-container-org8c10905" class="outline-3">
-<h3 id="org8c10905"><span class="section-number-3">1.6</span> Simulation</h3>
+<div id="outline-container-org30afd72" class="outline-3">
+<h3 id="org30afd72"><span class="section-number-3">1.6</span> Simulation</h3>
 <div class="outline-text-3" id="text-1-6">
 <div class="org-src-container">
 <pre class="src src-matlab">t = linspace(0, 10, 1000);
@@ -518,8 +518,8 @@ simout_D = simout;
 </div>
 </div>
 
-<div id="outline-container-org2c54a80" class="outline-3">
-<h3 id="org2c54a80"><span class="section-number-3">1.8</span> Conclusion</h3>
+<div id="outline-container-orge3e2e02" class="outline-3">
+<h3 id="orge3e2e02"><span class="section-number-3">1.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 Such control architecture is easy to implement and give good results.
@@ -540,8 +540,8 @@ However, as \(\mathcal{X}\) is not directly measured, it is possible that import
 <a id="org48604d1"></a>
 </p>
 </div>
-<div id="outline-container-org54419d3" class="outline-3">
-<h3 id="org54419d3"><span class="section-number-3">2.1</span> Control Schematic</h3>
+<div id="outline-container-org3846e3e" class="outline-3">
+<h3 id="org3846e3e"><span class="section-number-3">2.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 The centralized controller takes the position error \(\bm{\epsilon}_\mathcal{X}\) as an inputs and generate actuator forces \(\bm{\tau}\) (see Figure <a href="#org97ec686">7</a>).
@@ -551,7 +551,7 @@ The signals are:
 <li>reference path \(\bm{r}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}\)</li>
 <li>tracking error \(\bm{\epsilon}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}\)</li>
 <li>actuator forces \(\bm{\tau} = \begin{bmatrix} \tau_1 & \tau_2 & \tau_3 & \tau_4 & \tau_5 & \tau_6 \end{bmatrix}\)</li>
-<li>payload pose \(\bm{\mathcal{X}) = \begin{bmatrix} x & y & z & R_x & R_y & R_z \end{bmatrix}\)</li>
+<li>payload pose \(\bm{\mathcal{X}} = \begin{bmatrix} x & y & z & R_x & R_y & R_z \end{bmatrix}\)</li>
 </ul>
 
 
@@ -579,8 +579,8 @@ It is indeed a more complex computation explained in section <a href="#org5f6154
 </div>
 </div>
 
-<div id="outline-container-orgfbc962f" class="outline-3">
-<h3 id="orgfbc962f"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orga001fab" class="outline-3">
+<h3 id="orga001fab"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -612,8 +612,8 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-org5b50e6c" class="outline-3">
-<h3 id="org5b50e6c"><span class="section-number-3">2.3</span> Identification of the plant</h3>
+<div id="outline-container-orgdff5afa" class="outline-3">
+<h3 id="orgdff5afa"><span class="section-number-3">2.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
@@ -643,8 +643,8 @@ G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'
 <a id="org31fd942"></a>
 </p>
 </div>
-<div id="outline-container-org8ff61f7" class="outline-4">
-<h4 id="org8ff61f7"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
+<div id="outline-container-org224a0bb" class="outline-4">
+<h4 id="org224a0bb"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 The pose error \(\bm{\epsilon}_\mathcal{X}\) is first converted in the frame of the leg by using the Jacobian matrix.
@@ -665,8 +665,8 @@ Note here that the transformation from the pose error \(\bm{\epsilon}_\mathcal{X
 </div>
 </div>
 
-<div id="outline-container-org7d457dc" class="outline-4">
-<h4 id="org7d457dc"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
+<div id="outline-container-org7cd17a1" class="outline-4">
+<h4 id="org7cd17a1"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#orgb1f5ad2">8</a> to obtain a more diagonal plant.
@@ -716,8 +716,8 @@ Thus \(J \cdot G(\omega = 0) = J \cdot \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\
 </div>
 </div>
 
-<div id="outline-container-orge101512" class="outline-4">
-<h4 id="orge101512"><span class="section-number-4">2.4.3</span> Controller Design</h4>
+<div id="outline-container-orgfe68d27" class="outline-4">
+<h4 id="orgfe68d27"><span class="section-number-4">2.4.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 The controller consists of:
@@ -755,8 +755,8 @@ The controller \(\bm{K} = \bm{K}_\mathcal{L} \bm{J}\) is computed.
 </div>
 </div>
 
-<div id="outline-container-orgb422b25" class="outline-4">
-<h4 id="orgb422b25"><span class="section-number-4">2.4.4</span> Simulation</h4>
+<div id="outline-container-org2481134" class="outline-4">
+<h4 id="org2481134"><span class="section-number-4">2.4.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 We specify the reference path to follow.
@@ -796,8 +796,8 @@ simout_L = simout;
 <a id="orgfd201c3"></a>
 </p>
 </div>
-<div id="outline-container-orgcad4c0f" class="outline-4">
-<h4 id="orgcad4c0f"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
+<div id="outline-container-org0831ba6" class="outline-4">
+<h4 id="org0831ba6"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 A diagonal controller \(\bm{K}_\mathcal{X}\) take the pose error \(\bm{\epsilon}_\mathcal{X}\) and generate cartesian forces \(\bm{\mathcal{F}}\) that are then converted to actuators forces using the Jacobian as shown in Figure e <a href="#org6b158db">12</a>.
@@ -816,8 +816,8 @@ The final implemented controller is \(\bm{K} = \bm{J}^{-T} \cdot \bm{K}_\mathcal
 </div>
 </div>
 
-<div id="outline-container-orga0f64cf" class="outline-4">
-<h4 id="orga0f64cf"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
+<div id="outline-container-orga750816" class="outline-4">
+<h4 id="orga750816"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#org6b158db">12</a> to obtain a more diagonal plant.
@@ -939,8 +939,8 @@ This control architecture can also give a dynamically decoupled plant if the Cen
 </div>
 </div>
 
-<div id="outline-container-orgc665ea1" class="outline-4">
-<h4 id="orgc665ea1"><span class="section-number-4">2.5.3</span> Controller Design</h4>
+<div id="outline-container-org925664d" class="outline-4">
+<h4 id="org925664d"><span class="section-number-4">2.5.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-5-3">
 <p>
 The controller consists of:
@@ -978,8 +978,8 @@ The controller \(\bm{K} = \bm{J}^{-T} \bm{K}_\mathcal{X}\) is computed.
 </div>
 </div>
 
-<div id="outline-container-org30afd72" class="outline-4">
-<h4 id="org30afd72"><span class="section-number-4">2.5.4</span> Simulation</h4>
+<div id="outline-container-org42d3b74" class="outline-4">
+<h4 id="org42d3b74"><span class="section-number-4">2.5.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-5-4">
 <p>
 We specify the reference path to follow.
@@ -1019,8 +1019,8 @@ simout_X = simout;
 <a id="org789ba4a"></a>
 </p>
 </div>
-<div id="outline-container-org224a0bb" class="outline-4">
-<h4 id="org224a0bb"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
+<div id="outline-container-org51231d3" class="outline-4">
+<h4 id="org51231d3"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 The plant \(\bm{G}\) is pre-multiply by \(\bm{G}^{-1}(\omega = 0)\) such that the &ldquo;shaped plant&rdquo; \(\bm{G}_0 = \bm{G} \bm{G}^{-1}(\omega = 0)\) is diagonal at low frequency.
@@ -1043,8 +1043,8 @@ The control architecture is shown in Figure <a href="#orgb226e44">16</a>.
 </div>
 </div>
 
-<div id="outline-container-org127af6e" class="outline-4">
-<h4 id="org127af6e"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
+<div id="outline-container-org0328e3c" class="outline-4">
+<h4 id="org0328e3c"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 The plant is pre-multiplied by \(\bm{G}^{-1}(\omega = 0)\).
@@ -1072,8 +1072,8 @@ The diagonal elements of the shaped plant are shown in Figure <a href="#orgc15aa
 </div>
 </div>
 
-<div id="outline-container-org64fe247" class="outline-4">
-<h4 id="org64fe247"><span class="section-number-4">2.6.3</span> Controller Design</h4>
+<div id="outline-container-orge8a14d5" class="outline-4">
+<h4 id="orge8a14d5"><span class="section-number-4">2.6.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-6-3">
 <p>
 We have that:
@@ -1147,8 +1147,8 @@ This error is much lower when using the diagonal control in the frame of the leg
 </div>
 </div>
 
-<div id="outline-container-orge3e2e02" class="outline-3">
-<h3 id="orge3e2e02"><span class="section-number-3">2.8</span> Conclusion</h3>
+<div id="outline-container-org94c3e48" class="outline-3">
+<h3 id="org94c3e48"><span class="section-number-3">2.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Both control architecture gives similar results even tough the control in the Leg&rsquo;s frame gives slightly better results.
@@ -1231,8 +1231,8 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
 <a id="org14e3e5f"></a>
 </p>
 </div>
-<div id="outline-container-orgf22ae1f" class="outline-3">
-<h3 id="orgf22ae1f"><span class="section-number-3">3.1</span> Control Schematic</h3>
+<div id="outline-container-org2183826" class="outline-3">
+<h3 id="org2183826"><span class="section-number-3">3.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-3-1">
 
 <div id="org3a1b1db" class="figure">
@@ -1359,7 +1359,7 @@ Erz = atan2(<span class="org-type">-</span>T(1, 2)<span class="org-type">/</span
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-11 mer. 19:00</p>
+<p class="date">Created: 2020-03-11 mer. 19:01</p>
 </div>
 </body>
 </html>

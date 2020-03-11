@@ -434,7 +434,7 @@ The signals are:
 - reference path $\bm{r}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}$
 - tracking error $\bm{\epsilon}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}$
 - actuator forces $\bm{\tau} = \begin{bmatrix} \tau_1 & \tau_2 & \tau_3 & \tau_4 & \tau_5 & \tau_6 \end{bmatrix}$
-- payload pose $\bm{\mathcal{X}) = \begin{bmatrix} x & y & z & R_x & R_y & R_z \end{bmatrix}$
+- payload pose $\bm{\mathcal{X}} = \begin{bmatrix} x & y & z & R_x & R_y & R_z \end{bmatrix}$
 
 #+begin_src latex :file centralized_reference_tracking.pdf
   \begin{tikzpicture}
