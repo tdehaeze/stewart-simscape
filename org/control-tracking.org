@@ -38,7 +38,16 @@
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
-* First Control Architecture
+* Introduction                                                        :ignore:
+Let's suppose the control objective is to position $\bm{\mathcal{X}}$ of the mobile platform of the Stewart platform such that it is following some reference position $\bm{r}_\mathcal{X}$.
+
+Depending of the measured quantity, different control architectures can be used:
+- If the struts length $\bm{\mathcal{L}}$ is measured, a decentralized control architecture can be used (Section [[sec:decentralized]])
+- If the pose of the mobile platform $\bm{\mathcal{X}}$ is directly measured, a centralized control architecture can be used (Section [[sec:centralized]])
+- If both $\bm{\mathcal{L}}$ and $\bm{\mathcal{X}}$ are measured, we can use an hybrid control architecture (Section [[sec:hybrid]])
+
+* Decentralized Control Architecture using Strut Length
+<<sec:decentralized>>
 ** Matlab Init                                                     :noexport:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -52,24 +61,36 @@
   simulinkproject('../');
 #+end_src
 
+#+begin_src matlab
+  open('stewart_platform_model.slx');
+#+end_src
+
 ** Control Schematic
+The control architecture is shown in Figure [[fig:control_measure_rotating_2dof]].
+
+The required leg length $\bm{r}_\mathcal{L}$ is computed from the reference path $\bm{r}_\mathcal{X}$ using the inverse kinematics.
+
+Then, a diagonal (decentralized) controller $\bm{K}_\mathcal{L}$ is used such that each leg lengths stays close to its required length.
+
 #+begin_src latex :file control_measure_rotating_2dof.pdf
   \begin{tikzpicture}
     % Blocs
-    \node[block] (J) at (0, 0) {$J$};
+    \node[block, align=center] (J) at (0, 0) {Inverse\\Kinematics};
     \node[addb={+}{}{}{}{-}, right=1 of J] (subr) {};
-    \node[block, right=0.8 of subr] (K) {$K_{L}$};
-    \node[block, right=1 of K] (G) {$G_{L}$};
+    \node[block, right=0.8 of subr] (K) {$\bm{K}_\mathcal{L}$};
+    \node[block, right=1 of K] (G) {$\bm{G}_\mathcal{L}$};
 
     % Connections and labels
-    \draw[<-] (J.west)node[above left]{$\bm{r}_{n}$} -- ++(-1, 0);
-    \draw[->] (J.east) -- (subr.west) node[above left]{$\bm{r}_{L}$};
-    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{L}$};
+    \draw[<-] (J.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1, 0);
+    \draw[->] (J.east) -- (subr.west) node[above left]{$\bm{r}_{\mathcal{L}}$};
+    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_\mathcal{L}$};
     \draw[->] (K.east) -- (G.west) node[above left]{$\bm{\tau}$};
-    \draw[->] (G.east) node[above right]{$\bm{L}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{L}}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
   \end{tikzpicture}
 #+end_src
 
+#+name: fig:control_measure_rotating_2dof
+#+caption: Decentralized control for reference tracking
 #+RESULTS:
 [[file:figs/control_measure_rotating_2dof.png]]
 
@@ -89,8 +110,14 @@
 #+end_src
 
 #+begin_src matlab
-  ground = initializeGround('type', 'none');
+  ground = initializeGround('type', 'rigid');
   payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
 #+end_src
 
 ** Identification of the plant
@@ -111,7 +138,10 @@ Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
 #+end_src
 
 ** Plant Analysis
-Diagonal terms
+The diagonal terms of the plant is shown in Figure [[fig:plant_decentralized_diagonal]].
+
+All the diagonal terms are equal.
+
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
 
@@ -140,7 +170,19 @@ Diagonal terms
   linkaxes([ax1,ax2],'x');
 #+end_src
 
-Compare to off-diagonal terms
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_decentralized_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_decentralized_diagonal
+#+caption: Diagonal Elements of the Plant ([[./figs/plant_decentralized_diagonal.png][png]], [[./figs/plant_decentralized_diagonal.pdf][pdf]])
+[[file:figs/plant_decentralized_diagonal.png]]
+
+The off-diagonal terms are shown in Figure [[fig:plant_decentralized_off_diagonal]].
+
+We see that the plant is decoupled at low frequency which indicate that decentralized control may be a good idea.
+
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
 
@@ -177,23 +219,26 @@ Compare to off-diagonal terms
   linkaxes([ax1,ax2],'x');
 #+end_src
 
-** Controller Design
-One integrator should be present in the controller.
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_decentralized_off_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
 
-A lead is added around the crossover frequency which is set to be around 500Hz.
+#+name: fig:plant_decentralized_off_diagonal
+#+caption: Diagonal Elements of the Plant ([[./figs/plant_decentralized_off_diagonal.png][png]], [[./figs/plant_decentralized_off_diagonal.pdf][pdf]])
+[[file:figs/plant_decentralized_off_diagonal.png]]
+
+** Controller Design
+The controller consists of:
+- A pure integrator
+- A lead around the crossover frequency to increase the phase margin
+- A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
+
+The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_decentralized_L]].
 
 #+begin_src matlab
-  % wint = 2*pi*100; % Integrate until [rad]
-  % wlead = 2*pi*500; % Location of the lead [rad]
-  % hlead = 2; % Lead strengh
-
-  % Kl = 1e6 * ... % Gain
-  %      (s + wint)/(s) * ... % Integrator until 100Hz
-  %      (1 + s/(wlead/hlead)/(1 + s/(wlead*hlead))); % Lead
-
-  wc = 2*pi*100;
-  Kl = 1/abs(freqresp(G(1,1), wc)) * wc/s * 1/(1 + s/(3*wc));
-  Kl = Kl * eye(6);
+  wc = 2*pi*30;
+  Kl = diag(1./diag(abs(freqresp(G, wc)))) * wc/s * 1/(1 + s/3/wc);
 #+end_src
 
 #+begin_src matlab :exports none
@@ -203,14 +248,18 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
 
   ax1 = subplot(2, 1, 1);
   hold on;
-  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Kl(i, i)*G(i, i), freqs, 'Hz'))));
+  end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(i, i)*G(i, i), freqs, 'Hz'))));
+  end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
@@ -219,6 +268,332 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
 
   linkaxes([ax1,ax2],'x');
 #+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/loop_gain_decentralized_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:loop_gain_decentralized_L
+#+caption: Loop Gain of the diagonal elements ([[./figs/loop_gain_decentralized_L.png][png]], [[./figs/loop_gain_decentralized_L.pdf][pdf]])
+[[file:figs/loop_gain_decentralized_L.png]]
+
+** Simulation
+#+begin_src matlab
+  t = linspace(0, 10, 1000);
+
+  r = zeros(6, length(t));
+
+  r(1, :) = 5e-3*sin(2*pi*t);
+
+  references = initializeReferences(stewart, 't', t, 'r', r);
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'ref-track-L');
+#+end_src
+
+#+begin_src matlab
+  sim('stewart_platform_model')
+  simout_D = simout;
+#+end_src
+
+** Results
+#+begin_src matlab :exports none
+  figure;
+  subplot(2, 3, 1);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(1, 1, :))-simout_D.x.Xr.Data(:, 1), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dx [m]');
+
+  subplot(2, 3, 2);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(2, 1, :))-simout_D.x.Xr.Data(:, 2), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dy [m]');
+
+  subplot(2, 3, 3);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(3, 1, :))-simout_D.x.Xr.Data(:, 3), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dz [m]');
+
+  subplot(2, 3, 4);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(4, 1, :))-simout_D.x.Xr.Data(:, 4), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rx [rad]');
+
+  subplot(2, 3, 5);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(5, 1, :))-simout_D.x.Xr.Data(:, 5), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Ry [rad]');
+
+  subplot(2, 3, 6);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(6, 1, :))-simout_D.x.Xr.Data(:, 6), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rz [rad]');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/decentralized_control_Ex.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:decentralized_control_Ex
+#+caption: Position error $\bm{\epsilon}_\mathcal{X}$ ([[./figs/decentralized_control_Ex.png][png]], [[./figs/decentralized_control_Ex.pdf][pdf]])
+[[file:figs/decentralized_control_Ex.png]]
+
+#+begin_src matlab :exports none
+  figure;
+  subplot(2, 3, 1);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(1, 1, :))-simout_D.y.dLm.Data(:, 1), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L1 [m]');
+
+  subplot(2, 3, 2);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(2, 1, :))-simout_D.y.dLm.Data(:, 2), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L1 [m]');
+
+  subplot(2, 3, 3);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(3, 1, :))-simout_D.y.dLm.Data(:, 3), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L1 [m]');
+
+  subplot(2, 3, 4);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(4, 1, :))-simout_D.y.dLm.Data(:, 4), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L4 [m]');
+
+  subplot(2, 3, 5);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(5, 1, :))-simout_D.y.dLm.Data(:, 5), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L5 [m]');
+
+  subplot(2, 3, 6);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.rL.Data(6, 1, :))-simout_D.y.dLm.Data(:, 6), 'k-')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('L6 [m]');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/decentralized_control_El.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:decentralized_control_El
+#+caption: Position error $\bm{\epsilon}_\mathcal{L}$ ([[./figs/decentralized_control_El.png][png]], [[./figs/decentralized_control_El.pdf][pdf]])
+[[file:figs/decentralized_control_El.png]]
+
+** Conclusion
+Such control architecture is easy to implement and give good results.
+The inverse kinematics is easy to compute.
+
+However, as $\mathcal{X}$ is not directly measured, it is possible that important positioning errors are due to finite stiffness of the joints and other imperfections.
+
+* Centralized Control Architecture using Pose Measurement
+<<sec:centralized>>
+** Matlab Init                                                     :noexport:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+** Control Schematic
+The centralized controller takes the position error $\bm{\epsilon}_\mathcal{X}$ as an inputs and generate actuator forces $\bm{\tau}$ (see Figure [[fig:centralized_reference_tracking]]).
+The signals are:
+- reference path $\bm{r}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}$
+- tracking error $\bm{\epsilon}_\mathcal{X} = \begin{bmatrix} \epsilon_x & \epsilon_y & \epsilon_z & \epsilon_{R_x} & \epsilon_{R_y} & \epsilon_{R_z} \end{bmatrix}$
+- actuator forces $\bm{\tau} = \begin{bmatrix} \tau_1 & \tau_2 & \tau_3 & \tau_4 & \tau_5 & \tau_6 \end{bmatrix}$
+- payload pose $\bm{\mathcal{X}) = \begin{bmatrix} x & y & z & R_x & R_y & R_z \end{bmatrix}$
+
+#+begin_src latex :file centralized_reference_tracking.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[addb={+}{}{}{}{-}] (subr) at (0, 0) {};
+    \node[block, right=0.8 of subr] (K) {$K$};
+    \node[block, right=1 of K] (G) {$G$};
+
+    % Connections and labels
+    \draw[<-] (subr.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1, 0);
+    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{\mathcal{X}}$};
+    \draw[->] (K.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:centralized_reference_tracking
+#+caption: Centralized Controller
+#+RESULTS:
+[[file:figs/centralized_reference_tracking.png]]
+
+Instead of designing a full MIMO controller $K$, we first try to make the plant more diagonal by pre- or post-multiplying some constant matrix, then we design a diagonal controller.
+
+We can think of two ways to make the plant more diagonal that are described in sections [[sec:diagonal_control_L]] and [[sec:diagonal_control_X]].
+
+#+begin_important
+  Note here that the subtraction shown in Figure [[fig:centralized_reference_tracking]] is not a real subtraction.
+  It is indeed a more complex computation explained in section [[sec:compute_pose_error]].
+#+end_important
+
+** Initialize the Stewart platform
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid');
+  payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
+** Identification of the plant
+Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+** Diagonal Control - Leg's Frame
+<<sec:diagonal_control_L>>
+*** Control Architecture
+The pose error $\bm{\epsilon}_\mathcal{X}$ is first converted in the frame of the leg by using the Jacobian matrix.
+Then a diagonal controller $\bm{K}_\mathcal{L}$ is designed.
+The final implemented controller is $\bm{K} = \bm{K}_\mathcal{L} \cdot \bm{J}$ as shown in Figure [[fig:centralized_reference_tracking_L]]
+
+Note here that the transformation from the pose error $\bm{\epsilon}_\mathcal{X}$ to the leg's length errors by using the Jacobian matrix is only valid for small errors.
+
+#+begin_src latex :file centralized_reference_tracking_L.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[addb={+}{}{}{}{-}] (subr) at (0, 0) {};
+    \node[block, right= 1 of subr] (J) {$\bm{J}$};
+    \node[block, right=0.8 of J] (K) {$\bm{K}_{\mathcal{L}}$};
+    \node[block, right=1 of K] (G) {$\bm{G}$};
+
+    % Connections and labels
+    \draw[<-] (subr.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1, 0);
+    \draw[->] (subr.east) -- (J.west) node[above left]{$\bm{\epsilon}_{\mathcal{X}}$};
+    \draw[->] (J.east) -- (K.west) node[above left]{$\bm{\epsilon}_{\mathcal{L}}$};
+    \draw[->] (K.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+
+    \begin{scope}[on background layer]
+      \node[fit={(J.south west) (K.north east)}, fill=black!20!white, draw, dashed, inner sep=8pt] (Ktot) {};
+      \node[above] at (Ktot.north) {$\bm{K}$};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:centralized_reference_tracking_L
+#+caption: Controller in the frame of the legs
+#+RESULTS:
+[[file:figs/centralized_reference_tracking_L.png]]
+
+*** Plant Analysis
+We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centralized_reference_tracking_L]] to obtain a more diagonal plant.
+
+#+begin_src matlab
+  Gl = stewart.kinematics.J*G;
+  Gl.OutputName  = {'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))), 'DisplayName', ['$d\mathcal{L}_' num2str(i) '/\tau_' num2str(i) '$']);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend();
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_diagonal_L
+#+caption: Diagonal Elements of the plant $\bm{J} \bm{G}$ ([[./figs/plant_centralized_diagonal_L.png][png]], [[./figs/plant_centralized_diagonal_L.pdf][pdf]])
+[[file:figs/plant_centralized_diagonal_L.png]]
+
+All the diagonal elements are identical.
+This will simplify the design of the controller as all the elements of the diagonal controller can be made identical.
+
+The off-diagonal terms of the controller are shown in Figure [[fig:plant_centralized_off_diagonal_L]].
 
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
@@ -229,11 +604,11 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
   hold on;
   for i = 1:5
     for j = i+1:6
-      plot(freqs, abs(squeeze(freqresp(Kl(i,i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+      plot(freqs, abs(squeeze(freqresp(Gl(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
     end
   end
   set(gca,'ColorOrderIndex',1);
-  plot(freqs, abs(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  plot(freqs, abs(squeeze(freqresp(Gl(1, 1), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
@@ -242,11 +617,11 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
   hold on;
   for i = 1:5
     for j = i+1:6
-      plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(i, i)*G(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
     end
   end
   set(gca,'ColorOrderIndex',1);
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(1,1)*G(1, 1), freqs, 'Hz'))));
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(1, 1), freqs, 'Hz'))));
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
@@ -254,4 +629,745 @@ A lead is added around the crossover frequency which is set to be around 500Hz.
   yticks([-180, -90, 0, 90, 180]);
 
   linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_off_diagonal_L
+#+caption: Off Diagonal Elements of the plant $\bm{J} \bm{G}$ ([[./figs/plant_centralized_off_diagonal_L.png][png]], [[./figs/plant_centralized_off_diagonal_L.pdf][pdf]])
+[[file:figs/plant_centralized_off_diagonal_L.png]]
+
+We can see that this *totally decouples the system at low frequency*.
+
+This was expected since:
+\[ \bm{G}(\omega = 0) = \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\tau}}(\omega = 0) = \bm{J}^{-1} \frac{\delta\bm{\mathcal{L}}}{\delta\bm{\tau}}(\omega = 0) = \bm{J}^{-1} \text{diag}(\mathcal{K}_1^{-1} \ \dots \ \mathcal{K}_6^{-1}) \]
+
+Thus $J \cdot G(\omega = 0) = J \cdot \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\tau}}(\omega = 0)$ is a diagonal matrix containing the inverse of the joint's stiffness.
+
+*** Controller Design
+The controller consists of:
+- A pure integrator
+- A lead around the crossover frequency to increase the phase margin
+- A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
+
+The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_centralized_L]].
+
+#+begin_src matlab
+  wc = 2*pi*30;
+  Kl = diag(1./diag(abs(freqresp(Gl, wc)))) * wc/s * 1/(1 + s/3/wc);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Kl(i, i)*Gl(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Kl(i, i)*Gl(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/loop_gain_centralized_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:loop_gain_centralized_L
+#+caption: Loop Gain of the diagonal elements ([[./figs/loop_gain_centralized_L.png][png]], [[./figs/loop_gain_centralized_L.pdf][pdf]])
+[[file:figs/loop_gain_centralized_L.png]]
+
+The controller $\bm{K} = \bm{K}_\mathcal{L} \bm{J}$ is computed.
+#+begin_src matlab
+  K = Kl*stewart.kinematics.J;
+#+end_src
+
+*** Simulation
+We specify the reference path to follow.
+#+begin_src matlab
+  t = linspace(0, 10, 1000);
+
+  r = zeros(6, length(t));
+
+  r(1, :) = 5e-3*sin(2*pi*t);
+
+  references = initializeReferences(stewart, 't', t, 'r', r);
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'ref-track-X');
+#+end_src
+
+We run the simulation and we save the results.
+#+begin_src matlab
+  sim('stewart_platform_model')
+  simout_L = simout;
+#+end_src
+
+** Diagonal Control - Cartesian Frame
+<<sec:diagonal_control_X>>
+*** Control Architecture
+A diagonal controller $\bm{K}_\mathcal{X}$ take the pose error $\bm{\epsilon}_\mathcal{X}$ and generate cartesian forces $\bm{\mathcal{F}}$ that are then converted to actuators forces using the Jacobian as shown in Figure e [[fig:centralized_reference_tracking_X]].
+
+The final implemented controller is $\bm{K} = \bm{J}^{-T} \cdot \bm{K}_\mathcal{X}$.
+
+#+begin_src latex :file centralized_reference_tracking_X.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[addb={+}{}{}{}{-}] (subr) at (0, 0) {};
+    \node[block, right= of subr] (K) {$\bm{K}_{\mathcal{X}}$};
+    \node[block, right= of K] (J) {$\bm{J}^{-T}$};
+    \node[block, right= of J] (G) {$\bm{G}$};
+
+    % Connections and labels
+    \draw[<-] (subr.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1, 0);
+    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{\mathcal{X}}$};
+    \draw[->] (K.east) -- (J.west) node[above left]{$\bm{\mathcal{F}}$};
+    \draw[->] (J.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+
+    \begin{scope}[on background layer]
+      \node[fit={(K.south west) (J.north east)}, fill=black!20!white, draw, dashed, inner sep=8pt] (Ktot) {};
+      \node[above] at (Ktot.north) {$\bm{K}$};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:centralized_reference_tracking_X
+#+caption: Controller in the cartesian frame
+#+RESULTS:
+[[file:figs/centralized_reference_tracking_X.png]]
+
+*** Plant Analysis
+We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centralized_reference_tracking_X]] to obtain a more diagonal plant.
+
+#+begin_src matlab
+  Gx = G*inv(stewart.kinematics.J');
+  Gx.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  labels = {'$D_x/\mathcal{F}_x$', '$D_y/\mathcal{F}_y$', '$D_z/\mathcal{F}_z$', '$R_x/\mathcal{M}_x$', '$R_y/\mathcal{M}_y$', '$R_z/\mathcal{M}_z$'};
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))), 'DisplayName', labels{i});
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend();
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_diagonal_X
+#+caption: Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_diagonal_X.png][png]], [[./figs/plant_centralized_diagonal_X.pdf][pdf]])
+[[file:figs/plant_centralized_diagonal_X.png]]
+
+The diagonal terms are not the same.
+The resonances of the system are "decoupled".
+For instance, the vertical resonance of the system is only present on the diagonal term corresponding to $D_z/\mathcal{F}_z$.
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gx(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gx(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_off_diagonal_X
+#+caption: Off Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_off_diagonal_X.png][png]], [[./figs/plant_centralized_off_diagonal_X.pdf][pdf]])
+[[file:figs/plant_centralized_off_diagonal_X.png]]
+
+Here the system is almost decoupled at all frequencies except for the transfer functions $\frac{R_y}{\mathcal{F}_x}$ and  $\frac{R_x}{\mathcal{F}_y}$.
+
+This is due to the fact that the compliance matrix of the Stewart platform is not diagonal.
+#+begin_src matlab :exports results :results value table replace :tangle no
+  inv(stewart.kinematics.K)
+#+end_src
+
+#+RESULTS:
+|    4.75e-08 | -1.9751e-24 | 7.3536e-25 |   5.915e-23 |  3.2093e-07 |  5.8696e-24 |
+| -7.1302e-25 |    4.75e-08 | 2.8866e-25 | -3.2093e-07 |   -5.38e-24 | -3.2725e-23 |
+|  7.9012e-26 | -6.3991e-25 |  2.099e-08 |  1.9073e-23 |  5.3384e-25 | -6.4867e-40 |
+|  1.3724e-23 | -3.2093e-07 | 1.2799e-23 |  5.1863e-06 |  4.9412e-22 | -3.8269e-24 |
+|  3.2093e-07 |  7.6013e-24 | 1.2239e-23 |  6.8886e-22 |  5.1863e-06 | -2.6025e-22 |
+|   7.337e-24 | -3.2395e-23 | -1.571e-39 |   9.927e-23 | -3.2531e-22 |  1.7073e-06 |
+
+One way to have this compliance matrix diagonal (and thus having a decoupled plant at DC) is to use a *cubic architecture* with the center of the cube's coincident with frame $\{A\}$.
+
+This control architecture can also give a dynamically decoupled plant if the Center of mass of the payload is also coincident with frame $\{A\}$.
+
+*** Controller Design
+The controller consists of:
+- A pure integrator
+- A lead around the crossover frequency to increase the phase margin
+- A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
+
+The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_centralized_X]].
+
+#+begin_src matlab
+  wc = 2*pi*30;
+  Kx = diag(1./diag(abs(freqresp(Gx, wc)))) * wc/s * 1/(1 + s/3/wc);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Kx(i,i)*Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Kx(i,i)*Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/loop_gain_centralized_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:loop_gain_centralized_X
+#+caption: Loop Gain of the diagonal elements ([[./figs/loop_gain_centralized_X.png][png]], [[./figs/loop_gain_centralized_X.pdf][pdf]])
+[[file:figs/loop_gain_centralized_X.png]]
+
+The controller $\bm{K} = \bm{J}^{-T} \bm{K}_\mathcal{X}$ is computed.
+#+begin_src matlab
+  K = inv(stewart.kinematics.J')*Kx;
+#+end_src
+
+*** Simulation
+We specify the reference path to follow.
+#+begin_src matlab
+  t = linspace(0, 10, 1000);
+
+  r = zeros(6, length(t));
+
+  r(1, :) = 5e-3*sin(2*pi*t);
+
+  references = initializeReferences(stewart, 't', t, 'r', r);
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'ref-track-X');
+#+end_src
+
+We run the simulation and we save the results.
+#+begin_src matlab
+  sim('stewart_platform_model')
+  simout_X = simout;
+#+end_src
+
+** Diagonal Control - Steady State Decoupling
+<<sec:diagonal_control_SD>>
+*** Control Architecture
+The plant $\bm{G}$ is pre-multiply by $\bm{G}^{-1}(\omega = 0)$ such that the "shaped plant" $\bm{G}_0 = \bm{G} \bm{G}^{-1}(\omega = 0)$ is diagonal at low frequency.
+
+Then a diagonal controller $\bm{K}_0$ is designed.
+
+The control architecture is shown in Figure [[fig:centralized_reference_tracking_S]].
+
+#+begin_src latex :file centralized_reference_tracking_S.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[addb={+}{}{}{}{-}] (subr) at (0, 0) {};
+    \node[block, right=0.8 of subr] (K) {$\bm{K}_{0}$};
+    \node[block, right= 1 of K] (J) {$\bm{G}^{-1}(\omega=0)$};
+    \node[block, right=1 of J] (G) {$\bm{G}$};
+
+    % Connections and labels
+    \draw[<-] (subr.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1, 0);
+    \draw[->] (subr.east) -- (K.west) node[above left]{$\bm{\epsilon}_{\mathcal{X}}$};
+    \draw[->] (K.east) -- (J.west);
+    \draw[->] (J.east) -- (G.west) node[above left]{$\bm{\tau}$};
+    \draw[->] (G.east) node[above right]{$\bm{\mathcal{X}}$} -| ($(G.east)+(1, -1)$) -| (subr.south);
+
+    \begin{scope}[on background layer]
+      \node[fit={(K.south west) (J.north east)}, fill=black!20!white, draw, dashed, inner sep=8pt] (Ktot) {};
+      \node[above] at (Ktot.north) {$\bm{K}$};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:centralized_reference_tracking_S
+#+caption: Static Decoupling of the Plant
+#+RESULTS:
+[[file:figs/centralized_reference_tracking_S.png]]
+
+*** Plant Analysis
+The plant is pre-multiplied by $\bm{G}^{-1}(\omega = 0)$.
+The diagonal elements of the shaped plant are shown in Figure [[fig:centralized_reference_tracking_SD]].
+
+#+begin_src matlab
+  G0 = G*inv(freqresp(G, 0));
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(G0(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(G0(i, i), freqs, 'Hz'))), 'DisplayName', ['$G_0(' num2str(i) ',' num2str(i) ')$']);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend();
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_SD.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_diagonal_SD
+#+caption: Diagonal Elements of the plant $\bm{G} \bm{G}^{-1}(\omega = 0)$ ([[./figs/plant_centralized_diagonal_SD.png][png]], [[./figs/plant_centralized_diagonal_SD.pdf][pdf]])
+[[file:figs/plant_centralized_diagonal_SD.png]]
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(G0(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(G0(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G0(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G0(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_SD.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:plant_centralized_off_diagonal_SD
+#+caption: Off Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_off_diagonal_SD.png][png]], [[./figs/plant_centralized_off_diagonal_SD.pdf][pdf]])
+[[file:figs/plant_centralized_off_diagonal_SD.png]]
+
+*** Controller Design
+We have that:
+\[ \bm{G}^{-1}(\omega = 0) = \left(\frac{\delta\bm{\mathcal{X}}}{\delta\bm{\tau}}(\omega = 0)\right)^{-1} = \left( \bm{J}^{-1} \frac{\delta\bm{\mathcal{L}}}{\delta\bm{\tau}}(\omega = 0) \right)^{-1} = \text{diag}(\mathcal{K}_1^{-1} \ \dots \ \mathcal{K}_6^{-1}) \bm{J} \]
+
+And because:
+- all the leg stiffness are equal
+- the controller equal to a $\bm{K}_0(s) = k(s) \bm{I}_6$
+We have that $\bm{K}_0(s)$ commutes with $\bm{G}^{-1}(\omega = 0)$ and thus the overall controller $\bm{K}$ is the same as the one obtain in section [[sec:diagonal_control_L]].
+
+** Comparison
+*** Obtained MIMO Controllers
+#+begin_src matlab :exports none
+  figure;
+  bode(inv(stewart.kinematics.J')*Kx, Kl*stewart.kinematics.J)
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/centralized_control_comp_K.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:centralized_control_comp_K
+#+caption: Comparison of the MIMO controller $\bm{K}$ for both centralized architectures ([[./figs/centralized_control_comp_K.png][png]], [[./figs/centralized_control_comp_K.pdf][pdf]])
+[[file:figs/centralized_control_comp_K.png]]
+
+*** Simulation Results
+The position error $\bm{\epsilon}_\mathcal{X}$ for both centralized architecture are shown in Figure [[fig:centralized_control_comp_Ex]].
+The corresponding leg's length errors $\bm{\epsilon}_\mathcal{L}$ are shown in Figure [[fig:centralized_control_comp_El]].
+
+Based on Figure [[fig:centralized_control_comp_Ex]], we can see that:
+- There is some tracking error $\epsilon_x$
+- The errors $\epsilon_y$, $\epsilon_{R_x}$ and $\epsilon_{R_z}$ are quite negligible
+- There is some error in the vertical position $\epsilon_z$.
+  The frequency of the error $\epsilon_z$ is twice the frequency of the reference path $r_x$.
+- There is some error $\epsilon_{R_y}$.
+  This error is much lower when using the diagonal control in the frame of the leg instead of the cartesian frame.
+
+#+begin_src matlab :exports none
+  figure;
+  subplot(2, 3, 1);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(1, 1, :))-simout_L.x.Xr.Data(:, 1))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(1, 1, :))-simout_X.x.Xr.Data(:, 1))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dx [m]');
+
+  subplot(2, 3, 2);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(2, 1, :))-simout_L.x.Xr.Data(:, 2))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(2, 1, :))-simout_X.x.Xr.Data(:, 2))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dy [m]');
+
+  subplot(2, 3, 3);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(3, 1, :))-simout_L.x.Xr.Data(:, 3))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(3, 1, :))-simout_X.x.Xr.Data(:, 3))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dz [m]');
+
+  subplot(2, 3, 4);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(4, 1, :))-simout_L.x.Xr.Data(:, 4))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(4, 1, :))-simout_X.x.Xr.Data(:, 4))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rx [rad]');
+
+  subplot(2, 3, 5);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(5, 1, :))-simout_L.x.Xr.Data(:, 5))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(5, 1, :))-simout_X.x.Xr.Data(:, 5))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Ry [rad]');
+
+  subplot(2, 3, 6);
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(6, 1, :))-simout_L.x.Xr.Data(:, 6), 'DisplayName', '$K_\mathcal{L}$')
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(6, 1, :))-simout_X.x.Xr.Data(:, 6), 'DisplayName', '$K_\mathcal{X}$')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rz [rad]');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/centralized_control_comp_Ex.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:centralized_control_comp_Ex
+#+caption: Comparison of the position error $\bm{\epsilon}_\mathcal{X}$ for both centralized controllers ([[./figs/centralized_control_comp_Ex.png][png]], [[./figs/centralized_control_comp_Ex.pdf][pdf]])
+[[file:figs/centralized_control_comp_Ex.png]]
+
+#+begin_src matlab :exports none
+  figure;
+  hold on;
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.rL.Data(6, 1, :))-simout_L.y.dLm.Data(:, 6), 'DisplayName', '$K_\mathcal{L}$')
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.rL.Data(6, 1, :))-simout_X.y.dLm.Data(:, 6), 'DisplayName', '$K_\mathcal{X}$')
+  for i = 2:6
+    set(gca,'ColorOrderIndex',1);
+    plot(simout_L.r.r.Time, squeeze(simout_L.r.rL.Data(i, 1, :))-simout_L.y.dLm.Data(:, i), 'HandleVisibility', 'off')
+    plot(simout_X.r.r.Time, squeeze(simout_X.r.rL.Data(i, 1, :))-simout_X.y.dLm.Data(:, i), 'HandleVisibility', 'off')
+  end
+  hold off;
+  xlabel('Time [s]');
+  ylabel('$\epsilon_\mathcal{L}$ [m]');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/centralized_control_comp_El.pdf" :var figsize="wide-normal" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:centralized_control_comp_El
+#+caption: Comparison of the leg's length error $\bm{\epsilon}_\mathcal{L}$ for both centralized controllers ([[./figs/centralized_control_comp_El.png][png]], [[./figs/centralized_control_comp_El.pdf][pdf]])
+[[file:figs/centralized_control_comp_El.png]]
+
+** Conclusion
+Both control architecture gives similar results even tough the control in the Leg's frame gives slightly better results.
+
+The main differences between the control architectures used in sections [[sec:diagonal_control_L]] and [[sec:diagonal_control_X]] are summarized in Table [[tab:centralized_control_comp]].
+
+#+name: tab:centralized_control_comp
+#+caption: Comparison of the two centralized control architectures
+|                             | *Leg's Frame*                     | *Cartesian Frame*                     | *Static Decoupling*            |
+|-----------------------------+-----------------------------------+---------------------------------------+--------------------------------|
+| *Plant Meaning*             | $\delta\mathcal{L}_i/\tau_i$      | $\delta\mathcal{X}_i/\mathcal{F}_i$   | No physical meaning            |
+| *Obtained Decoupling*       | Decoupled at DC                   | Dynamical decoupling except few terms | Decoupled at DC                |
+| *Diagonal Elements*         | Identical with all the Resonances | Different, resonances are cancel out  | No Alternating poles and zeros |
+| *Mechanical Architecture*   | Architecture Independent          | Better with Cubic Architecture        |                                |
+| *Robustness to Uncertainty* | Good (only depends on $J$)        | Good (only depends on $J$)            | Bad (depends on the mass)      |
+
+These decoupling methods only uses the Jacobian matrix which only depends on the Stewart platform geometry.
+Thus, this method should be quite robust against parameter variation (e.g. the payload mass).
+
+* Hybrid Control Architecture - HAC-LAC with relative DVF
+<<sec:hybrid>>
+** Matlab Init                                                     :noexport:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+** Control Schematic
+
+#+begin_src latex :file hybrid_reference_tracking.pdf
+  \begin{tikzpicture}
+    \node[block={3.0cm}{3.0cm}] (G) {$G$};
+
+    % Input and outputs coordinates
+    \coordinate[] (outputX) at ($(G.south east)!0.25!(G.north east)$);
+    \coordinate[] (outputL) at ($(G.south east)!0.75!(G.north east)$);
+
+    \draw[->] (outputX) -- ++(1.8, 0) node[above left]{$\bm{\mathcal{X}}$};
+    \draw[->] (outputL) -- ++(1.8, 0) node[above left]{$\bm{\mathcal{L}}$};
+
+    % Blocs
+    \node[addb, left= of G] (addF) {};
+    \node[block, left=1.2 of addF] (Kx) {$\bm{K}_\mathcal{X}$};
+    \node[addb={+}{}{}{}{-}, left= of Kx] (subx) {};
+
+    \node[block, above= of addF] (Kl) {$\bm{K}_\mathcal{L}$};
+    \node[addb={+}{}{}{-}{}, above= of Kl] (subl) {};
+
+    \node[block, align=center, left= of subl] (invK) {Inverse\\Kinematics};
+
+    % Connections and labels
+    \draw[<-] (subx.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1.2, 0);
+    \draw[->] ($(subx.west) + (-0.8, 0)$)node[branch]{} |- (invK.west);
+    \draw[->] (invK.east) -- (subl.west) node[above left]{$\bm{\epsilon}_\mathcal{L}$};
+    \draw[->] (subl.south) -- (Kl.north);
+    \draw[->] (Kl.south) -- (addF.north);
+
+    \draw[->] (subx.east) -- (Kx.west) node[above left]{$\bm{\epsilon}_\mathcal{X}$};
+    \draw[->] (Kx.east) node[above right]{$\bm{\tau}_\mathcal{X}$} -- (addF.west);
+    \draw[->] (addF.east) -- (G.west) node[above left]{$\bm{\tau}$};
+
+    \draw[->] ($(outputL.east) + (0.4, 0)$)node[branch](L){} |- (subl.east);
+    \draw[->] ($(outputX.east) + (1.2, 0)$)node[branch]{} -- ++(0, -1.6) -| (subx.south);
+
+    \begin{scope}[on background layer]
+      \node[fit={(G.south-|Kl.west) (L|-subl.north)}, fill=black!20!white, draw, dashed, inner sep=8pt] (Ktot) {};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+name: fig:hybrid_reference_tracking
+#+caption: Centralized Controller
+#+RESULTS:
+[[file:figs/hybrid_reference_tracking.png]]
+
+
+
+* Position Error computation
+<<sec:compute_pose_error>>
+Let's denote:
+- $\{W\}$ the initial fixed frame (base in which the measurement is done)
+- $\{R\}$ the reference frame corresponding to the wanted pose of the sample
+- $\{M\}$ the frame corresponding to the measured pose of the sample
+
+We have then computed:
+- ${}^W\bm{T}_R$ which corresponds to the wanted pose of the sample with respect to the granite
+- ${}^W\bm{T}_M$ which corresponds to the measured pose of the sample with respect to the granite
+
+Reference Position with respect to fixed frame {W}: ${}^WT_R$
+#+begin_src matlab
+  Dx = 0;
+  Dy = 0;
+  Dz = 0.1;
+  Rx = pi;
+  Ry = 0;
+  Rz = 0;
+
+  WTr = zeros(4,4);
+
+  R = [cos(Rz) -sin(Rz) 0;
+       sin(Rz)  cos(Rz) 0;
+       0        0         1] * ...
+      [cos(Ry)  0        sin(Ry);
+       0        1        0;
+       -sin(Ry)  0        cos(Ry)] * ...
+      [1        0        0;
+       0        cos(Rx) -sin(Rx);
+       0        sin(Rx)  cos(Rx)];
+
+
+  WTr(1:3, 1:3) = R;
+  WTr(1:4, 4) = [Dx ; Dy ; Dz; 1];
+#+end_src
+
+Measured Position with respect to fixed frame {W}: ${}^WT_M$
+#+begin_src matlab
+  Dx = 0;
+  Dy = 0;
+  Dz = 0;
+  Rx = pi;
+  Ry = 0;
+  Rz = 0;
+
+  WTm = zeros(4,4);
+
+  R = [cos(Rz) -sin(Rz) 0;
+       sin(Rz)  cos(Rz) 0;
+       0        0         1] * ...
+      [cos(Ry)  0        sin(Ry);
+       0        1        0;
+       -sin(Ry)  0        cos(Ry)] * ...
+      [1        0        0;
+       0        cos(Rx) -sin(Rx);
+       0        sin(Rx)  cos(Rx)];
+
+
+  WTm(1:3, 1:3) = R;
+  WTm(1:4, 4) = [Dx ; Dy ; Dz; 1];
+#+end_src
+
+We would like to compute ${}^M\bm{T}_R$ which corresponds to the wanted pose of the sample expressed in a frame attached to the top platform of the nano-hexapod (frame $\{M\}$).
+
+We have:
+\begin{align}
+  {}^M\bm{T}_R &= {}^M\bm{T}_W \cdot {}^W\bm{T}_R \\
+          &= {}^W{\bm{T}_M}^{-1} \cdot {}^W\bm{T}_R
+\end{align}
+
+#+begin_src matlab
+  % Error with respect to the top platform
+  MTr = [WTm(1:3,1:3)', -WTm(1:3,1:3)'*WTm(1:3,4) ; 0 0 0 1]*WTr;
+
+  T = MTr;
+  Edx = T(1, 4);
+  Edy = T(2, 4);
+  Edz = T(3, 4);
+
+  % The angles obtained are u-v-w Euler angles (rotations in the moving frame)
+  Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
+  Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
+  Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
+
+  [Edx, Edy, Edz, Erx, Ery, Erz]
 #+end_src

@@ -38,6 +38,19 @@
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
+* Introduction                                                        :ignore:
+Control architectures can be divided in different ways.
+
+It can depend on the sensor used:
+- Sensors located in each strut: relative motion, force sensor, inertial sensor
+- Sensors measuring the relative motion between the fixed base and the mobile platform
+- Inertial sensors located on the mobile platform
+
+It can also depends on the control objective:
+- Reference Tracking
+- Active Damping
+- Vibration Isolation
+
 * HAC-LAC (Cascade) Control - Integral Control
 ** Introduction
 In this section, we wish to study the use of the High Authority Control - Low Authority Control (HAC-LAC) architecture on the Stewart platform.
@@ -760,6 +773,8 @@ Let's define the system as shown in figure [[fig:general_control_names]].
 
 #+name: tab:general_plant_signals
 #+caption: Signals definition for the generalized plant
+|                     | *Symbol*                    | *Meaning*                              |
+|---------------------+-----------------------------+----------------------------------------|
 | *Exogenous Inputs*  | $\bm{\mathcal{X}}_w$        | Ground motion                          |
 |                     | $\bm{\mathcal{F}}_d$        | External Forces applied to the Payload |
 |                     | $\bm{r}$                    | Reference signal for tracking          |
@@ -1177,9 +1192,150 @@ The results are shown in figure
 #+caption: Frobenius norm of the Compliance and transmissibility matrices ([[./figs/static_decoupling_C_T_frobenius_norm.png][png]], [[./figs/static_decoupling_C_T_frobenius_norm.pdf][pdf]])
 [[file:figs/static_decoupling_C_T_frobenius_norm.png]]
 
-** Decoupling at Crossover
+** TODO Decoupling at Crossover
 - [ ] Find a method for real approximation of a complex matrix
  
+* Time Domain Simulation
+** Matlab Init                                                     :noexport:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+#+begin_src matlab
+  open('stewart_platform_model.slx')
+#+end_src
+
+** Initialization
+We first initialize the Stewart platform.
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal', 'type_M', 'spherical');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'none');
+#+end_src
+
+The rotation point of the ground is located at the origin of frame $\{A\}$.
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid', 'rot_point', stewart.platform_F.FO_A);
+  payload = initializePayload('type', 'none');
+#+end_src
+
+#+begin_src matlab
+  load('./mat/motion_error_ol.mat', 'Eg')
+#+end_src
+
+** HAC IFF
+#+begin_src matlab
+  controller = initializeController('type', 'iff');
+  K_iff = -(1e4/s)*eye(6);
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_iff = linearize(mdl, io);
+  G_iff.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_iff.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+
+  Gc_iff = minreal(G_iff)/stewart.kinematics.J';
+  Gc_iff.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+#+begin_src matlab
+  wc = 2*pi*100; % Wanted Bandwidth [rad/s]
+
+  h = 1.2;
+  H_lead = 1/h*(1 + s/(wc/h))/(1 + s/(wc*h));
+
+  Kd_iff = diag(1./abs(diag(freqresp(1/s*Gc_iff, wc)))) .* H_lead .* 1/s;
+  K_hac_iff = inv(stewart.kinematics.J')*Kd_iff;
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'hac-iff');
+#+end_src
+
+** HAC-DVF
+#+begin_src matlab
+  controller = initializeController('type', 'dvf');
+  K_dvf = -1e4*s/(1+s/2/pi/5000)*eye(6);
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');      io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Absolute Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Absolute Sensor [m, rad]
+
+  %% Run the linearization
+  G_dvf = linearize(mdl, io);
+  G_dvf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G_dvf.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+
+  Gc_dvf = minreal(G_dvf)/stewart.kinematics.J';
+  Gc_dvf.InputName = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+#+begin_src matlab
+  wc = 2*pi*100; % Wanted Bandwidth [rad/s]
+
+  h = 1.2;
+  H_lead = 1/h*(1 + s/(wc/h))/(1 + s/(wc*h));
+
+  Kd_dvf = diag(1./abs(diag(freqresp(1/s*Gc_dvf, wc)))) .* H_lead .* 1/s;
+
+  K_hac_dvf = inv(stewart.kinematics.J')*Kd_dvf;
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'hac-dvf');
+#+end_src
+
+** Results
+
+#+begin_src matlab
+  figure;
+  subplot(1, 2, 1);
+  hold on;
+  plot(Eg.Time, Eg.Data(:, 1), 'DisplayName', 'X');
+  plot(Eg.Time, Eg.Data(:, 2), 'DisplayName', 'Y');
+  plot(Eg.Time, Eg.Data(:, 3), 'DisplayName', 'Z');
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Position error [m]');
+  legend();
+
+  subplot(1, 2, 2);
+  hold on;
+  plot(simout.Xa.Time, simout.Xa.Data(:, 1));
+  plot(simout.Xa.Time, simout.Xa.Data(:, 2));
+  plot(simout.Xa.Time, simout.Xa.Data(:, 3));
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Orientation error [rad]');
+#+end_src
+
 * Functions
 ** =initializeController=: Initialize the Controller
 :PROPERTIES:
@@ -1208,7 +1364,7 @@ The results are shown in figure
 :END:
 #+begin_src matlab
   arguments
-    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf', 'hac-iff', 'hac-dvf'})} = 'open-loop'
+    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf', 'hac-iff', 'hac-dvf', 'ref-track-L', 'ref-track-X'})} = 'open-loop'
   end
 #+end_src
 
@@ -1236,5 +1392,9 @@ The results are shown in figure
       controller.type = 3;
     case 'hac-dvf'
       controller.type = 4;
+    case 'ref-track-L'
+      controller.type = 5;
+    case 'ref-track-X'
+      controller.type = 6;
   end
 #+end_src
