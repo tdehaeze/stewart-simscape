@@ -484,6 +484,67 @@ However, the rotational stiffnesses are increasing with the cube's size but the 
 |   -8e-17 |        0 |   -3e-17 | -6.1e-19 |    0.094 |       0 |
 | -6.2e-18 |  7.2e-17 |  5.6e-17 |  2.3e-17 |        0 |    0.37 |
 
+** Size of the platforms
+The minimum size of the platforms depends on the cube's size and the height between the platform and the cube's center.
+
+Let's denote:
+- $H$ the height between the cube's center and the considered platform
+- $D$ the size of the cube's edges
+
+Let's denote by $a$ and $b$ the points of both ends of one of the cube's edge.
+
+Initially, we have:
+\begin{align}
+  a &= \frac{D}{2} \begin{bmatrix}-1 \\ -1 \\ 1\end{bmatrix} \\
+  b &= \frac{D}{2} \begin{bmatrix} 1 \\ -1 \\ 1\end{bmatrix}
+\end{align}
+
+We rotate the cube around its center (origin of the rotated frame) such that one of its diagonal is vertical.
+\[ R = \begin{bmatrix}
+   \frac{2}{\sqrt{6}} & 0 & \frac{1}{\sqrt{3}} \\
+  \frac{-1}{\sqrt{6}} &  \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \\
+  \frac{-1}{\sqrt{6}} & \frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{3}}
+\end{bmatrix} \]
+
+After rotation, the points $a$ and $b$ become:
+\begin{align}
+  a &= \frac{D}{2} \begin{bmatrix}-\frac{\sqrt{2}}{\sqrt{3}} \\ -\sqrt{2} \\ -\frac{1}{\sqrt{3}}\end{bmatrix} \\
+  b &= \frac{D}{2} \begin{bmatrix} \frac{\sqrt{2}}{\sqrt{3}} \\ -\sqrt{2} \\  \frac{1}{\sqrt{3}}\end{bmatrix}
+\end{align}
+
+Points $a$ and $b$ define a vector $u = b - a$ that gives the orientation of one of the Stewart platform strut:
+\[ u = \frac{D}{\sqrt{3}} \begin{bmatrix} -\sqrt{2} \\ 0 \\ -1\end{bmatrix} \]
+
+Then we want to find the intersection between the line that defines the strut with the plane defined by the height $H$ from the cube's center.
+To do so, we first find $g$ such that:
+\[ a_z + g u_z = -H \]
+We obtain:
+\begin{align}
+  g &= - \frac{H + a_z}{u_z} \\
+    &= \sqrt{3} \frac{H}{D} - \frac{1}{2}
+\end{align}
+
+Then, the intersection point $P$ is given by:
+\begin{align}
+  P &= a + g u \\
+    &= \begin{bmatrix}
+  H \sqrt{2} \\
+  D \frac{1}{\sqrt{2}} \\
+  H
+\end{bmatrix}
+\end{align}
+
+Finally, the circle can contains the intersection point has a radius $r$:
+\begin{align}
+  r &= \sqrt{P_x^2 + P_y^2} \\
+    &= \sqrt{2 H^2 + \frac{1}{2}D^2}
+\end{align}
+
+By symmetry, we can show that all the other intersection points will also be on the circle with a radius $r$.
+
+For a small cube:
+\[ r \approx \sqrt{2} H \]
+
 ** Conclusion
 #+begin_important
   We found that we can have a diagonal stiffness matrix using the cubic architecture when $\{A\}$ and $\{B\}$ are located above the top platform.
@@ -1119,6 +1180,11 @@ No flexibility below the Stewart platform and no payload.
   controller = initializeController('type', 'open-loop');
 #+end_src
 
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
 #+begin_src matlab :exports none
   displayArchitecture(stewart, 'labels', false, 'view', 'all');
 #+end_src
@@ -1509,8 +1575,7 @@ This Matlab function is accessible [[file:../src/generateCubicConfiguration.m][h
 :UNNUMBERED: t
 :END:
 We define the useful points of the cube with respect to the Cube's center.
-${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is
-located at the center of the cube and aligned with {F} and {M}.
+${}^{C}C$ are the 6 vertices of the cubes expressed in a frame {C} which is located at the center of the cube and aligned with {F} and {M}.
 
 #+begin_src matlab
   sx = [ 2; -1; -1];

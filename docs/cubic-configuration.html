@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-03 mar. 15:51 -->
+<!-- 2020-03-12 jeu. 18:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cubic configuration for the Stewart Platform</title>
@@ -252,33 +252,34 @@
 <li><a href="#orga88e79a">1.2. Cubic Stewart platform centered with the cube center - Jacobian not estimated at the cube center</a></li>
 <li><a href="#orge02ec88">1.3. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the cube center</a></li>
 <li><a href="#org43fd7e4">1.4. Cubic Stewart platform not centered with the cube center - Jacobian estimated at the Stewart platform center</a></li>
-<li><a href="#org64395b6">1.5. Conclusion</a></li>
+<li><a href="#org3356db5">1.5. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgd70418b">2. Configuration with the Cube&rsquo;s center above the mobile platform</a>
 <ul>
 <li><a href="#org8afa645">2.1. Having Cube&rsquo;s center above the top platform</a></li>
-<li><a href="#org8e09793">2.2. Conclusion</a></li>
+<li><a href="#org25d045b">2.2. Size of the platforms</a></li>
+<li><a href="#org9477b7a">2.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgcc4ecce">3. Cubic size analysis</a>
 <ul>
 <li><a href="#org0029d8c">3.1. Analysis</a></li>
-<li><a href="#orgc5a2e1f">3.2. Conclusion</a></li>
+<li><a href="#org46632b3">3.2. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orgf09da67">4. Dynamic Coupling in the Cartesian Frame</a>
 <ul>
 <li><a href="#org5fe01ec">4.1. Cube&rsquo;s center at the Center of Mass of the mobile platform</a></li>
 <li><a href="#org4cb2a36">4.2. Cube&rsquo;s center not coincident with the Mass of the Mobile platform</a></li>
-<li><a href="#org24cd25e">4.3. Conclusion</a></li>
+<li><a href="#orgc1b6a36">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org8f26dc0">5. Dynamic Coupling between actuators and sensors of each strut</a>
 <ul>
 <li><a href="#org6e391c9">5.1. Coupling between the actuators and sensors - Cubic Architecture</a></li>
 <li><a href="#orgafd808d">5.2. Coupling between the actuators and sensors - Non-Cubic Architecture</a></li>
-<li><a href="#org3356db5">5.3. Conclusion</a></li>
+<li><a href="#org87716af">5.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org3044455">6. Functions</a>
@@ -826,8 +827,8 @@ stewart = initializeCylindricalPlatforms(stewart, <span class="org-string">'Fpr'
 </div>
 </div>
 
-<div id="outline-container-org64395b6" class="outline-3">
-<h3 id="org64395b6"><span class="section-number-3">1.5</span> Conclusion</h3>
+<div id="outline-container-org3356db5" class="outline-3">
+<h3 id="org3356db5"><span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="important">
 <p>
@@ -1164,9 +1165,100 @@ FOc  = H <span class="org-type">+</span> MO_B; <span class="org-comment">% Cente
 </div>
 </div>
 
-<div id="outline-container-org8e09793" class="outline-3">
-<h3 id="org8e09793"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org25d045b" class="outline-3">
+<h3 id="org25d045b"><span class="section-number-3">2.2</span> Size of the platforms</h3>
 <div class="outline-text-3" id="text-2-2">
+<p>
+The minimum size of the platforms depends on the cube&rsquo;s size and the height between the platform and the cube&rsquo;s center.
+</p>
+
+<p>
+Let&rsquo;s denote:
+</p>
+<ul class="org-ul">
+<li>\(H\) the height between the cube&rsquo;s center and the considered platform</li>
+<li>\(D\) the size of the cube&rsquo;s edges</li>
+</ul>
+
+<p>
+Let&rsquo;s denote by \(a\) and \(b\) the points of both ends of one of the cube&rsquo;s edge.
+</p>
+
+<p>
+Initially, we have:
+</p>
+\begin{align}
+  a &= \frac{D}{2} \begin{bmatrix}-1 \\ -1 \\ 1\end{bmatrix} \\
+  b &= \frac{D}{2} \begin{bmatrix} 1 \\ -1 \\ 1\end{bmatrix}
+\end{align}
+
+<p>
+We rotate the cube around its center (origin of the rotated frame) such that one of its diagonal is vertical.
+\[ R = \begin{bmatrix}
+   \frac{2}{\sqrt{6}} & 0 & \frac{1}{\sqrt{3}} \\
+  \frac{-1}{\sqrt{6}} &  \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \\
+  \frac{-1}{\sqrt{6}} & \frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{3}}
+\end{bmatrix} \]
+</p>
+
+<p>
+After rotation, the points \(a\) and \(b\) become:
+</p>
+\begin{align}
+  a &= \frac{D}{2} \begin{bmatrix}-\frac{\sqrt{2}}{\sqrt{3}} \\ -\sqrt{2} \\ -\frac{1}{\sqrt{3}}\end{bmatrix} \\
+  b &= \frac{D}{2} \begin{bmatrix} \frac{\sqrt{2}}{\sqrt{3}} \\ -\sqrt{2} \\  \frac{1}{\sqrt{3}}\end{bmatrix}
+\end{align}
+
+<p>
+Points \(a\) and \(b\) define a vector \(u = b - a\) that gives the orientation of one of the Stewart platform strut:
+\[ u = \frac{D}{\sqrt{3}} \begin{bmatrix} -\sqrt{2} \\ 0 \\ -1\end{bmatrix} \]
+</p>
+
+<p>
+Then we want to find the intersection between the line that defines the strut with the plane defined by the height \(H\) from the cube&rsquo;s center.
+To do so, we first find \(g\) such that:
+\[ a_z + g u_z = -H \]
+We obtain:
+</p>
+\begin{align}
+  g &= - \frac{H + a_z}{u_z} \\
+    &= \sqrt{3} \frac{H}{D} - \frac{1}{2}
+\end{align}
+
+<p>
+Then, the intersection point \(P\) is given by:
+</p>
+\begin{align}
+  P &= a + g u \\
+    &= \begin{bmatrix}
+  H \sqrt{2} \\
+  D \frac{1}{\sqrt{2}} \\
+  H
+\end{bmatrix}
+\end{align}
+
+<p>
+Finally, the circle can contains the intersection point has a radius \(r\):
+</p>
+\begin{align}
+  r &= \sqrt{P_x^2 + P_y^2} \\
+    &= \sqrt{2 H^2 + \frac{1}{2}D^2}
+\end{align}
+
+<p>
+By symmetry, we can show that all the other intersection points will also be on the circle with a radius \(r\).
+</p>
+
+<p>
+For a small cube:
+\[ r \approx \sqrt{2} H \]
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9477b7a" class="outline-3">
+<h3 id="org9477b7a"><span class="section-number-3">2.3</span> Conclusion</h3>
+<div class="outline-text-3" id="text-2-3">
 <div class="important">
 <p>
 We found that we can have a diagonal stiffness matrix using the cubic architecture when \(\{A\}\) and \(\{B\}\) are located above the top platform.
@@ -1283,8 +1375,8 @@ We also find that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) are varyi
 </div>
 </div>
 
-<div id="outline-container-orgc5a2e1f" class="outline-3">
-<h3 id="orgc5a2e1f"><span class="section-number-3">3.2</span> Conclusion</h3>
+<div id="outline-container-org46632b3" class="outline-3">
+<h3 id="org46632b3"><span class="section-number-3">3.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We observe that \(k_{\theta_x} = k_{\theta_y}\) and \(k_{\theta_z}\) increase linearly with the cube size.
@@ -1653,8 +1745,8 @@ This was expected as the mass matrix is not diagonal (the Center of Mass of the 
 </div>
 </div>
 
-<div id="outline-container-org24cd25e" class="outline-3">
-<h3 id="org24cd25e"><span class="section-number-3">4.3</span> Conclusion</h3>
+<div id="outline-container-orgc1b6a36" class="outline-3">
+<h3 id="orgc1b6a36"><span class="section-number-3">4.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="important">
 <p>
@@ -1740,6 +1832,12 @@ No flexibility below the Stewart platform and no payload.
 <pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
 controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+references = initializeReferences(stewart);
 </pre>
 </div>
 
@@ -1838,8 +1936,8 @@ And we identify the dynamics from the actuator forces \(\tau_{i}\) to the relati
 </div>
 </div>
 
-<div id="outline-container-org3356db5" class="outline-3">
-<h3 id="org3356db5"><span class="section-number-3">5.3</span> Conclusion</h3>
+<div id="outline-container-org87716af" class="outline-3">
+<h3 id="org87716af"><span class="section-number-3">5.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="important">
 <p>
@@ -1942,8 +2040,7 @@ H = stewart.geometry.H;
 <div class="outline-text-4" id="text-org771c630">
 <p>
 We define the useful points of the cube with respect to the Cube&rsquo;s center.
-\({}^{C}C\) are the 6 vertices of the cubes expressed in a frame {C} which is
-located at the center of the cube and aligned with {F} and {M}.
+\({}^{C}C\) are the 6 vertices of the cubes expressed in a frame {C} which is located at the center of the cube and aligned with {F} and {M}.
 </p>
 
 <div class="org-src-container">
@@ -2019,7 +2116,7 @@ stewart.platform_M.Mb = Mb;
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-03 mar. 15:51</p>
+<p class="date">Created: 2020-03-12 jeu. 18:06</p>
 </div>
 </body>
 </html>

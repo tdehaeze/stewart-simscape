@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-11 mer. 19:01 -->
+<!-- 2020-03-12 jeu. 18:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Tracking Control</title>
@@ -248,42 +248,42 @@
 <ul>
 <li><a href="#orgd7b25e5">1. Decentralized Control Architecture using Strut Length</a>
 <ul>
-<li><a href="#orgf22ae1f">1.1. Control Schematic</a></li>
-<li><a href="#orgfbc962f">1.2. Initialize the Stewart platform</a></li>
-<li><a href="#org5b50e6c">1.3. Identification of the plant</a></li>
-<li><a href="#org127af6e">1.4. Plant Analysis</a></li>
-<li><a href="#org64fe247">1.5. Controller Design</a></li>
-<li><a href="#org30afd72">1.6. Simulation</a></li>
+<li><a href="#org2183826">1.1. Control Schematic</a></li>
+<li><a href="#orga001fab">1.2. Initialize the Stewart platform</a></li>
+<li><a href="#orgdff5afa">1.3. Identification of the plant</a></li>
+<li><a href="#org0328e3c">1.4. Plant Analysis</a></li>
+<li><a href="#orge8a14d5">1.5. Controller Design</a></li>
+<li><a href="#org42d3b74">1.6. Simulation</a></li>
 <li><a href="#org974b430">1.7. Results</a></li>
-<li><a href="#orge3e2e02">1.8. Conclusion</a></li>
+<li><a href="#org94c3e48">1.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orga519721">2. Centralized Control Architecture using Pose Measurement</a>
 <ul>
-<li><a href="#org3846e3e">2.1. Control Schematic</a></li>
-<li><a href="#orga001fab">2.2. Initialize the Stewart platform</a></li>
-<li><a href="#orgdff5afa">2.3. Identification of the plant</a></li>
+<li><a href="#org1cb5954">2.1. Control Schematic</a></li>
+<li><a href="#orgb748d0f">2.2. Initialize the Stewart platform</a></li>
+<li><a href="#org131ba62">2.3. Identification of the plant</a></li>
 <li><a href="#org2223469">2.4. Diagonal Control - Leg&rsquo;s Frame</a>
 <ul>
-<li><a href="#org224a0bb">2.4.1. Control Architecture</a></li>
-<li><a href="#org7cd17a1">2.4.2. Plant Analysis</a></li>
-<li><a href="#orgfe68d27">2.4.3. Controller Design</a></li>
-<li><a href="#org2481134">2.4.4. Simulation</a></li>
+<li><a href="#org51231d3">2.4.1. Control Architecture</a></li>
+<li><a href="#org474cd8b">2.4.2. Plant Analysis</a></li>
+<li><a href="#org98d44a8">2.4.3. Controller Design</a></li>
+<li><a href="#orgb2c0d3f">2.4.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#org26a8857">2.5. Diagonal Control - Cartesian Frame</a>
 <ul>
-<li><a href="#org0831ba6">2.5.1. Control Architecture</a></li>
-<li><a href="#orga750816">2.5.2. Plant Analysis</a></li>
-<li><a href="#org925664d">2.5.3. Controller Design</a></li>
-<li><a href="#org42d3b74">2.5.4. Simulation</a></li>
+<li><a href="#org8ab259f">2.5.1. Control Architecture</a></li>
+<li><a href="#org59acfd9">2.5.2. Plant Analysis</a></li>
+<li><a href="#orgebfcbb3">2.5.3. Controller Design</a></li>
+<li><a href="#org48cd0ec">2.5.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#orgad7bc54">2.6. Diagonal Control - Steady State Decoupling</a>
 <ul>
-<li><a href="#org51231d3">2.6.1. Control Architecture</a></li>
-<li><a href="#org0328e3c">2.6.2. Plant Analysis</a></li>
-<li><a href="#orge8a14d5">2.6.3. Controller Design</a></li>
+<li><a href="#org19de50e">2.6.1. Control Architecture</a></li>
+<li><a href="#org7eca1bc">2.6.2. Plant Analysis</a></li>
+<li><a href="#org177398f">2.6.3. Controller Design</a></li>
 </ul>
 </li>
 <li><a href="#orga2eadeb">2.7. Comparison</a>
@@ -292,12 +292,29 @@
 <li><a href="#org23ae479">2.7.2. Simulation Results</a></li>
 </ul>
 </li>
-<li><a href="#org94c3e48">2.8. Conclusion</a></li>
+<li><a href="#orgb643774">2.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org4b8c360">3. Hybrid Control Architecture - HAC-LAC with relative DVF</a>
 <ul>
-<li><a href="#org2183826">3.1. Control Schematic</a></li>
+<li><a href="#org0e138be">3.1. Control Schematic</a></li>
+<li><a href="#org627b63c">3.2. Initialize the Stewart platform</a></li>
+<li><a href="#org3274a98">3.3. First Control Loop - \(\bm{K}_\mathcal{L}\)</a>
+<ul>
+<li><a href="#org4d65047">3.3.1. Identification</a></li>
+<li><a href="#org0f5d7cd">3.3.2. Obtained Plant</a></li>
+<li><a href="#org4e073ac">3.3.3. Controller Design</a></li>
+</ul>
+</li>
+<li><a href="#org8440c0b">3.4. Second Control Loop - \(\bm{K}_\mathcal{X}\)</a>
+<ul>
+<li><a href="#orge29b065">3.4.1. Identification</a></li>
+<li><a href="#org78e6e29">3.4.2. Obtained Plant</a></li>
+<li><a href="#org3a9b8c2">3.4.3. Controller Design</a></li>
+</ul>
+</li>
+<li><a href="#org74d3dcd">3.5. Simulations</a></li>
+<li><a href="#org35a41e9">3.6. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org445f7a9">4. Position Error computation</a></li>
@@ -325,8 +342,8 @@ Depending of the measured quantity, different control architectures can be used:
 <a id="orgea7df6c"></a>
 </p>
 </div>
-<div id="outline-container-orgf22ae1f" class="outline-3">
-<h3 id="orgf22ae1f"><span class="section-number-3">1.1</span> Control Schematic</h3>
+<div id="outline-container-org2183826" class="outline-3">
+<h3 id="org2183826"><span class="section-number-3">1.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The control architecture is shown in Figure <a href="#org4f704a1">1</a>.
@@ -349,8 +366,8 @@ Then, a diagonal (decentralized) controller \(\bm{K}_\mathcal{L}\) is used such 
 </div>
 </div>
 
-<div id="outline-container-orgfbc962f" class="outline-3">
-<h3 id="orgfbc962f"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orga001fab" class="outline-3">
+<h3 id="orga001fab"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -382,11 +399,11 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-org5b50e6c" class="outline-3">
-<h3 id="org5b50e6c"><span class="section-number-3">1.3</span> Identification of the plant</h3>
+<div id="outline-container-orgdff5afa" class="outline-3">
+<h3 id="orgdff5afa"><span class="section-number-3">1.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
+Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{\mathcal{L}}\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
@@ -406,8 +423,8 @@ G.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'
 </div>
 </div>
 
-<div id="outline-container-org127af6e" class="outline-3">
-<h3 id="org127af6e"><span class="section-number-3">1.4</span> Plant Analysis</h3>
+<div id="outline-container-org0328e3c" class="outline-3">
+<h3 id="org0328e3c"><span class="section-number-3">1.4</span> Plant Analysis</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The diagonal terms of the plant is shown in Figure <a href="#org8c82316">2</a>.
@@ -441,15 +458,14 @@ We see that the plant is decoupled at low frequency which indicate that decentra
 </div>
 </div>
 
-<div id="outline-container-org64fe247" class="outline-3">
-<h3 id="org64fe247"><span class="section-number-3">1.5</span> Controller Design</h3>
+<div id="outline-container-orge8a14d5" class="outline-3">
+<h3 id="orge8a14d5"><span class="section-number-3">1.5</span> Controller Design</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 The controller consists of:
 </p>
 <ul class="org-ul">
 <li>A pure integrator</li>
-<li>A lead around the crossover frequency to increase the phase margin</li>
 <li>A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin</li>
 </ul>
 
@@ -472,8 +488,8 @@ Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(G, wc)))) <span cla
 </div>
 </div>
 
-<div id="outline-container-org30afd72" class="outline-3">
-<h3 id="org30afd72"><span class="section-number-3">1.6</span> Simulation</h3>
+<div id="outline-container-org42d3b74" class="outline-3">
+<h3 id="org42d3b74"><span class="section-number-3">1.6</span> Simulation</h3>
 <div class="outline-text-3" id="text-1-6">
 <div class="org-src-container">
 <pre class="src src-matlab">t = linspace(0, 10, 1000);
@@ -518,8 +534,8 @@ simout_D = simout;
 </div>
 </div>
 
-<div id="outline-container-orge3e2e02" class="outline-3">
-<h3 id="orge3e2e02"><span class="section-number-3">1.8</span> Conclusion</h3>
+<div id="outline-container-org94c3e48" class="outline-3">
+<h3 id="org94c3e48"><span class="section-number-3">1.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 Such control architecture is easy to implement and give good results.
@@ -540,8 +556,8 @@ However, as \(\mathcal{X}\) is not directly measured, it is possible that import
 <a id="org48604d1"></a>
 </p>
 </div>
-<div id="outline-container-org3846e3e" class="outline-3">
-<h3 id="org3846e3e"><span class="section-number-3">2.1</span> Control Schematic</h3>
+<div id="outline-container-org1cb5954" class="outline-3">
+<h3 id="org1cb5954"><span class="section-number-3">2.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 The centralized controller takes the position error \(\bm{\epsilon}_\mathcal{X}\) as an inputs and generate actuator forces \(\bm{\tau}\) (see Figure <a href="#org97ec686">7</a>).
@@ -579,8 +595,8 @@ It is indeed a more complex computation explained in section <a href="#org5f6154
 </div>
 </div>
 
-<div id="outline-container-orga001fab" class="outline-3">
-<h3 id="orga001fab"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orgb748d0f" class="outline-3">
+<h3 id="orgb748d0f"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
@@ -612,11 +628,11 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-orgdff5afa" class="outline-3">
-<h3 id="orgdff5afa"><span class="section-number-3">2.3</span> Identification of the plant</h3>
+<div id="outline-container-org131ba62" class="outline-3">
+<h3 id="org131ba62"><span class="section-number-3">2.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
+Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{\mathcal{X}}\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
@@ -643,8 +659,8 @@ G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'
 <a id="org31fd942"></a>
 </p>
 </div>
-<div id="outline-container-org224a0bb" class="outline-4">
-<h4 id="org224a0bb"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
+<div id="outline-container-org51231d3" class="outline-4">
+<h4 id="org51231d3"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 The pose error \(\bm{\epsilon}_\mathcal{X}\) is first converted in the frame of the leg by using the Jacobian matrix.
@@ -665,8 +681,8 @@ Note here that the transformation from the pose error \(\bm{\epsilon}_\mathcal{X
 </div>
 </div>
 
-<div id="outline-container-org7cd17a1" class="outline-4">
-<h4 id="org7cd17a1"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
+<div id="outline-container-org474cd8b" class="outline-4">
+<h4 id="org474cd8b"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#orgb1f5ad2">8</a> to obtain a more diagonal plant.
@@ -716,15 +732,14 @@ Thus \(J \cdot G(\omega = 0) = J \cdot \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\
 </div>
 </div>
 
-<div id="outline-container-orgfe68d27" class="outline-4">
-<h4 id="orgfe68d27"><span class="section-number-4">2.4.3</span> Controller Design</h4>
+<div id="outline-container-org98d44a8" class="outline-4">
+<h4 id="org98d44a8"><span class="section-number-4">2.4.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 The controller consists of:
 </p>
 <ul class="org-ul">
 <li>A pure integrator</li>
-<li>A lead around the crossover frequency to increase the phase margin</li>
 <li>A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin</li>
 </ul>
 
@@ -755,8 +770,8 @@ The controller \(\bm{K} = \bm{K}_\mathcal{L} \bm{J}\) is computed.
 </div>
 </div>
 
-<div id="outline-container-org2481134" class="outline-4">
-<h4 id="org2481134"><span class="section-number-4">2.4.4</span> Simulation</h4>
+<div id="outline-container-orgb2c0d3f" class="outline-4">
+<h4 id="orgb2c0d3f"><span class="section-number-4">2.4.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 We specify the reference path to follow.
@@ -796,8 +811,8 @@ simout_L = simout;
 <a id="orgfd201c3"></a>
 </p>
 </div>
-<div id="outline-container-org0831ba6" class="outline-4">
-<h4 id="org0831ba6"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
+<div id="outline-container-org8ab259f" class="outline-4">
+<h4 id="org8ab259f"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 A diagonal controller \(\bm{K}_\mathcal{X}\) take the pose error \(\bm{\epsilon}_\mathcal{X}\) and generate cartesian forces \(\bm{\mathcal{F}}\) that are then converted to actuators forces using the Jacobian as shown in Figure e <a href="#org6b158db">12</a>.
@@ -816,8 +831,8 @@ The final implemented controller is \(\bm{K} = \bm{J}^{-T} \cdot \bm{K}_\mathcal
 </div>
 </div>
 
-<div id="outline-container-orga750816" class="outline-4">
-<h4 id="orga750816"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
+<div id="outline-container-org59acfd9" class="outline-4">
+<h4 id="org59acfd9"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#org6b158db">12</a> to obtain a more diagonal plant.
@@ -939,15 +954,14 @@ This control architecture can also give a dynamically decoupled plant if the Cen
 </div>
 </div>
 
-<div id="outline-container-org925664d" class="outline-4">
-<h4 id="org925664d"><span class="section-number-4">2.5.3</span> Controller Design</h4>
+<div id="outline-container-orgebfcbb3" class="outline-4">
+<h4 id="orgebfcbb3"><span class="section-number-4">2.5.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-5-3">
 <p>
 The controller consists of:
 </p>
 <ul class="org-ul">
 <li>A pure integrator</li>
-<li>A lead around the crossover frequency to increase the phase margin</li>
 <li>A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin</li>
 </ul>
 
@@ -978,8 +992,8 @@ The controller \(\bm{K} = \bm{J}^{-T} \bm{K}_\mathcal{X}\) is computed.
 </div>
 </div>
 
-<div id="outline-container-org42d3b74" class="outline-4">
-<h4 id="org42d3b74"><span class="section-number-4">2.5.4</span> Simulation</h4>
+<div id="outline-container-org48cd0ec" class="outline-4">
+<h4 id="org48cd0ec"><span class="section-number-4">2.5.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-5-4">
 <p>
 We specify the reference path to follow.
@@ -1019,8 +1033,8 @@ simout_X = simout;
 <a id="org789ba4a"></a>
 </p>
 </div>
-<div id="outline-container-org51231d3" class="outline-4">
-<h4 id="org51231d3"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
+<div id="outline-container-org19de50e" class="outline-4">
+<h4 id="org19de50e"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 The plant \(\bm{G}\) is pre-multiply by \(\bm{G}^{-1}(\omega = 0)\) such that the &ldquo;shaped plant&rdquo; \(\bm{G}_0 = \bm{G} \bm{G}^{-1}(\omega = 0)\) is diagonal at low frequency.
@@ -1043,8 +1057,8 @@ The control architecture is shown in Figure <a href="#orgb226e44">16</a>.
 </div>
 </div>
 
-<div id="outline-container-org0328e3c" class="outline-4">
-<h4 id="org0328e3c"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
+<div id="outline-container-org7eca1bc" class="outline-4">
+<h4 id="org7eca1bc"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 The plant is pre-multiplied by \(\bm{G}^{-1}(\omega = 0)\).
@@ -1072,8 +1086,8 @@ The diagonal elements of the shaped plant are shown in Figure <a href="#orgc15aa
 </div>
 </div>
 
-<div id="outline-container-orge8a14d5" class="outline-4">
-<h4 id="orge8a14d5"><span class="section-number-4">2.6.3</span> Controller Design</h4>
+<div id="outline-container-org177398f" class="outline-4">
+<h4 id="org177398f"><span class="section-number-4">2.6.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-6-3">
 <p>
 We have that:
@@ -1147,8 +1161,8 @@ This error is much lower when using the diagonal control in the frame of the leg
 </div>
 </div>
 
-<div id="outline-container-org94c3e48" class="outline-3">
-<h3 id="org94c3e48"><span class="section-number-3">2.8</span> Conclusion</h3>
+<div id="outline-container-orgb643774" class="outline-3">
+<h3 id="orgb643774"><span class="section-number-3">2.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Both control architecture gives similar results even tough the control in the Leg&rsquo;s frame gives slightly better results.
@@ -1231,68 +1245,332 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
 <a id="org14e3e5f"></a>
 </p>
 </div>
-<div id="outline-container-org2183826" class="outline-3">
-<h3 id="org2183826"><span class="section-number-3">3.1</span> Control Schematic</h3>
+<div id="outline-container-org0e138be" class="outline-3">
+<h3 id="org0e138be"><span class="section-number-3">3.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-3-1">
+<p>
+Let&rsquo;s consider the control schematic shown in Figure <a href="#org3a1b1db">22</a>.
+</p>
+
+<p>
+The first loop containing \(\bm{K}_\mathcal{L}\) is a Decentralized Direct (Relative) Velocity Feedback.
+</p>
+
+<p>
+A reference \(\bm{r}_\mathcal{L}\) is computed using the inverse kinematics and corresponds to the wanted motion of each leg.
+The actual length of each leg \(\bm{\mathcal{L}}\) is subtracted and then passed trough the controller \(\bm{K}_\mathcal{L}\).
+</p>
+
+<p>
+The controller is a diagonal controller with pure derivative action on the diagonal.
+</p>
+
+<p>
+The effect of this loop is:
+</p>
+<ul class="org-ul">
+<li>it adds damping to the system (the force applied in each actuator is proportional to the relative velocity of the strut)</li>
+<li>it however does not go &ldquo;against&rdquo; the reference path \(\bm{r}_\mathcal{X}\) thanks to the use of the inverse kinematics</li>
+</ul>
+
+<p>
+Then, the second loop containing \(\bm{K}_\mathcal{X}\) is designed based on the already damped plant (represented by the gray area).
+This second loop is responsible for the reference tracking.
+</p>
+
 
 <div id="org3a1b1db" class="figure">
 <p><img src="figs/hybrid_reference_tracking.png" alt="hybrid_reference_tracking.png" />
 </p>
-<p><span class="figure-number">Figure 22: </span>Centralized Controller</p>
+<p><span class="figure-number">Figure 22: </span>Hybrid Control Architecture</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org627b63c" class="outline-3">
+<h3 id="org627b63c"><span class="section-number-3">3.2</span> Initialize the Stewart platform</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
+payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+references = initializeReferences(stewart);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3274a98" class="outline-3">
+<h3 id="org3274a98"><span class="section-number-3">3.3</span> First Control Loop - \(\bm{K}_\mathcal{L}\)</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-org4d65047" class="outline-4">
+<h4 id="org4d65047"><span class="section-number-4">3.3.1</span> Identification</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+Gl = linearize(mdl, io);
+Gl.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+Gl.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'L2'</span>, <span class="org-string">'L3'</span>, <span class="org-string">'L4'</span>, <span class="org-string">'L5'</span>, <span class="org-string">'L6'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0f5d7cd" class="outline-4">
+<h4 id="org0f5d7cd"><span class="section-number-4">3.3.2</span> Obtained Plant</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+The diagonal elements of the plant are shown in Figure <a href="#org687a922">23</a> while the off diagonal terms are shown in Figure <a href="#orge568b8a">24</a>.
+</p>
+
+
+<div id="org687a922" class="figure">
+<p><img src="figs/hybrid_control_Kl_plant_diagonal.png" alt="hybrid_control_Kl_plant_diagonal.png" />
+</p>
+<p><span class="figure-number">Figure 23: </span>Diagonal elements of the plant for the design of \(\bm{K}_\mathcal{L}\) (<a href="./figs/hybrid_control_Kl_plant_diagonal.png">png</a>, <a href="./figs/hybrid_control_Kl_plant_diagonal.pdf">pdf</a>)</p>
+</div>
+
+
+<div id="orge568b8a" class="figure">
+<p><img src="figs/hybrid_control_Kl_plant_off_diagonal.png" alt="hybrid_control_Kl_plant_off_diagonal.png" />
+</p>
+<p><span class="figure-number">Figure 24: </span>Off-diagonal elements of the plant for the design of \(\bm{K}_\mathcal{L}\) (<a href="./figs/hybrid_control_Kl_plant_off_diagonal.png">png</a>, <a href="./figs/hybrid_control_Kl_plant_off_diagonal.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4e073ac" class="outline-4">
+<h4 id="org4e073ac"><span class="section-number-4">3.3.3</span> Controller Design</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+We apply a decentralized (diagonal) direct velocity feedback.
+Thus, we apply a pure derivative action.
+In order to make the controller realizable, we add a low pass filter at high frequency.
+The gain of the controller is chosen such that the resonances are critically damped.
+</p>
+
+<p>
+The obtain loop gain is shown in Figure <a href="#orgb74befe">25</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kl = 1e4 <span class="org-type">*</span> s <span class="org-type">/</span> (1 <span class="org-type">+</span> s<span class="org-type">/</span>2<span class="org-type">/</span><span class="org-constant">pi</span><span class="org-type">/</span>1e4) <span class="org-type">*</span> eye(6);
+</pre>
+</div>
+
+
+<div id="orgb74befe" class="figure">
+<p><img src="figs/hybrid_control_Kl_loop_gain.png" alt="hybrid_control_Kl_loop_gain.png" />
+</p>
+<p><span class="figure-number">Figure 25: </span>Obtain Loop Gain for the DVF control loop (<a href="./figs/hybrid_control_Kl_loop_gain.png">png</a>, <a href="./figs/hybrid_control_Kl_loop_gain.pdf">pdf</a>)</p>
 </div>
 </div>
 </div>
 </div>
 
+<div id="outline-container-org8440c0b" class="outline-3">
+<h3 id="org8440c0b"><span class="section-number-3">3.4</span> Second Control Loop - \(\bm{K}_\mathcal{X}\)</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<div id="outline-container-orge29b065" class="outline-4">
+<h4 id="orge29b065"><span class="section-number-4">3.4.1</span> Identification</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<div class="org-src-container">
+<pre class="src src-matlab">Kx = tf(zeros(6));
 
+controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'ref-track-hac-dvf'</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+mdl = <span class="org-string">'stewart_platform_model'</span>;
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+clear io; io_i = 1;
+io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
+io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+
+<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+G = linearize(mdl, io);
+G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
+G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org78e6e29" class="outline-4">
+<h4 id="org78e6e29"><span class="section-number-4">3.4.2</span> Obtained Plant</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<p>
+We use the Jacobian matrix to apply forces in the cartesian frame.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Gx = G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>);
+Gx.InputName  = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+</pre>
+</div>
+
+<p>
+The obtained plant is shown in Figure <a href="#org2517e3d">26</a>.
+</p>
+
+<div id="org2517e3d" class="figure">
+<p><img src="figs/hybrid_control_Kx_plant.png" alt="hybrid_control_Kx_plant.png" />
+</p>
+<p><span class="figure-number">Figure 26: </span>Diagonal and Off-diagonal elements of the plant for the design of \(\bm{K}_\mathcal{L}\) (<a href="./figs/hybrid_control_Kx_plant.png">png</a>, <a href="./figs/hybrid_control_Kx_plant.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3a9b8c2" class="outline-4">
+<h4 id="org3a9b8c2"><span class="section-number-4">3.4.3</span> Controller Design</h4>
+<div class="outline-text-4" id="text-3-4-3">
+<p>
+The controller consists of:
+</p>
+<ul class="org-ul">
+<li>A pure integrator</li>
+<li>A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>200; <span class="org-comment">% Bandwidth Bandwidth [rad/s]</span>
+
+h = 3; <span class="org-comment">% Lead parameter</span>
+
+Kx = (1<span class="org-type">/</span>h) <span class="org-type">*</span> (1 <span class="org-type">+</span> s<span class="org-type">/</span>wc<span class="org-type">*</span>h)<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>wc<span class="org-type">/</span>h) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> ((s<span class="org-type">/</span>wc<span class="org-type">/</span>2 <span class="org-type">+</span> 1)<span class="org-type">/</span>(s<span class="org-type">/</span>wc<span class="org-type">/</span>2));
+
+<span class="org-comment">% Normalization of the gain of have a loop gain of 1 at frequency wc</span>
+Kx = Kx<span class="org-type">.*</span>diag(1<span class="org-type">./</span>diag(abs(freqresp(Gx<span class="org-type">*</span>Kx, wc))));
+</pre>
+</div>
+
+
+<div id="org30ad867" class="figure">
+<p><img src="figs/hybrid_control_Kx_loop_gain.png" alt="hybrid_control_Kx_loop_gain.png" />
+</p>
+<p><span class="figure-number">Figure 27: </span>Obtained Loop Gain for the controller \(\bm{K}_\mathcal{X}\) (<a href="./figs/hybrid_control_Kx_loop_gain.png">png</a>, <a href="./figs/hybrid_control_Kx_loop_gain.pdf">pdf</a>)</p>
+</div>
+
+<p>
+Then we include the Jacobian in the controller matrix.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Kx = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class="org-type">*</span>Kx;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org74d3dcd" class="outline-3">
+<h3 id="org74d3dcd"><span class="section-number-3">3.5</span> Simulations</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+We specify the reference path to follow.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">t = linspace(0, 10, 10000);
+
+r = zeros(6, length(t));
+
+r(1, <span class="org-type">:</span>) = 5e<span class="org-type">-</span>3<span class="org-type">*</span>sin(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
+
+references = initializeReferences(stewart, <span class="org-string">'t'</span>, t, <span class="org-string">'r'</span>, r);
+</pre>
+</div>
+
+<p>
+We run the simulation and we save the results.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">sim</span>(<span class="org-string">'stewart_platform_model'</span>)
+simout_H = simout;
+</pre>
+</div>
+
+<p>
+The obtained position error is shown in Figure <a href="#org19456cf">28</a>.
+</p>
+
+
+<div id="org19456cf" class="figure">
+<p><img src="figs/hybrid_control_Ex.png" alt="hybrid_control_Ex.png" />
+</p>
+<p><span class="figure-number">Figure 28: </span>Obtained position error \(\bm{\epsilon}_\mathcal{X}\) (<a href="./figs/hybrid_control_Ex.png">png</a>, <a href="./figs/hybrid_control_Ex.pdf">pdf</a>)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org35a41e9" class="outline-3">
+<h3 id="org35a41e9"><span class="section-number-3">3.6</span> Conclusion</h3>
+</div>
+</div>
 
 <div id="outline-container-org445f7a9" class="outline-2">
 <h2 id="org445f7a9"><span class="section-number-2">4</span> Position Error computation</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 <a id="org5f61540"></a>
-Let&rsquo;s denote:
 </p>
-<ul class="org-ul">
-<li>\(\{W\}\) the initial fixed frame (base in which the measurement is done)</li>
-<li>\(\{R\}\) the reference frame corresponding to the wanted pose of the sample</li>
-<li>\(\{M\}\) the frame corresponding to the measured pose of the sample</li>
-</ul>
 
 <p>
-We have then computed:
+Let&rsquo;s note:
 </p>
 <ul class="org-ul">
-<li>\({}^W\bm{T}_R\) which corresponds to the wanted pose of the sample with respect to the granite</li>
-<li>\({}^W\bm{T}_M\) which corresponds to the measured pose of the sample with respect to the granite</li>
+<li>\(\{W\}\) the fixed measurement frame (corresponding to the metrology frame / the frame where the wanted displacement are expressed).
+The center of the frame if \(O_W\)</li>
+<li>\(\{M\}\) is the frame fixed to the measured elements.
+\(O_M\) is the point where the pose of the element is measured</li>
+<li>\(\{R\}\) is a virtual frame corresponding to the wanted pose of the element.
+\(O_R\) is the origin of this frame where the we want to position the point \(O_M\) of the element.</li>
+<li>\(\{V\}\) is a frame which its axes are aligned with \(\{W\}\) and its origin \(O_V\) is coincident with the \(O_M\)</li>
 </ul>
 
 <p>
 Reference Position with respect to fixed frame {W}: \({}^WT_R\)
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Dx = 0;
-Dy = 0;
-Dz = 0.1;
-Rx = <span class="org-constant">pi</span>;
-Ry = 0;
-Rz = 0;
-
-WTr = zeros(4,4);
-
-R = [cos(Rz) <span class="org-type">-</span>sin(Rz) 0;
-     sin(Rz)  cos(Rz) 0;
-     0        0         1] <span class="org-type">*</span> ...
-    [cos(Ry)  0        sin(Ry);
-     0        1        0;
-     <span class="org-type">-</span>sin(Ry)  0        cos(Ry)] <span class="org-type">*</span> ...
-    [1        0        0;
-     0        cos(Rx) <span class="org-type">-</span>sin(Rx);
-     0        sin(Rx)  cos(Rx)];
-
-
-WTr(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = R;
-WTr(1<span class="org-type">:</span>4, 4) = [Dx ; Dy ; Dz; 1];
+<pre class="src src-matlab">Dxr = 0;
+Dyr = 0;
+Dzr = 0.1;
+Rxr = <span class="org-constant">pi</span>;
+Ryr = 0;
+Rzr = 0;
 </pre>
 </div>
 
@@ -1300,47 +1578,89 @@ WTr(1<span class="org-type">:</span>4, 4) = [Dx ; Dy ; Dz; 1];
 Measured Position with respect to fixed frame {W}: \({}^WT_M\)
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Dx = 0;
-Dy = 0;
-Dz = 0;
-Rx = <span class="org-constant">pi</span>;
-Ry = 0;
-Rz = 0;
-
-WTm = zeros(4,4);
-
-R = [cos(Rz) <span class="org-type">-</span>sin(Rz) 0;
-     sin(Rz)  cos(Rz) 0;
-     0        0         1] <span class="org-type">*</span> ...
-    [cos(Ry)  0        sin(Ry);
-     0        1        0;
-     <span class="org-type">-</span>sin(Ry)  0        cos(Ry)] <span class="org-type">*</span> ...
-    [1        0        0;
-     0        cos(Rx) <span class="org-type">-</span>sin(Rx);
-     0        sin(Rx)  cos(Rx)];
-
-
-WTm(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = R;
-WTm(1<span class="org-type">:</span>4, 4) = [Dx ; Dy ; Dz; 1];
+<pre class="src src-matlab">Dxm = 0;
+Dym = 0;
+Dzm = 0;
+Rxm = <span class="org-constant">pi</span>;
+Rym = 0;
+Rzm = 0;
 </pre>
 </div>
 
 <p>
-We would like to compute \({}^M\bm{T}_R\) which corresponds to the wanted pose of the sample expressed in a frame attached to the top platform of the nano-hexapod (frame \(\{M\}\)).
+We measure the position and orientation (pose) of the element represented by the frame \(\{M\}\) with respect to frame \(\{W\}\).
+Thus we can compute the Homogeneous transformation matrix \({}^WT_M\).
 </p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Measured Pose</span></span>
+WTm = zeros(4,4);
+
+WTm(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = [cos(Rzm) <span class="org-type">-</span>sin(Rzm) 0;
+     sin(Rzm)  cos(Rzm) 0;
+     0        0         1] <span class="org-type">*</span> ...
+    [cos(Rym)  0        sin(Rym);
+     0        1        0;
+     <span class="org-type">-</span>sin(Rym)  0        cos(Rym)] <span class="org-type">*</span> ...
+    [1        0        0;
+     0        cos(Rxm) <span class="org-type">-</span>sin(Rxm);
+     0        sin(Rxm)  cos(Rxm)];
+WTm(1<span class="org-type">:</span>4, 4) = [Dxm ; Dym ; Dzm; 1];
+</pre>
+</div>
 
 <p>
-We have:
+We can also compute the Homogeneous transformation matrix \({}^WT_R\) corresponding to the transformation required to go from fixed frame \(\{W\}\) to the wanted frame \(\{R\}\).
 </p>
-\begin{align}
-  {}^M\bm{T}_R &= {}^M\bm{T}_W \cdot {}^W\bm{T}_R \\
-          &= {}^W{\bm{T}_M}^{-1} \cdot {}^W\bm{T}_R
-\end{align}
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Reference Pose</span></span>
+WTr = zeros(4,4);
+
+WTr(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = [cos(Rzr) <span class="org-type">-</span>sin(Rzr) 0;
+     sin(Rzr)  cos(Rzr) 0;
+     0        0         1] <span class="org-type">*</span> ...
+    [cos(Ryr)  0        sin(Ryr);
+     0        1        0;
+     <span class="org-type">-</span>sin(Ryr)  0        cos(Ryr)] <span class="org-type">*</span> ...
+    [1        0        0;
+     0        cos(Rxr) <span class="org-type">-</span>sin(Rxr);
+     0        sin(Rxr)  cos(Rxr)];
+WTr(1<span class="org-type">:</span>4, 4) = [Dxr ; Dyr ; Dzr; 1];
+</pre>
+</div>
+
+<p>
+We can also compute \({}^WT_V\).
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">WTv = eye(4);
+WTv(1<span class="org-type">:</span>3, 4) = WTm(1<span class="org-type">:</span>3, 4);
+</pre>
+</div>
+
+<p>
+Now we want to express \({}^MT_R\) which corresponds to the transformation required to go to wanted position expressed in the frame of the measured element.
+This homogeneous transformation can be computed from the previously computed matrices:
+\[ {}^MT_R = ({{}^WT_M}^{-1}) {}^WT_R \]
+</p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-comment">% Error with respect to the top platform</span>
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Wanted pose expressed in a frame corresponding to the actual measured pose</span></span>
 MTr = [WTm(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'</span>, <span class="org-type">-</span>WTm(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'*</span>WTm(1<span class="org-type">:</span>3,4) ; 0 0 0 1]<span class="org-type">*</span>WTr;
+</pre>
+</div>
 
+<p>
+Now we want to express \({}^VT_R\):
+\[ {}^VT_R = ({{}^WT_V}^{-1}) {}^WT_R \]
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Wanted pose expressed in a frame coincident with the actual position but with no rotation</span></span>
+VTr = [WTv(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'</span>, <span class="org-type">-</span>WTv(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'*</span>WTv(1<span class="org-type">:</span>3,4) ; 0 0 0 1] <span class="org-type">*</span> WTr;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Extract Translations and Rotations from the Homogeneous Matrix</span></span>
 T = MTr;
 Edx = T(1, 4);
 Edy = T(2, 4);
@@ -1350,8 +1670,6 @@ Edz = T(3, 4);
 Ery = atan2( T(1, 3),          sqrt(T(1, 1)<span class="org-type">^</span>2 <span class="org-type">+</span> T(1, 2)<span class="org-type">^</span>2));
 Erx = atan2(<span class="org-type">-</span>T(2, 3)<span class="org-type">/</span>cos(Ery), T(3, 3)<span class="org-type">/</span>cos(Ery));
 Erz = atan2(<span class="org-type">-</span>T(1, 2)<span class="org-type">/</span>cos(Ery), T(1, 1)<span class="org-type">/</span>cos(Ery));
-
-[Edx, Edy, Edz, Erx, Ery, Erz]
 </pre>
 </div>
 </div>
@@ -1359,7 +1677,7 @@ Erz = atan2(<span class="org-type">-</span>T(1, 2)<span class="org-type">/</span
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-11 mer. 19:01</p>
+<p class="date">Created: 2020-03-12 jeu. 18:06</p>
 </div>
 </body>
 </html>
