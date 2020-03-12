@@ -772,6 +772,7 @@ The root locus is shown in figure [[fig:root_locus_dvf_rot_stiffness]].
 #+begin_important
   Joint stiffness does increase the resonance frequencies of the system but does not change the attainable damping when using relative motion sensors.
 #+end_important
+
 * Compliance and Transmissibility Comparison
 ** Introduction                                                      :ignore:
 ** Matlab Init                                             :noexport:ignore:

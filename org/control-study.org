@@ -1364,7 +1364,7 @@ The rotation point of the ground is located at the origin of frame $\{A\}$.
 :END:
 #+begin_src matlab
   arguments
-    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf', 'hac-iff', 'hac-dvf', 'ref-track-L', 'ref-track-X'})} = 'open-loop'
+    args.type   char   {mustBeMember(args.type, {'open-loop', 'iff', 'dvf', 'hac-iff', 'hac-dvf', 'ref-track-L', 'ref-track-X', 'ref-track-hac-dvf'})} = 'open-loop'
   end
 #+end_src
 
@@ -1396,5 +1396,7 @@ The rotation point of the ground is located at the origin of frame $\{A\}$.
       controller.type = 5;
     case 'ref-track-X'
       controller.type = 6;
+    case 'ref-track-hac-dvf'
+      controller.type = 7;
   end
 #+end_src

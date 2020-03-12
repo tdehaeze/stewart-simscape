@@ -121,7 +121,7 @@ Then, a diagonal (decentralized) controller $\bm{K}_\mathcal{L}$ is used such th
 #+end_src
 
 ** Identification of the plant
-Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
+Let's identify the transfer function from $\bm{\tau}$ to $\bm{\mathcal{L}}$.
 #+begin_src matlab
   %% Name of the Simulink File
   mdl = 'stewart_platform_model';
@@ -231,7 +231,6 @@ We see that the plant is decoupled at low frequency which indicate that decentra
 ** Controller Design
 The controller consists of:
 - A pure integrator
-- A lead around the crossover frequency to increase the phase margin
 - A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
 
 The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_decentralized_L]].
@@ -428,6 +427,10 @@ However, as $\mathcal{X}$ is not directly measured, it is possible that importan
   simulinkproject('../');
 #+end_src
 
+#+begin_src matlab
+  open('stewart_platform_model.slx');
+#+end_src
+
 ** Control Schematic
 The centralized controller takes the position error $\bm{\epsilon}_\mathcal{X}$ as an inputs and generate actuator forces $\bm{\tau}$ (see Figure [[fig:centralized_reference_tracking]]).
 The signals are:
@@ -492,7 +495,7 @@ We can think of two ways to make the plant more diagonal that are described in s
 #+end_src
 
 ** Identification of the plant
-Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
+Let's identify the transfer function from $\bm{\tau}$ to $\bm{\mathcal{X}}$.
 #+begin_src matlab
   %% Name of the Simulink File
   mdl = 'stewart_platform_model';
@@ -650,7 +653,6 @@ Thus $J \cdot G(\omega = 0) = J \cdot \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\t
 *** Controller Design
 The controller consists of:
 - A pure integrator
-- A lead around the crossover frequency to increase the phase margin
 - A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
 
 The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_centralized_L]].
@@ -877,7 +879,6 @@ This control architecture can also give a dynamically decoupled plant if the Cen
 *** Controller Design
 The controller consists of:
 - A pure integrator
-- A lead around the crossover frequency to increase the phase margin
 - A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
 
 The obtained loop gains corresponding to the diagonal elements are shown in Figure [[fig:loop_gain_centralized_X]].
@@ -1221,6 +1222,7 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
 
 * Hybrid Control Architecture - HAC-LAC with relative DVF
 <<sec:hybrid>>
+** Introduction                                                      :ignore:
 ** Matlab Init                                                     :noexport:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -1234,7 +1236,26 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
   simulinkproject('../');
 #+end_src
 
+#+begin_src matlab
+  open('stewart_platform_model.slx');
+#+end_src
+
 ** Control Schematic
+Let's consider the control schematic shown in Figure [[fig:hybrid_reference_tracking]].
+
+The first loop containing $\bm{K}_\mathcal{L}$ is a Decentralized Direct (Relative) Velocity Feedback.
+
+A reference $\bm{r}_\mathcal{L}$ is computed using the inverse kinematics and corresponds to the wanted motion of each leg.
+The actual length of each leg $\bm{\mathcal{L}}$ is subtracted and then passed trough the controller $\bm{K}_\mathcal{L}$.
+
+The controller is a diagonal controller with pure derivative action on the diagonal.
+
+The effect of this loop is:
+- it adds damping to the system (the force applied in each actuator is proportional to the relative velocity of the strut)
+- it however does not go "against" the reference path $\bm{r}_\mathcal{X}$ thanks to the use of the inverse kinematics
+
+Then, the second loop containing $\bm{K}_\mathcal{X}$ is designed based on the already damped plant (represented by the gray area).
+This second loop is responsible for the reference tracking.
 
 #+begin_src latex :file hybrid_reference_tracking.pdf
   \begin{tikzpicture}
@@ -1260,8 +1281,8 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
     % Connections and labels
     \draw[<-] (subx.west)node[above left]{$\bm{r}_{\mathcal{X}}$} -- ++(-1.2, 0);
     \draw[->] ($(subx.west) + (-0.8, 0)$)node[branch]{} |- (invK.west);
-    \draw[->] (invK.east) -- (subl.west) node[above left]{$\bm{\epsilon}_\mathcal{L}$};
-    \draw[->] (subl.south) -- (Kl.north);
+    \draw[->] (invK.east) -- (subl.west) node[above left]{$\bm{r}_\mathcal{L}$};
+    \draw[->] (subl.south) -- (Kl.north) node[above right]{$\bm{\epsilon}_\mathcal{L}$};
     \draw[->] (Kl.south) -- (addF.north);
 
     \draw[->] (subx.east) -- (Kx.west) node[above left]{$\bm{\epsilon}_\mathcal{X}$};
@@ -1278,11 +1299,418 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
 #+end_src
 
 #+name: fig:hybrid_reference_tracking
-#+caption: Centralized Controller
+#+caption: Hybrid Control Architecture
 #+RESULTS:
 [[file:figs/hybrid_reference_tracking.png]]
 
+** Initialize the Stewart platform
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+#+end_src
 
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid');
+  payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
+** First Control Loop - $\bm{K}_\mathcal{L}$
+*** Identification
+Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+  %% Run the linearization
+  Gl = linearize(mdl, io);
+  Gl.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gl.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+#+end_src
+
+*** Obtained Plant
+The diagonal elements of the plant are shown in Figure [[fig:hybrid_control_Kl_plant_diagonal]] while the off diagonal terms are shown in Figure [[fig:hybrid_control_Kl_plant_off_diagonal]].
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Kl_plant_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Kl_plant_diagonal
+#+caption: Diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kl_plant_diagonal.png][png]], [[./figs/hybrid_control_Kl_plant_diagonal.pdf][pdf]])
+[[file:figs/hybrid_control_Kl_plant_diagonal.png]]
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gl(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gl(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Kl_plant_off_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Kl_plant_off_diagonal
+#+caption: Off-diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kl_plant_off_diagonal.png][png]], [[./figs/hybrid_control_Kl_plant_off_diagonal.pdf][pdf]])
+[[file:figs/hybrid_control_Kl_plant_off_diagonal.png]]
+
+*** Controller Design
+We apply a decentralized (diagonal) direct velocity feedback.
+Thus, we apply a pure derivative action.
+In order to make the controller realizable, we add a low pass filter at high frequency.
+The gain of the controller is chosen such that the resonances are critically damped.
+
+The obtain loop gain is shown in Figure [[fig:hybrid_control_Kl_loop_gain]].
+
+#+begin_src matlab
+  Kl = 1e4 * s / (1 + s/2/pi/1e4) * eye(6);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Gl(1, 1)*Kl(1,1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(1, 1)*Kl(1,1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Kl_loop_gain.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Kl_loop_gain
+#+caption: Obtain Loop Gain for the DVF control loop ([[./figs/hybrid_control_Kl_loop_gain.png][png]], [[./figs/hybrid_control_Kl_loop_gain.pdf][pdf]])
+[[file:figs/hybrid_control_Kl_loop_gain.png]]
+
+** Second Control Loop - $\bm{K}_\mathcal{X}$
+*** Identification
+#+begin_src matlab
+  Kx = tf(zeros(6));
+
+  controller = initializeController('type', 'ref-track-hac-dvf');
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],              1, 'input');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+#+end_src
+
+*** Obtained Plant
+We use the Jacobian matrix to apply forces in the cartesian frame.
+#+begin_src matlab
+  Gx = G*inv(stewart.kinematics.J');
+  Gx.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
+#+end_src
+
+The obtained plant is shown in Figure [[fig:hybrid_control_Kx_plant]].
+#+begin_src matlab :exports none
+  freqs = logspace(1, 4, 1000);
+
+  labels = {'$D_x/\mathcal{F}_x$', '$D_y/\mathcal{F}_y$', '$D_z/\mathcal{F}_z$', '$R_x/\mathcal{M}_x$', '$R_y/\mathcal{M}_y$', '$R_z/\mathcal{M}_z$'};
+
+  figure;
+
+  ax1 = subplot(2, 2, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
+
+  ax2 = subplot(2, 2, 3);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))), 'DisplayName', labels{i});
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend();
+
+  ax3 = subplot(2, 2, 2);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, abs(squeeze(freqresp(Gx(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, abs(squeeze(freqresp(Gx(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
+
+  ax4 = subplot(2, 2, 4);
+  hold on;
+  for i = 1:5
+    for j = i+1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(i, j), freqs, 'Hz'))), 'color', [0, 0, 0, 0.2]);
+    end
+  end
+  set(gca,'ColorOrderIndex',1);
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(1, 1), freqs, 'Hz'))));
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2,ax3,ax4],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Kx_plant.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Kx_plant
+#+caption: Diagonal and Off-diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kx_plant.png][png]], [[./figs/hybrid_control_Kx_plant.pdf][pdf]])
+[[file:figs/hybrid_control_Kx_plant.png]]
+
+*** Controller Design
+The controller consists of:
+- A pure integrator
+- A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
+
+#+begin_src matlab
+  wc = 2*pi*200; % Bandwidth Bandwidth [rad/s]
+
+  h = 3; % Lead parameter
+
+  Kx = (1/h) * (1 + s/wc*h)/(1 + s/wc/h) * wc/s * ((s/wc/2 + 1)/(s/wc/2));
+
+  % Normalization of the gain of have a loop gain of 1 at frequency wc
+  Kx = Kx.*diag(1./diag(abs(freqresp(Gx*Kx, wc))));
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(1, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(Kx(i,i)*Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Loop Gain'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Kx(i,i)*Gx(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Kx_loop_gain.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Kx_loop_gain
+#+caption: Obtained Loop Gain for the controller $\bm{K}_\mathcal{X}$ ([[./figs/hybrid_control_Kx_loop_gain.png][png]], [[./figs/hybrid_control_Kx_loop_gain.pdf][pdf]])
+[[file:figs/hybrid_control_Kx_loop_gain.png]]
+
+Then we include the Jacobian in the controller matrix.
+#+begin_src matlab
+  Kx = inv(stewart.kinematics.J')*Kx;
+#+end_src
+
+** Simulations
+We specify the reference path to follow.
+#+begin_src matlab
+  t = linspace(0, 10, 10000);
+
+  r = zeros(6, length(t));
+
+  r(1, :) = 5e-3*sin(2*pi*t);
+
+  references = initializeReferences(stewart, 't', t, 'r', r);
+#+end_src
+
+We run the simulation and we save the results.
+#+begin_src matlab
+  sim('stewart_platform_model')
+  simout_H = simout;
+#+end_src
+
+The obtained position error is shown in Figure [[fig:hybrid_control_Ex]].
+
+#+begin_src matlab :exports none
+  figure;
+  subplot(2, 3, 1);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(1, 1, :))-simout_H.x.Xr.Data(:, 1))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dx [m]');
+
+  subplot(2, 3, 2);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(2, 1, :))-simout_H.x.Xr.Data(:, 2))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dy [m]');
+
+  subplot(2, 3, 3);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(3, 1, :))-simout_H.x.Xr.Data(:, 3))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dz [m]');
+
+  subplot(2, 3, 4);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(4, 1, :))-simout_H.x.Xr.Data(:, 4))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rx [rad]');
+
+  subplot(2, 3, 5);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(5, 1, :))-simout_H.x.Xr.Data(:, 5))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Ry [rad]');
+
+  subplot(2, 3, 6);
+  hold on;
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(6, 1, :))-simout_H.x.Xr.Data(:, 6))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rz [rad]');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/hybrid_control_Ex.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:hybrid_control_Ex
+#+caption: Obtained position error $\bm{\epsilon}_\mathcal{X}$ ([[./figs/hybrid_control_Ex.png][png]], [[./figs/hybrid_control_Ex.pdf][pdf]])
+[[file:figs/hybrid_control_Ex.png]]
+
+** Conclusion
 
 * Position Error computation
 <<sec:compute_pose_error>>
@@ -1370,4 +1798,113 @@ We have:
   Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
 
   [Edx, Edy, Edz, Erx, Ery, Erz]
+#+end_src
+
+* Tests
+#+begin_src matlab
+  Dxr = 0.1;
+  Dyr = 0.1;
+  Dzr = 0;
+  Rxr = 0;
+  Ryr = 0;
+  Rzr = 0.1;
+
+  Dxm = 0.1;
+  Dym = 0.1;
+  Dzm = 0.1;
+  Rxm = 0.1;
+  Rym = 0.1;
+  Rzm = 0.1;
+
+  [Edx, Edy, Edz, Erx, Ery, Erz] = computePosErrorTest(Dxr, Dyr, Dzr, Rxr, Ryr, Rzr, Dxm, Dym, Dzm, Rxm, Rym, Rzm)
+#+end_src
+
+* Function Name
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/computePosErrorTest.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+
+#+begin_src matlab
+  function [Edx, Edy, Edz, Erx, Ery, Erz] = computePosErrorTest(Dxr, Dyr, Dzr, Rxr, Ryr, Rzr, Dxm, Dym, Dzm, Rxm, Rym, Rzm)
+#+end_src
+
+Let's note:
+- $\{W\}$ the fixed measurement frame (corresponding to the metrology frame / the frame where the wanted displacement are expressed).
+  The center of the frame if $O_W$
+- $\{M\}$ is the frame fixed to the measured elements.
+  $O_M$ is the point where the pose of the element is measured
+- $\{R\}$ is a virtual frame corresponding to the wanted pose of the element.
+  $O_R$ is the origin of this frame where the we want to position the point $O_M$ of the element.
+- $\{V\}$ is a frame which its axes are aligned with $\{W\}$ and its origin $O_V$ is coincident with the $O_M$
+
+We measure the position and orientation (pose) of the element represented by the frame $\{M\}$ with respect to frame $\{W\}$.
+Thus we can compute the Homogeneous transformation matrix ${}^WT_M$.
+#+begin_src matlab
+    %% Measured Pose
+    WTm = zeros(4,4);
+
+    WTm(1:3, 1:3) = [cos(Rzm) -sin(Rzm) 0;
+         sin(Rzm)  cos(Rzm) 0;
+         0        0         1] * ...
+        [cos(Rym)  0        sin(Rym);
+         0        1        0;
+         -sin(Rym)  0        cos(Rym)] * ...
+        [1        0        0;
+         0        cos(Rxm) -sin(Rxm);
+         0        sin(Rxm)  cos(Rxm)];
+    WTm(1:4, 4) = [Dxm ; Dym ; Dzm; 1];
+#+end_src
+
+We can also compute the Homogeneous transformation matrix ${}^WT_R$ corresponding to the transformation required to go from fixed frame $\{W\}$ to the wanted frame $\{R\}$.
+#+begin_src matlab
+    %% Reference Pose
+    WTr = zeros(4,4);
+
+    WTr(1:3, 1:3) = [cos(Rzr) -sin(Rzr) 0;
+         sin(Rzr)  cos(Rzr) 0;
+         0        0         1] * ...
+        [cos(Ryr)  0        sin(Ryr);
+         0        1        0;
+         -sin(Ryr)  0        cos(Ryr)] * ...
+        [1        0        0;
+         0        cos(Rxr) -sin(Rxr);
+         0        sin(Rxr)  cos(Rxr)];
+    WTr(1:4, 4) = [Dxr ; Dyr ; Dzr; 1];
+#+end_src
+
+We can also compute ${}^WT_V$.
+#+begin_src matlab
+  WTv = eye(4);
+  WTv(1:3, 4) = WTm(1:3, 4);
+#+end_src
+
+Now we want to express ${}^MT_R$ which corresponds to the transformation required to go to wanted position expressed in the frame of the measured element.
+This homogeneous transformation can be computed from the previously computed matrices:
+\[ {}^MT_R = ({{}^WT_M}^{-1}) {}^WT_R \]
+
+#+begin_src matlab
+    %% Wanted pose expressed in a frame corresponding to the actual measured pose
+    MTr = [WTm(1:3,1:3)', -WTm(1:3,1:3)'*WTm(1:3,4) ; 0 0 0 1]*WTr;
+#+end_src
+
+Now we want to express ${}^VT_R$:
+\[ {}^VT_R = ({{}^WT_V}^{-1}) {}^WT_R \]
+#+begin_src matlab
+    %% Wanted pose expressed in a frame coincident with the actual position but with no rotation
+    VTr = [WTv(1:3,1:3)', -WTv(1:3,1:3)'*WTv(1:3,4) ; 0 0 0 1] * WTr;
+#+end_src
+
+#+begin_src matlab
+    %% Extract Translations and Rotations from the Homogeneous Matrix
+    T = MTr;
+    Edx = T(1, 4);
+    Edy = T(2, 4);
+    Edz = T(3, 4);
+
+    % The angles obtained are u-v-w Euler angles (rotations in the moving frame)
+    Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
+    Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
+    Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
+  end
 #+end_src
