@@ -1714,120 +1714,6 @@ The obtained position error is shown in Figure [[fig:hybrid_control_Ex]].
 
 * Position Error computation
 <<sec:compute_pose_error>>
-Let's denote:
-- $\{W\}$ the initial fixed frame (base in which the measurement is done)
-- $\{R\}$ the reference frame corresponding to the wanted pose of the sample
-- $\{M\}$ the frame corresponding to the measured pose of the sample
-
-We have then computed:
-- ${}^W\bm{T}_R$ which corresponds to the wanted pose of the sample with respect to the granite
-- ${}^W\bm{T}_M$ which corresponds to the measured pose of the sample with respect to the granite
-
-Reference Position with respect to fixed frame {W}: ${}^WT_R$
-#+begin_src matlab
-  Dx = 0;
-  Dy = 0;
-  Dz = 0.1;
-  Rx = pi;
-  Ry = 0;
-  Rz = 0;
-
-  WTr = zeros(4,4);
-
-  R = [cos(Rz) -sin(Rz) 0;
-       sin(Rz)  cos(Rz) 0;
-       0        0         1] * ...
-      [cos(Ry)  0        sin(Ry);
-       0        1        0;
-       -sin(Ry)  0        cos(Ry)] * ...
-      [1        0        0;
-       0        cos(Rx) -sin(Rx);
-       0        sin(Rx)  cos(Rx)];
-
-
-  WTr(1:3, 1:3) = R;
-  WTr(1:4, 4) = [Dx ; Dy ; Dz; 1];
-#+end_src
-
-Measured Position with respect to fixed frame {W}: ${}^WT_M$
-#+begin_src matlab
-  Dx = 0;
-  Dy = 0;
-  Dz = 0;
-  Rx = pi;
-  Ry = 0;
-  Rz = 0;
-
-  WTm = zeros(4,4);
-
-  R = [cos(Rz) -sin(Rz) 0;
-       sin(Rz)  cos(Rz) 0;
-       0        0         1] * ...
-      [cos(Ry)  0        sin(Ry);
-       0        1        0;
-       -sin(Ry)  0        cos(Ry)] * ...
-      [1        0        0;
-       0        cos(Rx) -sin(Rx);
-       0        sin(Rx)  cos(Rx)];
-
-
-  WTm(1:3, 1:3) = R;
-  WTm(1:4, 4) = [Dx ; Dy ; Dz; 1];
-#+end_src
-
-We would like to compute ${}^M\bm{T}_R$ which corresponds to the wanted pose of the sample expressed in a frame attached to the top platform of the nano-hexapod (frame $\{M\}$).
-
-We have:
-\begin{align}
-  {}^M\bm{T}_R &= {}^M\bm{T}_W \cdot {}^W\bm{T}_R \\
-          &= {}^W{\bm{T}_M}^{-1} \cdot {}^W\bm{T}_R
-\end{align}
-
-#+begin_src matlab
-  % Error with respect to the top platform
-  MTr = [WTm(1:3,1:3)', -WTm(1:3,1:3)'*WTm(1:3,4) ; 0 0 0 1]*WTr;
-
-  T = MTr;
-  Edx = T(1, 4);
-  Edy = T(2, 4);
-  Edz = T(3, 4);
-
-  % The angles obtained are u-v-w Euler angles (rotations in the moving frame)
-  Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
-  Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
-  Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
-
-  [Edx, Edy, Edz, Erx, Ery, Erz]
-#+end_src
-
-* Tests
-#+begin_src matlab
-  Dxr = 0.1;
-  Dyr = 0.1;
-  Dzr = 0;
-  Rxr = 0;
-  Ryr = 0;
-  Rzr = 0.1;
-
-  Dxm = 0.1;
-  Dym = 0.1;
-  Dzm = 0.1;
-  Rxm = 0.1;
-  Rym = 0.1;
-  Rzm = 0.1;
-
-  [Edx, Edy, Edz, Erx, Ery, Erz] = computePosErrorTest(Dxr, Dyr, Dzr, Rxr, Ryr, Rzr, Dxm, Dym, Dzm, Rxm, Rym, Rzm)
-#+end_src
-
-* Function Name
-:PROPERTIES:
-:header-args:matlab+: :tangle ../src/computePosErrorTest.m
-:header-args:matlab+: :comments none :mkdirp yes :eval no
-:END:
-
-#+begin_src matlab
-  function [Edx, Edy, Edz, Erx, Ery, Erz] = computePosErrorTest(Dxr, Dyr, Dzr, Rxr, Ryr, Rzr, Dxm, Dym, Dzm, Rxm, Rym, Rzm)
-#+end_src
 
 Let's note:
 - $\{W\}$ the fixed measurement frame (corresponding to the metrology frame / the frame where the wanted displacement are expressed).
@@ -1837,6 +1723,26 @@ Let's note:
 - $\{R\}$ is a virtual frame corresponding to the wanted pose of the element.
   $O_R$ is the origin of this frame where the we want to position the point $O_M$ of the element.
 - $\{V\}$ is a frame which its axes are aligned with $\{W\}$ and its origin $O_V$ is coincident with the $O_M$
+
+Reference Position with respect to fixed frame {W}: ${}^WT_R$
+#+begin_src matlab
+  Dxr = 0;
+  Dyr = 0;
+  Dzr = 0.1;
+  Rxr = pi;
+  Ryr = 0;
+  Rzr = 0;
+#+end_src
+
+Measured Position with respect to fixed frame {W}: ${}^WT_M$
+#+begin_src matlab
+  Dxm = 0;
+  Dym = 0;
+  Dzm = 0;
+  Rxm = pi;
+  Rym = 0;
+  Rzm = 0;
+#+end_src
 
 We measure the position and orientation (pose) of the element represented by the frame $\{M\}$ with respect to frame $\{W\}$.
 Thus we can compute the Homogeneous transformation matrix ${}^WT_M$.
@@ -1906,5 +1812,4 @@ Now we want to express ${}^VT_R$:
     Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
     Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
     Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
-  end
 #+end_src
