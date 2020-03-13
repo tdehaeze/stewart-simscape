@@ -1529,14 +1529,16 @@ The obtained plant is shown in Figure [[fig:hybrid_control_Kx_plant]].
 *** Controller Design
 The controller consists of:
 - A pure integrator
-- A low pass filter with a cut-off frequency 3 times the crossover to increase the gain margin
+- A Second integrator up to half the wanted bandwidth
+- A Lead around the cross-over frequency
+- A low pass filter with a cut-off equal to three times the wanted bandwidth
 
 #+begin_src matlab
   wc = 2*pi*200; % Bandwidth Bandwidth [rad/s]
 
   h = 3; % Lead parameter
 
-  Kx = (1/h) * (1 + s/wc*h)/(1 + s/wc/h) * wc/s * ((s/wc/2 + 1)/(s/wc/2));
+  Kx = (1/h) * (1 + s/wc*h)/(1 + s/wc/h) * wc/s * ((s/wc*2 + 1)/(s/wc*2)) * (1/(1 + s/wc/3));
 
   % Normalization of the gain of have a loop gain of 1 at frequency wc
   Kx = Kx.*diag(1./diag(abs(freqresp(Gx*Kx, wc))));
