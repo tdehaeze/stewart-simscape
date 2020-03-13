@@ -1,7 +1,7 @@
 function [stewart] = initializeFramesPositions(stewart, args)
 % initializeFramesPositions - Initialize the positions of frames {A}, {B}, {F} and {M}
 %
-% Syntax: [stewart] = initializeFramesPositions(args)
+% Syntax: [stewart] = initializeFramesPositions(stewart, args)
 %
 % Inputs:
 %    - args - Can have the following fields:
