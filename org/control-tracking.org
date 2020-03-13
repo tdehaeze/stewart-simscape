@@ -41,10 +41,14 @@
 * Introduction                                                        :ignore:
 Let's suppose the control objective is to position $\bm{\mathcal{X}}$ of the mobile platform of the Stewart platform such that it is following some reference position $\bm{r}_\mathcal{X}$.
 
+In order to compute the pose error $\bm{\epsilon}_\mathcal{X}$ from the actual pose $\bm{\mathcal{X}}$ and the reference position $\bm{r}_\mathcal{X}$, some computation is required and explained in section [[sec:compute_pose_error]].
+
 Depending of the measured quantity, different control architectures can be used:
 - If the struts length $\bm{\mathcal{L}}$ is measured, a decentralized control architecture can be used (Section [[sec:decentralized]])
 - If the pose of the mobile platform $\bm{\mathcal{X}}$ is directly measured, a centralized control architecture can be used (Section [[sec:centralized]])
 - If both $\bm{\mathcal{L}}$ and $\bm{\mathcal{X}}$ are measured, we can use an hybrid control architecture (Section [[sec:hybrid]])
+
+The control configuration are compare in section [[sec:comparison]].
 
 * Decentralized Control Architecture using Strut Length
 <<sec:decentralized>>
@@ -95,29 +99,8 @@ Then, a diagonal (decentralized) controller $\bm{K}_\mathcal{L}$ is used such th
 [[file:figs/control_measure_rotating_2dof.png]]
 
 ** Initialize the Stewart platform
-#+begin_src matlab
-  stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
-  stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
-#+end_src
-
-#+begin_src matlab
-  ground = initializeGround('type', 'rigid');
-  payload = initializePayload('type', 'none');
-  controller = initializeController('type', 'open-loop');
-#+end_src
-
-#+begin_src matlab
-  disturbances = initializeDisturbances();
-  references = initializeReferences(stewart);
+#+begin_src matlab :noweb yes
+  <<init-sim>>
 #+end_src
 
 ** Identification of the plant
@@ -278,26 +261,67 @@ The obtained loop gains corresponding to the diagonal elements are shown in Figu
 [[file:figs/loop_gain_decentralized_L.png]]
 
 ** Simulation
-#+begin_src matlab
-  t = linspace(0, 10, 1000);
-
-  r = zeros(6, length(t));
-
-  r(1, :) = 5e-3*sin(2*pi*t);
-
-  references = initializeReferences(stewart, 't', t, 'r', r);
+Let's define some reference path to follow.
+#+begin_src matlab :noweb yes
+  <<init-ref>>
 #+end_src
+
+The reference path is shown in Figure [[fig:tracking_control_reference_path]].
+
+#+begin_src matlab :export none
+  figure;
+  plot3(squeeze(references.r.Data(1,1,:)), squeeze(references.r.Data(2,1,:)), squeeze(references.r.Data(3,1,:)));
+  xlabel('X [m]');
+  ylabel('Y [m]');
+  zlabel('Z [m]');
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/tracking_control_reference_path.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:tracking_control_reference_path
+#+caption: Reference path used for Tracking control ([[./figs/tracking_control_reference_path.png][png]], [[./figs/tracking_control_reference_path.pdf][pdf]])
+[[file:figs/tracking_control_reference_path.png]]
 
 #+begin_src matlab
   controller = initializeController('type', 'ref-track-L');
 #+end_src
 
 #+begin_src matlab
-  sim('stewart_platform_model')
+  set_param('stewart_platform_model', 'StopTime', '10')
+  sim('stewart_platform_model');
   simout_D = simout;
 #+end_src
 
+#+begin_src matlab
+  save('./mat/control_tracking.mat', 'simout_D', '-append');
+#+end_src
+
 ** Results
+The reference path and the position of the mobile platform are shown in Figure [[fig:decentralized_control_3d_pos]].
+
+#+begin_src matlab :export none
+  figure;
+  hold on;
+  plot3(simout_D.x.Xr.Data(:, 1), simout_D.x.Xr.Data(:, 2), simout_D.x.Xr.Data(:, 3), 'k-');
+  plot3(squeeze(references.r.Data(1,1,:)), squeeze(references.r.Data(2,1,:)), squeeze(references.r.Data(3,1,:)), '--');
+  hold off;
+  xlabel('X [m]'); ylabel('Y [m]'); zlabel('Z [m]');
+  view([1,1,1])
+  zlim([0, inf]);
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/decentralized_control_3d_pos.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:decentralized_control_3d_pos
+#+caption: Reference path and Obtained Position ([[./figs/decentralized_control_3d_pos.png][png]], [[./figs/decentralized_control_3d_pos.pdf][pdf]])
+[[file:figs/decentralized_control_3d_pos.png]]
+
 #+begin_src matlab :exports none
   figure;
   subplot(2, 3, 1);
@@ -469,29 +493,8 @@ We can think of two ways to make the plant more diagonal that are described in s
 #+end_important
 
 ** Initialize the Stewart platform
-#+begin_src matlab
-  stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
-  stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
-#+end_src
-
-#+begin_src matlab
-  ground = initializeGround('type', 'rigid');
-  payload = initializePayload('type', 'none');
-  controller = initializeController('type', 'open-loop');
-#+end_src
-
-#+begin_src matlab
-  disturbances = initializeDisturbances();
-  references = initializeReferences(stewart);
+#+begin_src matlab :noweb yes
+  <<init-sim>>
 #+end_src
 
 ** Identification of the plant
@@ -706,14 +709,8 @@ The controller $\bm{K} = \bm{K}_\mathcal{L} \bm{J}$ is computed.
 
 *** Simulation
 We specify the reference path to follow.
-#+begin_src matlab
-  t = linspace(0, 10, 1000);
-
-  r = zeros(6, length(t));
-
-  r(1, :) = 5e-3*sin(2*pi*t);
-
-  references = initializeReferences(stewart, 't', t, 'r', r);
+#+begin_src matlab :noweb yes
+  <<init-ref>>
 #+end_src
 
 #+begin_src matlab
@@ -722,8 +719,10 @@ We specify the reference path to follow.
 
 We run the simulation and we save the results.
 #+begin_src matlab
+  set_param('stewart_platform_model', 'StopTime', '10')
   sim('stewart_platform_model')
   simout_L = simout;
+  save('./mat/control_tracking.mat', 'simout_L', '-append');
 #+end_src
 
 ** Diagonal Control - Cartesian Frame
@@ -932,14 +931,8 @@ The controller $\bm{K} = \bm{J}^{-T} \bm{K}_\mathcal{X}$ is computed.
 
 *** Simulation
 We specify the reference path to follow.
-#+begin_src matlab
-  t = linspace(0, 10, 1000);
-
-  r = zeros(6, length(t));
-
-  r(1, :) = 5e-3*sin(2*pi*t);
-
-  references = initializeReferences(stewart, 't', t, 'r', r);
+#+begin_src matlab :noweb yes
+  <<init-ref>>
 #+end_src
 
 #+begin_src matlab
@@ -948,8 +941,10 @@ We specify the reference path to follow.
 
 We run the simulation and we save the results.
 #+begin_src matlab
+  set_param('stewart_platform_model', 'StopTime', '10')
   sim('stewart_platform_model')
   simout_X = simout;
+  save('./mat/control_tracking.mat', 'simout_X', '-append');
 #+end_src
 
 ** Diagonal Control - Steady State Decoupling
@@ -1106,7 +1101,6 @@ We have that $\bm{K}_0(s)$ commutes with $\bm{G}^{-1}(\omega = 0)$ and thus the 
 
 *** Simulation Results
 The position error $\bm{\epsilon}_\mathcal{X}$ for both centralized architecture are shown in Figure [[fig:centralized_control_comp_Ex]].
-The corresponding leg's length errors $\bm{\epsilon}_\mathcal{L}$ are shown in Figure [[fig:centralized_control_comp_El]].
 
 Based on Figure [[fig:centralized_control_comp_Ex]], we can see that:
 - There is some tracking error $\epsilon_x$
@@ -1176,31 +1170,6 @@ Based on Figure [[fig:centralized_control_comp_Ex]], we can see that:
 #+name: fig:centralized_control_comp_Ex
 #+caption: Comparison of the position error $\bm{\epsilon}_\mathcal{X}$ for both centralized controllers ([[./figs/centralized_control_comp_Ex.png][png]], [[./figs/centralized_control_comp_Ex.pdf][pdf]])
 [[file:figs/centralized_control_comp_Ex.png]]
-
-#+begin_src matlab :exports none
-  figure;
-  hold on;
-  plot(simout_L.r.r.Time, squeeze(simout_L.r.rL.Data(6, 1, :))-simout_L.y.dLm.Data(:, 6), 'DisplayName', '$K_\mathcal{L}$')
-  plot(simout_X.r.r.Time, squeeze(simout_X.r.rL.Data(6, 1, :))-simout_X.y.dLm.Data(:, 6), 'DisplayName', '$K_\mathcal{X}$')
-  for i = 2:6
-    set(gca,'ColorOrderIndex',1);
-    plot(simout_L.r.r.Time, squeeze(simout_L.r.rL.Data(i, 1, :))-simout_L.y.dLm.Data(:, i), 'HandleVisibility', 'off')
-    plot(simout_X.r.r.Time, squeeze(simout_X.r.rL.Data(i, 1, :))-simout_X.y.dLm.Data(:, i), 'HandleVisibility', 'off')
-  end
-  hold off;
-  xlabel('Time [s]');
-  ylabel('$\epsilon_\mathcal{L}$ [m]');
-  legend();
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/centralized_control_comp_El.pdf" :var figsize="wide-normal" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:centralized_control_comp_El
-#+caption: Comparison of the leg's length error $\bm{\epsilon}_\mathcal{L}$ for both centralized controllers ([[./figs/centralized_control_comp_El.png][png]], [[./figs/centralized_control_comp_El.pdf][pdf]])
-[[file:figs/centralized_control_comp_El.png]]
 
 ** Conclusion
 Both control architecture gives similar results even tough the control in the Leg's frame gives slightly better results.
@@ -1304,29 +1273,8 @@ This second loop is responsible for the reference tracking.
 [[file:figs/hybrid_reference_tracking.png]]
 
 ** Initialize the Stewart platform
-#+begin_src matlab
-  stewart = initializeStewartPlatform();
-  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
-  stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
-  stewart = initializeStrutDynamics(stewart);
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
-  stewart = initializeCylindricalPlatforms(stewart);
-  stewart = initializeCylindricalStruts(stewart);
-  stewart = computeJacobian(stewart);
-  stewart = initializeStewartPose(stewart);
-  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
-#+end_src
-
-#+begin_src matlab
-  ground = initializeGround('type', 'rigid');
-  payload = initializePayload('type', 'none');
-  controller = initializeController('type', 'open-loop');
-#+end_src
-
-#+begin_src matlab
-  disturbances = initializeDisturbances();
-  references = initializeReferences(stewart);
+#+begin_src matlab :noweb yes
+  <<init-sim>>
 #+end_src
 
 ** First Control Loop - $\bm{K}_\mathcal{L}$
@@ -1638,20 +1586,16 @@ Then we include the Jacobian in the controller matrix.
 
 ** Simulations
 We specify the reference path to follow.
-#+begin_src matlab
-  t = linspace(0, 10, 10000);
-
-  r = zeros(6, length(t));
-
-  r(1, :) = 5e-3*sin(2*pi*t);
-
-  references = initializeReferences(stewart, 't', t, 'r', r);
+#+begin_src matlab :noweb yes
+  <<init-ref>>
 #+end_src
 
 We run the simulation and we save the results.
 #+begin_src matlab
+  set_param('stewart_platform_model', 'StopTime', '10')
   sim('stewart_platform_model')
   simout_H = simout;
+  save('./mat/control_tracking.mat', 'simout_H', '-append');
 #+end_src
 
 The obtained position error is shown in Figure [[fig:hybrid_control_Ex]].
@@ -1712,7 +1656,88 @@ The obtained position error is shown in Figure [[fig:hybrid_control_Ex]].
 
 ** Conclusion
 
-* Position Error computation
+* Comparison of all the methods
+<<sec:comparison>>
+
+Let's load the simulation results and compare them in Figure [[fig:reference_tracking_performance_comparison]].
+#+begin_src matlab
+  load('./mat/control_tracking.mat', 'simout_D', 'simout_L', 'simout_X', 'simout_H');
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+  subplot(2, 3, 1);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(1, 1, :))-simout_D.x.Xr.Data(:, 1))
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(1, 1, :))-simout_L.x.Xr.Data(:, 1))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(1, 1, :))-simout_X.x.Xr.Data(:, 1))
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(1, 1, :))-simout_H.x.Xr.Data(:, 1))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dx [m]');
+
+  subplot(2, 3, 2);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(2, 1, :))-simout_D.x.Xr.Data(:, 2))
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(2, 1, :))-simout_L.x.Xr.Data(:, 2))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(2, 1, :))-simout_X.x.Xr.Data(:, 2))
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(2, 1, :))-simout_H.x.Xr.Data(:, 2))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dy [m]');
+
+  subplot(2, 3, 3);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(3, 1, :))-simout_D.x.Xr.Data(:, 3))
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(3, 1, :))-simout_L.x.Xr.Data(:, 3))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(3, 1, :))-simout_X.x.Xr.Data(:, 3))
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(3, 1, :))-simout_H.x.Xr.Data(:, 3))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Dz [m]');
+
+  subplot(2, 3, 4);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(4, 1, :))-simout_D.x.Xr.Data(:, 4))
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(4, 1, :))-simout_L.x.Xr.Data(:, 4))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(4, 1, :))-simout_X.x.Xr.Data(:, 4))
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(4, 1, :))-simout_H.x.Xr.Data(:, 4))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rx [rad]');
+
+  subplot(2, 3, 5);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(5, 1, :))-simout_D.x.Xr.Data(:, 5))
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(5, 1, :))-simout_L.x.Xr.Data(:, 5))
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(5, 1, :))-simout_X.x.Xr.Data(:, 5))
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(5, 1, :))-simout_H.x.Xr.Data(:, 5))
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Ry [rad]');
+
+  subplot(2, 3, 6);
+  hold on;
+  plot(simout_D.r.r.Time, squeeze(simout_D.r.r.Data(6, 1, :))-simout_D.x.Xr.Data(:, 6), 'DisplayName', 'Decentralized - L')
+  plot(simout_L.r.r.Time, squeeze(simout_L.r.r.Data(6, 1, :))-simout_L.x.Xr.Data(:, 6), 'DisplayName', 'Centralized - L')
+  plot(simout_X.r.r.Time, squeeze(simout_X.r.r.Data(6, 1, :))-simout_X.x.Xr.Data(:, 6), 'DisplayName', 'Centralized - X')
+  plot(simout_H.r.r.Time, squeeze(simout_H.r.r.Data(6, 1, :))-simout_H.x.Xr.Data(:, 6), 'DisplayName', 'Hybrid')
+  hold off;
+  xlabel('Time [s]');
+  ylabel('Rz [rad]');
+  legend();
+#+end_src
+
+#+header: :tangle no :exports results :results none :noweb yes
+#+begin_src matlab :var filepath="figs/reference_tracking_performance_comparison.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+<<plt-matlab>>
+#+end_src
+
+#+name: fig:reference_tracking_performance_comparison
+#+caption: Comparison of the position errors for all the Control architecture used ([[./figs/reference_tracking_performance_comparison.png][png]], [[./figs/reference_tracking_performance_comparison.pdf][pdf]])
+[[file:figs/reference_tracking_performance_comparison.png]]
+
+* Compute the pose error of the Stewart Platform
 <<sec:compute_pose_error>>
 
 Let's note:
@@ -1812,4 +1837,47 @@ Now we want to express ${}^VT_R$:
     Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
     Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
     Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
+#+end_src
+
+* Useful Blocks                                                     :noexport:
+** Initialize Simulation
+#+name: init-sim
+#+begin_src matlab
+  % Stewart Platform
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+
+  % Ground and Payload
+  ground = initializeGround('type', 'rigid');
+  payload = initializePayload('type', 'none');
+
+  % Controller
+  controller = initializeController('type', 'open-loop');
+
+  % Disturbances and References
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
+** Initialize Reference Path
+#+name: init-ref
+#+begin_src matlab
+  t = [0:1e-4:10];
+
+  r = zeros(6, length(t));
+
+  r(1, :) = 1e-3.*t.*sin(2*pi*t);
+  r(2, :) = 1e-3.*t.*cos(2*pi*t);
+  r(3, :) = 1e-3.*t;
+
+  references = initializeReferences(stewart, 't', t, 'r', r);
 #+end_src
