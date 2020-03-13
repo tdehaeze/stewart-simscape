@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-03 mar. 16:04 -->
+<!-- 2020-03-13 ven. 10:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platforms</title>
@@ -241,10 +241,9 @@
 <li><a href="#orgf1c7b3b">3. Simscape Model of the Stewart Platform (link)</a></li>
 <li><a href="#org369c8bb">4. Kinematic Analysis (link)</a></li>
 <li><a href="#org2e3169e">5. Identification of the Stewart Dynamics (link)</a></li>
-<li><a href="#orgc3a4c87">6. Active Damping (link)</a></li>
-<li><a href="#org5b4e9b0">7. Motion Control of the Stewart Platform (link)</a></li>
-<li><a href="#org1f468b1">8. Cubic Configuration (link)</a></li>
-<li><a href="#orga2bd0e9">9. Bibliography (link)</a></li>
+<li><a href="#org0fdb910">6. Control</a></li>
+<li><a href="#org1f468b1">7. Cubic Configuration (link)</a></li>
+<li><a href="#orga2bd0e9">8. Bibliography (link)</a></li>
 </ul>
 </div>
 </div>
@@ -349,37 +348,53 @@ The code that is used for identification is explained <a href="identification.ht
 </div>
 </div>
 
-<div id="outline-container-orgc3a4c87" class="outline-2">
-<h2 id="orgc3a4c87"><span class="section-number-2">6</span> Active Damping (<a href="active-damping.html">link</a>)</h2>
+<div id="outline-container-org0fdb910" class="outline-2">
+<h2 id="org0fdb910"><span class="section-number-2">6</span> Control</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-The use of different sensors are compared for active damping:
+The use of active control for Stewart platforms is a wide subject.
+Many aspect can be studied.
+</p>
+
+<p>
+The sensors used is of primary important. We can have:
 </p>
 <ul class="org-ul">
-<li>Inertial Sensor in each strut</li>
-<li>Inertial Sensor fixed to the mobile platform</li>
-<li>Force Sensor in each strut</li>
-<li>Relative Motion Sensor in each strut</li>
+<li>Sensors located in each strut: relative motion, force sensor, inertial sensor</li>
+<li>Sensors measuring the relative motion between the fixed base and the mobile platform</li>
+<li>Inertial sensors located on the mobile platform</li>
 </ul>
 
 <p>
-The result of the analysis is accessible <a href="active-damping.html">here</a>.
+The control objective can also vary:
 </p>
-</div>
-</div>
+<ul class="org-ul">
+<li>Reference Tracking</li>
+<li>Active Damping</li>
+<li>Vibration Isolation</li>
+</ul>
 
-<div id="outline-container-org5b4e9b0" class="outline-2">
-<h2 id="org5b4e9b0"><span class="section-number-2">7</span> Motion Control of the Stewart Platform (<a href="control-study.html">link</a>)</h2>
-<div class="outline-text-2" id="text-7">
 <p>
-Some control architecture for motion control of the Stewart platform are applied on the Simscape model and compared in <a href="control-study.html">this</a> document.
+The Control for Stewart platforms is here studied in the following files:
 </p>
+<ul class="org-ul">
+<li><b>Active Damping</b> (<a href="control-active-damping.html">link</a>).
+The use of different sensors are compared for active damping:
+<ul class="org-ul">
+<li>Inertial Sensor in each strut or fixed to the mobile platform</li>
+<li>Force Sensor in each strut</li>
+<li>Relative Motion Sensor in each strut</li>
+</ul></li>
+<li><b>Motion Control</b> (<a href="control-tracking.html">link</a>).
+Different control architectures (centralized and decentralized) are compared for the position control of the Stewart platform.</li>
+<li><b>Vibration Isolation</b> (<a href="control-vibration-isolation.html">link</a>)</li>
+</ul>
 </div>
 </div>
 
 <div id="outline-container-org1f468b1" class="outline-2">
-<h2 id="org1f468b1"><span class="section-number-2">8</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
-<div class="outline-text-2" id="text-8">
+<h2 id="org1f468b1"><span class="section-number-2">7</span> Cubic Configuration (<a href="cubic-configuration.html">link</a>)</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 The cubic configuration is a special class of Stewart platform that has interesting properties.
 </p>
@@ -391,8 +406,8 @@ These properties are studied in <a href="cubic-configuration.html">this</a> docu
 </div>
 
 <div id="outline-container-orga2bd0e9" class="outline-2">
-<h2 id="orga2bd0e9"><span class="section-number-2">9</span> Bibliography (<a href="bibliography.html">link</a>)</h2>
-<div class="outline-text-2" id="text-9">
+<h2 id="orga2bd0e9"><span class="section-number-2">8</span> Bibliography (<a href="bibliography.html">link</a>)</h2>
+<div class="outline-text-2" id="text-8">
 <p>
 Many text books, PhD thesis and articles related to parallel robots and Stewart platforms are gathered in <a href="bibliography.html">this</a> document.
 </p>
@@ -401,7 +416,7 @@ Many text books, PhD thesis and articles related to parallel robots and Stewart 
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-03 mar. 16:04</p>
+<p class="date">Created: 2020-03-13 ven. 10:34</p>
 </div>
 </body>
 </html>

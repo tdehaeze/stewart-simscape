@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-12 jeu. 18:06 -->
+<!-- 2020-03-13 ven. 10:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Vibration Isolation</title>
@@ -246,79 +247,79 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org272e7f8">1. HAC-LAC (Cascade) Control - Integral Control</a>
+<li><a href="#orgf86b757">1. HAC-LAC (Cascade) Control - Integral Control</a>
 <ul>
-<li><a href="#orga5c9b98">1.1. Introduction</a></li>
-<li><a href="#org8418e03">1.2. Initialization</a></li>
-<li><a href="#org827d3cd">1.3. Identification</a>
+<li><a href="#org3a9f4d4">1.1. Introduction</a></li>
+<li><a href="#org42643f7">1.2. Initialization</a></li>
+<li><a href="#orgd24dcff">1.3. Identification</a>
 <ul>
-<li><a href="#org9a68faf">1.3.1. HAC - Without LAC</a></li>
-<li><a href="#org2abd2cc">1.3.2. HAC - IFF</a></li>
-<li><a href="#org65a7b31">1.3.3. HAC - DVF</a></li>
+<li><a href="#org8048e33">1.3.1. HAC - Without LAC</a></li>
+<li><a href="#org937f315">1.3.2. HAC - IFF</a></li>
+<li><a href="#org83d8630">1.3.3. HAC - DVF</a></li>
 </ul>
 </li>
-<li><a href="#org61a6098">1.4. Control Architecture</a></li>
-<li><a href="#orgdca8b1b">1.5. 6x6 Plant Comparison</a></li>
-<li><a href="#org56a04ba">1.6. HAC - DVF</a>
+<li><a href="#org4d7a6d8">1.4. Control Architecture</a></li>
+<li><a href="#org3e1b1b7">1.5. 6x6 Plant Comparison</a></li>
+<li><a href="#org22da139">1.6. HAC - DVF</a>
 <ul>
-<li><a href="#org9060c71">1.6.1. Plant</a></li>
-<li><a href="#org57d2db6">1.6.2. Controller Design</a></li>
-<li><a href="#orgc77ad88">1.6.3. Obtained Performance</a></li>
+<li><a href="#orgc0e6f7d">1.6.1. Plant</a></li>
+<li><a href="#org91edbdd">1.6.2. Controller Design</a></li>
+<li><a href="#org5e71990">1.6.3. Obtained Performance</a></li>
 </ul>
 </li>
-<li><a href="#orga7519aa">1.7. HAC - IFF</a>
+<li><a href="#orgd3d2942">1.7. HAC - IFF</a>
 <ul>
-<li><a href="#orgdcb3512">1.7.1. Plant</a></li>
-<li><a href="#org7775b79">1.7.2. Controller Design</a></li>
-<li><a href="#org37a736f">1.7.3. Obtained Performance</a></li>
+<li><a href="#org71d45ac">1.7.1. Plant</a></li>
+<li><a href="#org8236bd6">1.7.2. Controller Design</a></li>
+<li><a href="#org7810516">1.7.3. Obtained Performance</a></li>
 </ul>
 </li>
-<li><a href="#org9224c01">1.8. Comparison</a></li>
+<li><a href="#org81c1767">1.8. Comparison</a></li>
 </ul>
 </li>
-<li><a href="#orgde62390">2. MIMO Analysis</a>
+<li><a href="#org6f94eba">2. MIMO Analysis</a>
 <ul>
-<li><a href="#orgf2ef3bf">2.1. Initialization</a></li>
-<li><a href="#org169782d">2.2. Identification</a>
+<li><a href="#orgc26d5f4">2.1. Initialization</a></li>
+<li><a href="#org308b8f7">2.2. Identification</a>
 <ul>
-<li><a href="#org39e10f2">2.2.1. HAC - Without LAC</a></li>
-<li><a href="#org0f4faf4">2.2.2. HAC - DVF</a></li>
-<li><a href="#orgf7913d5">2.2.3. Cartesian Frame</a></li>
+<li><a href="#org2309d71">2.2.1. HAC - Without LAC</a></li>
+<li><a href="#org492aabc">2.2.2. HAC - DVF</a></li>
+<li><a href="#orgf606814">2.2.3. Cartesian Frame</a></li>
 </ul>
 </li>
-<li><a href="#orgf9a6267">2.3. Singular Value Decomposition</a></li>
+<li><a href="#org8349fa6">2.3. Singular Value Decomposition</a></li>
 </ul>
 </li>
-<li><a href="#orgebf6121">3. Diagonal Control based on the damped plant</a>
+<li><a href="#orgc8479b7">3. Diagonal Control based on the damped plant</a>
 <ul>
-<li><a href="#org8c2f437">3.1. Initialization</a></li>
-<li><a href="#orge2b1c03">3.2. Identification</a></li>
-<li><a href="#orgab6bc6f">3.3. Steady State Decoupling</a>
+<li><a href="#orga3f0f82">3.1. Initialization</a></li>
+<li><a href="#orgab56a44">3.2. Identification</a></li>
+<li><a href="#orgae85e0d">3.3. Steady State Decoupling</a>
 <ul>
-<li><a href="#orga589a4a">3.3.1. Pre-Compensator Design</a></li>
-<li><a href="#org9eaf88f">3.3.2. Diagonal Control Design</a></li>
-<li><a href="#org5d77351">3.3.3. Results</a></li>
+<li><a href="#org1e2bbe7">3.3.1. Pre-Compensator Design</a></li>
+<li><a href="#org077e6f6">3.3.2. Diagonal Control Design</a></li>
+<li><a href="#org4e0fae0">3.3.3. Results</a></li>
 </ul>
 </li>
-<li><a href="#org7af13df">3.4. Decoupling at Crossover</a></li>
+<li><a href="#orgad35bf9">3.4. Decoupling at Crossover</a></li>
 </ul>
 </li>
-<li><a href="#orgde0f265">4. Time Domain Simulation</a>
+<li><a href="#org846cef9">4. Time Domain Simulation</a>
 <ul>
-<li><a href="#org327858f">4.1. Initialization</a></li>
-<li><a href="#org27ed7aa">4.2. HAC IFF</a></li>
-<li><a href="#orgfd6afac">4.3. HAC-DVF</a></li>
-<li><a href="#orgd68da79">4.4. Results</a></li>
+<li><a href="#org58e2ab0">4.1. Initialization</a></li>
+<li><a href="#org8dbc004">4.2. HAC IFF</a></li>
+<li><a href="#org7dc4716">4.3. HAC-DVF</a></li>
+<li><a href="#orgf7c304f">4.4. Results</a></li>
 </ul>
 </li>
-<li><a href="#org1ce6b23">5. Functions</a>
+<li><a href="#org69ebad1">5. Functions</a>
 <ul>
-<li><a href="#org9b036f8">5.1. <code>initializeController</code>: Initialize the Controller</a>
+<li><a href="#orgc7bcc65">5.1. <code>initializeController</code>: Initialize the Controller</a>
 <ul>
-<li><a href="#org89608d1">Function description</a></li>
-<li><a href="#orgb457316">Optional Parameters</a></li>
-<li><a href="#orgad0bd08">Structure initialization</a></li>
-<li><a href="#org05c3878">Add Type</a></li>
+<li><a href="#orgf672f64">Function description</a></li>
+<li><a href="#org941466e">Optional Parameters</a></li>
+<li><a href="#org65d3a7d">Structure initialization</a></li>
+<li><a href="#org32be93f">Add Type</a></li>
 </ul>
 </li>
 </ul>
@@ -327,41 +328,19 @@
 </div>
 </div>
 
-<p>
-Control architectures can be divided in different ways.
-</p>
-
-<p>
-It can depend on the sensor used:
-</p>
-<ul class="org-ul">
-<li>Sensors located in each strut: relative motion, force sensor, inertial sensor</li>
-<li>Sensors measuring the relative motion between the fixed base and the mobile platform</li>
-<li>Inertial sensors located on the mobile platform</li>
-</ul>
-
-<p>
-It can also depends on the control objective:
-</p>
-<ul class="org-ul">
-<li>Reference Tracking</li>
-<li>Active Damping</li>
-<li>Vibration Isolation</li>
-</ul>
-
-<div id="outline-container-org272e7f8" class="outline-2">
-<h2 id="org272e7f8"><span class="section-number-2">1</span> HAC-LAC (Cascade) Control - Integral Control</h2>
+<div id="outline-container-orgf86b757" class="outline-2">
+<h2 id="orgf86b757"><span class="section-number-2">1</span> HAC-LAC (Cascade) Control - Integral Control</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga5c9b98" class="outline-3">
-<h3 id="orga5c9b98"><span class="section-number-3">1.1</span> Introduction</h3>
+<div id="outline-container-org3a9f4d4" class="outline-3">
+<h3 id="org3a9f4d4"><span class="section-number-3">1.1</span> Introduction</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 In this section, we wish to study the use of the High Authority Control - Low Authority Control (HAC-LAC) architecture on the Stewart platform.
 </p>
 
 <p>
-The control architectures are shown in Figures <a href="#orgf85634b">1</a> and <a href="#orgd068ad1">2</a>.
+The control architectures are shown in Figures <a href="#org63523c7">1</a> and <a href="#org7ad8618">2</a>.
 </p>
 
 <p>
@@ -369,7 +348,7 @@ First, the LAC loop is closed (the LAC control is described <a href="active-damp
 </p>
 
 
-<div id="orgf85634b" class="figure">
+<div id="org63523c7" class="figure">
 <p><img src="figs/control_arch_hac_iff.png" alt="control_arch_hac_iff.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>HAC-LAC architecture with IFF</p>
@@ -377,7 +356,7 @@ First, the LAC loop is closed (the LAC control is described <a href="active-damp
 
 
 
-<div id="orgd068ad1" class="figure">
+<div id="org7ad8618" class="figure">
 <p><img src="figs/control_arch_hac_dvf.png" alt="control_arch_hac_dvf.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>HAC-LAC architecture with DVF</p>
@@ -385,8 +364,8 @@ First, the LAC loop is closed (the LAC control is described <a href="active-damp
 </div>
 </div>
 
-<div id="outline-container-org8418e03" class="outline-3">
-<h3 id="org8418e03"><span class="section-number-3">1.2</span> Initialization</h3>
+<div id="outline-container-org42643f7" class="outline-3">
+<h3 id="org42643f7"><span class="section-number-3">1.2</span> Initialization</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We first initialize the Stewart platform.
@@ -417,8 +396,8 @@ payload = initializePayload(<span class="org-string">'type'</span>, <span class=
 </div>
 </div>
 
-<div id="outline-container-org827d3cd" class="outline-3">
-<h3 id="org827d3cd"><span class="section-number-3">1.3</span> Identification</h3>
+<div id="outline-container-orgd24dcff" class="outline-3">
+<h3 id="orgd24dcff"><span class="section-number-3">1.3</span> Identification</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 We identify the transfer function from the actuator forces \(\bm{\tau}\) to the absolute displacement of the mobile platform \(\bm{\mathcal{X}}\) in three different cases:
@@ -430,8 +409,8 @@ We identify the transfer function from the actuator forces \(\bm{\tau}\) to the 
 </ul>
 </div>
 
-<div id="outline-container-org9a68faf" class="outline-4">
-<h4 id="org9a68faf"><span class="section-number-4">1.3.1</span> HAC - Without LAC</h4>
+<div id="outline-container-org8048e33" class="outline-4">
+<h4 id="org8048e33"><span class="section-number-4">1.3.1</span> HAC - Without LAC</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
@@ -456,8 +435,8 @@ G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 </div>
 
-<div id="outline-container-org2abd2cc" class="outline-4">
-<h4 id="org2abd2cc"><span class="section-number-4">1.3.2</span> HAC - IFF</h4>
+<div id="outline-container-org937f315" class="outline-4">
+<h4 id="org937f315"><span class="section-number-4">1.3.2</span> HAC - IFF</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'iff'</span>);
@@ -483,8 +462,8 @@ G_iff.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-org65a7b31" class="outline-4">
-<h4 id="org65a7b31"><span class="section-number-4">1.3.3</span> HAC - DVF</h4>
+<div id="outline-container-org83d8630" class="outline-4">
+<h4 id="org83d8630"><span class="section-number-4">1.3.3</span> HAC - DVF</h4>
 <div class="outline-text-4" id="text-1-3-3">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
@@ -511,8 +490,8 @@ G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-org61a6098" class="outline-3">
-<h3 id="org61a6098"><span class="section-number-3">1.4</span> Control Architecture</h3>
+<div id="outline-container-org4d7a6d8" class="outline-3">
+<h3 id="org4d7a6d8"><span class="section-number-3">1.4</span> Control Architecture</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 We use the Jacobian to express the actuator forces in the cartesian frame, and thus we obtain the transfer functions from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\).
@@ -536,11 +515,11 @@ We then design a controller based on the transfer functions from \(\bm{\mathcal{
 </div>
 </div>
 
-<div id="outline-container-orgdca8b1b" class="outline-3">
-<h3 id="orgdca8b1b"><span class="section-number-3">1.5</span> 6x6 Plant Comparison</h3>
+<div id="outline-container-org3e1b1b7" class="outline-3">
+<h3 id="org3e1b1b7"><span class="section-number-3">1.5</span> 6x6 Plant Comparison</h3>
 <div class="outline-text-3" id="text-1-5">
 
-<div id="org4aa226f" class="figure">
+<div id="orgbee4071" class="figure">
 <p><img src="figs/hac_lac_coupling_jacobian.png" alt="hac_lac_coupling_jacobian.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Norm of the transfer functions from \(\bm{\mathcal{F}}\) to \(\bm{\mathcal{X}}\) (<a href="./figs/hac_lac_coupling_jacobian.png">png</a>, <a href="./figs/hac_lac_coupling_jacobian.pdf">pdf</a>)</p>
@@ -548,15 +527,15 @@ We then design a controller based on the transfer functions from \(\bm{\mathcal{
 </div>
 </div>
 
-<div id="outline-container-org56a04ba" class="outline-3">
-<h3 id="org56a04ba"><span class="section-number-3">1.6</span> HAC - DVF</h3>
+<div id="outline-container-org22da139" class="outline-3">
+<h3 id="org22da139"><span class="section-number-3">1.6</span> HAC - DVF</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-org9060c71" class="outline-4">
-<h4 id="org9060c71"><span class="section-number-4">1.6.1</span> Plant</h4>
+<div id="outline-container-orgc0e6f7d" class="outline-4">
+<h4 id="orgc0e6f7d"><span class="section-number-4">1.6.1</span> Plant</h4>
 <div class="outline-text-4" id="text-1-6-1">
 
-<div id="orgbe936ef" class="figure">
+<div id="org487a558" class="figure">
 <p><img src="figs/hac_lac_plant_dvf.png" alt="hac_lac_plant_dvf.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Diagonal elements of the plant for HAC control when DVF is previously applied (<a href="./figs/hac_lac_plant_dvf.png">png</a>, <a href="./figs/hac_lac_plant_dvf.pdf">pdf</a>)</p>
@@ -564,8 +543,8 @@ We then design a controller based on the transfer functions from \(\bm{\mathcal{
 </div>
 </div>
 
-<div id="outline-container-org57d2db6" class="outline-4">
-<h4 id="org57d2db6"><span class="section-number-4">1.6.2</span> Controller Design</h4>
+<div id="outline-container-org91edbdd" class="outline-4">
+<h4 id="org91edbdd"><span class="section-number-4">1.6.2</span> Controller Design</h4>
 <div class="outline-text-4" id="text-1-6-2">
 <p>
 We design a diagonal controller with equal bandwidth for the 6 terms.
@@ -583,7 +562,7 @@ Kd_dvf = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="o
 </div>
 
 
-<div id="org6fb90ba" class="figure">
+<div id="org5d0e2e3" class="figure">
 <p><img src="figs/hac_lac_loop_gain_dvf.png" alt="hac_lac_loop_gain_dvf.png" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Diagonal elements of the Loop Gain for the HAC control (<a href="./figs/hac_lac_loop_gain_dvf.png">png</a>, <a href="./figs/hac_lac_loop_gain_dvf.pdf">pdf</a>)</p>
@@ -600,8 +579,8 @@ Finally, we pre-multiply the diagonal controller by \(\bm{J}^{-T}\) prior implem
 </div>
 </div>
 
-<div id="outline-container-orgc77ad88" class="outline-4">
-<h4 id="orgc77ad88"><span class="section-number-4">1.6.3</span> Obtained Performance</h4>
+<div id="outline-container-org5e71990" class="outline-4">
+<h4 id="org5e71990"><span class="section-number-4">1.6.3</span> Obtained Performance</h4>
 <div class="outline-text-4" id="text-1-6-3">
 <p>
 We identify the transmissibility and compliance of the system.
@@ -629,7 +608,7 @@ We identify the transmissibility and compliance of the system.
 </div>
 
 
-<div id="orge8167aa" class="figure">
+<div id="orga06a318" class="figure">
 <p><img src="figs/hac_lac_C_T_dvf.png" alt="hac_lac_C_T_dvf.png" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Obtained Compliance and Transmissibility (<a href="./figs/hac_lac_C_T_dvf.png">png</a>, <a href="./figs/hac_lac_C_T_dvf.pdf">pdf</a>)</p>
@@ -638,15 +617,15 @@ We identify the transmissibility and compliance of the system.
 </div>
 </div>
 
-<div id="outline-container-orga7519aa" class="outline-3">
-<h3 id="orga7519aa"><span class="section-number-3">1.7</span> HAC - IFF</h3>
+<div id="outline-container-orgd3d2942" class="outline-3">
+<h3 id="orgd3d2942"><span class="section-number-3">1.7</span> HAC - IFF</h3>
 <div class="outline-text-3" id="text-1-7">
 </div>
-<div id="outline-container-orgdcb3512" class="outline-4">
-<h4 id="orgdcb3512"><span class="section-number-4">1.7.1</span> Plant</h4>
+<div id="outline-container-org71d45ac" class="outline-4">
+<h4 id="org71d45ac"><span class="section-number-4">1.7.1</span> Plant</h4>
 <div class="outline-text-4" id="text-1-7-1">
 
-<div id="orgcb10b82" class="figure">
+<div id="org0fc8dea" class="figure">
 <p><img src="figs/hac_lac_plant_iff.png" alt="hac_lac_plant_iff.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Diagonal elements of the plant for HAC control when IFF is previously applied (<a href="./figs/hac_lac_plant_iff.png">png</a>, <a href="./figs/hac_lac_plant_iff.pdf">pdf</a>)</p>
@@ -654,8 +633,8 @@ We identify the transmissibility and compliance of the system.
 </div>
 </div>
 
-<div id="outline-container-org7775b79" class="outline-4">
-<h4 id="org7775b79"><span class="section-number-4">1.7.2</span> Controller Design</h4>
+<div id="outline-container-org8236bd6" class="outline-4">
+<h4 id="org8236bd6"><span class="section-number-4">1.7.2</span> Controller Design</h4>
 <div class="outline-text-4" id="text-1-7-2">
 <p>
 We design a diagonal controller with equal bandwidth for the 6 terms.
@@ -673,7 +652,7 @@ Kd_iff = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="o
 </div>
 
 
-<div id="org5ef2d56" class="figure">
+<div id="org211b595" class="figure">
 <p><img src="figs/hac_lac_loop_gain_iff.png" alt="hac_lac_loop_gain_iff.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Diagonal elements of the Loop Gain for the HAC control (<a href="./figs/hac_lac_loop_gain_iff.png">png</a>, <a href="./figs/hac_lac_loop_gain_iff.pdf">pdf</a>)</p>
@@ -690,8 +669,8 @@ Finally, we pre-multiply the diagonal controller by \(\bm{J}^{-T}\) prior implem
 </div>
 </div>
 
-<div id="outline-container-org37a736f" class="outline-4">
-<h4 id="org37a736f"><span class="section-number-4">1.7.3</span> Obtained Performance</h4>
+<div id="outline-container-org7810516" class="outline-4">
+<h4 id="org7810516"><span class="section-number-4">1.7.3</span> Obtained Performance</h4>
 <div class="outline-text-4" id="text-1-7-3">
 <p>
 We identify the transmissibility and compliance of the system.
@@ -719,7 +698,7 @@ We identify the transmissibility and compliance of the system.
 </div>
 
 
-<div id="orgfd7029e" class="figure">
+<div id="orgc47bfe0" class="figure">
 <p><img src="figs/hac_lac_C_T_iff.png" alt="hac_lac_C_T_iff.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Obtained Compliance and Transmissibility (<a href="./figs/hac_lac_C_T_iff.png">png</a>, <a href="./figs/hac_lac_C_T_iff.pdf">pdf</a>)</p>
@@ -728,25 +707,25 @@ We identify the transmissibility and compliance of the system.
 </div>
 </div>
 
-<div id="outline-container-org9224c01" class="outline-3">
-<h3 id="org9224c01"><span class="section-number-3">1.8</span> Comparison</h3>
+<div id="outline-container-org81c1767" class="outline-3">
+<h3 id="org81c1767"><span class="section-number-3">1.8</span> Comparison</h3>
 <div class="outline-text-3" id="text-1-8">
 
-<div id="org77494cc" class="figure">
+<div id="orgf042a3f" class="figure">
 <p><img src="figs/hac_lac_C_full_comparison.png" alt="hac_lac_C_full_comparison.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Comparison of the norm of the Compliance matrices for the HAC-LAC architecture (<a href="./figs/hac_lac_C_full_comparison.png">png</a>, <a href="./figs/hac_lac_C_full_comparison.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="org41b4aec" class="figure">
+<div id="org5a9df7e" class="figure">
 <p><img src="figs/hac_lac_T_full_comparison.png" alt="hac_lac_T_full_comparison.png" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Comparison of the norm of the Transmissibility matrices for the HAC-LAC architecture (<a href="./figs/hac_lac_T_full_comparison.png">png</a>, <a href="./figs/hac_lac_T_full_comparison.pdf">pdf</a>)</p>
 </div>
 
 
-<div id="orgddec129" class="figure">
+<div id="orgdc12a99" class="figure">
 <p><img src="figs/hac_lac_C_T_comparison.png" alt="hac_lac_C_T_comparison.png" />
 </p>
 <p><span class="figure-number">Figure 12: </span>Comparison of the Frobenius norm of the Compliance and Transmissibility for the HAC-LAC architecture with both IFF and DVF (<a href="./figs/hac_lac_C_T_comparison.png">png</a>, <a href="./figs/hac_lac_C_T_comparison.pdf">pdf</a>)</p>
@@ -755,21 +734,21 @@ We identify the transmissibility and compliance of the system.
 </div>
 </div>
 
-<div id="outline-container-orgde62390" class="outline-2">
-<h2 id="orgde62390"><span class="section-number-2">2</span> MIMO Analysis</h2>
+<div id="outline-container-org6f94eba" class="outline-2">
+<h2 id="org6f94eba"><span class="section-number-2">2</span> MIMO Analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Let&rsquo;s define the system as shown in figure <a href="#orgba6519a">13</a>.
+Let&rsquo;s define the system as shown in figure <a href="#orgac8f77c">13</a>.
 </p>
 
 
-<div id="orgba6519a" class="figure">
+<div id="orgac8f77c" class="figure">
 <p><img src="figs/general_control_names.png" alt="general_control_names.png" />
 </p>
 <p><span class="figure-number">Figure 13: </span>General Control Architecture</p>
 </div>
 
-<table id="org1daae94" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="orgc2ee4b0" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 1:</span> Signals definition for the generalized plant</caption>
 
 <colgroup>
@@ -847,8 +826,8 @@ Let&rsquo;s define the system as shown in figure <a href="#orgba6519a">13</a>.
 </table>
 </div>
 
-<div id="outline-container-orgf2ef3bf" class="outline-3">
-<h3 id="orgf2ef3bf"><span class="section-number-3">2.1</span> Initialization</h3>
+<div id="outline-container-orgc26d5f4" class="outline-3">
+<h3 id="orgc26d5f4"><span class="section-number-3">2.1</span> Initialization</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 We first initialize the Stewart platform.
@@ -879,12 +858,12 @@ payload = initializePayload(<span class="org-string">'type'</span>, <span class=
 </div>
 </div>
 
-<div id="outline-container-org169782d" class="outline-3">
-<h3 id="org169782d"><span class="section-number-3">2.2</span> Identification</h3>
+<div id="outline-container-org308b8f7" class="outline-3">
+<h3 id="org308b8f7"><span class="section-number-3">2.2</span> Identification</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org39e10f2" class="outline-4">
-<h4 id="org39e10f2"><span class="section-number-4">2.2.1</span> HAC - Without LAC</h4>
+<div id="outline-container-org2309d71" class="outline-4">
+<h4 id="org2309d71"><span class="section-number-4">2.2.1</span> HAC - Without LAC</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
@@ -909,8 +888,8 @@ G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 </div>
 
-<div id="outline-container-org0f4faf4" class="outline-4">
-<h4 id="org0f4faf4"><span class="section-number-4">2.2.2</span> HAC - DVF</h4>
+<div id="outline-container-org492aabc" class="outline-4">
+<h4 id="org492aabc"><span class="section-number-4">2.2.2</span> HAC - DVF</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
@@ -936,8 +915,8 @@ G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-orgf7913d5" class="outline-4">
-<h4 id="orgf7913d5"><span class="section-number-4">2.2.3</span> Cartesian Frame</h4>
+<div id="outline-container-orgf606814" class="outline-4">
+<h4 id="orgf606814"><span class="section-number-4">2.2.3</span> Cartesian Frame</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <div class="org-src-container">
 <pre class="src src-matlab">Gc_ol = minreal(G_ol)<span class="org-type">/</span>stewart.kinematics.J<span class="org-type">'</span>;
@@ -951,8 +930,8 @@ Gc_dvf.InputName = {<span class="org-string">'Fx'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-orgf9a6267" class="outline-3">
-<h3 id="orgf9a6267"><span class="section-number-3">2.3</span> Singular Value Decomposition</h3>
+<div id="outline-container-org8349fa6" class="outline-3">
+<h3 id="org8349fa6"><span class="section-number-3">2.3</span> Singular Value Decomposition</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-matlab">freqs = logspace(1, 4, 1000);
@@ -982,8 +961,8 @@ V_dvf = zeros(6,6,length(freqs));
 </div>
 </div>
 
-<div id="outline-container-orgebf6121" class="outline-2">
-<h2 id="orgebf6121"><span class="section-number-2">3</span> Diagonal Control based on the damped plant</h2>
+<div id="outline-container-orgc8479b7" class="outline-2">
+<h2 id="orgc8479b7"><span class="section-number-2">3</span> Diagonal Control based on the damped plant</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 From <a class='org-ref-reference' href="#skogestad07_multiv_feedb_contr">skogestad07_multiv_feedb_contr</a>, a simple approach to multivariable control is the following two-step procedure:
@@ -1008,8 +987,8 @@ There are mainly three different cases:
 </ol>
 </div>
 
-<div id="outline-container-org8c2f437" class="outline-3">
-<h3 id="org8c2f437"><span class="section-number-3">3.1</span> Initialization</h3>
+<div id="outline-container-orga3f0f82" class="outline-3">
+<h3 id="orga3f0f82"><span class="section-number-3">3.1</span> Initialization</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We first initialize the Stewart platform.
@@ -1040,8 +1019,8 @@ payload = initializePayload(<span class="org-string">'type'</span>, <span class=
 </div>
 </div>
 
-<div id="outline-container-orge2b1c03" class="outline-3">
-<h3 id="orge2b1c03"><span class="section-number-3">3.2</span> Identification</h3>
+<div id="outline-container-orgab56a44" class="outline-3">
+<h3 id="orgab56a44"><span class="section-number-3">3.2</span> Identification</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
@@ -1067,12 +1046,12 @@ G_dvf.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-strin
 </div>
 </div>
 
-<div id="outline-container-orgab6bc6f" class="outline-3">
-<h3 id="orgab6bc6f"><span class="section-number-3">3.3</span> Steady State Decoupling</h3>
+<div id="outline-container-orgae85e0d" class="outline-3">
+<h3 id="orgae85e0d"><span class="section-number-3">3.3</span> Steady State Decoupling</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-orga589a4a" class="outline-4">
-<h4 id="orga589a4a"><span class="section-number-4">3.3.1</span> Pre-Compensator Design</h4>
+<div id="outline-container-org1e2bbe7" class="outline-4">
+<h4 id="org1e2bbe7"><span class="section-number-4">3.3.1</span> Pre-Compensator Design</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 We choose \(W_1 = G^{-1}(0)\).
@@ -1102,18 +1081,18 @@ In the case of the Stewart platform, the pre-compensator for static decoupling i
 \end{align*}
 
 <p>
-The static decoupled plant is schematic shown in Figure <a href="#org2d65021">14</a> and the bode plots of its diagonal elements are shown in Figure <a href="#org4a3c33d">15</a>.
+The static decoupled plant is schematic shown in Figure <a href="#org76617c6">14</a> and the bode plots of its diagonal elements are shown in Figure <a href="#org96093e0">15</a>.
 </p>
 
 
-<div id="org2d65021" class="figure">
+<div id="org76617c6" class="figure">
 <p><img src="figs/control_arch_static_decoupling.png" alt="control_arch_static_decoupling.png" />
 </p>
 <p><span class="figure-number">Figure 14: </span>Static Decoupling of the Stewart platform</p>
 </div>
 
 
-<div id="org4a3c33d" class="figure">
+<div id="org96093e0" class="figure">
 <p><img src="figs/static_decoupling_diagonal_plant.png" alt="static_decoupling_diagonal_plant.png" />
 </p>
 <p><span class="figure-number">Figure 15: </span>Bode plot of the diagonal elements of \(G_s(s)\) (<a href="./figs/static_decoupling_diagonal_plant.png">png</a>, <a href="./figs/static_decoupling_diagonal_plant.pdf">pdf</a>)</p>
@@ -1121,8 +1100,8 @@ The static decoupled plant is schematic shown in Figure <a href="#org2d65021">14
 </div>
 </div>
 
-<div id="outline-container-org9eaf88f" class="outline-4">
-<h4 id="org9eaf88f"><span class="section-number-4">3.3.2</span> Diagonal Control Design</h4>
+<div id="outline-container-org077e6f6" class="outline-4">
+<h4 id="org077e6f6"><span class="section-number-4">3.3.2</span> Diagonal Control Design</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 We design a diagonal controller \(K_s(s)\) that consist of a pure integrator and a lead around the crossover.
@@ -1139,7 +1118,7 @@ Ks_dvf = diag(1<span class="org-type">./</span>abs(diag(freqresp(1<span class="o
 </div>
 
 <p>
-The overall controller is then \(K(s) = W_1 K_s(s)\) as shown in Figure <a href="#org6068962">16</a>.
+The overall controller is then \(K(s) = W_1 K_s(s)\) as shown in Figure <a href="#org4d1ce48">16</a>.
 </p>
 
 <div class="org-src-container">
@@ -1148,7 +1127,7 @@ The overall controller is then \(K(s) = W_1 K_s(s)\) as shown in Figure <a href=
 </div>
 
 
-<div id="org6068962" class="figure">
+<div id="org4d1ce48" class="figure">
 <p><img src="figs/control_arch_static_decoupling_K.png" alt="control_arch_static_decoupling_K.png" />
 </p>
 <p><span class="figure-number">Figure 16: </span>Controller including the static decoupling matrix</p>
@@ -1156,8 +1135,8 @@ The overall controller is then \(K(s) = W_1 K_s(s)\) as shown in Figure <a href=
 </div>
 </div>
 
-<div id="outline-container-org5d77351" class="outline-4">
-<h4 id="org5d77351"><span class="section-number-4">3.3.3</span> Results</h4>
+<div id="outline-container-org4e0fae0" class="outline-4">
+<h4 id="org4e0fae0"><span class="section-number-4">3.3.3</span> Results</h4>
 <div class="outline-text-4" id="text-3-3-3">
 <p>
 We identify the transmissibility and compliance of the Stewart platform under open-loop and closed-loop control.
@@ -1182,7 +1161,7 @@ The results are shown in figure
 </p>
 
 
-<div id="orgedc3353" class="figure">
+<div id="orge29798b" class="figure">
 <p><img src="figs/static_decoupling_C_T_frobenius_norm.png" alt="static_decoupling_C_T_frobenius_norm.png" />
 </p>
 <p><span class="figure-number">Figure 17: </span>Frobenius norm of the Compliance and transmissibility matrices (<a href="./figs/static_decoupling_C_T_frobenius_norm.png">png</a>, <a href="./figs/static_decoupling_C_T_frobenius_norm.pdf">pdf</a>)</p>
@@ -1191,8 +1170,8 @@ The results are shown in figure
 </div>
 </div>
 
-<div id="outline-container-org7af13df" class="outline-3">
-<h3 id="org7af13df"><span class="section-number-3">3.4</span> Decoupling at Crossover</h3>
+<div id="outline-container-orgad35bf9" class="outline-3">
+<h3 id="orgad35bf9"><span class="section-number-3">3.4</span> Decoupling at Crossover</h3>
 <div class="outline-text-3" id="text-3-4">
 <ul class="org-ul">
 <li class="off"><code>[&#xa0;]</code> Find a method for real approximation of a complex matrix</li>
@@ -1201,12 +1180,12 @@ The results are shown in figure
 </div>
 </div>
 
-<div id="outline-container-orgde0f265" class="outline-2">
-<h2 id="orgde0f265"><span class="section-number-2">4</span> Time Domain Simulation</h2>
+<div id="outline-container-org846cef9" class="outline-2">
+<h2 id="org846cef9"><span class="section-number-2">4</span> Time Domain Simulation</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org327858f" class="outline-3">
-<h3 id="org327858f"><span class="section-number-3">4.1</span> Initialization</h3>
+<div id="outline-container-org58e2ab0" class="outline-3">
+<h3 id="org58e2ab0"><span class="section-number-3">4.1</span> Initialization</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 We first initialize the Stewart platform.
@@ -1242,8 +1221,8 @@ payload = initializePayload(<span class="org-string">'type'</span>, <span class=
 </div>
 </div>
 
-<div id="outline-container-org27ed7aa" class="outline-3">
-<h3 id="org27ed7aa"><span class="section-number-3">4.2</span> HAC IFF</h3>
+<div id="outline-container-org8dbc004" class="outline-3">
+<h3 id="org8dbc004"><span class="section-number-3">4.2</span> HAC IFF</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'iff'</span>);
@@ -1285,8 +1264,8 @@ K_hac_iff = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class=
 </div>
 </div>
 
-<div id="outline-container-orgfd6afac" class="outline-3">
-<h3 id="orgfd6afac"><span class="section-number-3">4.3</span> HAC-DVF</h3>
+<div id="outline-container-org7dc4716" class="outline-3">
+<h3 id="org7dc4716"><span class="section-number-3">4.3</span> HAC-DVF</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'dvf'</span>);
@@ -1329,8 +1308,8 @@ K_hac_dvf = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class=
 </div>
 </div>
 
-<div id="outline-container-orgd68da79" class="outline-3">
-<h3 id="orgd68da79"><span class="section-number-3">4.4</span> Results</h3>
+<div id="outline-container-orgf7c304f" class="outline-3">
+<h3 id="orgf7c304f"><span class="section-number-3">4.4</span> Results</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-type">figure</span>;
@@ -1358,21 +1337,21 @@ ylabel(<span class="org-string">'Orientation error [rad]'</span>);
 </div>
 </div>
 
-<div id="outline-container-org1ce6b23" class="outline-2">
-<h2 id="org1ce6b23"><span class="section-number-2">5</span> Functions</h2>
+<div id="outline-container-org69ebad1" class="outline-2">
+<h2 id="org69ebad1"><span class="section-number-2">5</span> Functions</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org9b036f8" class="outline-3">
-<h3 id="org9b036f8"><span class="section-number-3">5.1</span> <code>initializeController</code>: Initialize the Controller</h3>
+<div id="outline-container-orgc7bcc65" class="outline-3">
+<h3 id="orgc7bcc65"><span class="section-number-3">5.1</span> <code>initializeController</code>: Initialize the Controller</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
-<a id="org339969f"></a>
+<a id="org33a5401"></a>
 </p>
 </div>
 
-<div id="outline-container-org89608d1" class="outline-4">
-<h4 id="org89608d1">Function description</h4>
-<div class="outline-text-4" id="text-org89608d1">
+<div id="outline-container-orgf672f64" class="outline-4">
+<h4 id="orgf672f64">Function description</h4>
+<div class="outline-text-4" id="text-orgf672f64">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[controller]</span> = <span class="org-function-name">initializeController</span>(<span class="org-variable-name">args</span>)
 <span class="org-comment">% initializeController - Initialize the Controller</span>
@@ -1386,9 +1365,9 @@ ylabel(<span class="org-string">'Orientation error [rad]'</span>);
 </div>
 </div>
 
-<div id="outline-container-orgb457316" class="outline-4">
-<h4 id="orgb457316">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgb457316">
+<div id="outline-container-org941466e" class="outline-4">
+<h4 id="org941466e">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org941466e">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.type   char   {mustBeMember(args.type, {<span class="org-string">'open-loop'</span>, <span class="org-string">'iff'</span>, <span class="org-string">'dvf'</span>, <span class="org-string">'hac-iff'</span>, <span class="org-string">'hac-dvf'</span>, <span class="org-string">'ref-track-L'</span>, <span class="org-string">'ref-track-X'</span>, <span class="org-string">'ref-track-hac-dvf'</span>})} = <span class="org-string">'open-loop'</span>
@@ -1398,9 +1377,9 @@ ylabel(<span class="org-string">'Orientation error [rad]'</span>);
 </div>
 </div>
 
-<div id="outline-container-orgad0bd08" class="outline-4">
-<h4 id="orgad0bd08">Structure initialization</h4>
-<div class="outline-text-4" id="text-orgad0bd08">
+<div id="outline-container-org65d3a7d" class="outline-4">
+<h4 id="org65d3a7d">Structure initialization</h4>
+<div class="outline-text-4" id="text-org65d3a7d">
 <div class="org-src-container">
 <pre class="src src-matlab">controller = struct();
 </pre>
@@ -1408,9 +1387,9 @@ ylabel(<span class="org-string">'Orientation error [rad]'</span>);
 </div>
 </div>
 
-<div id="outline-container-org05c3878" class="outline-4">
-<h4 id="org05c3878">Add Type</h4>
-<div class="outline-text-4" id="text-org05c3878">
+<div id="outline-container-org32be93f" class="outline-4">
+<h4 id="org32be93f">Add Type</h4>
+<div class="outline-text-4" id="text-org32be93f">
 <div class="org-src-container">
 <pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
   <span class="org-keyword">case</span> <span class="org-string">'open-loop'</span>
@@ -1439,7 +1418,7 @@ ylabel(<span class="org-string">'Orientation error [rad]'</span>);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-12 jeu. 18:06</p>
+<p class="date">Created: 2020-03-13 ven. 10:34</p>
 </div>
 </body>
 </html>

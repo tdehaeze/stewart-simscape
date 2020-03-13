@@ -63,17 +63,29 @@ It is possible to:
 
 The code that is used for identification is explained [[file:identification.org][here]].
  
-* Active Damping ([[file:active-damping.org][link]])
-The use of different sensors are compared for active damping:
-- Inertial Sensor in each strut
-- Inertial Sensor fixed to the mobile platform
-- Force Sensor in each strut
-- Relative Motion Sensor in each strut
+* Control
+The use of active control for Stewart platforms is a wide subject.
+Many aspect can be studied.
 
-The result of the analysis is accessible [[file:active-damping.org][here]].
+The sensors used is of primary important. We can have:
+- Sensors located in each strut: relative motion, force sensor, inertial sensor
+- Sensors measuring the relative motion between the fixed base and the mobile platform
+- Inertial sensors located on the mobile platform
 
-* Motion Control of the Stewart Platform ([[file:control-study.org][link]])
-Some control architecture for motion control of the Stewart platform are applied on the Simscape model and compared in [[file:control-study.org][this]] document.
+The control objective can also vary:
+- Reference Tracking
+- Active Damping
+- Vibration Isolation
+
+The Control for Stewart platforms is here studied in the following files:
+- *Active Damping* ([[file:control-active-damping.org][link]]).
+  The use of different sensors are compared for active damping:
+  - Inertial Sensor in each strut or fixed to the mobile platform
+  - Force Sensor in each strut
+  - Relative Motion Sensor in each strut
+- *Motion Control* ([[file:control-tracking.org][link]]).
+  Different control architectures (centralized and decentralized) are compared for the position control of the Stewart platform.
+- *Vibration Isolation* ([[file:control-vibration-isolation.org][link]])
 
 * Cubic Configuration ([[file:cubic-configuration.org][link]])
 The cubic configuration is a special class of Stewart platform that has interesting properties.
