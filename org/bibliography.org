@@ -38,6 +38,15 @@
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
+Things to add:
+- cite:zheng20_multi_frequen_mimo_contr_method
+- cite:ting05_error
+- cite:rahman98_multiax
+- cite:rahman96_six
+- cite:beijen18_exper_estim_trans_matric_indus
+- cite:xie17_model_contr_hybrid_passiv_activ
+- cite:chi15_desig_exper_study_vcm_based
+
 * Books
 |                                                        | <c>  |
 | Link to bibliography                                   | Read |
