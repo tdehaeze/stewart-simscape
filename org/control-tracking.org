@@ -70,13 +70,13 @@ The control configuration are compare in section [[sec:comparison]].
 #+end_src
 
 ** Control Schematic
-The control architecture is shown in Figure [[fig:control_measure_rotating_2dof]].
+The control architecture is shown in Figure [[fig:decentralized_reference_tracking_L]].
 
 The required leg length $\bm{r}_\mathcal{L}$ is computed from the reference path $\bm{r}_\mathcal{X}$ using the inverse kinematics.
 
 Then, a diagonal (decentralized) controller $\bm{K}_\mathcal{L}$ is used such that each leg lengths stays close to its required length.
 
-#+begin_src latex :file control_measure_rotating_2dof.pdf
+#+begin_src latex :file decentralized_reference_tracking_L.pdf
   \begin{tikzpicture}
     % Blocs
     \node[block, align=center] (J) at (0, 0) {Inverse\\Kinematics};
@@ -93,10 +93,10 @@ Then, a diagonal (decentralized) controller $\bm{K}_\mathcal{L}$ is used such th
   \end{tikzpicture}
 #+end_src
 
-#+name: fig:control_measure_rotating_2dof
+#+name: fig:decentralized_reference_tracking_L
 #+caption: Decentralized control for reference tracking
 #+RESULTS:
-[[file:figs/control_measure_rotating_2dof.png]]
+[[file:figs/decentralized_reference_tracking_L.png]]
 
 ** Initialize the Stewart platform
 #+begin_src matlab :noweb yes
@@ -121,49 +121,9 @@ Let's identify the transfer function from $\bm{\tau}$ to $\bm{\mathcal{L}}$.
 #+end_src
 
 ** Plant Analysis
-The diagonal terms of the plant is shown in Figure [[fig:plant_decentralized_diagonal]].
+The diagonal and off-diagonal terms of the plant are shown in Figure [[fig:plant_decentralized_L]].
 
 All the diagonal terms are equal.
-
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
-  hold on;
-  for i = 1:6
-    plot(freqs, abs(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
-  end
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
-
-  ax2 = subplot(2, 1, 2);
-  hold on;
-  for i = 1:6
-    plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
-  end
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
-  ylim([-180, 180]);
-  yticks([-180, -90, 0, 90, 180]);
-
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_decentralized_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:plant_decentralized_diagonal
-#+caption: Diagonal Elements of the Plant ([[./figs/plant_decentralized_diagonal.png][png]], [[./figs/plant_decentralized_diagonal.pdf][pdf]])
-[[file:figs/plant_decentralized_diagonal.png]]
-
-The off-diagonal terms are shown in Figure [[fig:plant_decentralized_off_diagonal]].
-
 We see that the plant is decoupled at low frequency which indicate that decentralized control may be a good idea.
 
 #+begin_src matlab :exports none
@@ -171,7 +131,29 @@ We see that the plant is decoupled at low frequency which indicate that decentra
 
   figure;
 
-  ax1 = subplot(2, 1, 1);
+  ax1 = subplot(2, 2, 1);
+  hold on;
+  for i = 1:6
+    plot(freqs, abs(squeeze(freqresp(G(i, i), freqs, 'Hz'))));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
+
+  ax2 = subplot(2, 2, 3);
+  hold on;
+  for i = 1:6
+    plot(freqs, 180/pi*angle(squeeze(freqresp(G(i, i), freqs, 'Hz'))), 'DisplayName', sprintf('$d\\mathcal{L}_%i/\\tau_%i$', i, i));
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+  legend('location', 'northwest');
+
+  ax3 = subplot(2, 2, 2);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -183,8 +165,9 @@ We see that the plant is decoupled at low frequency which indicate that decentra
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax4 = subplot(2, 2, 4);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -199,17 +182,17 @@ We see that the plant is decoupled at low frequency which indicate that decentra
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
 
-  linkaxes([ax1,ax2],'x');
+  linkaxes([ax1,ax2,ax3,ax4],'x');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_decentralized_off_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+#+begin_src matlab :var filepath="figs/plant_decentralized_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
 <<plt-matlab>>
 #+end_src
 
-#+name: fig:plant_decentralized_off_diagonal
-#+caption: Diagonal Elements of the Plant ([[./figs/plant_decentralized_off_diagonal.png][png]], [[./figs/plant_decentralized_off_diagonal.pdf][pdf]])
-[[file:figs/plant_decentralized_off_diagonal.png]]
+#+name: fig:plant_decentralized_L
+#+caption: Obtain Diagonal and off diagonal dynamics ([[./figs/plant_decentralized_L.png][png]], [[./figs/plant_decentralized_L.pdf][pdf]])
+[[file:figs/plant_decentralized_L.png]]
 
 ** Controller Design
 The controller consists of:
@@ -558,12 +541,16 @@ We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centra
   Gl.OutputName  = {'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
 #+end_src
 
+The bode plot of the plant is shown in Figure [[fig:plant_centralized_L]].
+We can see that the diagonal elements are identical.
+This will simplify the design of the controller as all the elements of the diagonal controller can be made identical.
+
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
 
   figure;
 
-  ax1 = subplot(2, 1, 1);
+  ax1 = subplot(2, 2, 1);
   hold on;
   for i = 1:6
     plot(freqs, abs(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
@@ -571,42 +558,21 @@ We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centra
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax2 = subplot(2, 2, 3);
   hold on;
   for i = 1:6
-    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))), 'DisplayName', ['$d\mathcal{L}_' num2str(i) '/\tau_' num2str(i) '$']);
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))), 'DisplayName', sprintf('$\\epsilon_{\\mathcal{L}_%i}/\\tau_%i$', i, i));
   end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
-  legend();
+  legend('location', 'northwest');
 
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:plant_centralized_diagonal_L
-#+caption: Diagonal Elements of the plant $\bm{J} \bm{G}$ ([[./figs/plant_centralized_diagonal_L.png][png]], [[./figs/plant_centralized_diagonal_L.pdf][pdf]])
-[[file:figs/plant_centralized_diagonal_L.png]]
-
-All the diagonal elements are identical.
-This will simplify the design of the controller as all the elements of the diagonal controller can be made identical.
-
-The off-diagonal terms of the controller are shown in Figure [[fig:plant_centralized_off_diagonal_L]].
-
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
+  ax3 = subplot(2, 2, 2);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -618,8 +584,9 @@ The off-diagonal terms of the controller are shown in Figure [[fig:plant_central
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax4 = subplot(2, 2, 4);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -634,17 +601,17 @@ The off-diagonal terms of the controller are shown in Figure [[fig:plant_central
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
 
-  linkaxes([ax1,ax2],'x');
+  linkaxes([ax1,ax2,ax3,ax4],'x');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+#+begin_src matlab :var filepath="figs/plant_centralized_L.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
 <<plt-matlab>>
 #+end_src
 
-#+name: fig:plant_centralized_off_diagonal_L
-#+caption: Off Diagonal Elements of the plant $\bm{J} \bm{G}$ ([[./figs/plant_centralized_off_diagonal_L.png][png]], [[./figs/plant_centralized_off_diagonal_L.pdf][pdf]])
-[[file:figs/plant_centralized_off_diagonal_L.png]]
+#+name: fig:plant_centralized_L
+#+caption: Diagonal and off-diagonal elements of the plant $\bm{K}\bm{G}$ ([[./figs/plant_centralized_L.png][png]], [[./figs/plant_centralized_L.pdf][pdf]])
+[[file:figs/plant_centralized_L.png]]
 
 We can see that this *totally decouples the system at low frequency*.
 
@@ -774,7 +741,7 @@ We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centra
 
   figure;
 
-  ax1 = subplot(2, 1, 1);
+  ax1 = subplot(2, 2, 1);
   hold on;
   for i = 1:6
     plot(freqs, abs(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))));
@@ -782,8 +749,9 @@ We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centra
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax2 = subplot(2, 2, 3);
   hold on;
   for i = 1:6
     plot(freqs, 180/pi*angle(squeeze(freqresp(Gx(i, i), freqs, 'Hz'))), 'DisplayName', labels{i});
@@ -793,30 +761,9 @@ We now multiply the plant by the Jacobian matrix as shown in Figure [[fig:centra
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
-  legend();
+  legend('location', 'northwest');
 
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:plant_centralized_diagonal_X
-#+caption: Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_diagonal_X.png][png]], [[./figs/plant_centralized_diagonal_X.pdf][pdf]])
-[[file:figs/plant_centralized_diagonal_X.png]]
-
-The diagonal terms are not the same.
-The resonances of the system are "decoupled".
-For instance, the vertical resonance of the system is only present on the diagonal term corresponding to $D_z/\mathcal{F}_z$.
-
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
+  ax3 = subplot(2, 2, 2);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -828,8 +775,9 @@ For instance, the vertical resonance of the system is only present on the diagon
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax4 = subplot(2, 2, 4);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -844,17 +792,21 @@ For instance, the vertical resonance of the system is only present on the diagon
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
 
-  linkaxes([ax1,ax2],'x');
+  linkaxes([ax1,ax2,ax3,ax4],'x');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+#+begin_src matlab :var filepath="figs/plant_centralized_X.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
 <<plt-matlab>>
 #+end_src
 
-#+name: fig:plant_centralized_off_diagonal_X
-#+caption: Off Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_off_diagonal_X.png][png]], [[./figs/plant_centralized_off_diagonal_X.pdf][pdf]])
-[[file:figs/plant_centralized_off_diagonal_X.png]]
+#+name: fig:plant_centralized_X
+#+caption: Diagonal and off-diagonal elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_X.png][png]], [[./figs/plant_centralized_X.pdf][pdf]])
+[[file:figs/plant_centralized_X.png]]
+
+The diagonal terms are not the same.
+The resonances of the system are "decoupled".
+For instance, the vertical resonance of the system is only present on the diagonal term corresponding to $D_z/\mathcal{F}_z$.
 
 Here the system is almost decoupled at all frequencies except for the transfer functions $\frac{R_y}{\mathcal{F}_x}$ and  $\frac{R_x}{\mathcal{F}_y}$.
 
@@ -985,7 +937,7 @@ The control architecture is shown in Figure [[fig:centralized_reference_tracking
 
 *** Plant Analysis
 The plant is pre-multiplied by $\bm{G}^{-1}(\omega = 0)$.
-The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centralized_diagonal_SD]].
+The diagonal and off-diagonal elements of the shaped plant are shown in Figure [[fig:plant_centralized_SD]].
 
 #+begin_src matlab
   G0 = G*inv(freqresp(G, 0));
@@ -996,7 +948,7 @@ The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centra
 
   figure;
 
-  ax1 = subplot(2, 1, 1);
+  ax1 = subplot(2, 2, 1);
   hold on;
   for i = 1:6
     plot(freqs, abs(squeeze(freqresp(G0(i, i), freqs, 'Hz'))));
@@ -1004,37 +956,21 @@ The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centra
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax2 = subplot(2, 2, 3);
   hold on;
   for i = 1:6
-    plot(freqs, 180/pi*angle(squeeze(freqresp(G0(i, i), freqs, 'Hz'))), 'DisplayName', ['$G_0(' num2str(i) ',' num2str(i) ')$']);
+    plot(freqs, 180/pi*angle(squeeze(freqresp(G0(i, i), freqs, 'Hz'))), 'DisplayName', sprintf('$G_0(%i,%i)$', i, i));
   end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
-  legend();
+  legend('location', 'northwest');
 
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_diagonal_SD.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:plant_centralized_diagonal_SD
-#+caption: Diagonal Elements of the plant $\bm{G} \bm{G}^{-1}(\omega = 0)$ ([[./figs/plant_centralized_diagonal_SD.png][png]], [[./figs/plant_centralized_diagonal_SD.pdf][pdf]])
-[[file:figs/plant_centralized_diagonal_SD.png]]
-
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
+  ax3 = subplot(2, 2, 2);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -1046,8 +982,9 @@ The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centra
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax4 = subplot(2, 2, 4);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -1062,17 +999,17 @@ The diagonal elements of the shaped plant are shown in Figure [[fig:plant_centra
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
 
-  linkaxes([ax1,ax2],'x');
+  linkaxes([ax1,ax2,ax3,ax4],'x');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/plant_centralized_off_diagonal_SD.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+#+begin_src matlab :var filepath="figs/plant_centralized_SD.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
 <<plt-matlab>>
 #+end_src
 
-#+name: fig:plant_centralized_off_diagonal_SD
-#+caption: Off Diagonal Elements of the plant $\bm{G} \bm{J}^{-T}$ ([[./figs/plant_centralized_off_diagonal_SD.png][png]], [[./figs/plant_centralized_off_diagonal_SD.pdf][pdf]])
-[[file:figs/plant_centralized_off_diagonal_SD.png]]
+#+name: fig:plant_centralized_SD
+#+caption: Diagonal and off-diagonal elements of the plant $\bm{G} \bm{G}^{-1}(\omega = 0)$ ([[./figs/plant_centralized_SD.png][png]], [[./figs/plant_centralized_SD.pdf][pdf]])
+[[file:figs/plant_centralized_SD.png]]
 
 *** Controller Design
 We have that:
@@ -1296,14 +1233,14 @@ Let's identify the transfer function from $\bm{\tau}$ to $\bm{L}$.
 #+end_src
 
 *** Obtained Plant
-The diagonal elements of the plant are shown in Figure [[fig:hybrid_control_Kl_plant_diagonal]] while the off diagonal terms are shown in Figure [[fig:hybrid_control_Kl_plant_off_diagonal]].
+The obtained plant is shown in Figure [[fig:hybrid_control_Kl_plant]].
 
 #+begin_src matlab :exports none
   freqs = logspace(1, 4, 1000);
 
   figure;
 
-  ax1 = subplot(2, 1, 1);
+  ax1 = subplot(2, 2, 1);
   hold on;
   for i = 1:6
     plot(freqs, abs(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
@@ -1311,36 +1248,21 @@ The diagonal elements of the plant are shown in Figure [[fig:hybrid_control_Kl_p
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax2 = subplot(2, 2, 3);
   hold on;
   for i = 1:6
-    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))));
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gl(i, i), freqs, 'Hz'))), 'DisplayName', sprintf('$\\epsilon_{\\mathcal{L}_%i}/\\tau_%i$', i, i));
   end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
+  legend('location', 'northwest');
 
-  linkaxes([ax1,ax2],'x');
-#+end_src
-
-#+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/hybrid_control_Kl_plant_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
-<<plt-matlab>>
-#+end_src
-
-#+name: fig:hybrid_control_Kl_plant_diagonal
-#+caption: Diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kl_plant_diagonal.png][png]], [[./figs/hybrid_control_Kl_plant_diagonal.pdf][pdf]])
-[[file:figs/hybrid_control_Kl_plant_diagonal.png]]
-
-#+begin_src matlab :exports none
-  freqs = logspace(1, 4, 1000);
-
-  figure;
-
-  ax1 = subplot(2, 1, 1);
+  ax3 = subplot(2, 2, 2);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -1352,8 +1274,9 @@ The diagonal elements of the plant are shown in Figure [[fig:hybrid_control_Kl_p
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+  title('Off-Diagonal elements of the Plant');
 
-  ax2 = subplot(2, 1, 2);
+  ax4 = subplot(2, 2, 4);
   hold on;
   for i = 1:5
     for j = i+1:6
@@ -1368,17 +1291,17 @@ The diagonal elements of the plant are shown in Figure [[fig:hybrid_control_Kl_p
   ylim([-180, 180]);
   yticks([-180, -90, 0, 90, 180]);
 
-  linkaxes([ax1,ax2],'x');
+  linkaxes([ax1,ax2,ax3,ax4],'x');
 #+end_src
 
 #+header: :tangle no :exports results :results none :noweb yes
-#+begin_src matlab :var filepath="figs/hybrid_control_Kl_plant_off_diagonal.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
+#+begin_src matlab :var filepath="figs/hybrid_control_Kl_plant.pdf" :var figsize="full-tall" :post pdf2svg(file=*this*, ext="png")
 <<plt-matlab>>
 #+end_src
 
-#+name: fig:hybrid_control_Kl_plant_off_diagonal
-#+caption: Off-diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kl_plant_off_diagonal.png][png]], [[./figs/hybrid_control_Kl_plant_off_diagonal.pdf][pdf]])
-[[file:figs/hybrid_control_Kl_plant_off_diagonal.png]]
+#+name: fig:hybrid_control_Kl_plant
+#+caption: Diagonal and off-diagonal elements of the plant for the design of $\bm{K}_\mathcal{L}$ ([[./figs/hybrid_control_Kl_plant.png][png]], [[./figs/hybrid_control_Kl_plant.pdf][pdf]])
+[[file:figs/hybrid_control_Kl_plant.png]]
 
 *** Controller Design
 We apply a decentralized (diagonal) direct velocity feedback.
