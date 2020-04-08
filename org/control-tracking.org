@@ -610,7 +610,7 @@ This will simplify the design of the controller as all the elements of the diago
 #+end_src
 
 #+name: fig:plant_centralized_L
-#+caption: Diagonal and off-diagonal elements of the plant $\bm{K}\bm{G}$ ([[./figs/plant_centralized_L.png][png]], [[./figs/plant_centralized_L.pdf][pdf]])
+#+caption: Diagonal and off-diagonal elements of the plant $\bm{J}\bm{G}$ ([[./figs/plant_centralized_L.png][png]], [[./figs/plant_centralized_L.pdf][pdf]])
 [[file:figs/plant_centralized_L.png]]
 
 We can see that this *totally decouples the system at low frequency*.

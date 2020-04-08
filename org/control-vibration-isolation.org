@@ -39,17 +39,6 @@
 :END:
 
 * Introduction                                                        :ignore:
-Control architectures can be divided in different ways.
-
-It can depend on the sensor used:
-- Sensors located in each strut: relative motion, force sensor, inertial sensor
-- Sensors measuring the relative motion between the fixed base and the mobile platform
-- Inertial sensors located on the mobile platform
-
-It can also depends on the control objective:
-- Reference Tracking
-- Active Damping
-- Vibration Isolation
 
 * HAC-LAC (Cascade) Control - Integral Control
 ** Introduction
