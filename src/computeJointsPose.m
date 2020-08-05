@@ -1,7 +1,7 @@
-function [stewart] = computeJointsPose(stewart)
+function [stewart] = computeJointsPose(stewart, args)
 % computeJointsPose -
 %
-% Syntax: [stewart] = computeJointsPose(stewart)
+% Syntax: [stewart] = computeJointsPose(stewart, args)
 %
 % Inputs:
 %    - stewart - A structure with the following fields
@@ -10,6 +10,9 @@ function [stewart] = computeJointsPose(stewart)
 %        - platform_F.FO_A [3x1] - Position of {A} with respect to {F}
 %        - platform_M.MO_B [3x1] - Position of {B} with respect to {M}
 %        - geometry.FO_M   [3x1] - Position of {M} with respect to {F}
+%    - args - Can have the following fields:
+%        - AP   [3x1] - The wanted position of {B} with respect to {A}
+%        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
 %
 % Outputs:
 %    - stewart - A structure with the following added fields
@@ -24,6 +27,12 @@ function [stewart] = computeJointsPose(stewart)
 %        - struts_M.l     [6x1]   - Length of the Mobile part of the i'th strut
 %        - platform_F.FRa [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the bottom of the i'th strut from {F}
 %        - platform_M.MRb [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the top of the i'th strut from {M}
+
+arguments
+    stewart
+    args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+    args.ARB (3,3) double {mustBeNumeric} = eye(3)
+end
 
 assert(isfield(stewart.platform_F, 'Fa'),   'stewart.platform_F should have attribute Fa')
 Fa = stewart.platform_F.Fa;
@@ -45,6 +54,9 @@ Bb = Mb - repmat(MO_B, [1, 6]);
 
 Ab = Bb - repmat(-MO_B-FO_M+FO_A, [1, 6]);
 Ba = Aa - repmat( MO_B+FO_M-FO_A, [1, 6]);
+
+Ab = args.ARB *(Bb - repmat(-args.AP, [1, 6]));
+Ba = args.ARB'*(Aa - repmat( args.AP, [1, 6]));
 
 As = (Ab - Aa)./vecnorm(Ab - Aa); % As_i is the i'th vector of As
 

@@ -424,7 +424,7 @@ Let's first generate all the possible combination of maximum translation and rot
 #+end_src
 
 #+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
-data2orgtable(Ps, {}, {'*Tx [m]*', '*Ty [m]*', '*Tz [m]*', '*Rx [rad]*', '*Ry [rad]*', '*Rz [rad]*'}, ' %.1e ');
+  data2orgtable(Ps, {}, {'*Tx [m]*', '*Ty [m]*', '*Tz [m]*', '*Rx [rad]*', '*Ry [rad]*', '*Rz [rad]*'}, ' %.1e ');
 #+end_src
 
 #+RESULTS:
@@ -615,7 +615,6 @@ using this function https://fr.mathworks.com/help/matlab/ref/contour3.html
 
 * Estimation of the Joint required Stroke
 ** Introduction                                                      :ignore:
-
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -629,37 +628,62 @@ using this function https://fr.mathworks.com/help/matlab/ref/contour3.html
   simulinkproject('../');
 #+end_src
 
-** Example of the initialization of a Stewart Platform
+** Estimation with an analytical model
 Let's first define the Stewart Platform Geometry.
 #+begin_src matlab
   stewart = initializeStewartPlatform();
   stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 150e-3);
   stewart = generateGeneralConfiguration(stewart);
-  stewart = computeJointsPose(stewart);
+  stewart = computeJointsPose(stewart, 'AP', [0; 0; 0]);
 
   As_init = stewart.geometry.As;
 #+end_src
 
 #+begin_src matlab
-  Tx_max = 50e-6; % Translation [m]
-  Ty_max = 50e-6; % Translation [m]
-  Tz_max = 50e-6; % Translation [m]
+  Tx_max = 60e-6; % Translation [m]
+  Ty_max = 60e-6; % Translation [m]
+  Tz_max = 60e-6; % Translation [m]
+  Rx_max = 30e-6; % Rotation [rad]
+  Ry_max = 30e-6; % Rotation [rad]
+  Rz_max = 0; % Rotation [rad]
 #+end_src
 
 #+begin_src matlab
-  Ps = [2*(dec2bin(0:3^2-2,3)-'0')-1].*[Tx_max Ty_max Tz_max];
+  Ps = [2*(dec2bin(0:5^2-1,5)-'0')-1, zeros(5^2, 1)].*[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
 #+end_src
 
 #+begin_src matlab
   flex_ang = zeros(size(Ps, 1), 6);
+  Rxs = zeros(size(Ps, 1), 6)
+  Rys = zeros(size(Ps, 1), 6)
+  Rzs = zeros(size(Ps, 1), 6)
 
   for Ps_i = 1:size(Ps, 1)
-      stewart.geometry.FO_M = [0; 0; 90e-3] + Ps(Ps_i, :)';
+      Rx = [1 0        0;
+            0 cos(Ps(Ps_i, 4)) -sin(Ps(Ps_i, 4));
+            0 sin(Ps(Ps_i, 4))  cos(Ps(Ps_i, 4))];
 
-      stewart = generateGeneralConfiguration(stewart);
-      stewart = computeJointsPose(stewart);
+      Ry = [ cos(Ps(Ps_i, 5)) 0 sin(Ps(Ps_i, 5));
+             0        1 0;
+             -sin(Ps(Ps_i, 5)) 0 cos(Ps(Ps_i, 5))];
+
+      Rz = [cos(Ps(Ps_i, 6)) -sin(Ps(Ps_i, 6)) 0;
+            sin(Ps(Ps_i, 6))  cos(Ps(Ps_i, 6)) 0;
+            0        0       1];
+
+      ARB = Rz*Ry*Rx;
+
+      stewart = computeJointsPose(stewart, 'AP', Ps(Ps_i, 1:3)', 'ARB', ARB);
 
       flex_ang(Ps_i, :) = acos(sum(As_init.*stewart.geometry.As));
+     
+      for l_i = 1:6
+          MRf = stewart.platform_M.MRb(:,:,l_i)*(ARB')*(stewart.platform_F.FRa(:,:,l_i)');
+         
+          Rys(Ps_i, l_i) = atan2(MRf(1,3), sqrt(MRf(1,1)^2 + MRf(2,2)^2));
+          Rxs(Ps_i, l_i) = atan2(-MRf(2,3)/cos(Rys(Ps_i, l_i)), MRf(3,3)/cos(Rys(Ps_i, l_i)));
+          Rzs(Ps_i, l_i) = atan2(-MRf(1,2)/cos(Rys(Ps_i, l_i)), MRf(1,1)/cos(Rys(Ps_i, l_i)));
+      end
   end
 #+end_src
 
@@ -669,7 +693,126 @@ And the maximum bending of the flexible joints is: (in [mrad])
 #+end_src
 
 #+RESULTS:
-: 0.90937
+: 1.1704
+
+#+begin_src matlab :results replace value
+  1e3*max(max(sqrt(Rxs.^2 + Rys.^2)))
+#+end_src
+
+#+RESULTS:
+: 0.075063
+
+#+begin_src matlab :results replace value
+  1e3*max(max(Rzs))
+#+end_src
+
+#+RESULTS:
+: 0.04666
+
+** Estimation using the Simscape Model
+*** Model Init
+#+begin_src matlab
+  open('stewart_platform_model.slx')
+#+end_src
+
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeStrutDynamics(stewart);
+  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'rigid');
+  payload = initializePayload('type', 'none');
+  controller = initializeController('type', 'open-loop');
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
+*** Controller design to be close to the wanted displacement
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+  %% Run the linearization
+  G = linearize(mdl, io);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+#+end_src
+
+#+begin_src matlab
+  wc = 2*pi*30;
+  Kl = diag(1./diag(abs(freqresp(G, wc)))) * wc/s * 1/(1 + s/3/wc);
+#+end_src
+
+#+begin_src matlab
+  controller = initializeController('type', 'ref-track-L');
+#+end_src
+
+*** Simulations
+#+begin_src matlab
+  Tx_max = 60e-6; % Translation [m]
+  Ty_max = 60e-6; % Translation [m]
+  Tz_max = 60e-6; % Translation [m]
+  Rx_max = 30e-6; % Rotation [rad]
+  Ry_max = 30e-6; % Rotation [rad]
+  Rz_max = 0; % Rotation [rad]
+#+end_src
+
+#+begin_src matlab
+  Ps = [2*(dec2bin(0:5^2-1,5)-'0')-1, zeros(5^2, 1)].*[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
+#+end_src
+
+#+begin_src matlab
+  cl_perf = zeros(size(Ps, 1), 1); % Closed loop performance [percentage]
+  Rs = zeros(size(Ps, 1), 5); % Max Flexor angles for the 6 legs [mrad]
+
+  for Ps_i = 1:size(Ps, 1)
+      fprintf('Experiment %i over %i', Ps_i, size(Ps, 1));
+     
+      references = initializeReferences(stewart, 't', 0, 'r', Ps(Ps_i, :)');
+      set_param('stewart_platform_model','StopTime','0.1');
+      sim('stewart_platform_model');
+
+      cl_perf(Ps_i) = 100*max(abs((simout.y.dLm.Data(end, :) - references.rL.Data(:,1,1)')./simout.y.dLm.Data(end, :)));
+      Rs(Ps_i, :) = [max(abs(1e3*simout.y.Rf.Data(end, 1:2:end))), max(abs(1e3*simout.y.Rf.Data(end, 2:2:end))), max(abs(1e3*simout.y.Rm.Data(end, 1:3:end))), max(abs(1e3*simout.y.Rm.Data(end, 2:3:end))), max(abs(1e3*simout.y.Rm.Data(end, 3:3:end)))]';
+  end
+#+end_src
+
+Verify that the simulations are all correct:
+#+begin_src matlab :results replace value
+  max(cl_perf)
+#+end_src
+
+#+RESULTS:
+: 8.1147
+
+*** Results
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  data2orgtable(max(Rs)', {'Rx bot', 'Ry bot', 'Rx top', 'Ry top', 'Rz top'}, {'Stroke [mrad]'}, ' %.2f ');
+#+end_src
+
+#+RESULTS:
+|        | Stroke [mrad] |
+|--------+---------------|
+| Rx bot |          1.03 |
+| Ry bot |          0.93 |
+| Rx top |          1.06 |
+| Ry top |          0.95 |
+| Rz top |          0.03 |
 
 * Functions
 <<sec:functions>>

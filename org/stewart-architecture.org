@@ -632,10 +632,10 @@ This Matlab function is accessible [[file:../src/computeJointsPose.m][here]].
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  function [stewart] = computeJointsPose(stewart)
+  function [stewart] = computeJointsPose(stewart, args)
   % computeJointsPose -
   %
-  % Syntax: [stewart] = computeJointsPose(stewart)
+  % Syntax: [stewart] = computeJointsPose(stewart, args)
   %
   % Inputs:
   %    - stewart - A structure with the following fields
@@ -644,6 +644,9 @@ This Matlab function is accessible [[file:../src/computeJointsPose.m][here]].
   %        - platform_F.FO_A [3x1] - Position of {A} with respect to {F}
   %        - platform_M.MO_B [3x1] - Position of {B} with respect to {M}
   %        - geometry.FO_M   [3x1] - Position of {M} with respect to {F}
+  %    - args - Can have the following fields:
+  %        - AP   [3x1] - The wanted position of {B} with respect to {A}
+  %        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
   %
   % Outputs:
   %    - stewart - A structure with the following added fields
@@ -658,6 +661,18 @@ This Matlab function is accessible [[file:../src/computeJointsPose.m][here]].
   %        - struts_M.l     [6x1]   - Length of the Mobile part of the i'th strut
   %        - platform_F.FRa [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the bottom of the i'th strut from {F}
   %        - platform_M.MRb [3x3x6] - The i'th 3x3 array is the rotation matrix to orientate the top of the i'th strut from {M}
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
+      args.ARB (3,3) double {mustBeNumeric} = eye(3)
+  end
 #+end_src
 
 *** Check the =stewart= structure elements
@@ -688,9 +703,18 @@ This Matlab function is accessible [[file:../src/computeJointsPose.m][here]].
 #+begin_src matlab
   Aa = Fa - repmat(FO_A, [1, 6]);
   Bb = Mb - repmat(MO_B, [1, 6]);
+#+end_src
 
+Original:
+#+begin_src matlab
   Ab = Bb - repmat(-MO_B-FO_M+FO_A, [1, 6]);
   Ba = Aa - repmat( MO_B+FO_M-FO_A, [1, 6]);
+#+end_src
+
+Translation & Rotation: (Rotation and then translation)
+#+begin_src matlab
+  Ab = args.ARB *Bb - repmat(-args.AP, [1, 6]);
+  Ba = args.ARB'*Aa - repmat( args.AP, [1, 6]);
 #+end_src
 
 *** Compute the strut length and orientation
