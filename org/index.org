@@ -7,7 +7,7 @@
 #+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
 #+HTML_HEAD: <script src="./js/readtheorg.js"></script>
 
-#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/org/}{config.tex}")
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/tikz/org/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
@@ -28,7 +28,7 @@ The project is managed with a *Simulink Project*.
 Such project is briefly presented [[file:simulink-project.org][here]].
 
 * Stewart Platform Architecture Definition ([[file:stewart-architecture.org][link]])
-The way the Stewart Platform is defined [[file:stewart-architecture.org][here]].
+The way the Stewart Platform is defined is explained [[file:stewart-architecture.org][here]].
 
 All the geometrical parameters are defined including:
 - Definition of the location of the frames

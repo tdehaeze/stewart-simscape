@@ -25,7 +25,7 @@
 #+PROPERTY: header-args:matlab+ :mkdirp yes
 #+PROPERTY: header-args:matlab+ :output-dir figs
 
-#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/thesis/latex/org/}{config.tex}")
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/tikz/org/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
@@ -130,6 +130,7 @@ The amount of these deflections are a function of the applied wrench as well as 
 As explain in [[file:stewart-architecture.org][this]] document, each Actuator is modeled by 3 elements in parallel:
 - A spring with a stiffness $k_{i}$
 - A dashpot with a damping $c_{i}$
+- A force source $\tau_i$
 
 The stiffness of the actuator $k_i$ links the applied actuator force $\delta \tau_i$ and the corresponding small deflection $\delta l_i$:
 \begin{equation*}
