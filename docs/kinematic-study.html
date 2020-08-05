@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-05 mer. 13:27 -->
+<!-- 2020-08-05 mer. 16:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Kinematic Study of the Stewart Platform</title>
 <meta name="generator" content="Org mode" />
@@ -55,14 +55,14 @@
 </li>
 <li><a href="#org86b4b35">4. Estimation of the range validity of the approximate inverse kinematics</a>
 <ul>
-<li><a href="#orga78aa66">4.1. Stewart architecture definition</a></li>
+<li><a href="#org6a6a5df">4.1. Stewart architecture definition</a></li>
 <li><a href="#orgd83ccf3">4.2. Comparison for &ldquo;pure&rdquo; translations</a></li>
 <li><a href="#org4871c83">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org63255f9">5. Estimated required actuator stroke from specified platform mobility</a>
 <ul>
-<li><a href="#orgadaa219">5.1. Stewart architecture definition</a></li>
+<li><a href="#org94b26cb">5.1. Stewart architecture definition</a></li>
 <li><a href="#orgde50dd3">5.2. Wanted translations and rotations</a></li>
 <li><a href="#org24e45ca">5.3. Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
 <li><a href="#orgf6ba90c">5.4. Needed stroke for &ldquo;combined&rdquo; rotations or translations</a></li>
@@ -70,21 +70,29 @@
 </li>
 <li><a href="#orgbbbf7b3">6. Estimated platform mobility from specified actuator stroke</a>
 <ul>
-<li><a href="#org6a6a5df">6.1. Stewart architecture definition</a></li>
+<li><a href="#org39d80a1">6.1. Stewart architecture definition</a></li>
 <li><a href="#org2c6819e">6.2. Pure translations</a></li>
 </ul>
 </li>
 <li><a href="#orgad495dd">7. Estimation of the Joint required Stroke</a>
 <ul>
-<li><a href="#orgae20178">7.1. Example of the initialization of a Stewart Platform</a></li>
+<li><a href="#org0eac36f">7.1. Estimation with an analytical model</a></li>
+<li><a href="#org22e7362">7.2. Estimation using the Simscape Model</a>
+<ul>
+<li><a href="#org74fd123">7.2.1. Model Init</a></li>
+<li><a href="#org55b87b1">7.2.2. Controller design to be close to the wanted displacement</a></li>
+<li><a href="#org88ff9a1">7.2.3. Simulations</a></li>
+<li><a href="#org881aa14">7.2.4. Results</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#orgc4916dc">8. Functions</a>
 <ul>
 <li><a href="#org26e8b28">8.1. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
 <ul>
-<li><a href="#orgcde905e">Function description</a></li>
-<li><a href="#org5be121e">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgc074bc3">Function description</a></li>
+<li><a href="#orgdc0187a">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0cd57b5">Compute Jacobian Matrix</a></li>
 <li><a href="#orge21dcfc">Compute Stiffness Matrix</a></li>
 <li><a href="#orgae76071">Compute Compliance Matrix</a></li>
@@ -94,17 +102,17 @@
 <li><a href="#orgb82066f">8.2. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
 <ul>
 <li><a href="#org89930b7">Theory</a></li>
-<li><a href="#orgb66d0e9">Function description</a></li>
-<li><a href="#org0aeb7ad">Optional Parameters</a></li>
-<li><a href="#orga54645b">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orge700de7">Function description</a></li>
+<li><a href="#org9a855b1">Optional Parameters</a></li>
+<li><a href="#orgea92a02">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0d64c23">Compute</a></li>
 </ul>
 </li>
 <li><a href="#orgf5d8f0b">8.3. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
 <ul>
-<li><a href="#orgc074bc3">Function description</a></li>
-<li><a href="#org9a855b1">Optional Parameters</a></li>
-<li><a href="#orgdc0187a">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#org2c9d954">Function description</a></li>
+<li><a href="#org2acccf0">Optional Parameters</a></li>
+<li><a href="#orgbc9683a">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#orge5ade24">Computation</a></li>
 </ul>
 </li>
@@ -451,8 +459,8 @@ This will also gives us the range for which the approximate forward kinematic is
 </p>
 </div>
 
-<div id="outline-container-orga78aa66" class="outline-3">
-<h3 id="orga78aa66"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org6a6a5df" class="outline-3">
+<h3 id="org6a6a5df"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 We first define some general Stewart architecture.
@@ -552,8 +560,8 @@ This is what is analyzed in this section.
 </p>
 </div>
 
-<div id="outline-container-orgadaa219" class="outline-3">
-<h3 id="orgadaa219"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org94b26cb" class="outline-3">
+<h3 id="org94b26cb"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
@@ -972,8 +980,8 @@ However, for small displacements, we can use the Jacobian as an approximate solu
 </p>
 </div>
 
-<div id="outline-container-org6a6a5df" class="outline-3">
-<h3 id="org6a6a5df"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org39d80a1" class="outline-3">
+<h3 id="org39d80a1"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
@@ -1089,8 +1097,8 @@ We can also approximate the mobility by a sphere with a radius equal to the mini
 <h2 id="orgad495dd"><span class="section-number-2">7</span> Estimation of the Joint required Stroke</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgae20178" class="outline-3">
-<h3 id="orgae20178"><span class="section-number-3">7.1</span> Example of the initialization of a Stewart Platform</h3>
+<div id="outline-container-org0eac36f" class="outline-3">
+<h3 id="org0eac36f"><span class="section-number-3">7.1</span> Estimation with an analytical model</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 Let&rsquo;s first define the Stewart Platform Geometry.
@@ -1099,34 +1107,59 @@ Let&rsquo;s first define the Stewart Platform Geometry.
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
 stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 150e-3);
 stewart = generateGeneralConfiguration(stewart);
-stewart = computeJointsPose(stewart);
+stewart = computeJointsPose(stewart, 'AP', [0; 0; 0]);
 
 As_init = stewart.geometry.As;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Tx_max = 50e-6; % Translation [m]
-Ty_max = 50e-6; % Translation [m]
-Tz_max = 50e-6; % Translation [m]
+<pre class="src src-matlab">Tx_max = 60e-6; % Translation [m]
+Ty_max = 60e-6; % Translation [m]
+Tz_max = 60e-6; % Translation [m]
+Rx_max = 30e-6; % Rotation [rad]
+Ry_max = 30e-6; % Rotation [rad]
+Rz_max = 0; % Rotation [rad]
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Ps = [2*(dec2bin(0:3^2-2,3)-'0')-1].*[Tx_max Ty_max Tz_max];
+<pre class="src src-matlab">Ps = [2*(dec2bin(0:5^2-1,5)-'0')-1, zeros(5^2, 1)].*[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
 </pre>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-matlab">flex_ang = zeros(size(Ps, 1), 6);
+Rxs = zeros(size(Ps, 1), 6)
+Rys = zeros(size(Ps, 1), 6)
+Rzs = zeros(size(Ps, 1), 6)
 
 for Ps_i = 1:size(Ps, 1)
-    stewart.geometry.FO_M = [0; 0; 90e-3] + Ps(Ps_i, :)';
+    Rx = [1 0        0;
+          0 cos(Ps(Ps_i, 4)) -sin(Ps(Ps_i, 4));
+          0 sin(Ps(Ps_i, 4))  cos(Ps(Ps_i, 4))];
 
-    stewart = generateGeneralConfiguration(stewart);
-    stewart = computeJointsPose(stewart);
+    Ry = [ cos(Ps(Ps_i, 5)) 0 sin(Ps(Ps_i, 5));
+           0        1 0;
+           -sin(Ps(Ps_i, 5)) 0 cos(Ps(Ps_i, 5))];
+
+    Rz = [cos(Ps(Ps_i, 6)) -sin(Ps(Ps_i, 6)) 0;
+          sin(Ps(Ps_i, 6))  cos(Ps(Ps_i, 6)) 0;
+          0        0       1];
+
+    ARB = Rz*Ry*Rx;
+
+    stewart = computeJointsPose(stewart, 'AP', Ps(Ps_i, 1:3)', 'ARB', ARB);
 
     flex_ang(Ps_i, :) = acos(sum(As_init.*stewart.geometry.As));
+
+    for l_i = 1:6
+        MRf = stewart.platform_M.MRb(:,:,l_i)*(ARB')*(stewart.platform_F.FRa(:,:,l_i)');
+
+        Rys(Ps_i, l_i) = atan2(MRf(1,3), sqrt(MRf(1,1)^2 + MRf(2,2)^2));
+        Rxs(Ps_i, l_i) = atan2(-MRf(2,3)/cos(Rys(Ps_i, l_i)), MRf(3,3)/cos(Rys(Ps_i, l_i)));
+        Rzs(Ps_i, l_i) = atan2(-MRf(1,2)/cos(Rys(Ps_i, l_i)), MRf(1,1)/cos(Rys(Ps_i, l_i)));
+    end
 end
 </pre>
 </div>
@@ -1140,8 +1173,195 @@ And the maximum bending of the flexible joints is: (in [mrad])
 </div>
 
 <pre class="example">
-0.90937
+1.1704
 </pre>
+
+
+<div class="org-src-container">
+<pre class="src src-matlab">1e3*max(max(sqrt(Rxs.^2 + Rys.^2)))
+</pre>
+</div>
+
+<pre class="example">
+0.075063
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-matlab">1e3*max(max(Rzs))
+</pre>
+</div>
+
+<pre class="example">
+0.04666
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org22e7362" class="outline-3">
+<h3 id="org22e7362"><span class="section-number-3">7.2</span> Estimation using the Simscape Model</h3>
+<div class="outline-text-3" id="text-7-2">
+</div>
+<div id="outline-container-org74fd123" class="outline-4">
+<h4 id="org74fd123"><span class="section-number-4">7.2.1</span> Model Init</h4>
+<div class="outline-text-4" id="text-7-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">open('stewart_platform_model.slx')
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeStrutDynamics(stewart);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround('type', 'rigid');
+payload = initializePayload('type', 'none');
+controller = initializeController('type', 'open-loop');
+disturbances = initializeDisturbances();
+references = initializeReferences(stewart);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org55b87b1" class="outline-4">
+<h4 id="org55b87b1"><span class="section-number-4">7.2.2</span> Controller design to be close to the wanted displacement</h4>
+<div class="outline-text-4" id="text-7-2-2">
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+%% Run the linearization
+G = linearize(mdl, io);
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2*pi*30;
+Kl = diag(1./diag(abs(freqresp(G, wc)))) * wc/s * 1/(1 + s/3/wc);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">controller = initializeController('type', 'ref-track-L');
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88ff9a1" class="outline-4">
+<h4 id="org88ff9a1"><span class="section-number-4">7.2.3</span> Simulations</h4>
+<div class="outline-text-4" id="text-7-2-3">
+<div class="org-src-container">
+<pre class="src src-matlab">Tx_max = 60e-6; % Translation [m]
+Ty_max = 60e-6; % Translation [m]
+Tz_max = 60e-6; % Translation [m]
+Rx_max = 30e-6; % Rotation [rad]
+Ry_max = 30e-6; % Rotation [rad]
+Rz_max = 0; % Rotation [rad]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Ps = [2*(dec2bin(0:5^2-1,5)-'0')-1, zeros(5^2, 1)].*[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">cl_perf = zeros(size(Ps, 1), 1); % Closed loop performance [percentage]
+Rs = zeros(size(Ps, 1), 5); % Max Flexor angles for the 6 legs [mrad]
+
+for Ps_i = 1:size(Ps, 1)
+    fprintf('Experiment %i over %i', Ps_i, size(Ps, 1));
+
+    references = initializeReferences(stewart, 't', 0, 'r', Ps(Ps_i, :)');
+    set_param('stewart_platform_model','StopTime','0.1');
+    sim('stewart_platform_model');
+
+    cl_perf(Ps_i) = 100*max(abs((simout.y.dLm.Data(end, :) - references.rL.Data(:,1,1)')./simout.y.dLm.Data(end, :)));
+    Rs(Ps_i, :) = [max(abs(1e3*simout.y.Rf.Data(end, 1:2:end))), max(abs(1e3*simout.y.Rf.Data(end, 2:2:end))), max(abs(1e3*simout.y.Rm.Data(end, 1:3:end))), max(abs(1e3*simout.y.Rm.Data(end, 2:3:end))), max(abs(1e3*simout.y.Rm.Data(end, 3:3:end)))]';
+end
+</pre>
+</div>
+
+<p>
+Verify that the simulations are all correct:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">max(cl_perf)
+</pre>
+</div>
+
+<pre class="example">
+8.1147
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org881aa14" class="outline-4">
+<h4 id="org881aa14"><span class="section-number-4">7.2.4</span> Results</h4>
+<div class="outline-text-4" id="text-7-2-4">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Stroke [mrad]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Rx bot</td>
+<td class="org-right">1.03</td>
+</tr>
+
+<tr>
+<td class="org-left">Ry bot</td>
+<td class="org-right">0.93</td>
+</tr>
+
+<tr>
+<td class="org-left">Rx top</td>
+<td class="org-right">1.06</td>
+</tr>
+
+<tr>
+<td class="org-left">Ry top</td>
+<td class="org-right">0.95</td>
+</tr>
+
+<tr>
+<td class="org-left">Rz top</td>
+<td class="org-right">0.03</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -1165,9 +1385,9 @@ This Matlab function is accessible <a href="../src/computeJacobian.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orgcde905e" class="outline-4">
-<h4 id="orgcde905e">Function description</h4>
-<div class="outline-text-4" id="text-orgcde905e">
+<div id="outline-container-orgc074bc3" class="outline-4">
+<h4 id="orgc074bc3">Function description</h4>
+<div class="outline-text-4" id="text-orgc074bc3">
 <div class="org-src-container">
 <pre class="src src-matlab">function [stewart] = computeJacobian(stewart)
 % computeJacobian -
@@ -1190,9 +1410,9 @@ This Matlab function is accessible <a href="../src/computeJacobian.m">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org5be121e" class="outline-4">
-<h4 id="org5be121e">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org5be121e">
+<div id="outline-container-orgdc0187a" class="outline-4">
+<h4 id="orgdc0187a">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orgdc0187a">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, 'As'),   'stewart.geometry should have attribute As')
 As = stewart.geometry.As;
@@ -1300,9 +1520,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-orgb66d0e9" class="outline-4">
-<h4 id="orgb66d0e9">Function description</h4>
-<div class="outline-text-4" id="text-orgb66d0e9">
+<div id="outline-container-orge700de7" class="outline-4">
+<h4 id="orge700de7">Function description</h4>
+<div class="outline-text-4" id="text-orge700de7">
 <div class="org-src-container">
 <pre class="src src-matlab">function [Li, dLi] = inverseKinematics(stewart, args)
 % inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
@@ -1326,9 +1546,9 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org0aeb7ad" class="outline-4">
-<h4 id="org0aeb7ad">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org0aeb7ad">
+<div id="outline-container-org9a855b1" class="outline-4">
+<h4 id="org9a855b1">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org9a855b1">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1340,9 +1560,9 @@ end
 </div>
 </div>
 
-<div id="outline-container-orga54645b" class="outline-4">
-<h4 id="orga54645b">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orga54645b">
+<div id="outline-container-orgea92a02" class="outline-4">
+<h4 id="orgea92a02">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orgea92a02">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.geometry, 'Aa'),   'stewart.geometry should have attribute Aa')
 Aa = stewart.geometry.Aa;
@@ -1386,9 +1606,9 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </p>
 </div>
 
-<div id="outline-container-orgc074bc3" class="outline-4">
-<h4 id="orgc074bc3">Function description</h4>
-<div class="outline-text-4" id="text-orgc074bc3">
+<div id="outline-container-org2c9d954" class="outline-4">
+<h4 id="org2c9d954">Function description</h4>
+<div class="outline-text-4" id="text-org2c9d954">
 <div class="org-src-container">
 <pre class="src src-matlab">function [P, R] = forwardKinematicsApprox(stewart, args)
 % forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using
@@ -1410,9 +1630,9 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </div>
 </div>
 
-<div id="outline-container-org9a855b1" class="outline-4">
-<h4 id="org9a855b1">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org9a855b1">
+<div id="outline-container-org2acccf0" class="outline-4">
+<h4 id="org2acccf0">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org2acccf0">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
@@ -1423,9 +1643,9 @@ end
 </div>
 </div>
 
-<div id="outline-container-orgdc0187a" class="outline-4">
-<h4 id="orgdc0187a">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orgdc0187a">
+<div id="outline-container-orgbc9683a" class="outline-4">
+<h4 id="orgbc9683a">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orgbc9683a">
 <div class="org-src-container">
 <pre class="src src-matlab">assert(isfield(stewart.kinematics, 'J'),   'stewart.kinematics should have attribute J')
 J = stewart.kinematics.J;
@@ -1490,7 +1710,7 @@ We then compute the corresponding rotation matrix.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-08-05 mer. 13:27</p>
+<p class="date">Created: 2020-08-05 mer. 16:23</p>
 </div>
 </body>
 </html>
