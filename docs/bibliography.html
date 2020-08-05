@@ -1,229 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-13 ven. 10:04 -->
+<!-- 2020-08-05 mer. 13:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Bibliography</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
 <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.cacheClassElem = elem.className;
-         elem.cacheClassTarget = target.className;
-         target.className = "code-highlighted";
-         elem.className   = "code-highlighted";
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(elem.cacheClassElem)
-         elem.className = elem.cacheClassElem;
-       if(elem.cacheClassTarget)
-         target.className = elem.cacheClassTarget;
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -245,6 +35,20 @@
 </ul>
 </div>
 </div>
+<p>
+Things to add:
+</p>
+<ul class="org-ul">
+<li>(<a href="#citeproc_bib_item_107">Zheng, Zhou, and Huang 2020</a>)</li>
+<li>(<a href="#citeproc_bib_item_89">Ting, Jar, and Li 2005</a>)</li>
+<li>(<a href="#citeproc_bib_item_76">Rahman, Spanos, and Laskin 1998</a>)</li>
+<li>(<a href="#citeproc_bib_item_75">Rahman and Spanos 1996</a>)</li>
+<li>(<a href="#citeproc_bib_item_8">Beijen, Voorhoeve, et al. 2018</a>)</li>
+<li>(<a href="#citeproc_bib_item_98">Xie, Wang, and Zhang 2017</a>)</li>
+<li>(<a href="#citeproc_bib_item_19">Chi et al. 2015</a>)</li>
+<li>(<a href="#citeproc_bib_item_34">Guo et al. 2008</a>)</li>
+<li>(<a href="#citeproc_bib_item_108">Zheng et al. 2018</a>)</li>
+</ul>
 
 <div id="outline-container-org53a1e55" class="outline-2">
 <h2 id="org53a1e55"><span class="section-number-2">1</span> Books</h2>
@@ -265,22 +69,22 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#merlet06_paral_robot">merlet06_paral_robot</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_62">Merlet 2006</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#taghirad13_paral">taghirad13_paral</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_83">Taghirad 2013</a>)</td>
 <td class="org-center">X</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#preumont18_vibrat_contr_activ_struc_fourt_edition">preumont18_vibrat_contr_activ_struc_fourt_edition</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_73">Preumont 2018</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#arakelian18_dynam_decoup_robot_manip">arakelian18_dynam_decoup_robot_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_5">Arakelian 2018</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 </tbody>
@@ -307,22 +111,22 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#li01_simul_fault_vibrat_isolat_point">li01_simul_fault_vibrat_isolat_point</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_54">Li 2001</a>)</td>
 <td class="org-center">X</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#hanieh03_activ_stewar">hanieh03_activ_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_35">Hanieh 2003</a>)</td>
 <td class="org-center">X</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#vivas04_contr">vivas04_contr</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_95">Vivas 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#deng17_integ_dof_loren_actuat_gravit">deng17_integ_dof_loren_actuat_gravit</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_22">Deng 2017</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 </tbody>
@@ -349,27 +153,27 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#dasgupta00_stewar_platf_manip">dasgupta00_stewar_platf_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_21">Dasgupta and Mruthyunjaya 2000</a>)</td>
 <td class="org-center">X</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#merlet02_still">merlet02_still</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_61">Merlet 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#patel12_paral_manip_applic_survey">patel12_paral_manip_applic_survey</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_69">Patel and George 2012</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#buzurovic12_advan_contr_method_paral_robot_system">buzurovic12_advan_contr_method_paral_robot_system</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_11">Buzurovic 2012</a>)</td>
 <td class="org-center">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#furqan17_studies_stewar_platf_manip">furqan17_studies_stewar_platf_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_27">Furqan, Suhaib, and Ahmad 2017</a>)</td>
 <td class="org-center">X</td>
 </tr>
 </tbody>
@@ -396,57 +200,57 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#liu01_dof">liu01_dof</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_53">Liu et al. 2001</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#tsai03_desig_isotr_paral_manip_using_isotr_gener">tsai03_desig_isotr_paral_manip_using_isotr_gener</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_94">Tsai and Huang 2003</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yang04_kinem_desig_six_dof_paral">yang04_kinem_desig_six_dof_paral</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_101">Yang et al. 2004</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#anderson06_precis">anderson06_precis</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_4">Anderson et al. 2006</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#pernkopf06_works_analy_stewar_gough_type_paral_manip">pernkopf06_works_analy_stewar_gough_type_paral_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_71">Pernkopf and Husty 2006</a>)</td>
 <td class="org-left">Reachable Workspace</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#mukherjee07_dynam_stabil_index_vibrat_analy">mukherjee07_dynam_stabil_index_vibrat_analy</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_65">Mukherjee, Dasgupta, and Mallik 2007</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#jiang09_deter_maxim_singul_free_orien">jiang09_deter_maxim_singul_free_orien</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_42">Jiang and Gosselin 2009a</a>)</td>
 <td class="org-left">Determination of the max. singularity free workspace</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#jiang09_evaluat_repres_theor_orien_works">jiang09_evaluat_repres_theor_orien_works</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_43">Jiang and Gosselin 2009b</a>)</td>
 <td class="org-left">Orientation Workspace</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#jin09_kinem_desig_famil_partial_decoup_paral_manip">jin09_kinem_desig_famil_partial_decoup_paral_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_45">Jin, Chen, and Yang 2009</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#legnani12_new_isotr_decoup_paral_manip">legnani12_new_isotr_decoup_paral_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_50">Legnani et al. 2012</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#li18_optim_desig_six_axis_vibrat">li18_optim_desig_six_axis_vibrat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_56">Li et al. 2018</a>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
@@ -500,7 +304,7 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#cleary91_protot_paral_manip">cleary91_protot_paral_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_20">Cleary and Arai 1991</a>)</td>
 <td class="org-center">1</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -514,7 +318,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#geng93_six_degree_of_freed_activ">geng93_six_degree_of_freed_activ</a>, <a class='org-ref-reference' href="#geng94_six_degree_of_freed_activ">geng94_six_degree_of_freed_activ</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_30">Geng and Haynes 1993</a>), (<a href="#citeproc_bib_item_31">Geng and Haynes 1994</a>)</td>
 <td class="org-center">1</td>
 <td class="org-center">X</td>
 <td class="org-left">Vibration Isolation</td>
@@ -528,7 +332,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#geng95_intel_contr_system_multip_degree">geng95_intel_contr_system_multip_degree</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_32">Geng et al. 1995</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">Vibration Isolation</td>
@@ -542,7 +346,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#spanos95_soft_activ_vibrat_isolat">spanos95_soft_activ_vibrat_isolat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_79">Spanos, Rahman, and Blackwood 1995</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">Vibration Isolation (Space)</td>
@@ -556,7 +360,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#thayer98_stewar">thayer98_stewar</a>, <a class='org-ref-reference' href="#thayer02_six_axis_vibrat_isolat_system">thayer02_six_axis_vibrat_isolat_system</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_85">Thayer and Vagners 1998</a>), (<a href="#citeproc_bib_item_86">Thayer et al. 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -570,7 +374,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#obrien98_lesson">obrien98_lesson</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_68">O’Brien et al. 1998</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -584,7 +388,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#mcinroy99_precis_fault_toler_point_using_stewar_platf">mcinroy99_precis_fault_toler_point_using_stewar_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_60">McInroy, O’Brien, and Neat 1999</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -598,7 +402,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#mcinroy99_dynam">mcinroy99_dynam</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_57">McInroy 1999</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -612,7 +416,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#mcinroy00_desig_contr_flexur_joint_hexap">mcinroy00_desig_contr_flexur_joint_hexap</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_59">McInroy and Hamann 2000</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -626,7 +430,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#kim00_robus_track_contr_desig_dof_paral_manip">kim00_robus_track_contr_desig_dof_paral_manip</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_46">Kim, Kang, and Lee 2000</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -640,7 +444,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#chen00_ident">chen00_ident</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_18">Chen and McInroy 2000</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -654,7 +458,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#li01_simul_vibrat_isolat_point_contr">li01_simul_vibrat_isolat_point_contr</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_55">Li, Hamann, and McInroy 2001</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -668,7 +472,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#selig01_theor_stewar">selig01_theor_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_78">Selig and Ding 2001</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -682,7 +486,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#bonev01_new_approac_to_orien_works">bonev01_new_approac_to_orien_works</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_10">Bonev and Ryu 2001</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -696,7 +500,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#gao02_new_kinem_struc_paral_manip_desig">gao02_new_kinem_struc_paral_manip_desig</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_29">Gao et al. 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -710,7 +514,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#chai02_pract_calib_proces_using_partial">chai02_pract_calib_proces_using_partial</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_14">Chai, Young, and Tuersley 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -724,7 +528,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#mcinroy02_model_desig_flexur_joint_stewar">mcinroy02_model_desig_flexur_joint_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_58">McInroy 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -738,7 +542,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#abu02_stiff_soft_stewar_platf_activ">abu02_stiff_soft_stewar_platf_activ</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_2">Abu Hanieh, Horodinca, and Preumont 2002</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -752,7 +556,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#jafari03_orthog_gough_stewar_platf_microm">jafari03_orthog_gough_stewar_platf_microm</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_41">Jafari and McInroy 2003</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -766,7 +570,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#chen03_payload_point_activ_vibrat_isolat">chen03_payload_point_activ_vibrat_isolat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_16">Chen, Bishop, and Agrawal 2003</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -780,7 +584,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#lee03_posit_contr_stewar_platf_using">lee03_posit_contr_stewar_platf_using</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_49">Lee et al. 2003</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -794,7 +598,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#wang03_kinem_dynam_degree_of_freed">wang03_kinem_dynam_degree_of_freed</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_97">Wang et al. 2003</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -808,7 +612,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#lin03_adapt_sinus_distur_cancel_precis">lin03_adapt_sinus_distur_cancel_precis</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_52">Lin and McInroy 2003</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -822,7 +626,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#agrawal04_algor_activ_vibrat_isolat_spacec">agrawal04_algor_activ_vibrat_isolat_spacec</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_3">Agrawal and Chen 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -836,7 +640,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#cheng04_multi_body_system_model_gough">cheng04_multi_body_system_model_gough</a>, <a class='org-ref-reference' href="#gexue04_vibrat_contr_with_stewar_paral_mechan">gexue04_vibrat_contr_with_stewar_paral_mechan</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_15">Cheng, Ren, and Dai 2004</a>), (<a href="#citeproc_bib_item_33">Gexue et al. 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">Vibration Isolation</td>
@@ -850,7 +654,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#hauge04_sensor_contr_space_based_six">hauge04_sensor_contr_space_based_six</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_36">Hauge and Campbell 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">Vibration Isolation</td>
@@ -864,7 +668,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#furutani04_nanom_cuttin_machin_using_stewar">furutani04_nanom_cuttin_machin_using_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_28">Furutani, Suzuki, and Kudoh 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -878,7 +682,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#ranganath04_force_torque_sensor_based_stewar">ranganath04_force_torque_sensor_based_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_77">Ranganath et al. 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -892,7 +696,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#chen04_decoup_contr_flexur_joint_hexap">chen04_decoup_contr_flexur_joint_hexap</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_17">Chen and McInroy 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -906,7 +710,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#su04_distur_rejec_high_precis_motion">su04_distur_rejec_high_precis_motion</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_81">Su et al. 2004</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -920,7 +724,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#huang05_smoot_stewar">huang05_smoot_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_40">Huang and Fu 2005</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -934,7 +738,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#ting06_desig_stewar_nanos_platf">ting06_desig_stewar_nanos_platf</a>, <a class='org-ref-reference' href="#ting13_compos_contr_desig_stewar_nanos_platf">ting13_compos_contr_desig_stewar_nanos_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_88">Ting, Jar, and Li 2006</a>), (<a href="#citeproc_bib_item_91">Ting, Li, and Nguyen 2013</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -948,7 +752,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#horin06_singul_condit_six_degree_of">horin06_singul_condit_six_degree_of</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_38">Horin and Shoham 2006</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -962,7 +766,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#preumont07_six_axis_singl_stage_activ">preumont07_six_axis_singl_stage_activ</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_72">Preumont et al. 2007</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -976,7 +780,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#ting07_measur_calib_stewar_microm_system">ting07_measur_calib_stewar_microm_system</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_90">Ting, Jar, and Li 2007</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -990,7 +794,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#lei08_multi_objec_robus_activ_vibrat">lei08_multi_objec_robus_activ_vibrat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_51">Lei and Benli 2008</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1004,7 +808,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#brezina08_ni_labview_matlab_simmec_stewar_platf_desig">brezina08_ni_labview_matlab_simmec_stewar_platf_desig</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_12">Bvrezina, Andrvs, and Bvrezina 2008</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1018,7 +822,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#molina08_simul_stewar">molina08_simul_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_64">Molina, Rosario, and Sanchez 2008</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1032,7 +836,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#dong08_stiff_resear_high_precis_large">dong08_stiff_resear_high_precis_large</a>, <a class='org-ref-reference' href="#dong07_desig_precis_compl_paral_posit">dong07_desig_precis_compl_paral_posit</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_24">Dong, Sun, and Du 2008</a>), (<a href="#citeproc_bib_item_25">Dong, Sun, and Du 2007</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1046,7 +850,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#heertjes10_optim_dynam_decoup_activ_vibrat_isolat">heertjes10_optim_dynam_decoup_activ_vibrat_isolat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_37">Heertjes, Engelen, and Steinbuch 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1060,7 +864,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#neagoe10_accur_stewar_platf">neagoe10_accur_stewar_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_66">Neagoe et al. 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1074,7 +878,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#beno10">beno10</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_9">Beno, Booth, and Mock 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1088,7 +892,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yang10_model_dof_simul_simmec">yang10_model_dof_simul_simmec</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_100">Yang et al. 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1102,7 +906,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#brezina10_contr_desig_stewar_platf_linear_actuat">brezina10_contr_desig_stewar_platf_linear_actuat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_13">Bvrezina and Bvrezina 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1116,7 +920,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#houska10_desig_implem_absol_linear_posit">houska10_desig_implem_absol_linear_posit</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_39">Houvska, Bvrezina, and Bvrezina 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1130,7 +934,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#brezina10_contr_desig_stewar_platf_linear_actuat">brezina10_contr_desig_stewar_platf_linear_actuat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_13">Bvrezina and Bvrezina 2010</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1144,7 +948,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#zhang11_six_dof">zhang11_six_dof</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_106">Zhang et al. 2011</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1158,7 +962,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yun11_gener_dynam_contr_model_class">yun11_gener_dynam_contr_model_class</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_105">Yun and Li 2011</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1172,7 +976,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#pu11_six_degree_of_freed_activ">pu11_six_degree_of_freed_activ</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_74">Pu et al. 2011</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1186,7 +990,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#ding11_robus_vibrat_isolat_dof">ding11_robus_vibrat_isolat_dof</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_23">Ding, Damen, and Bosch 2011</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1200,7 +1004,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#torii12_small_size_self_propel_stewar_platf">torii12_small_size_self_propel_stewar_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_93">Torii et al. 2012</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1214,7 +1018,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#pedrammehr12_study_vibrat_stewar_platf_based">pedrammehr12_study_vibrat_stewar_platf_based</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_70">Pedrammehr, Mahboubkhah, and Khani 2012</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1228,7 +1032,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#xu13_track_posit_vibrat_contr_simul">xu13_track_posit_vibrat_contr_simul</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_99">Xu and Weng 2013</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1242,7 +1046,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#baig14_neural_networ_optim_desig_param">baig14_neural_networ_optim_desig_param</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_6">Baig and Pugazhenthi 2014</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1256,7 +1060,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#du14_piezo_actuat_high_precis_flexib">du14_piezo_actuat_high_precis_flexib</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_26">Du, Shi, and Dong 2014</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1270,7 +1074,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#abbas14_vibrat_stewar_platf">abbas14_vibrat_stewar_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_1">Abbas and Hai 2014</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1284,7 +1088,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#lara-molina15_combin_struc_contr_optim_desig">lara-molina15_combin_struc_contr_optim_desig</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_48">Lara-Molina, Koroishi, and Dumur 2015</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1298,7 +1102,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#thier16_six_degree_freed_vibrat_isolat">thier16_six_degree_freed_vibrat_isolat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_87">Thier et al. 2016</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1312,7 +1116,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#wang16_inves_activ_vibrat_isolat_stewar">wang16_inves_activ_vibrat_isolat_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_96">Wang et al. 2016</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1326,7 +1130,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yang17_dynam_isotr_desig_decen_activ">yang17_dynam_isotr_desig_decen_activ</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_103">Yang et al. 2017</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1340,7 +1144,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#beijen18_self_tunin_mimo_distur_feedf">beijen18_self_tunin_mimo_distur_feedf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_7">Beijen, Heertjes, et al. 2018</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1354,7 +1158,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#jiao18_dynam_model_exper_analy_stewar">jiao18_dynam_model_exper_analy_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_44">Jiao et al. 2018</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1368,7 +1172,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#tang18_decen_vibrat_contr_voice_coil">tang18_decen_vibrat_contr_voice_coil</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_84">Tang, Cao, and Yu 2018</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1382,7 +1186,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#taghavi19_desig_model_simul_novel_hexap">taghavi19_desig_model_simul_novel_hexap</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_82">Taghavi, Kinoshita, and Bock 2019</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1396,7 +1200,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#owoc19_mechat_desig_model_contr_stewar_gough_platf">owoc19_mechat_desig_model_contr_stewar_gough_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_67">Owoc, Ludwiczak, and Piotrowski 2019</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1410,7 +1214,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#min19_high_precis_track_cubic_stewar">min19_high_precis_track_cubic_stewar</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_63">Min, Huang, and Su 2019</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1424,7 +1228,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yang19_dynam_model_decoup_contr_flexib">yang19_dynam_model_decoup_contr_flexib</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_102">Yang et al. 2019</a>)</td>
 <td class="org-center">1</td>
 <td class="org-center">X</td>
 <td class="org-left">&#xa0;</td>
@@ -1438,7 +1242,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#stabile19_desig_analy_novel_hexap_platf">stabile19_desig_analy_novel_hexap_platf</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_80">Stabile et al. 2019</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1452,7 +1256,7 @@
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#tong20_dynam_decoup_analy_exper_based">tong20_dynam_decoup_analy_exper_based</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_92">Tong, Gosselin, and Jiang 2020</a>)</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-center">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -1485,11 +1289,11 @@
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#kim09_desig_model_novel_precis_micro_stage">kim09_desig_model_novel_precis_micro_stage</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_47">Kim and Cho 2009</a>)</td>
 </tr>
 
 <tr>
-<td class="org-left"><a class='org-ref-reference' href="#yun10_desig_analy_novel_redun_actuat">yun10_desig_analy_novel_redun_actuat</a></td>
+<td class="org-left">(<a href="#citeproc_bib_item_104">Yun and Li 2010</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -1498,168 +1302,123 @@
 
 <p>
 
-<h1 class='org-ref-bib-h1'>Bibliography</h1>
-<ul class='org-ref-bib'><li><a id="merlet06_paral_robot">[merlet06_paral_robot]</a> <a name="merlet06_paral_robot"></a>Merlet, Parallel Robots, Kluwer Academic Publishers (2006).</li>
-<li><a id="taghirad13_paral">[taghirad13_paral]</a> <a name="taghirad13_paral"></a>Taghirad, Parallel robots : mechanics and control, CRC Press (2013).</li>
-<li><a id="preumont18_vibrat_contr_activ_struc_fourt_edition">[preumont18_vibrat_contr_activ_struc_fourt_edition]</a> <a name="preumont18_vibrat_contr_activ_struc_fourt_edition"></a>Andre Preumont, Vibration Control of Active Structures - Fourth Edition, Springer International Publishing (2018).</li>
-<li><a id="arakelian18_dynam_decoup_robot_manip">[arakelian18_dynam_decoup_robot_manip]</a> <a name="arakelian18_dynam_decoup_robot_manip"></a>Arakelian, Dynamic Decoupling of Robot Manipulators, Springer International Publishing (2018).</li>
-<li><a id="li01_simul_fault_vibrat_isolat_point">[li01_simul_fault_vibrat_isolat_point]</a> <a name="li01_simul_fault_vibrat_isolat_point"></a>@phdthesisli01_simul_fault_vibrat_isolat_point,
-  author = Li, Xiaochun,
-  school = University of Wyoming,
-  title = Simultaneous, Fault-tolerant Vibration Isolation and Pointing Control of Flexure Jointed Hexapods,
-  year = 2001,
-  tags = parallel robot,
-</li>
-<li><a id="hanieh03_activ_stewar">[hanieh03_activ_stewar]</a> <a name="hanieh03_activ_stewar"></a>@phdthesishanieh03_activ_stewar,
-  author = Hanieh, Ahmed Abu,
-  school = Universit\'e Libre de Bruxelles, Brussels, Belgium,
-  title = Active isolation and damping of vibrations via Stewart platform,
-  year = 2003,
-  tags = parallel robot,
-</li>
-<li><a id="vivas04_contr">[vivas04_contr]</a> <a name="vivas04_contr"></a>@phdthesisvivas04_contr,
-  author = Vivas, Oscar Andr\'es,
-  school = Universit\'e Montpellier II-Sciences et Techniques du Languedoc,
-  title = Contribution \`a l'identification et \`a la commande des robots parall\`eles,
-  year = 2004,
-  tags = parallel robot,
-</li>
-<li><a id="deng17_integ_dof_loren_actuat_gravit">[deng17_integ_dof_loren_actuat_gravit]</a> <a name="deng17_integ_dof_loren_actuat_gravit"></a>@phdthesisdeng17_integ_dof_loren_actuat_gravit,
-  author = Deng, R.,
-  school = TU Delft,
-  title = Integrated 6-DoF Lorentz Actuator with Gravity Compensation for Vibration Isolation in In-Line Surface Metrology,
-  year = 2017,
-  tags = parallel robot,
-</li>
-<li><a id="dasgupta00_stewar_platf_manip">[dasgupta00_stewar_platf_manip]</a> <a name="dasgupta00_stewar_platf_manip"></a>Bhaskar Dasgupta & Mruthyunjaya, The Stewart Platform Manipulator: a Review, <i>Mechanism and Machine Theory</i>, <b>35(1)</b>, 15-40 (2000). <a href="https://doi.org/10.1016/s0094-114x(99)00006-3">link</a>. <a href="http://dx.doi.org/10.1016/s0094-114x(99)00006-3">doi</a>.</li>
-<li><a id="merlet02_still">[merlet02_still]</a> <a name="merlet02_still"></a>Merlet, Still a long way to go on the road for parallel mechanisms, in in: Proc. ASME 2002 DETC Conf., Montreal, edited by (2002)</li>
-<li><a id="patel12_paral_manip_applic_survey">[patel12_paral_manip_applic_survey]</a> <a name="patel12_paral_manip_applic_survey"></a>Patel & George, Parallel Manipulators Applications-A Survey, <i>Modern Mechanical Engineering</i>, <b>02(03)</b>, 57-64 (2012). <a href="https://doi.org/10.4236/mme.2012.23008">link</a>. <a href="http://dx.doi.org/10.4236/mme.2012.23008">doi</a>.</li>
-<li><a id="buzurovic12_advan_contr_method_paral_robot_system">[buzurovic12_advan_contr_method_paral_robot_system]</a> <a name="buzurovic12_advan_contr_method_paral_robot_system"></a>Ivan Buzurovic, Advanced Control Methodologies in Parallel Robotic Systems, <i>Advances in Robotics & Automation</i>, <b>01(s6)</b>, nil (2012). <a href="https://doi.org/10.4172/2168-9695.s6-e001">link</a>. <a href="http://dx.doi.org/10.4172/2168-9695.s6-e001">doi</a>.</li>
-<li><a id="furqan17_studies_stewar_platf_manip">[furqan17_studies_stewar_platf_manip]</a> <a name="furqan17_studies_stewar_platf_manip"></a>Mohd Furqan, Mohd Suhaib & Nazeer Ahmad, Studies on Stewart Platform Manipulator: a Review, <i>Journal of Mechanical Science and Technology</i>, <b>31(9)</b>, 4459-4470 (2017). <a href="https://doi.org/10.1007/s12206-017-0846-1">link</a>. <a href="http://dx.doi.org/10.1007/s12206-017-0846-1">doi</a>.</li>
-<li><a id="liu01_dof">[liu01_dof]</a> <a name="liu01_dof"></a>Xin-Jun Liu, Jinsong Wang, Feng Gao & Li-Ping Wang, On the design of 6-DOF parallel micro-motion manipulators, nil, in in: Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180), edited by (2001)</li>
-<li><a id="tsai03_desig_isotr_paral_manip_using_isotr_gener">[tsai03_desig_isotr_paral_manip_using_isotr_gener]</a> <a name="tsai03_desig_isotr_paral_manip_using_isotr_gener"></a>Tsai & Huang, The Design of Isotropic 6-dof Parallel Manipulators Using  Isotropy Generators, <i>Mechanism and Machine Theory</i>, <b>38(11)</b>, 1199-1214 (2003). <a href="https://doi.org/10.1016/s0094-114x(03)00067-3">link</a>. <a href="http://dx.doi.org/10.1016/s0094-114x(03)00067-3">doi</a>.</li>
-<li><a id="yang04_kinem_desig_six_dof_paral">[yang04_kinem_desig_six_dof_paral]</a> <a name="yang04_kinem_desig_six_dof_paral"></a>Yang, Chen, Chen & Lin, Kinematic Design of a Six-Dof Parallel-Kinematics Machine With Decoupled-Motion Architecture, <i>IEEE Transactions on Robotics</i>, <b>20(5)</b>, 876-884 (2004). <a href="https://doi.org/10.1109/tro.2004.829485">link</a>. <a href="http://dx.doi.org/10.1109/tro.2004.829485">doi</a>.</li>
-<li><a id="anderson06_precis">[anderson06_precis]</a> <a name="anderson06_precis"></a>Eric Anderson, Michael Cash, Paul Janzen, , Gregory Pettit & Christian Smith, Precision, range, bandwidth, and other tradeoffs in  hexapods with application to large ground-based telescopes, nil, in in: Optomechanical Technologies for Astronomy, edited by (2006)</li>
-<li><a id="pernkopf06_works_analy_stewar_gough_type_paral_manip">[pernkopf06_works_analy_stewar_gough_type_paral_manip]</a> <a name="pernkopf06_works_analy_stewar_gough_type_paral_manip"></a>F Pernkopf & M L Husty, Workspace Analysis of Stewart-Gough-Type Parallel Manipulators, <i>Proceedings of the Institution of Mechanical Engineers, Part C: Journal of Mechanical Engineering Science</i>, <b>220(7)</b>, 1019-1032 (2006). <a href="https://doi.org/10.1243/09544062jmes194">link</a>. <a href="http://dx.doi.org/10.1243/09544062jmes194">doi</a>.</li>
-<li><a id="mukherjee07_dynam_stabil_index_vibrat_analy">[mukherjee07_dynam_stabil_index_vibrat_analy]</a> <a name="mukherjee07_dynam_stabil_index_vibrat_analy"></a>Mukherjee, Dasgupta & Mallik, Dynamic Stability Index and Vibration Analysis of a Flexible Stewart Platform, <i>Journal of Sound and Vibration</i>, <b>307(3-5)</b>, 495-512 (2007). <a href="https://doi.org/10.1016/j.jsv.2007.05.036">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2007.05.036">doi</a>.</li>
-<li><a id="jiang09_deter_maxim_singul_free_orien">[jiang09_deter_maxim_singul_free_orien]</a> <a name="jiang09_deter_maxim_singul_free_orien"></a>Qimi Jiang & Cl\'ement Gosselin, Determination of the Maximal Singularity-Free Orientation Workspace for the Gough-Stewart Platform, <i>Mechanism and Machine Theory</i>, <b>44(6)</b>, 1281-1293 (2009). <a href="https://doi.org/10.1016/j.mechmachtheory.2008.07.005">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2008.07.005">doi</a>.</li>
-<li><a id="jiang09_evaluat_repres_theor_orien_works">[jiang09_evaluat_repres_theor_orien_works]</a> <a name="jiang09_evaluat_repres_theor_orien_works"></a>Qimi Jiang & Cl\'ement Gosselin, Evaluation and Representation of the Theoretical Orientation Workspace of the Gough-Stewart Platform, <i>Journal of Mechanisms and Robotics</i>, <b>1(2)</b>, nil (2009). <a href="https://doi.org/10.1115/1.3046137">link</a>. <a href="http://dx.doi.org/10.1115/1.3046137">doi</a>.</li>
-<li><a id="jin09_kinem_desig_famil_partial_decoup_paral_manip">[jin09_kinem_desig_famil_partial_decoup_paral_manip]</a> <a name="jin09_kinem_desig_famil_partial_decoup_paral_manip"></a>Yan Jin, I-Ming Chen & Guilin Yang, Kinematic Design of a Family of 6-dof Partially Decoupled Parallel Manipulators, <i>Mechanism and Machine Theory</i>, <b>44(5)</b>, 912-922 (2009). <a href="https://doi.org/10.1016/j.mechmachtheory.2008.06.004">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2008.06.004">doi</a>.</li>
-<li><a id="legnani12_new_isotr_decoup_paral_manip">[legnani12_new_isotr_decoup_paral_manip]</a> <a name="legnani12_new_isotr_decoup_paral_manip"></a>Legnani, Fassi, Giberti, Cinquemani & Tosi, A New Isotropic and Decoupled 6-dof Parallel Manipulator, <i>Mechanism and Machine Theory</i>, <b>58(nil)</b>, 64-81 (2012). <a href="https://doi.org/10.1016/j.mechmachtheory.2012.07.008">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2012.07.008">doi</a>.</li>
-<li><a id="li18_optim_desig_six_axis_vibrat">[li18_optim_desig_six_axis_vibrat]</a> <a name="li18_optim_desig_six_axis_vibrat"></a>Yao Li, XiaoLong Yang, HongTao Wu & Bai Chen, Optimal Design of a Six-Axis Vibration Isolator Via Stewart Platform By Using Homogeneous Jacobian Matrix Formulation Based on Dual Quaternions, <i>Journal of Mechanical Science and Technology</i>, <b>32(1)</b>, 11-19 (2018). <a href="https://doi.org/10.1007/s12206-017-1202-1">link</a>. <a href="http://dx.doi.org/10.1007/s12206-017-1202-1">doi</a>.</li>
-<li><a id="cleary91_protot_paral_manip">[cleary91_protot_paral_manip]</a> <a name="cleary91_protot_paral_manip"></a>Cleary & Arai, A Prototype Parallel Manipulator: kinematics, construction, software, workspace results, and singularity analysis, nil, in in: Proceedings. 1991 IEEE International Conference on Robotics and Automation, edited by (1991)</li>
-<li><a id="geng93_six_degree_of_freed_activ">[geng93_six_degree_of_freed_activ]</a> <a name="geng93_six_degree_of_freed_activ"></a>Zheng Geng & Leonard Haynes, Six-Degree-Of-Freedom Active Vibration Isolation Using a Stewart Platform Mechanism, <i>Journal of Robotic Systems</i>, <b>10(5)</b>, 725-744 (1993). <a href="https://doi.org/10.1002/rob.4620100510">link</a>. <a href="http://dx.doi.org/10.1002/rob.4620100510">doi</a>.</li>
-<li><a id="geng94_six_degree_of_freed_activ">[geng94_six_degree_of_freed_activ]</a> <a name="geng94_six_degree_of_freed_activ"></a>Geng & Haynes, Six Degree-Of-Freedom Active Vibration Control Using the Stewart Platforms, <i>IEEE Transactions on Control Systems Technology</i>, <b>2(1)</b>, 45-53 (1994). <a href="https://doi.org/10.1109/87.273110">link</a>. <a href="http://dx.doi.org/10.1109/87.273110">doi</a>.</li>
-<li><a id="geng95_intel_contr_system_multip_degree">[geng95_intel_contr_system_multip_degree]</a> <a name="geng95_intel_contr_system_multip_degree"></a>Jason Geng, George Pan, Leonard Haynes, Ben Wada & John Garba, An Intelligent Control System for Multiple Degree-Of-Freedom Vibration Isolation, <i>Journal of Intelligent Material Systems and Structures</i>, <b>6(6)</b>, 787-800 (1995). <a href="https://doi.org/10.1177/1045389x9500600607">link</a>. <a href="http://dx.doi.org/10.1177/1045389x9500600607">doi</a>.</li>
-<li><a id="spanos95_soft_activ_vibrat_isolat">[spanos95_soft_activ_vibrat_isolat]</a> <a name="spanos95_soft_activ_vibrat_isolat"></a>Spanos, Rahman & Blackwood, A Soft 6-axis Active Vibration Isolator, nil, in in: Proceedings of 1995 American Control Conference - ACC'95, edited by (1995)</li>
-<li><a id="thayer98_stewar">[thayer98_stewar]</a> <a name="thayer98_stewar"></a>Thayer & Vagners, A look at the pole/zero structure of a Stewart platform using special coordinate basis, nil, in in: Proceedings of the 1998 American Control Conference. ACC (IEEE Cat. No.98CH36207), edited by (1998)</li>
-<li><a id="thayer02_six_axis_vibrat_isolat_system">[thayer02_six_axis_vibrat_isolat_system]</a> <a name="thayer02_six_axis_vibrat_isolat_system"></a>Doug Thayer, Mark Campbell, Juris Vagners & Andrew von Flotow, Six-Axis Vibration Isolation System Using Soft Actuators and Multiple Sensors, <i>Journal of Spacecraft and Rockets</i>, <b>39(2)</b>, 206-212 (2002). <a href="https://doi.org/10.2514/2.3821">link</a>. <a href="http://dx.doi.org/10.2514/2.3821">doi</a>.</li>
-<li><a id="obrien98_lesson">[obrien98_lesson]</a> <a name="obrien98_lesson"></a>O'Brien, McInroy, Bodtke, Bruch & Hamann, Lessons learned in nonlinear systems and flexible robots through experiments on a 6 legged platform, nil, in in: Proceedings of the 1998 American Control Conference. ACC (IEEE Cat. No.98CH36207), edited by (1998)</li>
-<li><a id="mcinroy99_precis_fault_toler_point_using_stewar_platf">[mcinroy99_precis_fault_toler_point_using_stewar_platf]</a> <a name="mcinroy99_precis_fault_toler_point_using_stewar_platf"></a>McInroy, O'Brien & Neat, Precise, Fault-Tolerant Pointing Using a Stewart Platform, <i>IEEE/ASME Transactions on Mechatronics</i>, <b>4(1)</b>, 91-95 (1999). <a href="https://doi.org/10.1109/3516.752089">link</a>. <a href="http://dx.doi.org/10.1109/3516.752089">doi</a>.</li>
-<li><a id="mcinroy99_dynam">[mcinroy99_dynam]</a> <a name="mcinroy99_dynam"></a>McInroy, Dynamic modeling of flexure jointed hexapods for control purposes, nil, in in: Proceedings of the 1999 IEEE International Conference on Control Applications (Cat. No.99CH36328), edited by (1999)</li>
-<li><a id="mcinroy00_desig_contr_flexur_joint_hexap">[mcinroy00_desig_contr_flexur_joint_hexap]</a> <a name="mcinroy00_desig_contr_flexur_joint_hexap"></a>McInroy & Hamann, Design and Control of Flexure Jointed Hexapods, <i>IEEE Transactions on Robotics and Automation</i>, <b>16(4)</b>, 372-381 (2000). <a href="https://doi.org/10.1109/70.864229">link</a>. <a href="http://dx.doi.org/10.1109/70.864229">doi</a>.</li>
-<li><a id="kim00_robus_track_contr_desig_dof_paral_manip">[kim00_robus_track_contr_desig_dof_paral_manip]</a> <a name="kim00_robus_track_contr_desig_dof_paral_manip"></a>Dong Hwan Kim, Ji-Yoon Kang & Kyo-Il Lee, Robust Tracking Control Design for a 6 Dof Parallel Manipulator, <i>Journal of Robotic Systems</i>, <b>17(10)</b>, 527-547 (2000). <a href="https://doi.org/10.1002/1097-4563(200010)17:10$<$527::AID-ROB2>3.0.CO;2-A">link</a>. <a href="http://dx.doi.org/10.1002/1097-4563(200010)17:10$<$527::AID-ROB2>3.0.CO;2-A">doi</a>.</li>
-<li><a id="chen00_ident">[chen00_ident]</a> <a name="chen00_ident"></a>Yixin Chen & McInroy, Identification and decoupling control of flexure jointed hexapods, nil, in in: Proceedings 2000 ICRA. Millennium Conference. IEEE International Conference on Robotics and Automation. Symposia Proceedings (Cat. No.00CH37065), edited by (2000)</li>
-<li><a id="li01_simul_vibrat_isolat_point_contr">[li01_simul_vibrat_isolat_point_contr]</a> <a name="li01_simul_vibrat_isolat_point_contr"></a>Xiaochun Li, Jerry Hamann & John McInroy, Simultaneous Vibration Isolation and Pointing Control of Flexure Jointed Hexapods, nil, in in: Smart Structures and Materials 2001: Smart Structures and Integrated Systems, edited by (2001)</li>
-<li><a id="selig01_theor_stewar">[selig01_theor_stewar]</a> <a name="selig01_theor_stewar"></a>Selig & Ding, Theory of vibrations in Stewart platforms, 2190-2195, in in: Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180), edited by (2001)</li>
-<li><a id="bonev01_new_approac_to_orien_works">[bonev01_new_approac_to_orien_works]</a> <a name="bonev01_new_approac_to_orien_works"></a>Ilian Bonev & Jeha Ryu, A New Approach To Orientation Workspace Analysis of 6-dof Parallel Manipulators, <i>Mechanism and Machine Theory</i>, <b>36(1)</b>, 15-28 (2001). <a href="https://doi.org/10.1016/s0094-114x(00)00032-x">link</a>. <a href="http://dx.doi.org/10.1016/s0094-114x(00)00032-x">doi</a>.</li>
-<li><a id="gao02_new_kinem_struc_paral_manip_desig">[gao02_new_kinem_struc_paral_manip_desig]</a> <a name="gao02_new_kinem_struc_paral_manip_desig"></a>Feng Gao, Weimin Li, Xianchao Zhao, Zhenlin Jin & Hui Zhao, New Kinematic Structures for 2-, 3-, 4-, and 5-dof Parallel Manipulator Designs, <i>Mechanism and Machine Theory</i>, <b>37(11)</b>, 1395-1411 (2002). <a href="https://doi.org/10.1016/s0094-114x(02)00044-7">link</a>. <a href="http://dx.doi.org/10.1016/s0094-114x(02)00044-7">doi</a>.</li>
-<li><a id="chai02_pract_calib_proces_using_partial">[chai02_pract_calib_proces_using_partial]</a> <a name="chai02_pract_calib_proces_using_partial"></a>Kok-Soon Chai, Ken Young & Ian Tuersley, A Practical Calibration Process Using Partial Information for a Commercial Stewart Platform, <i>Robotica</i>, <b>20(03)</b>, nil (2002). <a href="https://doi.org/10.1017/s0263574701004027">link</a>. <a href="http://dx.doi.org/10.1017/s0263574701004027">doi</a>.</li>
-<li><a id="mcinroy02_model_desig_flexur_joint_stewar">[mcinroy02_model_desig_flexur_joint_stewar]</a> <a name="mcinroy02_model_desig_flexur_joint_stewar"></a>McInroy, Modeling and Design of Flexure Jointed Stewart Platforms for Control Purposes, <i>IEEE/ASME Transactions on Mechatronics</i>, <b>7(1)</b>, 95-99 (2002). <a href="https://doi.org/10.1109/3516.990892">link</a>. <a href="http://dx.doi.org/10.1109/3516.990892">doi</a>.</li>
-<li><a id="abu02_stiff_soft_stewar_platf_activ">[abu02_stiff_soft_stewar_platf_activ]</a> <a name="abu02_stiff_soft_stewar_platf_activ"></a>Abu Hanieh, Horodinca & Preumont, Stiff and Soft Stewart Platforms for Active Damping and Active Isolation of Vibrations, in in: Actuator 2002, 8th International Conference on New Actuators, edited by (2002)</li>
-<li><a id="jafari03_orthog_gough_stewar_platf_microm">[jafari03_orthog_gough_stewar_platf_microm]</a> <a name="jafari03_orthog_gough_stewar_platf_microm"></a>Jafari & McInroy, Orthogonal Gough-Stewart Platforms for Micromanipulation, <i>IEEE Transactions on Robotics and Automation</i>, <b>19(4)</b>, 595-603 (2003). <a href="https://doi.org/10.1109/tra.2003.814506">link</a>. <a href="http://dx.doi.org/10.1109/tra.2003.814506">doi</a>.</li>
-<li><a id="chen03_payload_point_activ_vibrat_isolat">[chen03_payload_point_activ_vibrat_isolat]</a> <a name="chen03_payload_point_activ_vibrat_isolat"></a>Hong-Jen Chen, Ronald Bishop & Brij Agrawal, Payload Pointing and Active Vibration Isolation Using Hexapod Platforms, nil, in in: 44th AIAA/ASME/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference, edited by (2003)</li>
-<li><a id="lee03_posit_contr_stewar_platf_using">[lee03_posit_contr_stewar_platf_using]</a> <a name="lee03_posit_contr_stewar_platf_using"></a>Se-Han Lee, Jae-Bok Song, Woo-Chun Choi & Daehie Hong, Position Control of a Stewart Platform Using Inverse Dynamics Control With Approximate Dynamics, <i>Mechatronics</i>, <b>13(6)</b>, 605-619 (2003). <a href="https://doi.org/10.1016/s0957-4158(02)00033-8">link</a>. <a href="http://dx.doi.org/10.1016/s0957-4158(02)00033-8">doi</a>.</li>
-<li><a id="wang03_kinem_dynam_degree_of_freed">[wang03_kinem_dynam_degree_of_freed]</a> <a name="wang03_kinem_dynam_degree_of_freed"></a>Shao-Chi Wang, Hiromitsu Hikita, Hiroshi Kubo, Yong-Sheng Zhao, Zhen Huang & Tohru Ifukube, Kinematics and Dynamics of a 6 Degree-Of-Freedom Fully Parallel Manipulator With Elastic Joints, <i>Mechanism and Machine Theory</i>, <b>38(5)</b>, 439-461 (2003). <a href="https://doi.org/10.1016/s0094-114x(02)00132-5">link</a>. <a href="http://dx.doi.org/10.1016/s0094-114x(02)00132-5">doi</a>.</li>
-<li><a id="lin03_adapt_sinus_distur_cancel_precis">[lin03_adapt_sinus_distur_cancel_precis]</a> <a name="lin03_adapt_sinus_distur_cancel_precis"></a>Haomin Lin & McInroy, Adaptive Sinusoidal Disturbance Cancellation for Precise Pointing of Stewart Platforms, <i>IEEE Transactions on Control Systems Technology</i>, <b>11(2)</b>, 267-272 (2003). <a href="https://doi.org/10.1109/tcst.2003.809248">link</a>. <a href="http://dx.doi.org/10.1109/tcst.2003.809248">doi</a>.</li>
-<li><a id="agrawal04_algor_activ_vibrat_isolat_spacec">[agrawal04_algor_activ_vibrat_isolat_spacec]</a> <a name="agrawal04_algor_activ_vibrat_isolat_spacec"></a>Brij N Agrawal & Hong-Jen Chen, Algorithms for Active Vibration Isolation on Spacecraft  Using a Stewart Platform, <i>Smart Materials and Structures</i>, <b>13(4)</b>, 873-880 (2004). <a href="https://doi.org/10.1088/0964-1726/13/4/025">link</a>. <a href="http://dx.doi.org/10.1088/0964-1726/13/4/025">doi</a>.</li>
-<li><a id="cheng04_multi_body_system_model_gough">[cheng04_multi_body_system_model_gough]</a> <a name="cheng04_multi_body_system_model_gough"></a>Yuan Cheng, Gexue Ren & ShiLiang Dai, The Multi-Body System Modelling of the Gough-Stewart Platform for Vibration Control, <i>Journal of Sound and Vibration</i>, <b>271(3-5)</b>, 599-614 (2004). <a href="https://doi.org/10.1016/s0022-460x(03)00283-9">link</a>. <a href="http://dx.doi.org/10.1016/s0022-460x(03)00283-9">doi</a>.</li>
-<li><a id="gexue04_vibrat_contr_with_stewar_paral_mechan">[gexue04_vibrat_contr_with_stewar_paral_mechan]</a> <a name="gexue04_vibrat_contr_with_stewar_paral_mechan"></a>Ren Gexue, Lu Qiuhai, Hu Ning, Nan Rendong & Peng Bo, On Vibration Control With Stewart Parallel Mechanism, <i>Mechatronics</i>, <b>14(1)</b>, 1-13 (2004). <a href="https://doi.org/10.1016/s0957-4158(02)00092-2">link</a>. <a href="http://dx.doi.org/10.1016/s0957-4158(02)00092-2">doi</a>.</li>
-<li><a id="hauge04_sensor_contr_space_based_six">[hauge04_sensor_contr_space_based_six]</a> <a name="hauge04_sensor_contr_space_based_six"></a>Hauge & Campbell, Sensors and Control of a Space-Based Six-Axis Vibration Isolation System, <i>Journal of Sound and Vibration</i>, <b>269(3-5)</b>, 913-931 (2004). <a href="https://doi.org/10.1016/s0022-460x(03)00206-2">link</a>. <a href="http://dx.doi.org/10.1016/s0022-460x(03)00206-2">doi</a>.</li>
-<li><a id="furutani04_nanom_cuttin_machin_using_stewar">[furutani04_nanom_cuttin_machin_using_stewar]</a> <a name="furutani04_nanom_cuttin_machin_using_stewar"></a>Katsushi Furutani, Michio Suzuki & Ryusei Kudoh, Nanometre-Cutting Machine Using a Stewart-Platform Parallel Mechanism, <i>Measurement Science and Technology</i>, <b>15(2)</b>, 467-474 (2004). <a href="https://doi.org/10.1088/0957-0233/15/2/022">link</a>. <a href="http://dx.doi.org/10.1088/0957-0233/15/2/022">doi</a>.</li>
-<li><a id="ranganath04_force_torque_sensor_based_stewar">[ranganath04_force_torque_sensor_based_stewar]</a> <a name="ranganath04_force_torque_sensor_based_stewar"></a>R Ranganath, S Nair, S Mruthyunjaya & A Ghosal, A Force-Torque Sensor Based on a Stewart Platform in a Near-Singular Configuration, <i>Mechanism and Machine Theory</i>, <b>39(9)</b>, 971-998 (2004). <a href="https://doi.org/10.1016/j.mechmachtheory.2004.04.005">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2004.04.005">doi</a>.</li>
-<li><a id="chen04_decoup_contr_flexur_joint_hexap">[chen04_decoup_contr_flexur_joint_hexap]</a> <a name="chen04_decoup_contr_flexur_joint_hexap"></a>Chen & McInroy, Decoupled Control of Flexure-Jointed Hexapods Using Estimated Joint-Space Mass-Inertia Matrix, <i>IEEE Transactions on Control Systems Technology</i>, <b>12(3)</b>, 413-421 (2004). <a href="https://doi.org/10.1109/tcst.2004.824339">link</a>. <a href="http://dx.doi.org/10.1109/tcst.2004.824339">doi</a>.</li>
-<li><a id="su04_distur_rejec_high_precis_motion">[su04_distur_rejec_high_precis_motion]</a> <a name="su04_distur_rejec_high_precis_motion"></a>Su, Duan, Zheng, Zhang, Chen & Mi, Disturbance-Rejection High-Precision Motion Control of a Stewart Platform, <i>IEEE Transactions on Control Systems Technology</i>, <b>12(3)</b>, 364-374 (2004). <a href="https://doi.org/10.1109/tcst.2004.824315">link</a>. <a href="http://dx.doi.org/10.1109/tcst.2004.824315">doi</a>.</li>
-<li><a id="huang05_smoot_stewar">[huang05_smoot_stewar]</a> <a name="huang05_smoot_stewar"></a>Chin I Huang & Li-Chen Fu, Smooth sliding mode tracking control of the Stewart platform, nil, in in: Proceedings of 2005 IEEE Conference on Control Applications, 2005. CCA 2005., edited by (2005)</li>
-<li><a id="ting06_desig_stewar_nanos_platf">[ting06_desig_stewar_nanos_platf]</a> <a name="ting06_desig_stewar_nanos_platf"></a>Yung Ting, Jar & Chun-Chung Li, Design of a 6DOF Stewart-type Nanoscale Platform, nil, in in: 2006 Sixth IEEE Conference on Nanotechnology, edited by (2006)</li>
-<li><a id="ting13_compos_contr_desig_stewar_nanos_platf">[ting13_compos_contr_desig_stewar_nanos_platf]</a> <a name="ting13_compos_contr_desig_stewar_nanos_platf"></a>Yung Ting, Chun-Chung Li & Tho Van Nguyen, Composite Controller Design for a 6dof Stewart Nanoscale Platform, <i>Precision Engineering</i>, <b>37(3)</b>, 671-683 (2013). <a href="https://doi.org/10.1016/j.precisioneng.2013.01.012">link</a>. <a href="http://dx.doi.org/10.1016/j.precisioneng.2013.01.012">doi</a>.</li>
-<li><a id="horin06_singul_condit_six_degree_of">[horin06_singul_condit_six_degree_of]</a> <a name="horin06_singul_condit_six_degree_of"></a>Ben Horin & Shoham, Singularity Condition of Six-Degree-Of-Freedom Three-Legged Parallel Robots Based on Grassmann-Cayley Algebra, <i>IEEE Transactions on Robotics</i>, <b>22(4)</b>, 577-590 (2006). <a href="https://doi.org/10.1109/tro.2006.878958">link</a>. <a href="http://dx.doi.org/10.1109/tro.2006.878958">doi</a>.</li>
-<li><a id="preumont07_six_axis_singl_stage_activ">[preumont07_six_axis_singl_stage_activ]</a> <a name="preumont07_six_axis_singl_stage_activ"></a>Preumont, Horodinca, Romanescu, de Marneffe, Avraam, Deraemaeker, Bossens & Abu Hanieh, A Six-Axis Single-Stage Active Vibration Isolator Based on Stewart Platform, <i>Journal of Sound and Vibration</i>, <b>300(3-5)</b>, 644-661 (2007). <a href="https://doi.org/10.1016/j.jsv.2006.07.050">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2006.07.050">doi</a>.</li>
-<li><a id="ting07_measur_calib_stewar_microm_system">[ting07_measur_calib_stewar_microm_system]</a> <a name="ting07_measur_calib_stewar_microm_system"></a>Yung Ting, Ho-Chin Jar & Chun-Chung Li, Measurement and Calibration for Stewart Micromanipulation  System, <i>Precision Engineering</i>, <b>31(3)</b>, 226-233 (2007). <a href="https://doi.org/10.1016/j.precisioneng.2006.09.004">link</a>. <a href="http://dx.doi.org/10.1016/j.precisioneng.2006.09.004">doi</a>.</li>
-<li><a id="lei08_multi_objec_robus_activ_vibrat">[lei08_multi_objec_robus_activ_vibrat]</a> <a name="lei08_multi_objec_robus_activ_vibrat"></a>Liu Lei & Wang Benli, Multi Objective Robust Active Vibration Control for Flexure Jointed Struts of Stewart Platforms Via $H_\infty$ and $\mu$ Synthesis, <i>Chinese Journal of Aeronautics</i>, <b>21(2)</b>, 125-133 (2008). <a href="https://doi.org/10.1016/s1000-9361(08)60016-3">link</a>. <a href="http://dx.doi.org/10.1016/s1000-9361(08)60016-3">doi</a>.</li>
-<li><a id="brezina08_ni_labview_matlab_simmec_stewar_platf_desig">[brezina08_ni_labview_matlab_simmec_stewar_platf_desig]</a> <a name="brezina08_ni_labview_matlab_simmec_stewar_platf_desig"></a>B\vrezina, Andr\vs & B\vrezina, Ni Labview-Matlab Simmechanics Stewart Platform Design, <i>Applied and Computational Mechanics</i>,  (2008).</li>
-<li><a id="molina08_simul_stewar">[molina08_simul_stewar]</a> <a name="molina08_simul_stewar"></a>Molina, Rosario & Sanchez, Simulation environment proposal, analysis and control of a Stewart platform manipulator, in in: 7th Brazilian Conference on Dynamics, Control & Applications, edited by (2008)</li>
-<li><a id="dong08_stiff_resear_high_precis_large">[dong08_stiff_resear_high_precis_large]</a> <a name="dong08_stiff_resear_high_precis_large"></a>Wei Dong, Lining Sun & Zhijiang Du, Stiffness Research on a High-Precision, Large-Workspace Parallel Mechanism With Compliant Joints, <i>Precision Engineering</i>, <b>32(3)</b>, 222-231 (2008). <a href="https://doi.org/10.1016/j.precisioneng.2007.08.002">link</a>. <a href="http://dx.doi.org/10.1016/j.precisioneng.2007.08.002">doi</a>.</li>
-<li><a id="dong07_desig_precis_compl_paral_posit">[dong07_desig_precis_compl_paral_posit]</a> <a name="dong07_desig_precis_compl_paral_posit"></a>Dong, Sun & Du, Design of a Precision Compliant Parallel Positioner Driven By Dual Piezoelectric Actuators, <i>Sensors and Actuators A: Physical</i>, <b>135(1)</b>, 250-256 (2007). <a href="https://doi.org/10.1016/j.sna.2006.07.011">link</a>. <a href="http://dx.doi.org/10.1016/j.sna.2006.07.011">doi</a>.</li>
-<li><a id="heertjes10_optim_dynam_decoup_activ_vibrat_isolat">[heertjes10_optim_dynam_decoup_activ_vibrat_isolat]</a> <a name="heertjes10_optim_dynam_decoup_activ_vibrat_isolat"></a>Heertjes, van Engelen & Steinbuch, Optimized Dynamic Decoupling in Active Vibration Isolation, <i>IFAC Proceedings Volumes</i>, <b>43(18)</b>, 293-298 (2010).</li>
-<li><a id="neagoe10_accur_stewar_platf">[neagoe10_accur_stewar_platf]</a> <a name="neagoe10_accur_stewar_platf"></a>@incollectionneagoe10_accur_stewar_platf,
-  author = Neagoe, Mircea and Diaconescu, Dorin and Jaliu, Codruta and Stan, Sergiu-Dan and Cretescu, Nadia and Saulescu, Radu,
-  booktitle = Computational Intelligence and Modern Heuristics,
-  publisher = InTech,
-  title = On the Accuracy of a Stewart Platform: Modelling and Experimental Validation,
-  year = 2010,
-  tags = parallel robot,
-</li>
-<li><a id="beno10">[beno10]</a> <a name="beno10"></a>Joseph Beno, John Booth & Jason Mock, An alternative architecture and control strategy for hexapod positioning systems to simplify structural design and improve accuracy, nil, in in: Ground-based and Airborne Telescopes III, edited by (2010)</li>
-<li><a id="yang10_model_dof_simul_simmec">[yang10_model_dof_simul_simmec]</a> <a name="yang10_model_dof_simul_simmec"></a>Chifu Yang, Zhengmao Ye, Ogbobe Peter & Junwei Han, Modeling and simulation of spatial 6-DOF parallel robots using Simulink and SimMechanics, nil, in in: 2010 3rd International Conference on Computer Science and Information Technology, edited by (2010)</li>
-<li><a id="brezina10_contr_desig_stewar_platf_linear_actuat">[brezina10_contr_desig_stewar_platf_linear_actuat]</a> <a name="brezina10_contr_desig_stewar_platf_linear_actuat"></a>@inbookbrezina10_contr_desig_stewar_platf_linear_actuat,
-  author = T. B\vrezina and L. B\vrezina,
-  booktitle = Recent Advances in Mechatronics,
-  chapter = 1,
-  doi = 10.1007/978-3-642-05022-0_58,
-  pages = 341-346,
-  publisher = Springer Berlin Heidelberg,
-  series = Recent Advances in Mechatronics,
-  title = Controller Design of the Stewart Platform Linear Actuator,
-  url = https://doi.org/10.1007/978-3-642-05022-0_58,
-  year = 2010,
-  tags = parallel robot,
-</li>
-<li><a id="houska10_desig_implem_absol_linear_posit">[houska10_desig_implem_absol_linear_posit]</a> <a name="houska10_desig_implem_absol_linear_posit"></a>@inbookhouska10_desig_implem_absol_linear_posit,
-  author = P. Hou\vska and T. B\vrezina and L. B\vrezina,
-  booktitle = Recent Advances in Mechatronics,
-  chapter = 1,
-  doi = 10.1007/978-3-642-05022-0_59,
-  pages = 347-352,
-  publisher = Springer Berlin Heidelberg,
-  series = Recent Advances in Mechatronics,
-  title = Design and Implementation of the Absolute Linear Position Sensor for the Stewart Platform,
-  url = https://doi.org/10.1007/978-3-642-05022-0_59,
-  year = 2010,
-  tags = parallel robot,
-</li>
-<li><a id="zhang11_six_dof">[zhang11_six_dof]</a> <a name="zhang11_six_dof"></a>Zhen Zhang, J Liu, Jq Mao, Yx Guo & Yh Ma, Six DOF active vibration control using stewart platform with non-cubic configuration, nil, in in: 2011 6th IEEE Conference on Industrial Electronics and Applications, edited by (2011)</li>
-<li><a id="yun11_gener_dynam_contr_model_class">[yun11_gener_dynam_contr_model_class]</a> <a name="yun11_gener_dynam_contr_model_class"></a>Yuan Yun & Yangmin Li, A General Dynamics and Control Model of a Class of Multi-Dof Manipulators for Active Vibration Control, <i>Mechanism and Machine Theory</i>, <b>46(10)</b>, 1549-1574 (2011). <a href="https://doi.org/10.1016/j.mechmachtheory.2011.04.010">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2011.04.010">doi</a>.</li>
-<li><a id="pu11_six_degree_of_freed_activ">[pu11_six_degree_of_freed_activ]</a> <a name="pu11_six_degree_of_freed_activ"></a>H Pu, X Chen, Z Zhou & X Luo, Six-Degree-Of-Freedom Active Vibration Isolation System With Decoupled Collocated Control, <i>Proceedings of the Institution of Mechanical Engineers, Part B: Journal of Engineering Manufacture</i>, <b>226(2)</b>, 313-325 (2011). <a href="https://doi.org/10.1177/0954405411414336">link</a>. <a href="http://dx.doi.org/10.1177/0954405411414336">doi</a>.</li>
-<li><a id="ding11_robus_vibrat_isolat_dof">[ding11_robus_vibrat_isolat_dof]</a> <a name="ding11_robus_vibrat_isolat_dof"></a>Chenyang Ding, Damen & van den Bosch, Robust Vibration Isolation of a 6-DOF system using modal decomposition and sliding surface optimization, nil, in in: Proceedings of the 2011 American Control Conference, edited by (2011)</li>
-<li><a id="torii12_small_size_self_propel_stewar_platf">[torii12_small_size_self_propel_stewar_platf]</a> <a name="torii12_small_size_self_propel_stewar_platf"></a>Akihiro Torii, Masaaki Banno, Akiteru Ueda, Kae & Doki, A Small-Size Self-Propelled Stewart Platform, <i>Electrical Engineering in Japan</i>, <b>181(2)</b>, 37-46 (2012). <a href="https://doi.org/10.1002/eej.21261">link</a>. <a href="http://dx.doi.org/10.1002/eej.21261">doi</a>.</li>
-<li><a id="pedrammehr12_study_vibrat_stewar_platf_based">[pedrammehr12_study_vibrat_stewar_platf_based]</a> <a name="pedrammehr12_study_vibrat_stewar_platf_based"></a>Siamak Pedrammehr, Mehran Mahboubkhah & Navid Khani, A Study on Vibration of Stewart Platform-Based Machine Tool Table, <i>The International Journal of Advanced Manufacturing Technology</i>, <b>65(5-8)</b>, 991-1007 (2012). <a href="https://doi.org/10.1007/s00170-012-4234-9">link</a>. <a href="http://dx.doi.org/10.1007/s00170-012-4234-9">doi</a>.</li>
-<li><a id="xu13_track_posit_vibrat_contr_simul">[xu13_track_posit_vibrat_contr_simul]</a> <a name="xu13_track_posit_vibrat_contr_simul"></a>Zhao-dong Xu & Chen-hui Weng, Track-Position and Vibration Control Simulation for Strut of the Stewart Platform, <i>Journal of Zhejiang University SCIENCE A</i>, <b>14(4)</b>, 281-291 (2013). <a href="https://doi.org/10.1631/jzus.a1200278">link</a>. <a href="http://dx.doi.org/10.1631/jzus.a1200278">doi</a>.</li>
-<li><a id="baig14_neural_networ_optim_desig_param">[baig14_neural_networ_optim_desig_param]</a> <a name="baig14_neural_networ_optim_desig_param"></a>Baig & Pugazhenthi, Neural Network Optimization of Design Parameters of Stewart Platform for Effective Active Vibration Isolation, <i>Journal of Engineering and Applied Sciences</i>, <b>9(4)</b>, 78-84 (2014).</li>
-<li><a id="du14_piezo_actuat_high_precis_flexib">[du14_piezo_actuat_high_precis_flexib]</a> <a name="du14_piezo_actuat_high_precis_flexib"></a>Zhijiang Du, Ruochong Shi & Wei Dong, A Piezo-Actuated High-Precision Flexible Parallel Pointing Mechanism: Conceptual Design, Development, and Experiments, <i>IEEE Transactions on Robotics</i>, <b>30(1)</b>, 131-137 (2014). <a href="https://doi.org/10.1109/tro.2013.2288800">link</a>. <a href="http://dx.doi.org/10.1109/tro.2013.2288800">doi</a>.</li>
-<li><a id="abbas14_vibrat_stewar_platf">[abbas14_vibrat_stewar_platf]</a> <a name="abbas14_vibrat_stewar_platf"></a>Hussain Abbas & Huang Hai, Vibration isolation concepts for non-cubic Stewart Platform using modal control, nil, in in: Proceedings of 2014 11th International Bhurban Conference on Applied Sciences & Technology (IBCAST) Islamabad, Pakistan, 14th - 18th January, 2014, edited by (2014)</li>
-<li><a id="lara-molina15_combin_struc_contr_optim_desig">[lara-molina15_combin_struc_contr_optim_desig]</a> <a name="lara-molina15_combin_struc_contr_optim_desig"></a>Lara-Molina, Koroishi & Didier Dumur, Combined Structure-Control Optimal Design of the Stewart-Gough Robot, nil, in in: 2015 12th Latin American Robotics Symposium and 2015 3rd Brazilian Symposium on Robotics (LARS-SBR), edited by (2015)</li>
-<li><a id="thier16_six_degree_freed_vibrat_isolat">[thier16_six_degree_freed_vibrat_isolat]</a> <a name="thier16_six_degree_freed_vibrat_isolat"></a>Markus Thier, Rudolf Saathof, Andreas Sinn, Reinhard Hainisch & Georg Schitter, Six Degree of Freedom Vibration Isolation Platform for In-Line Nano-Metrology, <i>IFAC-PapersOnLine</i>, <b>49(21)</b>, 149-156 (2016). <a href="https://doi.org/10.1016/j.ifacol.2016.10.534">link</a>. <a href="http://dx.doi.org/10.1016/j.ifacol.2016.10.534">doi</a>.</li>
-<li><a id="wang16_inves_activ_vibrat_isolat_stewar">[wang16_inves_activ_vibrat_isolat_stewar]</a> <a name="wang16_inves_activ_vibrat_isolat_stewar"></a>Wang, Xie, Chen & Zhang, Investigation on Active Vibration Isolation of a Stewart Platform With Piezoelectric Actuators, <i>Journal of Sound and Vibration</i>, <b>383</b>, 1-19 (2016). <a href="https://doi.org/10.1016/j.jsv.2016.07.021">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2016.07.021">doi</a>.</li>
-<li><a id="yang17_dynam_isotr_desig_decen_activ">[yang17_dynam_isotr_desig_decen_activ]</a> <a name="yang17_dynam_isotr_desig_decen_activ"></a>XiaoLong Yang, HongTao Wu, Yao Li & Bai Chen, Dynamic Isotropic Design and Decentralized Active Control  of a Six-Axis Vibration Isolator Via Stewart Platform, <i>Mechanism and Machine Theory</i>, <b>117(nil)</b>, 244-252 (2017). <a href="https://doi.org/10.1016/j.mechmachtheory.2017.07.017">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2017.07.017">doi</a>.</li>
-<li><a id="beijen18_self_tunin_mimo_distur_feedf">[beijen18_self_tunin_mimo_distur_feedf]</a> <a name="beijen18_self_tunin_mimo_distur_feedf"></a>Beijen, Heertjes, Van Dijk & Hakvoort, Self-Tuning Mimo Disturbance Feedforward Control for Active Hard-Mounted Vibration Isolators, <i>Control Engineering Practice</i>, <b>72(nil)</b>, 90-103 (2018). <a href="https://doi.org/10.1016/j.conengprac.2017.11.008">link</a>. <a href="http://dx.doi.org/10.1016/j.conengprac.2017.11.008">doi</a>.</li>
-<li><a id="jiao18_dynam_model_exper_analy_stewar">[jiao18_dynam_model_exper_analy_stewar]</a> <a name="jiao18_dynam_model_exper_analy_stewar"></a>Jian Jiao, Ying Wu, Kaiping Yu & Rui Zhao, Dynamic Modeling and Experimental Analyses of Stewart Platform With Flexible Hinges, <i>Journal of Vibration and Control</i>, <b>25(1)</b>, 151-171 (2018). <a href="https://doi.org/10.1177/1077546318772474">link</a>. <a href="http://dx.doi.org/10.1177/1077546318772474">doi</a>.</li>
-<li><a id="tang18_decen_vibrat_contr_voice_coil">[tang18_decen_vibrat_contr_voice_coil]</a> <a name="tang18_decen_vibrat_contr_voice_coil"></a>Jie Tang, Dengqing Cao & Tianhu Yu, Decentralized Vibration Control of a Voice Coil Motor-Based Stewart Parallel Mechanism: Simulation and Experiments, <i>Proceedings of the Institution of Mechanical Engineers, Part C: Journal of Mechanical Engineering Science</i>, <b>233(1)</b>, 132-145 (2018). <a href="https://doi.org/10.1177/0954406218756941">link</a>. <a href="http://dx.doi.org/10.1177/0954406218756941">doi</a>.</li>
-<li><a id="taghavi19_desig_model_simul_novel_hexap">[taghavi19_desig_model_simul_novel_hexap]</a> <a name="taghavi19_desig_model_simul_novel_hexap"></a>Meysam Taghavi, Taku Kinoshita & Thomas Bock, Design, Modelling and Simulation of Novel Hexapod-Shaped Passive Damping System for Coupling Cable Robot and End Effector in Curtain Wall Module Installation Application, nil, in in: Proceedings of the 36th International Symposium on Automation and Robotics in Construction (ISARC), edited by (2019)</li>
-<li><a id="owoc19_mechat_desig_model_contr_stewar_gough_platf">[owoc19_mechat_desig_model_contr_stewar_gough_platf]</a> <a name="owoc19_mechat_desig_model_contr_stewar_gough_platf"></a>Dawid Owoc, Krzysztof Ludwiczak & Robert Piotrowski, Mechatronics Design, Modelling and Controlling of the Stewart-Gough Platform, nil, in in: 2019 24th International Conference on Methods and Models in Automation and Robotics (MMAR), edited by (2019)</li>
-<li><a id="min19_high_precis_track_cubic_stewar">[min19_high_precis_track_cubic_stewar]</a> <a name="min19_high_precis_track_cubic_stewar"></a>Da Min, Deqing Huang & Hu Su, High-Precision Tracking of Cubic Stewart Platform Using Active Disturbance Rejection Control, nil, in in: 2019 Chinese Control Conference (CCC), edited by (2019)</li>
-<li><a id="yang19_dynam_model_decoup_contr_flexib">[yang19_dynam_model_decoup_contr_flexib]</a> <a name="yang19_dynam_model_decoup_contr_flexib"></a>Yang, Wu, Chen, Kang & Cheng, Dynamic Modeling and Decoupled Control of a Flexible Stewart Platform for Vibration Isolation, <i>Journal of Sound and Vibration</i>, <b>439</b>, 398-412 (2019). <a href="https://doi.org/10.1016/j.jsv.2018.10.007">link</a>. <a href="http://dx.doi.org/10.1016/j.jsv.2018.10.007">doi</a>.</li>
-<li><a id="stabile19_desig_analy_novel_hexap_platf">[stabile19_desig_analy_novel_hexap_platf]</a> <a name="stabile19_desig_analy_novel_hexap_platf"></a>Stabile, Wegrzyn, Aglietti, Guglielmo S, Richardson & Smet, Design and Analysis of a Novel Hexapod Platform for  High-Performance Micro-Vibration Mitigation, in in: Proc. 18. European Space Mechanisms and Tribology
-                  Symposium, edited by (2019)</li>
-<li><a id="tong20_dynam_decoup_analy_exper_based">[tong20_dynam_decoup_analy_exper_based]</a> <a name="tong20_dynam_decoup_analy_exper_based"></a>Zhizhong Tong, Cl\'ement Gosselin & Hongzhou Jiang, Dynamic Decoupling Analysis and Experiment Based on a Class  of Modified Gough-Stewart Parallel Manipulators With Line  Orthogonality, <i>Mechanism and Machine Theory</i>, <b>143(nil)</b>, 103636 (2020). <a href="https://doi.org/10.1016/j.mechmachtheory.2019.103636">link</a>. <a href="http://dx.doi.org/10.1016/j.mechmachtheory.2019.103636">doi</a>.</li>
-<li><a id="kim09_desig_model_novel_precis_micro_stage">[kim09_desig_model_novel_precis_micro_stage]</a> <a name="kim09_desig_model_novel_precis_micro_stage"></a>Hwa Soo Kim & Young Man Cho, Design and Modeling of a Novel 3-dof Precision Micro-Stage, <i>Mechatronics</i>, <b>19(5)</b>, 598-608 (2009). <a href="https://doi.org/10.1016/j.mechatronics.2009.01.004">link</a>. <a href="http://dx.doi.org/10.1016/j.mechatronics.2009.01.004">doi</a>.</li>
-<li><a id="yun10_desig_analy_novel_redun_actuat">[yun10_desig_analy_novel_redun_actuat]</a> <a name="yun10_desig_analy_novel_redun_actuat"></a>Yuan Yun & Yangmin Li, Design and Analysis of a Novel 6-dof Redundant Actuated  Parallel Robot With Compliant Hinges for High Precision  Positioning, <i>Nonlinear Dynamics</i>, <b>61(4)</b>, 829-845 (2010). <a href="https://doi.org/10.1007/s11071-010-9690-x">link</a>. <a href="http://dx.doi.org/10.1007/s11071-010-9690-x">doi</a>.</li>
-</ul>
 </p>
+
+<style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><h2 class='citeproc-org-bib-h2'>Bibliography</h2>
+<div class="csl-bib-body">
+  <div class="csl-entry"><a name="citeproc_bib_item_1"></a>Abbas, Hussain, and Huang Hai. 2014. “Vibration Isolation Concepts for Non-Cubic Stewart Platform Using Modal Control.” In <i>Proceedings of 2014 11th International Bhurban Conference on Applied Sciences &#38; Technology (IBCAST) Islamabad, Pakistan, 14th - 18th January, 2014</i>, nil. <a href="https://doi.org/10.1109/ibcast.2014.6778139">https://doi.org/10.1109/ibcast.2014.6778139</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_2"></a>Abu Hanieh, Ahmed, Mihaita Horodinca, and Andre Preumont. 2002. “Stiff and Soft Stewart Platforms for Active Damping and Active Isolation of Vibrations.” In <i>Actuator 2002, 8th International Conference on New Actuators</i>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_3"></a>Agrawal, Brij N, and Hong-Jen Chen. 2004. “Algorithms for Active Vibration Isolation on Spacecraft Using a Stewart Platform.” <i>Smart Materials and Structures</i> 13 (4):873–80. <a href="https://doi.org/10.1088/0964-1726/13/4/025">https://doi.org/10.1088/0964-1726/13/4/025</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_4"></a>Anderson, Eric H., Michael F. Cash, Paul C. Janzen, Gregory W. Pettit, and Christian A. Smith. 2006. “Precision, Range, Bandwidth, and Other Tradeoffs in Hexapods with Application to Large Ground-Based Telescopes.” In <i>Optomechanical Technologies for Astronomy</i>, nil. <a href="https://doi.org/10.1117/12.672947">https://doi.org/10.1117/12.672947</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_5"></a>Arakelian, V. 2018. <i>Dynamic Decoupling of Robot Manipulators</i>. Mechanisms and Machine Science. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-74363-9">https://doi.org/10.1007/978-3-319-74363-9</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_6"></a>Baig, R Ulla, and S Pugazhenthi. 2014. “Neural Network Optimization of Design Parameters of Stewart Platform for Effective Active Vibration Isolation.” <i>Journal of Engineering and Applied Sciences</i> 9 (4):78–84.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_7"></a>Beijen, M.A., M.F. Heertjes, J. Van Dijk, and W.B.J. Hakvoort. 2018. “Self-Tuning Mimo Disturbance Feedforward Control for Active Hard-Mounted Vibration Isolators.” <i>Control Engineering Practice</i> 72 (nil):90–103. <a href="https://doi.org/10.1016/j.conengprac.2017.11.008">https://doi.org/10.1016/j.conengprac.2017.11.008</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_8"></a>Beijen, Michiel A., Robbert Voorhoeve, Marcel F. Heertjes, and Tom Oomen. 2018. “Experimental Estimation of Transmissibility Matrices for Industrial Multi-Axis Vibration Isolation Systems.” <i>Mechanical Systems and Signal Processing</i> 107 (nil):469–83. <a href="https://doi.org/10.1016/j.ymssp.2018.01.013">https://doi.org/10.1016/j.ymssp.2018.01.013</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_9"></a>Beno, Joseph H., John A. Booth, and Jason Mock. 2010. “An Alternative Architecture and Control Strategy for Hexapod Positioning Systems to Simplify Structural Design and Improve Accuracy.” In <i>Ground-Based and Airborne Telescopes III</i>, nil. <a href="https://doi.org/10.1117/12.856760">https://doi.org/10.1117/12.856760</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_10"></a>Bonev, Ilian A., and Jeha Ryu. 2001. “A New Approach to Orientation Workspace Analysis of 6-Dof Parallel Manipulators.” <i>Mechanism and Machine Theory</i> 36 (1):15–28. <a href="https://doi.org/10.1016/s0094-114x(00)00032-x">https://doi.org/10.1016/s0094-114x(00)00032-x</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_11"></a>Buzurovic, Ivan. 2012. “Advanced Control Methodologies in Parallel Robotic Systems.” <i>Advances in Robotics &#38; Automation</i> 01 (s6):nil. <a href="https://doi.org/10.4172/2168-9695.s6-e001">https://doi.org/10.4172/2168-9695.s6-e001</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_12"></a>Bvrezina, Lukávs, Ondvrej Andrvs, and Tomávs Bvrezina. 2008. “Ni Labview-Matlab Simmechanics Stewart Platform Design.” <i>Applied and Computational Mechanics</i>. University of West Bohemia.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_13"></a>Bvrezina, T., and L. Bvrezina. 2010. “Controller Design of the Stewart Platform Linear Actuator.” In <i>Recent Advances in Mechatronics</i>, 341–46. Recent Advances in Mechatronics. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-642-05022-0_58">https://doi.org/10.1007/978-3-642-05022-0_58</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_14"></a>Chai, Kok-Soon, Ken Young, and Ian Tuersley. 2002. “A Practical Calibration Process Using Partial Information for a Commercial Stewart Platform.” <i>Robotica</i> 20 (03):nil. <a href="https://doi.org/10.1017/s0263574701004027">https://doi.org/10.1017/s0263574701004027</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_15"></a>Cheng, Yuan, Gexue Ren, and ShiLiang Dai. 2004. “The Multi-Body System Modelling of the Gough-Stewart Platform for Vibration Control.” <i>Journal of Sound and Vibration</i> 271 (3-5):599–614. <a href="https://doi.org/10.1016/s0022-460x(03)00283-9">https://doi.org/10.1016/s0022-460x(03)00283-9</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_16"></a>Chen, Hong-Jen, Ronald Bishop, and Brij Agrawal. 2003. “Payload Pointing and Active Vibration Isolation Using Hexapod Platforms.” In <i>44th AIAA/ASME/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference</i>, nil. <a href="https://doi.org/10.2514/6.2003-1643">https://doi.org/10.2514/6.2003-1643</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_17"></a>Chen, Y., and J.E. McInroy. 2004. “Decoupled Control of Flexure-Jointed Hexapods Using Estimated Joint-Space Mass-Inertia Matrix.” <i>IEEE Transactions on Control Systems Technology</i> 12 (3):413–21. <a href="https://doi.org/10.1109/tcst.2004.824339">https://doi.org/10.1109/tcst.2004.824339</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_18"></a>Chen, Yixin, and J.E. McInroy. 2000. “Identification and Decoupling Control of Flexure Jointed Hexapods.” In <i>Proceedings 2000 ICRA. Millennium Conference. IEEE International Conference on Robotics and Automation. Symposia Proceedings (Cat. No.00CH37065)</i>, nil. <a href="https://doi.org/10.1109/robot.2000.844878">https://doi.org/10.1109/robot.2000.844878</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_19"></a>Chi, Weichao, Dengqing Cao, Dongwei Wang, Jie Tang, Yifan Nie, and Wenhu Huang. 2015. “Design and Experimental Study of a Vcm-Based Stewart Parallel Mechanism Used for Active Vibration Isolation.” <i>Energies</i> 8 (8):8001–19. <a href="https://doi.org/10.3390/en8088001">https://doi.org/10.3390/en8088001</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_20"></a>Cleary, K., and T. Arai. 1991. “A Prototype Parallel Manipulator: Kinematics, Construction, Software, Workspace Results, and Singularity Analysis.” In <i>Proceedings. 1991 IEEE International Conference on Robotics and Automation</i>, nil. <a href="https://doi.org/10.1109/robot.1991.131641">https://doi.org/10.1109/robot.1991.131641</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_21"></a>Dasgupta, Bhaskar, and T.S. Mruthyunjaya. 2000. “The Stewart Platform Manipulator: A Review.” <i>Mechanism and Machine Theory</i> 35 (1):15–40. <a href="https://doi.org/10.1016/s0094-114x(99)00006-3">https://doi.org/10.1016/s0094-114x(99)00006-3</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_22"></a>Deng, R. 2017. “Integrated 6-DoF Lorentz Actuator with Gravity Compensation for Vibration Isolation in in-Line Surface Metrology.” TU Delft.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_23"></a>Ding, Chenyang, A. A. H. Damen, and P. P. J. van den Bosch. 2011. “Robust Vibration Isolation of a 6-DOF System Using Modal Decomposition and Sliding Surface Optimization.” In <i>Proceedings of the 2011 American Control Conference</i>, nil. <a href="https://doi.org/10.1109/acc.2011.5991084">https://doi.org/10.1109/acc.2011.5991084</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_24"></a>Dong, Wei, Lining Sun, and Zhijiang Du. 2008. “Stiffness Research on a High-Precision, Large-Workspace Parallel Mechanism with Compliant Joints.” <i>Precision Engineering</i> 32 (3):222–31. <a href="https://doi.org/10.1016/j.precisioneng.2007.08.002">https://doi.org/10.1016/j.precisioneng.2007.08.002</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_25"></a>Dong, W., L.N. Sun, and Z.J. Du. 2007. “Design of a Precision Compliant Parallel Positioner Driven by Dual Piezoelectric Actuators.” <i>Sensors and Actuators a: Physical</i> 135 (1):250–56. <a href="https://doi.org/10.1016/j.sna.2006.07.011">https://doi.org/10.1016/j.sna.2006.07.011</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_26"></a>Du, Zhijiang, Ruochong Shi, and Wei Dong. 2014. “A Piezo-Actuated High-Precision Flexible Parallel Pointing Mechanism: Conceptual Design, Development, and Experiments.” <i>IEEE Transactions on Robotics</i> 30 (1):131–37. <a href="https://doi.org/10.1109/tro.2013.2288800">https://doi.org/10.1109/tro.2013.2288800</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_27"></a>Furqan, Mohd, Mohd Suhaib, and Nazeer Ahmad. 2017. “Studies on Stewart Platform Manipulator: A Review.” <i>Journal of Mechanical Science and Technology</i> 31 (9):4459–70. <a href="https://doi.org/10.1007/s12206-017-0846-1">https://doi.org/10.1007/s12206-017-0846-1</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_28"></a>Furutani, Katsushi, Michio Suzuki, and Ryusei Kudoh. 2004. “Nanometre-Cutting Machine Using a Stewart-Platform Parallel Mechanism.” <i>Measurement Science and Technology</i> 15 (2):467–74. <a href="https://doi.org/10.1088/0957-0233/15/2/022">https://doi.org/10.1088/0957-0233/15/2/022</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_29"></a>Gao, Feng, Weimin Li, Xianchao Zhao, Zhenlin Jin, and Hui Zhao. 2002. “New Kinematic Structures for 2-, 3-, 4-, and 5-Dof Parallel Manipulator Designs.” <i>Mechanism and Machine Theory</i> 37 (11):1395–1411. <a href="https://doi.org/10.1016/s0094-114x(02)00044-7">https://doi.org/10.1016/s0094-114x(02)00044-7</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_30"></a>Geng, Zheng, and Leonard S. Haynes. 1993. “Six-Degree-of-Freedom Active Vibration Isolation Using a Stewart Platform Mechanism.” <i>Journal of Robotic Systems</i> 10 (5):725–44. <a href="https://doi.org/10.1002/rob.4620100510">https://doi.org/10.1002/rob.4620100510</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_31"></a>Geng, Z.J., and L.S. Haynes. 1994. “Six Degree-of-Freedom Active Vibration Control Using the Stewart Platforms.” <i>IEEE Transactions on Control Systems Technology</i> 2 (1):45–53. <a href="https://doi.org/10.1109/87.273110">https://doi.org/10.1109/87.273110</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_32"></a>Geng, Z. Jason, George G. Pan, Leonard S. Haynes, Ben K. Wada, and John A. Garba. 1995. “An Intelligent Control System for Multiple Degree-of-Freedom Vibration Isolation.” <i>Journal of Intelligent Material Systems and Structures</i> 6 (6):787–800. <a href="https://doi.org/10.1177/1045389x9500600607">https://doi.org/10.1177/1045389x9500600607</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_33"></a>Gexue, Ren, Lu Qiuhai, Hu Ning, Nan Rendong, and Peng Bo. 2004. “On Vibration Control with Stewart Parallel Mechanism.” <i>Mechatronics</i> 14 (1):1–13. <a href="https://doi.org/10.1016/s0957-4158(02)00092-2">https://doi.org/10.1016/s0957-4158(02)00092-2</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_34"></a>Guo, HongBo, YongGuang Liu, GuiRong Liu, and HongRen Li. 2008. “Cascade Control of a Hydraulically Driven 6-Dof Parallel Robot Manipulator Based on a Sliding Mode.” <i>Control Engineering Practice</i> 16 (9):1055–68. <a href="https://doi.org/10.1016/j.conengprac.2007.11.005">https://doi.org/10.1016/j.conengprac.2007.11.005</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_35"></a>Hanieh, Ahmed Abu. 2003. “Active Isolation and Damping of Vibrations via Stewart Platform.” Université Libre de Bruxelles, Brussels, Belgium.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_36"></a>Hauge, G.S., and M.E. Campbell. 2004. “Sensors and Control of a Space-Based Six-Axis Vibration Isolation System.” <i>Journal of Sound and Vibration</i> 269 (3-5):913–31. <a href="https://doi.org/10.1016/s0022-460x(03)00206-2">https://doi.org/10.1016/s0022-460x(03)00206-2</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_37"></a>Heertjes, Marcel F, Arjan JP van Engelen, and Maarten Steinbuch. 2010. “Optimized Dynamic Decoupling in Active Vibration Isolation.” <i>IFAC Proceedings Volumes</i> 43 (18). Elsevier:293–98.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_38"></a>Horin, P. Ben, and M. Shoham. 2006. “Singularity Condition of Six-Degree-of-Freedom Three-Legged Parallel Robots Based on Grassmann-Cayley Algebra.” <i>IEEE Transactions on Robotics</i> 22 (4):577–90. <a href="https://doi.org/10.1109/tro.2006.878958">https://doi.org/10.1109/tro.2006.878958</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_39"></a>Houvska, P., T. Bvrezina, and L. Bvrezina. 2010. “Design and Implementation of the Absolute Linear Position Sensor for the Stewart Platform.” In <i>Recent Advances in Mechatronics</i>, 347–52. Recent Advances in Mechatronics. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-642-05022-0_59">https://doi.org/10.1007/978-3-642-05022-0_59</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_40"></a>Huang, Chin I, and Li-Chen Fu. 2005. “Smooth Sliding Mode Tracking Control of the Stewart Platform.” In <i>Proceedings of 2005 IEEE Conference on Control Applications, 2005. CCA 2005.</i>, nil. <a href="https://doi.org/10.1109/cca.2005.1507098">https://doi.org/10.1109/cca.2005.1507098</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_41"></a>Jafari, F., and J.E. McInroy. 2003. “Orthogonal Gough-Stewart Platforms for Micromanipulation.” <i>IEEE Transactions on Robotics and Automation</i> 19 (4). Institute of Electrical and Electronics Engineers (IEEE):595–603. <a href="https://doi.org/10.1109/tra.2003.814506">https://doi.org/10.1109/tra.2003.814506</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_42"></a>Jiang, Qimi, and Clément M. Gosselin. 2009a. “Determination of the Maximal Singularity-Free Orientation Workspace for the Gough-Stewart Platform.” <i>Mechanism and Machine Theory</i> 44 (6):1281–93. <a href="https://doi.org/10.1016/j.mechmachtheory.2008.07.005">https://doi.org/10.1016/j.mechmachtheory.2008.07.005</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_43"></a>———. 2009b. “Evaluation and Representation of the Theoretical Orientation Workspace of the Gough-Stewart Platform.” <i>Journal of Mechanisms and Robotics</i> 1 (2):nil. <a href="https://doi.org/10.1115/1.3046137">https://doi.org/10.1115/1.3046137</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_44"></a>Jiao, Jian, Ying Wu, Kaiping Yu, and Rui Zhao. 2018. “Dynamic Modeling and Experimental Analyses of Stewart Platform with Flexible Hinges.” <i>Journal of Vibration and Control</i> 25 (1):151–71. <a href="https://doi.org/10.1177/1077546318772474">https://doi.org/10.1177/1077546318772474</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_45"></a>Jin, Yan, I-Ming Chen, and Guilin Yang. 2009. “Kinematic Design of a Family of 6-Dof Partially Decoupled Parallel Manipulators.” <i>Mechanism and Machine Theory</i> 44 (5):912–22. <a href="https://doi.org/10.1016/j.mechmachtheory.2008.06.004">https://doi.org/10.1016/j.mechmachtheory.2008.06.004</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_46"></a>Kim, Dong Hwan, Ji-Yoon Kang, and Kyo-Il Lee. 2000. “Robust Tracking Control Design for a 6 Dof Parallel Manipulator.” <i>Journal of Robotic Systems</i> 17 (10):527–47. <a href="https://doi.org/10.1002/1097-4563(200010)17:10$&#60;$527:AID-ROB2&#62;3.0.CO;2-A">https://doi.org/10.1002/1097-4563(200010)17:10$&#60;$527:AID-ROB2&#62;3.0.CO;2-A</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_47"></a>Kim, Hwa Soo, and Young Man Cho. 2009. “Design and Modeling of a Novel 3-Dof Precision Micro-Stage.” <i>Mechatronics</i> 19 (5):598–608. <a href="https://doi.org/10.1016/j.mechatronics.2009.01.004">https://doi.org/10.1016/j.mechatronics.2009.01.004</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_48"></a>Lara-Molina, F.A., E.H. Koroishi, and Didier Dumur. 2015. “Combined Structure-Control Optimal Design of the Stewart-Gough Robot.” In <i>2015 12th Latin American Robotics Symposium and 2015 3rd Brazilian Symposium on Robotics (LARS-SBR)</i>, nil. <a href="https://doi.org/10.1109/lars-sbr.2015.26">https://doi.org/10.1109/lars-sbr.2015.26</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_49"></a>Lee, Se-Han, Jae-Bok Song, Woo-Chun Choi, and Daehie Hong. 2003. “Position Control of a Stewart Platform Using Inverse Dynamics Control with Approximate Dynamics.” <i>Mechatronics</i> 13 (6):605–19. <a href="https://doi.org/10.1016/s0957-4158(02)00033-8">https://doi.org/10.1016/s0957-4158(02)00033-8</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_50"></a>Legnani, G., I. Fassi, H. Giberti, S. Cinquemani, and D. Tosi. 2012. “A New Isotropic and Decoupled 6-Dof Parallel Manipulator.” <i>Mechanism and Machine Theory</i> 58 (nil):64–81. <a href="https://doi.org/10.1016/j.mechmachtheory.2012.07.008">https://doi.org/10.1016/j.mechmachtheory.2012.07.008</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_51"></a>Lei, Liu, and Wang Benli. 2008. “Multi Objective Robust Active Vibration Control for Flexure Jointed Struts of Stewart Platforms via $H_Infty$ and $mu$ Synthesis.” <i>Chinese Journal of Aeronautics</i> 21 (2):125–33. <a href="https://doi.org/10.1016/s1000-9361(08)60016-3">https://doi.org/10.1016/s1000-9361(08)60016-3</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_52"></a>Lin, Haomin, and J.E. McInroy. 2003. “Adaptive Sinusoidal Disturbance Cancellation for Precise Pointing of Stewart Platforms.” <i>IEEE Transactions on Control Systems Technology</i> 11 (2):267–72. <a href="https://doi.org/10.1109/tcst.2003.809248">https://doi.org/10.1109/tcst.2003.809248</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_53"></a>Liu, Xin-Jun, Jinsong Wang, Feng Gao, and Li-Ping Wang. 2001. “On the Design of 6-DOF Parallel Micro-Motion Manipulators.” In <i>Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180)</i>, nil. <a href="https://doi.org/10.1109/iros.2001.973381">https://doi.org/10.1109/iros.2001.973381</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_54"></a>Li, Xiaochun. 2001. “Simultaneous, Fault-Tolerant Vibration Isolation and Pointing Control of Flexure Jointed Hexapods.” University of Wyoming.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_55"></a>Li, Xiaochun, Jerry C. Hamann, and John E. McInroy. 2001. “Simultaneous Vibration Isolation and Pointing Control of Flexure Jointed Hexapods.” In <i>Smart Structures and Materials 2001: Smart Structures and Integrated Systems</i>, nil. <a href="https://doi.org/10.1117/12.436521">https://doi.org/10.1117/12.436521</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_56"></a>Li, Yao, XiaoLong Yang, HongTao Wu, and Bai Chen. 2018. “Optimal Design of a Six-Axis Vibration Isolator via Stewart Platform by Using Homogeneous Jacobian Matrix Formulation Based on Dual Quaternions.” <i>Journal of Mechanical Science and Technology</i> 32 (1):11–19. <a href="https://doi.org/10.1007/s12206-017-1202-1">https://doi.org/10.1007/s12206-017-1202-1</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_57"></a>McInroy, J.E. 1999. “Dynamic Modeling of Flexure Jointed Hexapods for Control Purposes.” In <i>Proceedings of the 1999 IEEE International Conference on Control Applications (Cat. No.99CH36328)</i>, nil. <a href="https://doi.org/10.1109/cca.1999.806694">https://doi.org/10.1109/cca.1999.806694</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_58"></a>———. 2002. “Modeling and Design of Flexure Jointed Stewart Platforms for Control Purposes.” <i>IEEE/ASME Transactions on Mechatronics</i> 7 (1):95–99. <a href="https://doi.org/10.1109/3516.990892">https://doi.org/10.1109/3516.990892</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_59"></a>McInroy, J.E., and J.C. Hamann. 2000. “Design and Control of Flexure Jointed Hexapods.” <i>IEEE Transactions on Robotics and Automation</i> 16 (4):372–81. <a href="https://doi.org/10.1109/70.864229">https://doi.org/10.1109/70.864229</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_60"></a>McInroy, J.E., J.F. O’Brien, and G.W. Neat. 1999. “Precise, Fault-Tolerant Pointing Using a Stewart Platform.” <i>IEEE/ASME Transactions on Mechatronics</i> 4 (1):91–95. <a href="https://doi.org/10.1109/3516.752089">https://doi.org/10.1109/3516.752089</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_61"></a>Merlet, Jean-Pierre. 2002. “Still a Long Way to Go on the Road for Parallel Mechanisms.” In <i>Proc. ASME 2002 DETC Conf., Montreal</i>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_62"></a>Merlet, J.P. 2006. <i>Parallel Robots</i>. Dordrecht Boston, MA: Kluwer Academic Publishers.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_63"></a>Min, Da, Deqing Huang, and Hu Su. 2019. “High-Precision Tracking of Cubic Stewart Platform Using Active Disturbance Rejection Control.” In <i>2019 Chinese Control Conference (CCC)</i>, nil. <a href="https://doi.org/10.23919/chicc.2019.8866606">https://doi.org/10.23919/chicc.2019.8866606</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_64"></a>Molina, Fabian Andres Lara, Joao Mauricio Rosario, and Oscar Fernando Aviles Sanchez. 2008. “Simulation Environment Proposal, Analysis and Control of a Stewart Platform Manipulator.” In <i>7th Brazilian Conference on Dynamics, Control &#38; Applications</i>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_65"></a>Mukherjee, Parthajit, Bhaskar Dasgupta, and A.K. Mallik. 2007. “Dynamic Stability Index and Vibration Analysis of a Flexible Stewart Platform.” <i>Journal of Sound and Vibration</i> 307 (3-5). Elsevier BV:495–512. <a href="https://doi.org/10.1016/j.jsv.2007.05.036">https://doi.org/10.1016/j.jsv.2007.05.036</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_66"></a>Neagoe, Mircea, Dorin Diaconescu, Codruta Jaliu, Sergiu-Dan Stan, Nadia Cretescu, and Radu Saulescu. 2010. “On the Accuracy of a Stewart Platform: Modelling and Experimental Validation.” In <i>Computational Intelligence and Modern Heuristics</i>. InTech.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_67"></a>Owoc, Dawid, Krzysztof Ludwiczak, and Robert Piotrowski. 2019. “Mechatronics Design, Modelling and Controlling of the Stewart-Gough Platform.” In <i>2019 24th International Conference on Methods and Models in Automation and Robotics (MMAR)</i>, nil. <a href="https://doi.org/10.1109/mmar.2019.8864694">https://doi.org/10.1109/mmar.2019.8864694</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_68"></a>O’Brien, J.F., J.E. McInroy, D. Bodtke, M. Bruch, and J.C. Hamann. 1998. “Lessons Learned in Nonlinear Systems and Flexible Robots Through Experiments on a 6 Legged Platform.” In <i>Proceedings of the 1998 American Control Conference. ACC (IEEE Cat. No.98CH36207)</i>, nil. <a href="https://doi.org/10.1109/acc.1998.703532">https://doi.org/10.1109/acc.1998.703532</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_69"></a>Patel, Y. D., and P. M. George. 2012. “Parallel Manipulators Applications-a Survey.” <i>Modern Mechanical Engineering</i> 02 (03). Scientific Research Publishing, Inc,:57–64. <a href="https://doi.org/10.4236/mme.2012.23008">https://doi.org/10.4236/mme.2012.23008</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_70"></a>Pedrammehr, Siamak, Mehran Mahboubkhah, and Navid Khani. 2012. “A Study on Vibration of Stewart Platform-Based Machine Tool Table.” <i>The International Journal of Advanced Manufacturing Technology</i> 65 (5-8):991–1007. <a href="https://doi.org/10.1007/s00170-012-4234-9">https://doi.org/10.1007/s00170-012-4234-9</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_71"></a>Pernkopf, F, and M L Husty. 2006. “Workspace Analysis of Stewart-Gough-Type Parallel Manipulators.” <i>Proceedings of the Institution of Mechanical Engineers, Part C: Journal of Mechanical Engineering Science</i> 220 (7):1019–32. <a href="https://doi.org/10.1243/09544062jmes194">https://doi.org/10.1243/09544062jmes194</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_72"></a>Preumont, A., M. Horodinca, I. Romanescu, B. de Marneffe, M. Avraam, A. Deraemaeker, F. Bossens, and A. Abu Hanieh. 2007. “A Six-Axis Single-Stage Active Vibration Isolator Based on Stewart Platform.” <i>Journal of Sound and Vibration</i> 300 (3-5):644–61. <a href="https://doi.org/10.1016/j.jsv.2006.07.050">https://doi.org/10.1016/j.jsv.2006.07.050</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_73"></a>Preumont, Andre. 2018. <i>Vibration Control of Active Structures - Fourth Edition</i>. Solid Mechanics and Its Applications. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-72296-2">https://doi.org/10.1007/978-3-319-72296-2</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_74"></a>Pu, H, X Chen, Z Zhou, and X Luo. 2011. “Six-Degree-of-Freedom Active Vibration Isolation System with Decoupled Collocated Control.” <i>Proceedings of the Institution of Mechanical Engineers, Part B: Journal of Engineering Manufacture</i> 226 (2):313–25. <a href="https://doi.org/10.1177/0954405411414336">https://doi.org/10.1177/0954405411414336</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_75"></a>Rahman, Zahidul, and John Spanos. 1996. “Six Axis Vibration Isolation, Suppression and Steering System for Space Applications.” In <i>Dynamics Specialists Conference</i>, nil. <a href="https://doi.org/10.2514/6.1996-1211">https://doi.org/10.2514/6.1996-1211</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_76"></a>Rahman, Zahidul H., John T. Spanos, and Robert A. Laskin. 1998. “Multiaxis Vibration Isolation, Suppression, and Steering System for Space Observational Applications.” In <i>Telescope Control Systems III</i>, nil. <a href="https://doi.org/10.1117/12.308821">https://doi.org/10.1117/12.308821</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_77"></a>Ranganath, R, P.S Nair, T.S Mruthyunjaya, and A Ghosal. 2004. “A Force-Torque Sensor Based on a Stewart Platform in a Near-Singular Configuration.” <i>Mechanism and Machine Theory</i> 39 (9):971–98. <a href="https://doi.org/10.1016/j.mechmachtheory.2004.04.005">https://doi.org/10.1016/j.mechmachtheory.2004.04.005</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_78"></a>Selig, J.M., and X. Ding. 2001. “Theory of Vibrations in Stewart Platforms.” In <i>Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180)</i>, 2190–95. <a href="https://doi.org/10.1109/iros.2001.976395">https://doi.org/10.1109/iros.2001.976395</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_79"></a>Spanos, J., Z. Rahman, and G. Blackwood. 1995. “A Soft 6-Axis Active Vibration Isolator.” In <i>Proceedings of 1995 American Control Conference - ACC’95</i>, nil. <a href="https://doi.org/10.1109/acc.1995.529280">https://doi.org/10.1109/acc.1995.529280</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_80"></a>Stabile, Alessandro, Emilia Wegrzyn, Guglielmo S Aglietti, Guy Richardson, and Geert Smet. 2019. “Design and Analysis of a Novel Hexapod Platform for High-Performance Micro-Vibration Mitigation.” In <i>Proc. 18. European Space Mechanisms and Tribology Symposium</i>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_81"></a>Su, Y.X., B.Y. Duan, C.H. Zheng, Y.F. Zhang, G.D. Chen, and J.W. Mi. 2004. “Disturbance-Rejection High-Precision Motion Control of a Stewart Platform.” <i>IEEE Transactions on Control Systems Technology</i> 12 (3):364–74. <a href="https://doi.org/10.1109/tcst.2004.824315">https://doi.org/10.1109/tcst.2004.824315</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_82"></a>Taghavi, Meysam, Taku Kinoshita, and Thomas Bock. 2019. “Design, Modelling and Simulation of Novel Hexapod-Shaped Passive Damping System for Coupling Cable Robot and End Effector in Curtain Wall Module Installation Application.” In <i>Proceedings of the 36th International Symposium on Automation and Robotics in Construction (ISARC)</i>, nil. <a href="https://doi.org/10.22260/isarc2019/0089">https://doi.org/10.22260/isarc2019/0089</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_83"></a>Taghirad, Hamid. 2013. <i>Parallel Robots : Mechanics and Control</i>. Boca Raton, FL: CRC Press.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_84"></a>Tang, Jie, Dengqing Cao, and Tianhu Yu. 2018. “Decentralized Vibration Control of a Voice Coil Motor-Based Stewart Parallel Mechanism: Simulation and Experiments.” <i>Proceedings of the Institution of Mechanical Engineers, Part C: Journal of Mechanical Engineering Science</i> 233 (1):132–45. <a href="https://doi.org/10.1177/0954406218756941">https://doi.org/10.1177/0954406218756941</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_85"></a>Thayer, D., and J. Vagners. 1998. “A Look at the Pole/Zero Structure of a Stewart Platform Using Special Coordinate Basis.” In <i>Proceedings of the 1998 American Control Conference. ACC (IEEE Cat. No.98CH36207)</i>, nil. <a href="https://doi.org/10.1109/acc.1998.703595">https://doi.org/10.1109/acc.1998.703595</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_86"></a>Thayer, Doug, Mark Campbell, Juris Vagners, and Andrew von Flotow. 2002. “Six-Axis Vibration Isolation System Using Soft Actuators and Multiple Sensors.” <i>Journal of Spacecraft and Rockets</i> 39 (2):206–12. <a href="https://doi.org/10.2514/2.3821">https://doi.org/10.2514/2.3821</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_87"></a>Thier, Markus, Rudolf Saathof, Andreas Sinn, Reinhard Hainisch, and Georg Schitter. 2016. “Six Degree of Freedom Vibration Isolation Platform for in-Line Nano-Metrology.” <i>IFAC-PapersOnLine</i> 49 (21):149–56. <a href="https://doi.org/10.1016/j.ifacol.2016.10.534">https://doi.org/10.1016/j.ifacol.2016.10.534</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_88"></a>Ting, Yung, H.-C. Jar, and Chun-Chung Li. 2006. “Design of a 6DOF Stewart-Type Nanoscale Platform.” In <i>2006 Sixth IEEE Conference on Nanotechnology</i>, nil. <a href="https://doi.org/10.1109/nano.2006.247808">https://doi.org/10.1109/nano.2006.247808</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_89"></a>Ting, Yung, Ho-Chin Jar, and Chun-Chung Li. 2005. “Error Compensation and Feedforward Controller Design for a 6-Dof Micro-Positioning Platform.” In <i>2005 IEEE/RSJ International Conference on Intelligent Robots and Systems</i>, nil. <a href="https://doi.org/10.1109/iros.2005.1545073">https://doi.org/10.1109/iros.2005.1545073</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_90"></a>———. 2007. “Measurement and Calibration for Stewart Micromanipulation System.” <i>Precision Engineering</i> 31 (3):226–33. <a href="https://doi.org/10.1016/j.precisioneng.2006.09.004">https://doi.org/10.1016/j.precisioneng.2006.09.004</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_91"></a>Ting, Yung, Chun-Chung Li, and Tho Van Nguyen. 2013. “Composite Controller Design for a 6dof Stewart Nanoscale Platform.” <i>Precision Engineering</i> 37 (3):671–83. <a href="https://doi.org/10.1016/j.precisioneng.2013.01.012">https://doi.org/10.1016/j.precisioneng.2013.01.012</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_92"></a>Tong, Zhizhong, Clément Gosselin, and Hongzhou Jiang. 2020. “Dynamic Decoupling Analysis and Experiment Based on a Class of Modified Gough-Stewart Parallel Manipulators with Line Orthogonality.” <i>Mechanism and Machine Theory</i> 143 (nil):103636. <a href="https://doi.org/10.1016/j.mechmachtheory.2019.103636">https://doi.org/10.1016/j.mechmachtheory.2019.103636</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_93"></a>Torii, Akihiro, Masaaki Banno, Akiteru Ueda, and Kae Doki. 2012. “A Small-Size Self-Propelled Stewart Platform.” <i>Electrical Engineering in Japan</i> 181 (2):37–46. <a href="https://doi.org/10.1002/eej.21261">https://doi.org/10.1002/eej.21261</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_94"></a>Tsai, K.Y., and K.D. Huang. 2003. “The Design of Isotropic 6-Dof Parallel Manipulators Using Isotropy Generators.” <i>Mechanism and Machine Theory</i> 38 (11):1199–1214. <a href="https://doi.org/10.1016/s0094-114x(03)00067-3">https://doi.org/10.1016/s0094-114x(03)00067-3</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_95"></a>Vivas, Oscar Andrés. 2004. “Contribution À L’identification Et À La Commande Des Robots Parallèles.” Université Montpellier II-Sciences et Techniques du Languedoc.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_96"></a>Wang, Chaoxin, Xiling Xie, Yanhao Chen, and Zhiyi Zhang. 2016. “Investigation on Active Vibration Isolation of a Stewart Platform with Piezoelectric Actuators.” <i>Journal of Sound and Vibration</i> 383 (November). Elsevier BV:1–19. <a href="https://doi.org/10.1016/j.jsv.2016.07.021">https://doi.org/10.1016/j.jsv.2016.07.021</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_97"></a>Wang, Shao-Chi, Hiromitsu Hikita, Hiroshi Kubo, Yong-Sheng Zhao, Zhen Huang, and Tohru Ifukube. 2003. “Kinematics and Dynamics of a 6 Degree-of-Freedom Fully Parallel Manipulator with Elastic Joints.” <i>Mechanism and Machine Theory</i> 38 (5):439–61. <a href="https://doi.org/10.1016/s0094-114x(02)00132-5">https://doi.org/10.1016/s0094-114x(02)00132-5</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_98"></a>Xie, Xiling, Chaoxin Wang, and Zhiyi Zhang. 2017. “Modeling and Control of a Hybrid Passive/Active Stewart Vibration Isolation Platform.” In <i>INTER-NOISE and NOISE-CON Congress and Conference Proceedings</i>, 255:1844–53. Institute of Noise Control Engineering.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_99"></a>Xu, Zhao-dong, and Chen-hui Weng. 2013. “Track-Position and Vibration Control Simulation for Strut of the Stewart Platform.” <i>Journal of Zhejiang University SCIENCE a</i> 14 (4):281–91. <a href="https://doi.org/10.1631/jzus.a1200278">https://doi.org/10.1631/jzus.a1200278</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_100"></a>Yang, Chifu, Zhengmao Ye, O. Ogbobe Peter, and Junwei Han. 2010. “Modeling and Simulation of Spatial 6-DOF Parallel Robots Using Simulink and SimMechanics.” In <i>2010 3rd International Conference on Computer Science and Information Technology</i>, nil. <a href="https://doi.org/10.1109/iccsit.2010.5563824">https://doi.org/10.1109/iccsit.2010.5563824</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_101"></a>Yang, G., I.-M. Chen, W. Chen, and W. Lin. 2004. “Kinematic Design of a Six-Dof Parallel-Kinematics Machine with Decoupled-Motion Architecture.” <i>IEEE Transactions on Robotics</i> 20 (5):876–84. <a href="https://doi.org/10.1109/tro.2004.829485">https://doi.org/10.1109/tro.2004.829485</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_102"></a>Yang, XiaoLong, HongTao Wu, Bai Chen, ShengZheng Kang, and ShiLi Cheng. 2019. “Dynamic Modeling and Decoupled Control of a Flexible Stewart Platform for Vibration Isolation.” <i>Journal of Sound and Vibration</i> 439 (January). Elsevier BV:398–412. <a href="https://doi.org/10.1016/j.jsv.2018.10.007">https://doi.org/10.1016/j.jsv.2018.10.007</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_103"></a>Yang, XiaoLong, HongTao Wu, Yao Li, and Bai Chen. 2017. “Dynamic Isotropic Design and Decentralized Active Control of a Six-Axis Vibration Isolator via Stewart Platform.” <i>Mechanism and Machine Theory</i> 117 (nil):244–52. <a href="https://doi.org/10.1016/j.mechmachtheory.2017.07.017">https://doi.org/10.1016/j.mechmachtheory.2017.07.017</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_104"></a>Yun, Yuan, and Yangmin Li. 2010. “Design and Analysis of a Novel 6-Dof Redundant Actuated Parallel Robot with Compliant Hinges for High Precision Positioning.” <i>Nonlinear Dynamics</i> 61 (4):829–45. <a href="https://doi.org/10.1007/s11071-010-9690-x">https://doi.org/10.1007/s11071-010-9690-x</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_105"></a>———. 2011. “A General Dynamics and Control Model of a Class of Multi-Dof Manipulators for Active Vibration Control.” <i>Mechanism and Machine Theory</i> 46 (10):1549–74. <a href="https://doi.org/10.1016/j.mechmachtheory.2011.04.010">https://doi.org/10.1016/j.mechmachtheory.2011.04.010</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_106"></a>Zhang, Zhen, J Liu, Jq Mao, Yx Guo, and Yh Ma. 2011. “Six DOF Active Vibration Control Using Stewart Platform with Non-Cubic Configuration.” In <i>2011 6th IEEE Conference on Industrial Electronics and Applications</i>, nil. <a href="https://doi.org/10.1109/iciea.2011.5975679">https://doi.org/10.1109/iciea.2011.5975679</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_107"></a>Zheng, Yan, Zhicheng Zhou, and Hai Huang. 2020. “A Multi-Frequency Mimo Control Method for the 6dof Micro-Vibration Exciting System.” <i>Acta Astronautica</i> 170 (nil):552–69. <a href="https://doi.org/10.1016/j.actaastro.2020.02.033">https://doi.org/10.1016/j.actaastro.2020.02.033</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_108"></a>Zheng, Yisheng, Qingpin Li, Bo Yan, Yajun Luo, and Xinong Zhang. 2018. “A Stewart Isolator with High-Static-Low-Dynamic Stiffness Struts Based on Negative Stiffness Magnetic Springs.” <i>Journal of Sound and Vibration</i> 422 (nil):390–408. <a href="https://doi.org/10.1016/j.jsv.2018.02.046">https://doi.org/10.1016/j.jsv.2018.02.046</a>.</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-13 ven. 10:04</p>
+<p class="date">Created: 2020-08-05 mer. 13:27</p>
 </div>
 </body>
 </html>

@@ -1,239 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-11 mer. 18:59 -->
+<!-- 2020-08-05 mer. 13:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Simscape Model</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
 <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.cacheClassElem = elem.className;
-         elem.cacheClassTarget = target.className;
-         target.className = "code-highlighted";
-         elem.className   = "code-highlighted";
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(elem.cacheClassElem)
-         elem.className = elem.cacheClassElem;
-       if(elem.cacheClassTarget)
-         target.className = elem.cacheClassTarget;
-     }
-    /*]]>*///-->
-// @license-end
-</script>
-<script>
-      MathJax = {
-          tex: { macros: {
-                  bm: ["\\boldsymbol{#1}",1],
-                  }
-              }
+<script>MathJax = {
+          tex: {
+            tags: 'ams',
+            macros: {bm: ["\\boldsymbol{#1}",1],}
+            }
           };
           </script>
-          <script type="text/javascript"
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -255,16 +43,16 @@
 <ul>
 <li><a href="#org3535b6d">6.1. Payload</a>
 <ul>
-<li><a href="#org1211163">Function description</a></li>
-<li><a href="#org0d8dc7e">Optional Parameters</a></li>
+<li><a href="#orgd38089d">Function description</a></li>
+<li><a href="#org5518a84">Optional Parameters</a></li>
 <li><a href="#orgeeb8d35">Add Payload Type</a></li>
 <li><a href="#org6d52ffc">Add Stiffness, Damping and Mass properties of the Payload</a></li>
 </ul>
 </li>
 <li><a href="#orgaaed406">6.2. Ground</a>
 <ul>
-<li><a href="#org0bee981">Function description</a></li>
-<li><a href="#orgeaeb9aa">Optional Parameters</a></li>
+<li><a href="#org7732939">Function description</a></li>
+<li><a href="#org480f36e">Optional Parameters</a></li>
 <li><a href="#orgef7035d">Add Ground Type</a></li>
 <li><a href="#org95633e8">Add Stiffness and Damping properties of the Ground</a></li>
 <li><a href="#org14ff2fc">Rotation Point</a></li>
@@ -274,8 +62,8 @@
 </li>
 <li><a href="#orgae6907a">7. Initialize Disturbances</a>
 <ul>
-<li><a href="#org0eae33e">Function Declaration and Documentation</a></li>
-<li><a href="#orge03b19d">Optional Parameters</a></li>
+<li><a href="#orge2fa859">Function Declaration and Documentation</a></li>
+<li><a href="#org6adb628">Optional Parameters</a></li>
 <li><a href="#org30dc07c">Structure initialization</a></li>
 <li><a href="#org0755155">Ground Motion</a></li>
 <li><a href="#org7617a55">Direct Forces</a></li>
@@ -283,8 +71,8 @@
 </li>
 <li><a href="#orgd45a07f">8. Initialize References</a>
 <ul>
-<li><a href="#org7f187c4">Function Declaration and Documentation</a></li>
-<li><a href="#org28b782e">Optional Parameters</a></li>
+<li><a href="#orge5deaa1">Function Declaration and Documentation</a></li>
+<li><a href="#orgeebb364">Optional Parameters</a></li>
 <li><a href="#orgc274320">8.1. Compute the corresponding strut length</a></li>
 <li><a href="#org36ac3fa">References</a></li>
 </ul>
@@ -351,7 +139,7 @@ Basically, the configuration is stored in a mat file <code>conf_simscape.mat</co
 It is automatically loaded when the Simulink project is open. It can be loaded manually with the command:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">load(<span class="org-string">'mat/conf_simscape.mat'</span>);
+<pre class="src src-matlab">load('mat/conf_simscape.mat');
 </pre>
 </div>
 
@@ -359,7 +147,7 @@ It is automatically loaded when the Simulink project is open. It can be loaded m
 It is however possible to modify specific parameters just for one simulation using the <code>set_param</code> command:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-variable-name">conf_simscape</span>, <span class="org-string">'StopTime'</span>, 1);
+<pre class="src src-matlab">set_param(conf_simscape, 'StopTime', 1);
 </pre>
 </div>
 </div>
@@ -510,50 +298,50 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 </p>
 </div>
 
-<div id="outline-container-org1211163" class="outline-4">
-<h4 id="org1211163">Function description</h4>
-<div class="outline-text-4" id="text-org1211163">
+<div id="outline-container-orgd38089d" class="outline-4">
+<h4 id="orgd38089d">Function description</h4>
+<div class="outline-text-4" id="text-orgd38089d">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[payload]</span> = <span class="org-function-name">initializePayload</span>(<span class="org-variable-name">args</span>)
-<span class="org-comment">% initializePayload - Initialize the Payload that can then be used for simulations and analysis</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [payload] = initializePayload(args)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - args - Structure with the following fields:</span>
-<span class="org-comment">%        - type - 'none', 'rigid', 'flexible', 'cartesian'</span>
-<span class="org-comment">%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]</span>
-<span class="org-comment">%                    This also the position where K and C are defined</span>
-<span class="org-comment">%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]</span>
-<span class="org-comment">%        - C [6x1] - Damping of the Payload [N/(m/s), N/(rad/s)]</span>
-<span class="org-comment">%        - m [1x1] - Mass of the Payload [kg]</span>
-<span class="org-comment">%        - I [3x3] - Inertia matrix for the Payload [kg*m2]</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Outputs:</span>
-<span class="org-comment">%    - payload - Struture with the following properties:</span>
-<span class="org-comment">%        - type - 1 (none), 2 (rigid), 3 (flexible)</span>
-<span class="org-comment">%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]</span>
-<span class="org-comment">%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]</span>
-<span class="org-comment">%        - C [6x1] - Stiffness of the Payload [N/(m/s), N/(rad/s)]</span>
-<span class="org-comment">%        - m [1x1] - Mass of the Payload [kg]</span>
-<span class="org-comment">%        - I [3x3] - Inertia matrix for the Payload [kg*m2]</span>
+<pre class="src src-matlab">function [payload] = initializePayload(args)
+% initializePayload - Initialize the Payload that can then be used for simulations and analysis
+%
+% Syntax: [payload] = initializePayload(args)
+%
+% Inputs:
+%    - args - Structure with the following fields:
+%        - type - 'none', 'rigid', 'flexible', 'cartesian'
+%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
+%                    This also the position where K and C are defined
+%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
+%        - C [6x1] - Damping of the Payload [N/(m/s), N/(rad/s)]
+%        - m [1x1] - Mass of the Payload [kg]
+%        - I [3x3] - Inertia matrix for the Payload [kg*m2]
+%
+% Outputs:
+%    - payload - Struture with the following properties:
+%        - type - 1 (none), 2 (rigid), 3 (flexible)
+%        - h [1x1] - Height of the CoM of the payload w.r.t {M} [m]
+%        - K [6x1] - Stiffness of the Payload [N/m, N/rad]
+%        - C [6x1] - Stiffness of the Payload [N/(m/s), N/(rad/s)]
+%        - m [1x1] - Mass of the Payload [kg]
+%        - I [3x3] - Inertia matrix for the Payload [kg*m2]
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0d8dc7e" class="outline-4">
-<h4 id="org0d8dc7e">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org0d8dc7e">
+<div id="outline-container-org5518a84" class="outline-4">
+<h4 id="org5518a84">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org5518a84">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
-  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>, <span class="org-string">'cartesian'</span>})} = <span class="org-string">'none'</span>
-  args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e8<span class="org-type">*</span>ones(6,1)
-  args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1<span class="org-type">*</span>ones(6,1)
-  args.h (1,1) double {mustBeNumeric, mustBeNonnegative} = 100e<span class="org-type">-</span>3
+  args.type char {mustBeMember(args.type,{'none', 'rigid', 'flexible', 'cartesian'})} = 'none'
+  args.K (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(6,1)
+  args.C (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+  args.h (1,1) double {mustBeNumeric, mustBeNonnegative} = 100e-3
   args.m (1,1) double {mustBeNumeric, mustBeNonnegative} = 10
-  args.I (3,3) double {mustBeNumeric, mustBeNonnegative} = 1<span class="org-type">*</span>eye(3)
-<span class="org-keyword">end</span>
+  args.I (3,3) double {mustBeNumeric, mustBeNonnegative} = 1*eye(3)
+end
 </pre>
 </div>
 </div>
@@ -563,16 +351,16 @@ This Matlab function is accessible <a href="../src/initializePayload.m">here</a>
 <h4 id="orgeeb8d35">Add Payload Type</h4>
 <div class="outline-text-4" id="text-orgeeb8d35">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
-  <span class="org-keyword">case</span> <span class="org-string">'none'</span>
+<pre class="src src-matlab">switch args.type
+  case 'none'
     payload.type = 1;
-  <span class="org-keyword">case</span> <span class="org-string">'rigid'</span>
+  case 'rigid'
     payload.type = 2;
-  <span class="org-keyword">case</span> <span class="org-string">'flexible'</span>
+  case 'flexible'
     payload.type = 3;
-  <span class="org-keyword">case</span> <span class="org-string">'cartesian'</span>
+  case 'cartesian'
     payload.type = 4;
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
@@ -606,42 +394,42 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org0bee981" class="outline-4">
-<h4 id="org0bee981">Function description</h4>
-<div class="outline-text-4" id="text-org0bee981">
+<div id="outline-container-org7732939" class="outline-4">
+<h4 id="org7732939">Function description</h4>
+<div class="outline-text-4" id="text-org7732939">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[ground]</span> = <span class="org-function-name">initializeGround</span>(<span class="org-variable-name">args</span>)
-<span class="org-comment">% initializeGround - Initialize the Ground that can then be used for simulations and analysis</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [ground] = initializeGround(args)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - args - Structure with the following fields:</span>
-<span class="org-comment">%        - type - 'none', 'solid', 'flexible'</span>
-<span class="org-comment">%        - rot_point [3x1] - Rotation point for the ground motion [m]</span>
-<span class="org-comment">%        - K [3x1] - Translation Stiffness of the Ground [N/m]</span>
-<span class="org-comment">%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Outputs:</span>
-<span class="org-comment">%    - ground - Struture with the following properties:</span>
-<span class="org-comment">%        - type - 1 (none), 2 (rigid), 3 (flexible)</span>
-<span class="org-comment">%        - K [3x1] - Translation Stiffness of the Ground [N/m]</span>
-<span class="org-comment">%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]</span>
+<pre class="src src-matlab">function [ground] = initializeGround(args)
+% initializeGround - Initialize the Ground that can then be used for simulations and analysis
+%
+% Syntax: [ground] = initializeGround(args)
+%
+% Inputs:
+%    - args - Structure with the following fields:
+%        - type - 'none', 'solid', 'flexible'
+%        - rot_point [3x1] - Rotation point for the ground motion [m]
+%        - K [3x1] - Translation Stiffness of the Ground [N/m]
+%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
+%
+% Outputs:
+%    - ground - Struture with the following properties:
+%        - type - 1 (none), 2 (rigid), 3 (flexible)
+%        - K [3x1] - Translation Stiffness of the Ground [N/m]
+%        - C [3x1] - Translation Damping of the Ground [N/(m/s)]
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgeaeb9aa" class="outline-4">
-<h4 id="orgeaeb9aa">Optional Parameters</h4>
-<div class="outline-text-4" id="text-orgeaeb9aa">
+<div id="outline-container-org480f36e" class="outline-4">
+<h4 id="org480f36e">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org480f36e">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
-  args.type char {mustBeMember(args.type,{<span class="org-string">'none'</span>, <span class="org-string">'rigid'</span>, <span class="org-string">'flexible'</span>})} = <span class="org-string">'none'</span>
+  args.type char {mustBeMember(args.type,{'none', 'rigid', 'flexible'})} = 'none'
   args.rot_point (3,1) double {mustBeNumeric} = zeros(3,1)
-  args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8<span class="org-type">*</span>ones(3,1)
-  args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1<span class="org-type">*</span>ones(3,1)
-<span class="org-keyword">end</span>
+  args.K (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e8*ones(3,1)
+  args.C (3,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(3,1)
+end
 </pre>
 </div>
 </div>
@@ -651,14 +439,14 @@ This Matlab function is accessible <a href="../src/initializeGround.m">here</a>.
 <h4 id="orgef7035d">Add Ground Type</h4>
 <div class="outline-text-4" id="text-orgef7035d">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">switch</span> <span class="org-constant">args.type</span>
-  <span class="org-keyword">case</span> <span class="org-string">'none'</span>
+<pre class="src src-matlab">switch args.type
+  case 'none'
     ground.type = 1;
-  <span class="org-keyword">case</span> <span class="org-string">'rigid'</span>
+  case 'rigid'
     ground.type = 2;
-  <span class="org-keyword">case</span> <span class="org-string">'flexible'</span>
+  case 'flexible'
     ground.type = 3;
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
@@ -694,33 +482,33 @@ ground.C = args.C;
 </p>
 </div>
 
-<div id="outline-container-org0eae33e" class="outline-3">
-<h3 id="org0eae33e">Function Declaration and Documentation</h3>
-<div class="outline-text-3" id="text-org0eae33e">
+<div id="outline-container-orge2fa859" class="outline-3">
+<h3 id="orge2fa859">Function Declaration and Documentation</h3>
+<div class="outline-text-3" id="text-orge2fa859">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[disturbances]</span> = <span class="org-function-name">initializeDisturbances</span>(<span class="org-variable-name">args</span>)
-<span class="org-comment">% initializeDisturbances - Initialize the disturbances</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [disturbances] = initializeDisturbances(args)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - args -</span>
+<pre class="src src-matlab">function [disturbances] = initializeDisturbances(args)
+% initializeDisturbances - Initialize the disturbances
+%
+% Syntax: [disturbances] = initializeDisturbances(args)
+%
+% Inputs:
+%    - args -
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge03b19d" class="outline-3">
-<h3 id="orge03b19d">Optional Parameters</h3>
-<div class="outline-text-3" id="text-orge03b19d">
+<div id="outline-container-org6adb628" class="outline-3">
+<h3 id="org6adb628">Optional Parameters</h3>
+<div class="outline-text-3" id="text-org6adb628">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   args.Fd     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
   args.Fd_t   double  {mustBeNumeric, mustBeReal} = 0
   args.Dw     double  {mustBeNumeric, mustBeReal} = zeros(6,1)
   args.Dw_t   double  {mustBeNumeric, mustBeReal} = 0
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
@@ -766,32 +554,32 @@ ground.C = args.C;
 </p>
 </div>
 
-<div id="outline-container-org7f187c4" class="outline-3">
-<h3 id="org7f187c4">Function Declaration and Documentation</h3>
-<div class="outline-text-3" id="text-org7f187c4">
+<div id="outline-container-orge5deaa1" class="outline-3">
+<h3 id="orge5deaa1">Function Declaration and Documentation</h3>
+<div class="outline-text-3" id="text-orge5deaa1">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[references]</span> = <span class="org-function-name">initializeReferences</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
-<span class="org-comment">% initializeReferences - Initialize the references</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [references] = initializeReferences(args)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - args -</span>
+<pre class="src src-matlab">function [references] = initializeReferences(stewart, args)
+% initializeReferences - Initialize the references
+%
+% Syntax: [references] = initializeReferences(args)
+%
+% Inputs:
+%    - args -
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org28b782e" class="outline-3">
-<h3 id="org28b782e">Optional Parameters</h3>
-<div class="outline-text-3" id="text-org28b782e">
+<div id="outline-container-orgeebb364" class="outline-3">
+<h3 id="orgeebb364">Optional Parameters</h3>
+<div class="outline-text-3" id="text-orgeebb364">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
   stewart
   args.t double {mustBeNumeric, mustBeReal} = 0
   args.r double {mustBeNumeric, mustBeReal} = zeros(6, 1)
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
@@ -803,20 +591,20 @@ ground.C = args.C;
 <div class="org-src-container">
 <pre class="src src-matlab">rL = zeros(6, length(args.t));
 
-<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(args.t)</span>
-  R = [cos(args.r(6,<span class="org-constant">i</span>)) <span class="org-type">-</span>sin(args.r(6,<span class="org-constant">i</span>))  0;
-       sin(args.r(6,<span class="org-constant">i</span>))  cos(args.r(6,<span class="org-constant">i</span>))  0;
-       0           0           1] <span class="org-type">*</span> ...
-      [cos(args.r(5,<span class="org-constant">i</span>))  0           sin(args.r(5,<span class="org-constant">i</span>));
+for i = 1:length(args.t)
+  R = [cos(args.r(6,i)) -sin(args.r(6,i))  0;
+       sin(args.r(6,i))  cos(args.r(6,i))  0;
+       0           0           1] * ...
+      [cos(args.r(5,i))  0           sin(args.r(5,i));
        0           1           0;
-      <span class="org-type">-</span>sin(args.r(5,<span class="org-constant">i</span>))  0           cos(args.r(5,<span class="org-constant">i</span>))] <span class="org-type">*</span> ...
+      -sin(args.r(5,i))  0           cos(args.r(5,i))] * ...
       [1           0           0;
-       0           cos(args.r(4,<span class="org-constant">i</span>)) <span class="org-type">-</span>sin(args.r(4,<span class="org-constant">i</span>));
-       0           sin(args.r(4,<span class="org-constant">i</span>))  cos(args.r(4,<span class="org-constant">i</span>))];
+       0           cos(args.r(4,i)) -sin(args.r(4,i));
+       0           sin(args.r(4,i))  cos(args.r(4,i))];
 
- [Li, dLi] = inverseKinematics(stewart, <span class="org-string">'AP'</span>, [args.r(1,<span class="org-constant">i</span>); args.r(2,<span class="org-constant">i</span>); args.r(3,<span class="org-constant">i</span>)], <span class="org-string">'ARB'</span>, R);
- rL(<span class="org-type">:</span>, <span class="org-constant">i</span>) = dLi;
-<span class="org-keyword">end</span>
+ [Li, dLi] = inverseKinematics(stewart, 'AP', [args.r(1,i); args.r(2,i); args.r(3,i)], 'ARB', R);
+ rL(:, i) = dLi;
+end
 </pre>
 </div>
 </div>
@@ -836,7 +624,7 @@ references.rL = timeseries(rL, args.t);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-11 mer. 18:59</p>
+<p class="date">Created: 2020-08-05 mer. 13:27</p>
 </div>
 </body>
 </html>

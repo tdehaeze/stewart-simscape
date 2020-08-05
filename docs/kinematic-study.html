@@ -1,239 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-02 lun. 17:57 -->
+<!-- 2020-08-05 mer. 13:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kinematic Study of the Stewart Platform</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
 <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.cacheClassElem = elem.className;
-         elem.cacheClassTarget = target.className;
-         target.className = "code-highlighted";
-         elem.className   = "code-highlighted";
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(elem.cacheClassElem)
-         elem.className = elem.cacheClassElem;
-       if(elem.cacheClassTarget)
-         target.className = elem.cacheClassTarget;
-     }
-    /*]]>*///-->
-// @license-end
-</script>
-<script>
-      MathJax = {
-          tex: { macros: {
-                  bm: ["\\boldsymbol{#1}",1],
-                  }
-              }
+<script>MathJax = {
+          tex: {
+            tags: 'ams',
+            macros: {bm: ["\\boldsymbol{#1}",1],}
+            }
           };
           </script>
-          <script type="text/javascript"
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -267,14 +55,14 @@
 </li>
 <li><a href="#org86b4b35">4. Estimation of the range validity of the approximate inverse kinematics</a>
 <ul>
-<li><a href="#org7423428">4.1. Stewart architecture definition</a></li>
+<li><a href="#orga78aa66">4.1. Stewart architecture definition</a></li>
 <li><a href="#orgd83ccf3">4.2. Comparison for &ldquo;pure&rdquo; translations</a></li>
 <li><a href="#org4871c83">4.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org63255f9">5. Estimated required actuator stroke from specified platform mobility</a>
 <ul>
-<li><a href="#org3e1d400">5.1. Stewart architecture definition</a></li>
+<li><a href="#orgadaa219">5.1. Stewart architecture definition</a></li>
 <li><a href="#orgde50dd3">5.2. Wanted translations and rotations</a></li>
 <li><a href="#org24e45ca">5.3. Needed stroke for &ldquo;pure&rdquo; rotations or translations</a></li>
 <li><a href="#orgf6ba90c">5.4. Needed stroke for &ldquo;combined&rdquo; rotations or translations</a></li>
@@ -282,36 +70,41 @@
 </li>
 <li><a href="#orgbbbf7b3">6. Estimated platform mobility from specified actuator stroke</a>
 <ul>
-<li><a href="#org53d6532">6.1. Stewart architecture definition</a></li>
+<li><a href="#org6a6a5df">6.1. Stewart architecture definition</a></li>
 <li><a href="#org2c6819e">6.2. Pure translations</a></li>
 </ul>
 </li>
-<li><a href="#orgc4916dc">7. Functions</a>
+<li><a href="#orgad495dd">7. Estimation of the Joint required Stroke</a>
 <ul>
-<li><a href="#org26e8b28">7.1. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
+<li><a href="#orgae20178">7.1. Example of the initialization of a Stewart Platform</a></li>
+</ul>
+</li>
+<li><a href="#orgc4916dc">8. Functions</a>
 <ul>
-<li><a href="#orgd0d007d">Function description</a></li>
-<li><a href="#orge1b5b04">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#org26e8b28">8.1. <code>computeJacobian</code>: Compute the Jacobian Matrix</a>
+<ul>
+<li><a href="#orgcde905e">Function description</a></li>
+<li><a href="#org5be121e">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0cd57b5">Compute Jacobian Matrix</a></li>
 <li><a href="#orge21dcfc">Compute Stiffness Matrix</a></li>
 <li><a href="#orgae76071">Compute Compliance Matrix</a></li>
 <li><a href="#org78f18d7">Populate the <code>stewart</code> structure</a></li>
 </ul>
 </li>
-<li><a href="#orgb82066f">7.2. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
+<li><a href="#orgb82066f">8.2. <code>inverseKinematics</code>: Compute Inverse Kinematics</a>
 <ul>
 <li><a href="#org89930b7">Theory</a></li>
-<li><a href="#org755b2ae">Function description</a></li>
-<li><a href="#org867b3a0">Optional Parameters</a></li>
-<li><a href="#org318eb5f">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgb66d0e9">Function description</a></li>
+<li><a href="#org0aeb7ad">Optional Parameters</a></li>
+<li><a href="#orga54645b">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#org0d64c23">Compute</a></li>
 </ul>
 </li>
-<li><a href="#orgf5d8f0b">7.3. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
+<li><a href="#orgf5d8f0b">8.3. <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</a>
 <ul>
-<li><a href="#orgba3bc64">Function description</a></li>
-<li><a href="#org7af7974">Optional Parameters</a></li>
-<li><a href="#org2ba5e64">Check the <code>stewart</code> structure elements</a></li>
+<li><a href="#orgc074bc3">Function description</a></li>
+<li><a href="#org9a855b1">Optional Parameters</a></li>
+<li><a href="#orgdc0187a">Check the <code>stewart</code> structure elements</a></li>
 <li><a href="#orge5ade24">Computation</a></li>
 </ul>
 </li>
@@ -322,7 +115,7 @@
 </div>
 
 <p>
-The kinematic analysis of a parallel manipulator is well described in <a class='org-ref-reference' href="#taghirad13_paral">taghirad13_paral</a>:
+The kinematic analysis of a parallel manipulator is well described in (<a href="#citeproc_bib_item_1">Taghirad 2013</a>):
 </p>
 <blockquote>
 <p>
@@ -349,7 +142,7 @@ The current document is divided in the following sections:
 <a id="orgc45d118"></a>
 </p>
 <p>
-From <a class='org-ref-reference' href="#taghirad13_paral">taghirad13_paral</a>:
+From (<a href="#citeproc_bib_item_1">Taghirad 2013</a>):
 </p>
 <blockquote>
 <p>
@@ -478,6 +271,7 @@ As explain in <a href="stewart-architecture.html">this</a> document, each Actuat
 <ul class="org-ul">
 <li>A spring with a stiffness \(k_{i}\)</li>
 <li>A dashpot with a damping \(c_{i}\)</li>
+<li>A force source \(\tau_i\)</li>
 </ul>
 
 <p>
@@ -657,15 +451,15 @@ This will also gives us the range for which the approximate forward kinematic is
 </p>
 </div>
 
-<div id="outline-container-org7423428" class="outline-3">
-<h3 id="org7423428"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
+<div id="outline-container-orga78aa66" class="outline-3">
+<h3 id="orga78aa66"><span class="section-number-3">4.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 We first define some general Stewart architecture.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -692,16 +486,16 @@ The estimate required strut stroke for both the approximate and exact solutions 
 The relative strut length displacement is shown in Figure <a href="#org02d8e34">2</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Xrs = logspace(<span class="org-type">-</span>6, <span class="org-type">-</span>1, 100); <span class="org-comment">% Wanted X translation of the mobile platform [m]</span>
+<pre class="src src-matlab">Xrs = logspace(-6, -1, 100); % Wanted X translation of the mobile platform [m]
 
 Ls_approx = zeros(6, length(Xrs));
 Ls_exact = zeros(6, length(Xrs));
 
-<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(Xrs)</span>
-  Xr = Xrs(<span class="org-constant">i</span>);
-  L_approx(<span class="org-type">:</span>, <span class="org-constant">i</span>) = stewart.kinematics.J<span class="org-type">*</span>[Xr; 0; 0; 0; 0; 0;];
-  [<span class="org-type">~</span>, L_exact(<span class="org-type">:</span>, <span class="org-constant">i</span>)] = inverseKinematics(stewart, <span class="org-string">'AP'</span>, [Xr; 0; 0]);
-<span class="org-keyword">end</span>
+for i = 1:length(Xrs)
+  Xr = Xrs(i);
+  L_approx(:, i) = stewart.kinematics.J*[Xr; 0; 0; 0; 0; 0;];
+  [~, L_exact(:, i)] = inverseKinematics(stewart, 'AP', [Xr; 0; 0]);
+end
 </pre>
 </div>
 
@@ -758,15 +552,15 @@ This is what is analyzed in this section.
 </p>
 </div>
 
-<div id="outline-container-org3e1d400" class="outline-3">
-<h3 id="org3e1d400"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
+<div id="outline-container-orgadaa219" class="outline-3">
+<h3 id="orgadaa219"><span class="section-number-3">5.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -787,12 +581,12 @@ stewart = computeJacobian(stewart);
 Let&rsquo;s now define the wanted extreme translations and rotations.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Tx_max = 50e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
-Ty_max = 50e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
-Tz_max = 50e<span class="org-type">-</span>6; <span class="org-comment">% Translation [m]</span>
-Rx_max = 30e<span class="org-type">-</span>6; <span class="org-comment">% Rotation [rad]</span>
-Ry_max = 30e<span class="org-type">-</span>6; <span class="org-comment">% Rotation [rad]</span>
-Rz_max = 0;     <span class="org-comment">% Rotation [rad]</span>
+<pre class="src src-matlab">Tx_max = 50e-6; % Translation [m]
+Ty_max = 50e-6; % Translation [m]
+Tz_max = 50e-6; % Translation [m]
+Rx_max = 30e-6; % Rotation [rad]
+Ry_max = 30e-6; % Rotation [rad]
+Rz_max = 0;     % Rotation [rad]
 </pre>
 </div>
 </div>
@@ -807,12 +601,12 @@ We do that using either the Inverse Kinematic solution or the Jacobian matrix as
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">LTx = stewart.kinematics.J<span class="org-type">*</span>[Tx_max 0 0 0 0 0]<span class="org-type">'</span>;
-LTy = stewart.kinematics.J<span class="org-type">*</span>[0 Ty_max 0 0 0 0]<span class="org-type">'</span>;
-LTz = stewart.kinematics.J<span class="org-type">*</span>[0 0 Tz_max 0 0 0]<span class="org-type">'</span>;
-LRx = stewart.kinematics.J<span class="org-type">*</span>[0 0 0 Rx_max 0 0]<span class="org-type">'</span>;
-LRy = stewart.kinematics.J<span class="org-type">*</span>[0 0 0 0 Ry_max 0]<span class="org-type">'</span>;
-LRz = stewart.kinematics.J<span class="org-type">*</span>[0 0 0 0 0 Rz_max]<span class="org-type">'</span>;
+<pre class="src src-matlab">LTx = stewart.kinematics.J*[Tx_max 0 0 0 0 0]';
+LTy = stewart.kinematics.J*[0 Ty_max 0 0 0 0]';
+LTz = stewart.kinematics.J*[0 0 Tz_max 0 0 0]';
+LRx = stewart.kinematics.J*[0 0 0 Rx_max 0 0]';
+LRy = stewart.kinematics.J*[0 0 0 0 Ry_max 0]';
+LRz = stewart.kinematics.J*[0 0 0 0 0 Rz_max]';
 </pre>
 </div>
 
@@ -845,7 +639,7 @@ To do so, we may estimate the required actuator stroke for all possible combinat
 Let&rsquo;s first generate all the possible combination of maximum translation and rotations.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ps = [2<span class="org-type">*</span>(dec2bin(0<span class="org-type">:</span>5<span class="org-type">^</span>2<span class="org-type">-</span>1,5)<span class="org-type">-</span><span class="org-string">'0'</span>)<span class="org-type">-</span>1, zeros(5<span class="org-type">^</span>2, 1)]<span class="org-type">.*</span>[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
+<pre class="src src-matlab">Ps = [2*(dec2bin(0:5^2-1,5)-'0')-1, zeros(5^2, 1)].*[Tx_max Ty_max Tz_max Rx_max Ry_max Rz_max];
 </pre>
 </div>
 
@@ -1110,29 +904,29 @@ For all possible combination, we compute the required actuator stroke using the 
 <pre class="src src-matlab">L_min = 0;
 L_max = 0;
 
-<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:size(Ps,1)</span>
+for i = 1:size(Ps,1)
   Rx = [1 0        0;
-        0 cos(Ps(<span class="org-constant">i</span>, 4)) <span class="org-type">-</span>sin(Ps(<span class="org-constant">i</span>, 4));
-        0 sin(Ps(<span class="org-constant">i</span>, 4))  cos(Ps(<span class="org-constant">i</span>, 4))];
+        0 cos(Ps(i, 4)) -sin(Ps(i, 4));
+        0 sin(Ps(i, 4))  cos(Ps(i, 4))];
 
-  Ry = [ cos(Ps(<span class="org-constant">i</span>, 5)) 0 sin(Ps(<span class="org-constant">i</span>, 5));
+  Ry = [ cos(Ps(i, 5)) 0 sin(Ps(i, 5));
         0        1 0;
-        <span class="org-type">-</span>sin(Ps(<span class="org-constant">i</span>, 5)) 0 cos(Ps(<span class="org-constant">i</span>, 5))];
+        -sin(Ps(i, 5)) 0 cos(Ps(i, 5))];
 
-  Rz = [cos(Ps(<span class="org-constant">i</span>, 6)) <span class="org-type">-</span>sin(Ps(<span class="org-constant">i</span>, 6)) 0;
-        sin(Ps(<span class="org-constant">i</span>, 6))  cos(Ps(<span class="org-constant">i</span>, 6)) 0;
+  Rz = [cos(Ps(i, 6)) -sin(Ps(i, 6)) 0;
+        sin(Ps(i, 6))  cos(Ps(i, 6)) 0;
         0        0       1];
 
-  ARB = Rz<span class="org-type">*</span>Ry<span class="org-type">*</span>Rx;
-  [<span class="org-type">~</span>, Ls] = inverseKinematics(stewart, <span class="org-string">'AP'</span>, Ps(<span class="org-constant">i</span>, 1<span class="org-type">:</span>3)<span class="org-type">'</span>, <span class="org-string">'ARB'</span>, ARB);
+  ARB = Rz*Ry*Rx;
+  [~, Ls] = inverseKinematics(stewart, 'AP', Ps(i, 1:3)', 'ARB', ARB);
 
-  <span class="org-keyword">if</span> min(Ls) <span class="org-type">&lt;</span> L_min
+  if min(Ls) &lt; L_min
     L_min = min(Ls)
-  <span class="org-keyword">end</span>
-  <span class="org-keyword">if</span> max(Ls) <span class="org-type">&gt;</span> L_max
+  end
+  if max(Ls) &gt; L_max
     L_max = max(Ls)
-  <span class="org-keyword">end</span>
-<span class="org-keyword">end</span>
+  end
+end
 </pre>
 </div>
 
@@ -1178,15 +972,15 @@ However, for small displacements, we can use the Jacobian as an approximate solu
 </p>
 </div>
 
-<div id="outline-container-org53d6532" class="outline-3">
-<h3 id="org53d6532"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
+<div id="outline-container-org6a6a5df" class="outline-3">
+<h3 id="org6a6a5df"><span class="section-number-3">6.1</span> Stewart architecture definition</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Let&rsquo;s first define the Stewart platform architecture that we want to study.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStewartPose(stewart);
@@ -1202,8 +996,8 @@ stewart = computeJacobian(stewart);
 Let&rsquo;s now define the actuator stroke.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">L_min = <span class="org-type">-</span>50e<span class="org-type">-</span>6; <span class="org-comment">% [m]</span>
-L_max =  50e<span class="org-type">-</span>6; <span class="org-comment">% [m]</span>
+<pre class="src src-matlab">L_min = -50e-6; % [m]
+L_max =  50e-6; % [m]
 </pre>
 </div>
 </div>
@@ -1231,21 +1025,21 @@ To obtain the mobility &ldquo;volume&rdquo; attainable by the Stewart platform w
 For each possible value of \((\theta, \phi)\), we compute the maximum radius \(r\) attainable with the constraint that the stroke of each actuator should be between <code>L_min</code> and <code>L_max</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">thetas = linspace(0, <span class="org-constant">pi</span>, 50);
-phis = linspace(0, 2<span class="org-type">*</span><span class="org-constant">pi</span>, 50);
+<pre class="src src-matlab">thetas = linspace(0, pi, 50);
+phis = linspace(0, 2*pi, 50);
 rs = zeros(length(thetas), length(phis));
 
-<span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">i</span></span> = <span class="org-constant">1:length(thetas)</span>
-  <span class="org-keyword">for</span> <span class="org-variable-name"><span class="org-constant">j</span></span> = <span class="org-constant">1:length(phis)</span>
-    Tx = sin(thetas(<span class="org-constant">i</span>))<span class="org-type">*</span>cos(phis(<span class="org-constant">j</span>));
-    Ty = sin(thetas(<span class="org-constant">i</span>))<span class="org-type">*</span>sin(phis(<span class="org-constant">j</span>));
-    Tz = cos(thetas(<span class="org-constant">i</span>));
+for i = 1:length(thetas)
+  for j = 1:length(phis)
+    Tx = sin(thetas(i))*cos(phis(j));
+    Ty = sin(thetas(i))*sin(phis(j));
+    Tz = cos(thetas(i));
 
-    dL = stewart.kinematics.J<span class="org-type">*</span>[Tx; Ty; Tz; 0; 0; 0;]; <span class="org-comment">% dL required for 1m displacement in theta/phi direction</span>
+    dL = stewart.kinematics.J*[Tx; Ty; Tz; 0; 0; 0;]; % dL required for 1m displacement in theta/phi direction
 
-    rs(<span class="org-constant">i</span>, <span class="org-constant">j</span>) = max([dL(dL<span class="org-type">&lt;</span>0)<span class="org-type">*</span>L_min; dL(dL<span class="org-type">&gt;</span>0)<span class="org-type">*</span>L_max]);
-  <span class="org-keyword">end</span>
-<span class="org-keyword">end</span>
+    rs(i, j) = max([dL(dL&lt;0)*L_min; dL(dL&gt;0)*L_max]);
+  end
+end
 </pre>
 </div>
 
@@ -1291,16 +1085,77 @@ We can also approximate the mobility by a sphere with a radius equal to the mini
 </div>
 </div>
 
-<div id="outline-container-orgc4916dc" class="outline-2">
-<h2 id="orgc4916dc"><span class="section-number-2">7</span> Functions</h2>
+<div id="outline-container-orgad495dd" class="outline-2">
+<h2 id="orgad495dd"><span class="section-number-2">7</span> Estimation of the Joint required Stroke</h2>
 <div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orgae20178" class="outline-3">
+<h3 id="orgae20178"><span class="section-number-3">7.1</span> Example of the initialization of a Stewart Platform</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Let&rsquo;s first define the Stewart Platform Geometry.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 150e-3);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+
+As_init = stewart.geometry.As;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Tx_max = 50e-6; % Translation [m]
+Ty_max = 50e-6; % Translation [m]
+Tz_max = 50e-6; % Translation [m]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Ps = [2*(dec2bin(0:3^2-2,3)-'0')-1].*[Tx_max Ty_max Tz_max];
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">flex_ang = zeros(size(Ps, 1), 6);
+
+for Ps_i = 1:size(Ps, 1)
+    stewart.geometry.FO_M = [0; 0; 90e-3] + Ps(Ps_i, :)';
+
+    stewart = generateGeneralConfiguration(stewart);
+    stewart = computeJointsPose(stewart);
+
+    flex_ang(Ps_i, :) = acos(sum(As_init.*stewart.geometry.As));
+end
+</pre>
+</div>
+
+<p>
+And the maximum bending of the flexible joints is: (in [mrad])
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">1e3*max(max(abs(flex_ang)))
+</pre>
+</div>
+
+<pre class="example">
+0.90937
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc4916dc" class="outline-2">
+<h2 id="orgc4916dc"><span class="section-number-2">8</span> Functions</h2>
+<div class="outline-text-2" id="text-8">
 <p>
 <a id="orgf9a6042"></a>
 </p>
 </div>
 <div id="outline-container-org26e8b28" class="outline-3">
-<h3 id="org26e8b28"><span class="section-number-3">7.1</span> <code>computeJacobian</code>: Compute the Jacobian Matrix</h3>
-<div class="outline-text-3" id="text-7-1">
+<h3 id="org26e8b28"><span class="section-number-3">8.1</span> <code>computeJacobian</code>: Compute the Jacobian Matrix</h3>
+<div class="outline-text-3" id="text-8-1">
 <p>
 <a id="org2387f19"></a>
 </p>
@@ -1310,42 +1165,42 @@ This Matlab function is accessible <a href="../src/computeJacobian.m">here</a>.
 </p>
 </div>
 
-<div id="outline-container-orgd0d007d" class="outline-4">
-<h4 id="orgd0d007d">Function description</h4>
-<div class="outline-text-4" id="text-orgd0d007d">
+<div id="outline-container-orgcde905e" class="outline-4">
+<h4 id="orgcde905e">Function description</h4>
+<div class="outline-text-4" id="text-orgcde905e">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[stewart]</span> = <span class="org-function-name">computeJacobian</span>(<span class="org-variable-name">stewart</span>)
-<span class="org-comment">% computeJacobian -</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [stewart] = computeJacobian(stewart)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - stewart - With at least the following fields:</span>
-<span class="org-comment">%      - geometry.As [3x6] - The 6 unit vectors for each strut expressed in {A}</span>
-<span class="org-comment">%      - geometry.Ab [3x6] - The 6 position of the joints bi expressed in {A}</span>
-<span class="org-comment">%      - actuators.K [6x1] - Total stiffness of the actuators</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Outputs:</span>
-<span class="org-comment">%    - stewart - With the 3 added field:</span>
-<span class="org-comment">%        - kinematics.J [6x6] - The Jacobian Matrix</span>
-<span class="org-comment">%        - kinematics.K [6x6] - The Stiffness Matrix</span>
-<span class="org-comment">%        - kinematics.C [6x6] - The Compliance Matrix</span>
+<pre class="src src-matlab">function [stewart] = computeJacobian(stewart)
+% computeJacobian -
+%
+% Syntax: [stewart] = computeJacobian(stewart)
+%
+% Inputs:
+%    - stewart - With at least the following fields:
+%      - geometry.As [3x6] - The 6 unit vectors for each strut expressed in {A}
+%      - geometry.Ab [3x6] - The 6 position of the joints bi expressed in {A}
+%      - actuators.K [6x1] - Total stiffness of the actuators
+%
+% Outputs:
+%    - stewart - With the 3 added field:
+%        - kinematics.J [6x6] - The Jacobian Matrix
+%        - kinematics.K [6x6] - The Stiffness Matrix
+%        - kinematics.C [6x6] - The Compliance Matrix
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge1b5b04" class="outline-4">
-<h4 id="orge1b5b04">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-orge1b5b04">
+<div id="outline-container-org5be121e" class="outline-4">
+<h4 id="org5be121e">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-org5be121e">
 <div class="org-src-container">
-<pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'As'</span>),   <span class="org-string">'stewart.geometry should have attribute As'</span>)
+<pre class="src src-matlab">assert(isfield(stewart.geometry, 'As'),   'stewart.geometry should have attribute As')
 As = stewart.geometry.As;
 
-assert(isfield(stewart.geometry, <span class="org-string">'Ab'</span>),   <span class="org-string">'stewart.geometry should have attribute Ab'</span>)
+assert(isfield(stewart.geometry, 'Ab'),   'stewart.geometry should have attribute Ab')
 Ab = stewart.geometry.Ab;
 
-assert(isfield(stewart.actuators, <span class="org-string">'K'</span>),   <span class="org-string">'stewart.actuators should have attribute K'</span>)
+assert(isfield(stewart.actuators, 'K'),   'stewart.actuators should have attribute K')
 Ki = stewart.actuators.K;
 </pre>
 </div>
@@ -1357,7 +1212,7 @@ Ki = stewart.actuators.K;
 <h4 id="org0cd57b5">Compute Jacobian Matrix</h4>
 <div class="outline-text-4" id="text-org0cd57b5">
 <div class="org-src-container">
-<pre class="src src-matlab">J = [As<span class="org-type">'</span> , cross(Ab, As)<span class="org-type">'</span>];
+<pre class="src src-matlab">J = [As' , cross(Ab, As)'];
 </pre>
 </div>
 </div>
@@ -1367,7 +1222,7 @@ Ki = stewart.actuators.K;
 <h4 id="orge21dcfc">Compute Stiffness Matrix</h4>
 <div class="outline-text-4" id="text-orge21dcfc">
 <div class="org-src-container">
-<pre class="src src-matlab">K = J<span class="org-type">'*</span>diag(Ki)<span class="org-type">*</span>J;
+<pre class="src src-matlab">K = J'*diag(Ki)*J;
 </pre>
 </div>
 </div>
@@ -1398,8 +1253,8 @@ stewart.kinematics.C = C;
 
 
 <div id="outline-container-orgb82066f" class="outline-3">
-<h3 id="orgb82066f"><span class="section-number-3">7.2</span> <code>inverseKinematics</code>: Compute Inverse Kinematics</h3>
-<div class="outline-text-3" id="text-7-2">
+<h3 id="orgb82066f"><span class="section-number-3">8.2</span> <code>inverseKinematics</code>: Compute Inverse Kinematics</h3>
+<div class="outline-text-3" id="text-8-2">
 <p>
 <a id="orgb8859d7"></a>
 </p>
@@ -1445,57 +1300,57 @@ Otherwise, when the limbs&rsquo; lengths derived yield complex numbers, then the
 </div>
 </div>
 
-<div id="outline-container-org755b2ae" class="outline-4">
-<h4 id="org755b2ae">Function description</h4>
-<div class="outline-text-4" id="text-org755b2ae">
+<div id="outline-container-orgb66d0e9" class="outline-4">
+<h4 id="orgb66d0e9">Function description</h4>
+<div class="outline-text-4" id="text-orgb66d0e9">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[Li, dLi]</span> = <span class="org-function-name">inverseKinematics</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
-<span class="org-comment">% inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [stewart] = inverseKinematics(stewart)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - stewart - A structure with the following fields</span>
-<span class="org-comment">%        - geometry.Aa   [3x6] - The positions ai expressed in {A}</span>
-<span class="org-comment">%        - geometry.Bb   [3x6] - The positions bi expressed in {B}</span>
-<span class="org-comment">%        - geometry.l    [6x1] - Length of each strut</span>
-<span class="org-comment">%    - args - Can have the following fields:</span>
-<span class="org-comment">%        - AP   [3x1] - The wanted position of {B} with respect to {A}</span>
-<span class="org-comment">%        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Outputs:</span>
-<span class="org-comment">%    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}</span>
-<span class="org-comment">%    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}</span>
+<pre class="src src-matlab">function [Li, dLi] = inverseKinematics(stewart, args)
+% inverseKinematics - Compute the needed length of each strut to have the wanted position and orientation of {B} with respect to {A}
+%
+% Syntax: [stewart] = inverseKinematics(stewart)
+%
+% Inputs:
+%    - stewart - A structure with the following fields
+%        - geometry.Aa   [3x6] - The positions ai expressed in {A}
+%        - geometry.Bb   [3x6] - The positions bi expressed in {B}
+%        - geometry.l    [6x1] - Length of each strut
+%    - args - Can have the following fields:
+%        - AP   [3x1] - The wanted position of {B} with respect to {A}
+%        - ARB  [3x3] - The rotation matrix that gives the wanted orientation of {B} with respect to {A}
+%
+% Outputs:
+%    - Li   [6x1] - The 6 needed length of the struts in [m] to have the wanted pose of {B} w.r.t. {A}
+%    - dLi  [6x1] - The 6 needed displacement of the struts from the initial position in [m] to have the wanted pose of {B} w.r.t. {A}
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org867b3a0" class="outline-4">
-<h4 id="org867b3a0">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org867b3a0">
+<div id="outline-container-org0aeb7ad" class="outline-4">
+<h4 id="org0aeb7ad">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org0aeb7ad">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
     args.AP  (3,1) double {mustBeNumeric} = zeros(3,1)
     args.ARB (3,3) double {mustBeNumeric} = eye(3)
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org318eb5f" class="outline-4">
-<h4 id="org318eb5f">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org318eb5f">
+<div id="outline-container-orga54645b" class="outline-4">
+<h4 id="orga54645b">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orga54645b">
 <div class="org-src-container">
-<pre class="src src-matlab">assert(isfield(stewart.geometry, <span class="org-string">'Aa'</span>),   <span class="org-string">'stewart.geometry should have attribute Aa'</span>)
+<pre class="src src-matlab">assert(isfield(stewart.geometry, 'Aa'),   'stewart.geometry should have attribute Aa')
 Aa = stewart.geometry.Aa;
 
-assert(isfield(stewart.geometry, <span class="org-string">'Bb'</span>),   <span class="org-string">'stewart.geometry should have attribute Bb'</span>)
+assert(isfield(stewart.geometry, 'Bb'),   'stewart.geometry should have attribute Bb')
 Bb = stewart.geometry.Bb;
 
-assert(isfield(stewart.geometry, <span class="org-string">'l'</span>),   <span class="org-string">'stewart.geometry should have attribute l'</span>)
+assert(isfield(stewart.geometry, 'l'),   'stewart.geometry should have attribute l')
 l = stewart.geometry.l;
 </pre>
 </div>
@@ -1507,12 +1362,12 @@ l = stewart.geometry.l;
 <h4 id="org0d64c23">Compute</h4>
 <div class="outline-text-4" id="text-org0d64c23">
 <div class="org-src-container">
-<pre class="src src-matlab">Li = sqrt(args.AP<span class="org-type">'*</span>args.AP <span class="org-type">+</span> diag(Bb<span class="org-type">'*</span>Bb) <span class="org-type">+</span> diag(Aa<span class="org-type">'*</span>Aa) <span class="org-type">-</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>Aa)<span class="org-type">'</span> <span class="org-type">+</span> (2<span class="org-type">*</span>args.AP<span class="org-type">'*</span>(args.ARB<span class="org-type">*</span>Bb))<span class="org-type">'</span> <span class="org-type">-</span> diag(2<span class="org-type">*</span>(args.ARB<span class="org-type">*</span>Bb)<span class="org-type">'*</span>Aa));
+<pre class="src src-matlab">Li = sqrt(args.AP'*args.AP + diag(Bb'*Bb) + diag(Aa'*Aa) - (2*args.AP'*Aa)' + (2*args.AP'*(args.ARB*Bb))' - diag(2*(args.ARB*Bb)'*Aa));
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">dLi = Li<span class="org-type">-</span>l;
+<pre class="src src-matlab">dLi = Li-l;
 </pre>
 </div>
 </div>
@@ -1520,8 +1375,8 @@ l = stewart.geometry.l;
 </div>
 
 <div id="outline-container-orgf5d8f0b" class="outline-3">
-<h3 id="orgf5d8f0b"><span class="section-number-3">7.3</span> <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</h3>
-<div class="outline-text-3" id="text-7-3">
+<h3 id="orgf5d8f0b"><span class="section-number-3">8.3</span> <code>forwardKinematicsApprox</code>: Compute the Approximate Forward Kinematics</h3>
+<div class="outline-text-3" id="text-8-3">
 <p>
 <a id="orgdb31434"></a>
 </p>
@@ -1531,48 +1386,48 @@ This Matlab function is accessible <a href="../src/forwardKinematicsApprox.m">he
 </p>
 </div>
 
-<div id="outline-container-orgba3bc64" class="outline-4">
-<h4 id="orgba3bc64">Function description</h4>
-<div class="outline-text-4" id="text-orgba3bc64">
+<div id="outline-container-orgc074bc3" class="outline-4">
+<h4 id="orgc074bc3">Function description</h4>
+<div class="outline-text-4" id="text-orgc074bc3">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-keyword">function</span> <span class="org-variable-name">[P, R]</span> = <span class="org-function-name">forwardKinematicsApprox</span>(<span class="org-variable-name">stewart</span>, <span class="org-variable-name">args</span>)
-<span class="org-comment">% forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using</span>
-<span class="org-comment">%                           the Jacobian Matrix</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Syntax: [P, R] = forwardKinematicsApprox(stewart, args)</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Inputs:</span>
-<span class="org-comment">%    - stewart - A structure with the following fields</span>
-<span class="org-comment">%        - kinematics.J  [6x6] - The Jacobian Matrix</span>
-<span class="org-comment">%    - args - Can have the following fields:</span>
-<span class="org-comment">%        - dL [6x1] - Displacement of each strut [m]</span>
-<span class="org-comment">%</span>
-<span class="org-comment">% Outputs:</span>
-<span class="org-comment">%    - P  [3x1] - The estimated position of {B} with respect to {A}</span>
-<span class="org-comment">%    - R  [3x3] - The estimated rotation matrix that gives the orientation of {B} with respect to {A}</span>
+<pre class="src src-matlab">function [P, R] = forwardKinematicsApprox(stewart, args)
+% forwardKinematicsApprox - Computed the approximate pose of {B} with respect to {A} from the length of each strut and using
+%                           the Jacobian Matrix
+%
+% Syntax: [P, R] = forwardKinematicsApprox(stewart, args)
+%
+% Inputs:
+%    - stewart - A structure with the following fields
+%        - kinematics.J  [6x6] - The Jacobian Matrix
+%    - args - Can have the following fields:
+%        - dL [6x1] - Displacement of each strut [m]
+%
+% Outputs:
+%    - P  [3x1] - The estimated position of {B} with respect to {A}
+%    - R  [3x3] - The estimated rotation matrix that gives the orientation of {B} with respect to {A}
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7af7974" class="outline-4">
-<h4 id="org7af7974">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org7af7974">
+<div id="outline-container-org9a855b1" class="outline-4">
+<h4 id="org9a855b1">Optional Parameters</h4>
+<div class="outline-text-4" id="text-org9a855b1">
 <div class="org-src-container">
 <pre class="src src-matlab">arguments
     stewart
     args.dL (6,1) double {mustBeNumeric} = zeros(6,1)
-<span class="org-keyword">end</span>
+end
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2ba5e64" class="outline-4">
-<h4 id="org2ba5e64">Check the <code>stewart</code> structure elements</h4>
-<div class="outline-text-4" id="text-org2ba5e64">
+<div id="outline-container-orgdc0187a" class="outline-4">
+<h4 id="orgdc0187a">Check the <code>stewart</code> structure elements</h4>
+<div class="outline-text-4" id="text-orgdc0187a">
 <div class="org-src-container">
-<pre class="src src-matlab">assert(isfield(stewart.kinematics, <span class="org-string">'J'</span>),   <span class="org-string">'stewart.kinematics should have attribute J'</span>)
+<pre class="src src-matlab">assert(isfield(stewart.kinematics, 'J'),   'stewart.kinematics should have attribute J')
 J = stewart.kinematics.J;
 </pre>
 </div>
@@ -1588,7 +1443,7 @@ position and orientation of {B} with respect to {A} using the following formula:
 \[ d \bm{\mathcal{X}} = \bm{J}^{-1} d\bm{\mathcal{L}} \]
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">X = J<span class="org-type">\</span>args.dL;
+<pre class="src src-matlab">X = J\args.dL;
 </pre>
 </div>
 
@@ -1596,7 +1451,7 @@ position and orientation of {B} with respect to {A} using the following formula:
 The position vector corresponds to the first 3 elements.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">P = X(1<span class="org-type">:</span>3);
+<pre class="src src-matlab">P = X(1:3);
 </pre>
 </div>
 
@@ -1605,8 +1460,8 @@ The next 3 elements are the orientation of {B} with respect to {A} expressed
 using the screw axis.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">theta = norm(X(4<span class="org-type">:</span>6));
-s = X(4<span class="org-type">:</span>6)<span class="org-type">/</span>theta;
+<pre class="src src-matlab">theta = norm(X(4:6));
+s = X(4:6)/theta;
 </pre>
 </div>
 
@@ -1614,9 +1469,9 @@ s = X(4<span class="org-type">:</span>6)<span class="org-type">/</span>theta;
 We then compute the corresponding rotation matrix.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">R = [s(1)<span class="org-type">^</span>2<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">+</span> cos(theta) ,        s(1)<span class="org-type">*</span>s(2)<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">-</span> s(3)<span class="org-type">*</span>sin(theta), s(1)<span class="org-type">*</span>s(3)<span class="org-type">*</span>(1<span class="org-type">-</span>cos(theta)) <span class="org-type">+</span> s(2)<span class="org-type">*</span>sin(theta);
-     s<span class="org-type">(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);</span>
-     s<span class="org-type">(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];</span>
+<pre class="src src-matlab">R = [s(1)^2*(1-cos(theta)) + cos(theta) ,        s(1)*s(2)*(1-cos(theta)) - s(3)*sin(theta), s(1)*s(3)*(1-cos(theta)) + s(2)*sin(theta);
+     s(2)*s(1)*(1-cos(theta)) + s(3)*sin(theta), s(2)^2*(1-cos(theta)) + cos(theta),         s(2)*s(3)*(1-cos(theta)) - s(1)*sin(theta);
+     s(3)*s(1)*(1-cos(theta)) - s(2)*sin(theta), s(3)*s(2)*(1-cos(theta)) + s(1)*sin(theta), s(3)^2*(1-cos(theta)) + cos(theta)];
 </pre>
 </div>
 </div>
@@ -1626,14 +1481,16 @@ We then compute the corresponding rotation matrix.
 
 <p>
 
-<h1 class='org-ref-bib-h1'>Bibliography</h1>
-<ul class='org-ref-bib'><li><a id="taghirad13_paral">[taghirad13_paral]</a> <a name="taghirad13_paral"></a>Taghirad, Parallel robots : mechanics and control, CRC Press (2013).</li>
-</ul>
 </p>
+
+<style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><h2 class='citeproc-org-bib-h2'>Bibliography</h2>
+<div class="csl-bib-body">
+  <div class="csl-entry"><a name="citeproc_bib_item_1"></a>Taghirad, Hamid. 2013. <i>Parallel Robots : Mechanics and Control</i>. Boca Raton, FL: CRC Press.</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-02 lun. 17:57</p>
+<p class="date">Created: 2020-08-05 mer. 13:27</p>
 </div>
 </body>
 </html>

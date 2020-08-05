@@ -1,239 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-16 lun. 11:22 -->
+<!-- 2020-08-05 mer. 13:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Tracking Control</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
 <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.cacheClassElem = elem.className;
-         elem.cacheClassTarget = target.className;
-         target.className = "code-highlighted";
-         elem.className   = "code-highlighted";
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(elem.cacheClassElem)
-         elem.className = elem.cacheClassElem;
-       if(elem.cacheClassTarget)
-         target.className = elem.cacheClassTarget;
-     }
-    /*]]>*///-->
-// @license-end
-</script>
-<script>
-      MathJax = {
-          tex: { macros: {
-                  bm: ["\\boldsymbol{#1}",1],
-                  }
-              }
+<script>MathJax = {
+          tex: {
+            tags: 'ams',
+            macros: {bm: ["\\boldsymbol{#1}",1],}
+            }
           };
           </script>
-          <script type="text/javascript"
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -248,42 +36,42 @@
 <ul>
 <li><a href="#orgd7b25e5">1. Decentralized Control Architecture using Strut Length</a>
 <ul>
-<li><a href="#orgaf4f125">1.1. Control Schematic</a></li>
-<li><a href="#org5efa5dc">1.2. Initialize the Stewart platform</a></li>
-<li><a href="#orgf2a4e09">1.3. Identification of the plant</a></li>
-<li><a href="#org346704a">1.4. Plant Analysis</a></li>
-<li><a href="#org303d728">1.5. Controller Design</a></li>
-<li><a href="#orgac9e2fb">1.6. Simulation</a></li>
+<li><a href="#orgf40962b">1.1. Control Schematic</a></li>
+<li><a href="#orgb67ba8a">1.2. Initialize the Stewart platform</a></li>
+<li><a href="#org869bd42">1.3. Identification of the plant</a></li>
+<li><a href="#org297755f">1.4. Plant Analysis</a></li>
+<li><a href="#org2d0848b">1.5. Controller Design</a></li>
+<li><a href="#orgfa88e97">1.6. Simulation</a></li>
 <li><a href="#org974b430">1.7. Results</a></li>
-<li><a href="#org8f3d960">1.8. Conclusion</a></li>
+<li><a href="#orga4f734e">1.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#orga519721">2. Centralized Control Architecture using Pose Measurement</a>
 <ul>
-<li><a href="#org373826d">2.1. Control Schematic</a></li>
-<li><a href="#orgdb540d4">2.2. Initialize the Stewart platform</a></li>
-<li><a href="#org7e2bbea">2.3. Identification of the plant</a></li>
+<li><a href="#orgc6622fd">2.1. Control Schematic</a></li>
+<li><a href="#orgb2ce884">2.2. Initialize the Stewart platform</a></li>
+<li><a href="#orgd3f8474">2.3. Identification of the plant</a></li>
 <li><a href="#org2223469">2.4. Diagonal Control - Leg&rsquo;s Frame</a>
 <ul>
-<li><a href="#org42dc407">2.4.1. Control Architecture</a></li>
-<li><a href="#org33774e9">2.4.2. Plant Analysis</a></li>
-<li><a href="#orgc7ddab1">2.4.3. Controller Design</a></li>
-<li><a href="#org3021cf3">2.4.4. Simulation</a></li>
+<li><a href="#org4a4490e">2.4.1. Control Architecture</a></li>
+<li><a href="#org8aeb07e">2.4.2. Plant Analysis</a></li>
+<li><a href="#orgba1c283">2.4.3. Controller Design</a></li>
+<li><a href="#org6e37e44">2.4.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#org26a8857">2.5. Diagonal Control - Cartesian Frame</a>
 <ul>
-<li><a href="#org185190b">2.5.1. Control Architecture</a></li>
-<li><a href="#orgac4e8f3">2.5.2. Plant Analysis</a></li>
-<li><a href="#org87c1a48">2.5.3. Controller Design</a></li>
-<li><a href="#org73875ca">2.5.4. Simulation</a></li>
+<li><a href="#orgff2007b">2.5.1. Control Architecture</a></li>
+<li><a href="#orgd009ff3">2.5.2. Plant Analysis</a></li>
+<li><a href="#org025c468">2.5.3. Controller Design</a></li>
+<li><a href="#org948e147">2.5.4. Simulation</a></li>
 </ul>
 </li>
 <li><a href="#orgad7bc54">2.6. Diagonal Control - Steady State Decoupling</a>
 <ul>
-<li><a href="#orgdeee29c">2.6.1. Control Architecture</a></li>
-<li><a href="#org4c98210">2.6.2. Plant Analysis</a></li>
-<li><a href="#orgbf66d4c">2.6.3. Controller Design</a></li>
+<li><a href="#org068c66b">2.6.1. Control Architecture</a></li>
+<li><a href="#org114dd11">2.6.2. Plant Analysis</a></li>
+<li><a href="#orge08ccd6">2.6.3. Controller Design</a></li>
 </ul>
 </li>
 <li><a href="#orga2eadeb">2.7. Comparison</a>
@@ -292,29 +80,29 @@
 <li><a href="#org23ae479">2.7.2. Simulation Results</a></li>
 </ul>
 </li>
-<li><a href="#orgd2764a2">2.8. Conclusion</a></li>
+<li><a href="#org06dbde5">2.8. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org4b8c360">3. Hybrid Control Architecture - HAC-LAC with relative DVF</a>
 <ul>
-<li><a href="#org539565c">3.1. Control Schematic</a></li>
-<li><a href="#orga9bdd4e">3.2. Initialize the Stewart platform</a></li>
+<li><a href="#org6cef32b">3.1. Control Schematic</a></li>
+<li><a href="#org7b3baad">3.2. Initialize the Stewart platform</a></li>
 <li><a href="#org3274a98">3.3. First Control Loop - \(\bm{K}_\mathcal{L}\)</a>
 <ul>
-<li><a href="#orgd69b37c">3.3.1. Identification</a></li>
-<li><a href="#org2a634da">3.3.2. Obtained Plant</a></li>
-<li><a href="#org23695fa">3.3.3. Controller Design</a></li>
+<li><a href="#org6886bdb">3.3.1. Identification</a></li>
+<li><a href="#org0130d27">3.3.2. Obtained Plant</a></li>
+<li><a href="#org7f5301a">3.3.3. Controller Design</a></li>
 </ul>
 </li>
 <li><a href="#org8440c0b">3.4. Second Control Loop - \(\bm{K}_\mathcal{X}\)</a>
 <ul>
-<li><a href="#orgeec6c35">3.4.1. Identification</a></li>
-<li><a href="#org57836ee">3.4.2. Obtained Plant</a></li>
-<li><a href="#orgcebb0d5">3.4.3. Controller Design</a></li>
+<li><a href="#org8ca6b32">3.4.1. Identification</a></li>
+<li><a href="#org5235b22">3.4.2. Obtained Plant</a></li>
+<li><a href="#orge58f568">3.4.3. Controller Design</a></li>
 </ul>
 </li>
 <li><a href="#org74d3dcd">3.5. Simulations</a></li>
-<li><a href="#org771bea0">3.6. Conclusion</a></li>
+<li><a href="#org9ce7b75">3.6. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org798d54f">4. Comparison of all the methods</a></li>
@@ -351,8 +139,8 @@ The control configuration are compare in section <a href="#orgb3403cb">4</a>.
 <a id="orgea7df6c"></a>
 </p>
 </div>
-<div id="outline-container-orgaf4f125" class="outline-3">
-<h3 id="orgaf4f125"><span class="section-number-3">1.1</span> Control Schematic</h3>
+<div id="outline-container-orgf40962b" class="outline-3">
+<h3 id="orgf40962b"><span class="section-number-3">1.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The control architecture is shown in Figure <a href="#org897886b">1</a>.
@@ -375,31 +163,31 @@ Then, a diagonal (decentralized) controller \(\bm{K}_\mathcal{L}\) is used such 
 </div>
 </div>
 
-<div id="outline-container-org5efa5dc" class="outline-3">
-<h3 id="org5efa5dc"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orgb67ba8a" class="outline-3">
+<h3 id="orgb67ba8a"><span class="section-number-3">1.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-comment">% Stewart Platform</span>
+<pre class="src src-matlab">% Stewart Platform
 stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
 
-<span class="org-comment">% Ground and Payload</span>
-ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
-payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+% Ground and Payload
+ground = initializeGround('type', 'rigid');
+payload = initializePayload('type', 'none');
 
-<span class="org-comment">% Controller</span>
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+% Controller
+controller = initializeController('type', 'open-loop');
 
-<span class="org-comment">% Disturbances and References</span>
+% Disturbances and References
 disturbances = initializeDisturbances();
 references = initializeReferences(stewart);
 </pre>
@@ -407,32 +195,32 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-orgf2a4e09" class="outline-3">
-<h3 id="orgf2a4e09"><span class="section-number-3">1.3</span> Identification of the plant</h3>
+<div id="outline-container-org869bd42" class="outline-3">
+<h3 id="org869bd42"><span class="section-number-3">1.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{\mathcal{L}}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'L2'</span>, <span class="org-string">'L3'</span>, <span class="org-string">'L4'</span>, <span class="org-string">'L5'</span>, <span class="org-string">'L6'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org346704a" class="outline-3">
-<h3 id="org346704a"><span class="section-number-3">1.4</span> Plant Analysis</h3>
+<div id="outline-container-org297755f" class="outline-3">
+<h3 id="org297755f"><span class="section-number-3">1.4</span> Plant Analysis</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The diagonal and off-diagonal terms of the plant are shown in Figure <a href="#org50fb6db">2</a>.
@@ -452,8 +240,8 @@ We see that the plant is decoupled at low frequency which indicate that decentra
 </div>
 </div>
 
-<div id="outline-container-org303d728" class="outline-3">
-<h3 id="org303d728"><span class="section-number-3">1.5</span> Controller Design</h3>
+<div id="outline-container-org2d0848b" class="outline-3">
+<h3 id="org2d0848b"><span class="section-number-3">1.5</span> Controller Design</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 The controller consists of:
@@ -468,8 +256,8 @@ The obtained loop gains corresponding to the diagonal elements are shown in Figu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>30;
-Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(G, wc)))) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> 1<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>3<span class="org-type">/</span>wc);
+<pre class="src src-matlab">wc = 2*pi*30;
+Kl = diag(1./diag(abs(freqresp(G, wc)))) * wc/s * 1/(1 + s/3/wc);
 </pre>
 </div>
 
@@ -482,22 +270,22 @@ Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(G, wc)))) <span cla
 </div>
 </div>
 
-<div id="outline-container-orgac9e2fb" class="outline-3">
-<h3 id="orgac9e2fb"><span class="section-number-3">1.6</span> Simulation</h3>
+<div id="outline-container-orgfa88e97" class="outline-3">
+<h3 id="orgfa88e97"><span class="section-number-3">1.6</span> Simulation</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 Let&rsquo;s define some reference path to follow.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">t = [0<span class="org-type">:</span>1e<span class="org-type">-</span>4<span class="org-type">:</span>10];
+<pre class="src src-matlab">t = [0:1e-4:10];
 
 r = zeros(6, length(t));
 
-r(1, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>sin(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(2, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>cos(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(3, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t;
+r(1, :) = 1e-3.*t.*sin(2*pi*t);
+r(2, :) = 1e-3.*t.*cos(2*pi*t);
+r(3, :) = 1e-3.*t;
 
-references = initializeReferences(stewart, <span class="org-string">'t'</span>, t, <span class="org-string">'r'</span>, r);
+references = initializeReferences(stewart, 't', t, 'r', r);
 </pre>
 </div>
 
@@ -506,11 +294,11 @@ The reference path is shown in Figure <a href="#orga6384f7">4</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
-plot3(squeeze(references.r.Data(1,1,<span class="org-type">:</span>)), squeeze(references.r.Data(2,1,<span class="org-type">:</span>)), squeeze(references.r.Data(3,1,<span class="org-type">:</span>)));
-xlabel(<span class="org-string">'X [m]'</span>);
-ylabel(<span class="org-string">'Y [m]'</span>);
-zlabel(<span class="org-string">'Z [m]'</span>);
+<pre class="src src-matlab">figure;
+plot3(squeeze(references.r.Data(1,1,:)), squeeze(references.r.Data(2,1,:)), squeeze(references.r.Data(3,1,:)));
+xlabel('X [m]');
+ylabel('Y [m]');
+zlabel('Z [m]');
 </pre>
 </div>
 
@@ -522,19 +310,19 @@ zlabel(<span class="org-string">'Z [m]'</span>);
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'ref-track-L'</span>);
+<pre class="src src-matlab">controller = initializeController('type', 'ref-track-L');
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-string">'stewart_platform_model'</span>, <span class="org-string">'StopTime'</span>, <span class="org-string">'10'</span>)
-<span class="org-matlab-simulink-keyword">sim</span>(<span class="org-string">'stewart_platform_model'</span>);
+<pre class="src src-matlab">set_param('stewart_platform_model', 'StopTime', '10')
+sim('stewart_platform_model');
 simout_D = simout;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="org-string">'simout_D'</span>, <span class="org-string">'-append'</span>);
+<pre class="src src-matlab">save('./mat/control_tracking.mat', 'simout_D', '-append');
 </pre>
 </div>
 </div>
@@ -548,14 +336,14 @@ The reference path and the position of the mobile platform are shown in Figure <
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-type">figure</span>;
+<pre class="src src-matlab">figure;
 hold on;
-plot3(simout_D.x.Xr.Data(<span class="org-type">:</span>, 1), simout_D.x.Xr.Data(<span class="org-type">:</span>, 2), simout_D.x.Xr.Data(<span class="org-type">:</span>, 3), <span class="org-string">'k-'</span>);
-plot3(squeeze(references.r.Data(1,1,<span class="org-type">:</span>)), squeeze(references.r.Data(2,1,<span class="org-type">:</span>)), squeeze(references.r.Data(3,1,<span class="org-type">:</span>)), <span class="org-string">'--'</span>);
+plot3(simout_D.x.Xr.Data(:, 1), simout_D.x.Xr.Data(:, 2), simout_D.x.Xr.Data(:, 3), 'k-');
+plot3(squeeze(references.r.Data(1,1,:)), squeeze(references.r.Data(2,1,:)), squeeze(references.r.Data(3,1,:)), '--');
 hold off;
-xlabel(<span class="org-string">'X [m]'</span>); ylabel(<span class="org-string">'Y [m]'</span>); zlabel(<span class="org-string">'Z [m]'</span>);
+xlabel('X [m]'); ylabel('Y [m]'); zlabel('Z [m]');
 view([1,1,1])
-zlim([0, <span class="org-constant">inf</span>]);
+zlim([0, inf]);
 </pre>
 </div>
 
@@ -582,8 +370,8 @@ zlim([0, <span class="org-constant">inf</span>]);
 </div>
 </div>
 
-<div id="outline-container-org8f3d960" class="outline-3">
-<h3 id="org8f3d960"><span class="section-number-3">1.8</span> Conclusion</h3>
+<div id="outline-container-orga4f734e" class="outline-3">
+<h3 id="orga4f734e"><span class="section-number-3">1.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 Such control architecture is easy to implement and give good results.
@@ -604,8 +392,8 @@ However, as \(\mathcal{X}\) is not directly measured, it is possible that import
 <a id="org48604d1"></a>
 </p>
 </div>
-<div id="outline-container-org373826d" class="outline-3">
-<h3 id="org373826d"><span class="section-number-3">2.1</span> Control Schematic</h3>
+<div id="outline-container-orgc6622fd" class="outline-3">
+<h3 id="orgc6622fd"><span class="section-number-3">2.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 The centralized controller takes the position error \(\bm{\epsilon}_\mathcal{X}\) as an inputs and generate actuator forces \(\bm{\tau}\) (see Figure <a href="#org97ec686">8</a>).
@@ -643,31 +431,31 @@ It is indeed a more complex computation explained in section <a href="#org5f6154
 </div>
 </div>
 
-<div id="outline-container-orgdb540d4" class="outline-3">
-<h3 id="orgdb540d4"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-orgb2ce884" class="outline-3">
+<h3 id="orgb2ce884"><span class="section-number-3">2.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-comment">% Stewart Platform</span>
+<pre class="src src-matlab">% Stewart Platform
 stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
 
-<span class="org-comment">% Ground and Payload</span>
-ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
-payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+% Ground and Payload
+ground = initializeGround('type', 'rigid');
+payload = initializePayload('type', 'none');
 
-<span class="org-comment">% Controller</span>
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+% Controller
+controller = initializeController('type', 'open-loop');
 
-<span class="org-comment">% Disturbances and References</span>
+% Disturbances and References
 disturbances = initializeDisturbances();
 references = initializeReferences(stewart);
 </pre>
@@ -675,25 +463,25 @@ references = initializeReferences(stewart);
 </div>
 </div>
 
-<div id="outline-container-org7e2bbea" class="outline-3">
-<h3 id="org7e2bbea"><span class="section-number-3">2.3</span> Identification of the plant</h3>
+<div id="outline-container-orgd3f8474" class="outline-3">
+<h3 id="orgd3f8474"><span class="section-number-3">2.3</span> Identification of the plant</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{\mathcal{X}}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
 </pre>
 </div>
 </div>
@@ -706,8 +494,8 @@ G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'
 <a id="org31fd942"></a>
 </p>
 </div>
-<div id="outline-container-org42dc407" class="outline-4">
-<h4 id="org42dc407"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
+<div id="outline-container-org4a4490e" class="outline-4">
+<h4 id="org4a4490e"><span class="section-number-4">2.4.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 The pose error \(\bm{\epsilon}_\mathcal{X}\) is first converted in the frame of the leg by using the Jacobian matrix.
@@ -728,16 +516,16 @@ Note here that the transformation from the pose error \(\bm{\epsilon}_\mathcal{X
 </div>
 </div>
 
-<div id="outline-container-org33774e9" class="outline-4">
-<h4 id="org33774e9"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
+<div id="outline-container-org8aeb07e" class="outline-4">
+<h4 id="org8aeb07e"><span class="section-number-4">2.4.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#orgb1f5ad2">9</a> to obtain a more diagonal plant.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Gl = stewart.kinematics.J<span class="org-type">*</span>G;
-Gl.OutputName  = {<span class="org-string">'D1'</span>, <span class="org-string">'D2'</span>, <span class="org-string">'D3'</span>, <span class="org-string">'D4'</span>, <span class="org-string">'D5'</span>, <span class="org-string">'D6'</span>};
+<pre class="src src-matlab">Gl = stewart.kinematics.J*G;
+Gl.OutputName  = {'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
 </pre>
 </div>
 
@@ -751,7 +539,7 @@ This will simplify the design of the controller as all the elements of the diago
 <div id="org6c8d99f" class="figure">
 <p><img src="figs/plant_centralized_L.png" alt="plant_centralized_L.png" />
 </p>
-<p><span class="figure-number">Figure 10: </span>Diagonal and off-diagonal elements of the plant \(\bm{K}\bm{G}\) (<a href="./figs/plant_centralized_L.png">png</a>, <a href="./figs/plant_centralized_L.pdf">pdf</a>)</p>
+<p><span class="figure-number">Figure 10: </span>Diagonal and off-diagonal elements of the plant \(\bm{J}\bm{G}\) (<a href="./figs/plant_centralized_L.png">png</a>, <a href="./figs/plant_centralized_L.pdf">pdf</a>)</p>
 </div>
 
 <p>
@@ -769,8 +557,8 @@ Thus \(J \cdot G(\omega = 0) = J \cdot \frac{\delta\bm{\mathcal{X}}}{\delta\bm{\
 </div>
 </div>
 
-<div id="outline-container-orgc7ddab1" class="outline-4">
-<h4 id="orgc7ddab1"><span class="section-number-4">2.4.3</span> Controller Design</h4>
+<div id="outline-container-orgba1c283" class="outline-4">
+<h4 id="orgba1c283"><span class="section-number-4">2.4.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 The controller consists of:
@@ -785,8 +573,8 @@ The obtained loop gains corresponding to the diagonal elements are shown in Figu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>30;
-Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(Gl, wc)))) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> 1<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>3<span class="org-type">/</span>wc);
+<pre class="src src-matlab">wc = 2*pi*30;
+Kl = diag(1./diag(abs(freqresp(Gl, wc)))) * wc/s * 1/(1 + s/3/wc);
 </pre>
 </div>
 
@@ -801,33 +589,33 @@ Kl = diag(1<span class="org-type">./</span>diag(abs(freqresp(Gl, wc)))) <span cl
 The controller \(\bm{K} = \bm{K}_\mathcal{L} \bm{J}\) is computed.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">K = Kl<span class="org-type">*</span>stewart.kinematics.J;
+<pre class="src src-matlab">K = Kl*stewart.kinematics.J;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3021cf3" class="outline-4">
-<h4 id="org3021cf3"><span class="section-number-4">2.4.4</span> Simulation</h4>
+<div id="outline-container-org6e37e44" class="outline-4">
+<h4 id="org6e37e44"><span class="section-number-4">2.4.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 We specify the reference path to follow.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">t = [0<span class="org-type">:</span>1e<span class="org-type">-</span>4<span class="org-type">:</span>10];
+<pre class="src src-matlab">t = [0:1e-4:10];
 
 r = zeros(6, length(t));
 
-r(1, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>sin(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(2, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>cos(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(3, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t;
+r(1, :) = 1e-3.*t.*sin(2*pi*t);
+r(2, :) = 1e-3.*t.*cos(2*pi*t);
+r(3, :) = 1e-3.*t;
 
-references = initializeReferences(stewart, <span class="org-string">'t'</span>, t, <span class="org-string">'r'</span>, r);
+references = initializeReferences(stewart, 't', t, 'r', r);
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'ref-track-X'</span>);
+<pre class="src src-matlab">controller = initializeController('type', 'ref-track-X');
 </pre>
 </div>
 
@@ -835,10 +623,10 @@ references = initializeReferences(stewart, <span class="org-string">'t'</span>, 
 We run the simulation and we save the results.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-string">'stewart_platform_model'</span>, <span class="org-string">'StopTime'</span>, <span class="org-string">'10'</span>)
-<span class="org-matlab-simulink-keyword">sim</span>(<span class="org-string">'stewart_platform_model'</span>)
+<pre class="src src-matlab">set_param('stewart_platform_model', 'StopTime', '10')
+sim('stewart_platform_model')
 simout_L = simout;
-save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="org-string">'simout_L'</span>, <span class="org-string">'-append'</span>);
+save('./mat/control_tracking.mat', 'simout_L', '-append');
 </pre>
 </div>
 </div>
@@ -852,8 +640,8 @@ save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="
 <a id="orgfd201c3"></a>
 </p>
 </div>
-<div id="outline-container-org185190b" class="outline-4">
-<h4 id="org185190b"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
+<div id="outline-container-orgff2007b" class="outline-4">
+<h4 id="orgff2007b"><span class="section-number-4">2.5.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 A diagonal controller \(\bm{K}_\mathcal{X}\) take the pose error \(\bm{\epsilon}_\mathcal{X}\) and generate cartesian forces \(\bm{\mathcal{F}}\) that are then converted to actuators forces using the Jacobian as shown in Figure e <a href="#org6b158db">12</a>.
@@ -872,16 +660,16 @@ The final implemented controller is \(\bm{K} = \bm{J}^{-T} \cdot \bm{K}_\mathcal
 </div>
 </div>
 
-<div id="outline-container-orgac4e8f3" class="outline-4">
-<h4 id="orgac4e8f3"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
+<div id="outline-container-orgd009ff3" class="outline-4">
+<h4 id="orgd009ff3"><span class="section-number-4">2.5.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 We now multiply the plant by the Jacobian matrix as shown in Figure <a href="#org6b158db">12</a> to obtain a more diagonal plant.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Gx = G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>);
-Gx.InputName  = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+<pre class="src src-matlab">Gx = G*inv(stewart.kinematics.J');
+Gx.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
 </pre>
 </div>
 
@@ -988,8 +776,8 @@ This control architecture can also give a dynamically decoupled plant if the Cen
 </div>
 </div>
 
-<div id="outline-container-org87c1a48" class="outline-4">
-<h4 id="org87c1a48"><span class="section-number-4">2.5.3</span> Controller Design</h4>
+<div id="outline-container-org025c468" class="outline-4">
+<h4 id="org025c468"><span class="section-number-4">2.5.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-5-3">
 <p>
 The controller consists of:
@@ -1004,8 +792,8 @@ The obtained loop gains corresponding to the diagonal elements are shown in Figu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>30;
-Kx = diag(1<span class="org-type">./</span>diag(abs(freqresp(Gx, wc)))) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> 1<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>3<span class="org-type">/</span>wc);
+<pre class="src src-matlab">wc = 2*pi*30;
+Kx = diag(1./diag(abs(freqresp(Gx, wc)))) * wc/s * 1/(1 + s/3/wc);
 </pre>
 </div>
 
@@ -1020,33 +808,33 @@ Kx = diag(1<span class="org-type">./</span>diag(abs(freqresp(Gx, wc)))) <span cl
 The controller \(\bm{K} = \bm{J}^{-T} \bm{K}_\mathcal{X}\) is computed.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">K = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class="org-type">*</span>Kx;
+<pre class="src src-matlab">K = inv(stewart.kinematics.J')*Kx;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org73875ca" class="outline-4">
-<h4 id="org73875ca"><span class="section-number-4">2.5.4</span> Simulation</h4>
+<div id="outline-container-org948e147" class="outline-4">
+<h4 id="org948e147"><span class="section-number-4">2.5.4</span> Simulation</h4>
 <div class="outline-text-4" id="text-2-5-4">
 <p>
 We specify the reference path to follow.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">t = [0<span class="org-type">:</span>1e<span class="org-type">-</span>4<span class="org-type">:</span>10];
+<pre class="src src-matlab">t = [0:1e-4:10];
 
 r = zeros(6, length(t));
 
-r(1, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>sin(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(2, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>cos(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(3, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t;
+r(1, :) = 1e-3.*t.*sin(2*pi*t);
+r(2, :) = 1e-3.*t.*cos(2*pi*t);
+r(3, :) = 1e-3.*t;
 
-references = initializeReferences(stewart, <span class="org-string">'t'</span>, t, <span class="org-string">'r'</span>, r);
+references = initializeReferences(stewart, 't', t, 'r', r);
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'ref-track-X'</span>);
+<pre class="src src-matlab">controller = initializeController('type', 'ref-track-X');
 </pre>
 </div>
 
@@ -1054,10 +842,10 @@ references = initializeReferences(stewart, <span class="org-string">'t'</span>, 
 We run the simulation and we save the results.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-string">'stewart_platform_model'</span>, <span class="org-string">'StopTime'</span>, <span class="org-string">'10'</span>)
-<span class="org-matlab-simulink-keyword">sim</span>(<span class="org-string">'stewart_platform_model'</span>)
+<pre class="src src-matlab">set_param('stewart_platform_model', 'StopTime', '10')
+sim('stewart_platform_model')
 simout_X = simout;
-save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="org-string">'simout_X'</span>, <span class="org-string">'-append'</span>);
+save('./mat/control_tracking.mat', 'simout_X', '-append');
 </pre>
 </div>
 </div>
@@ -1071,8 +859,8 @@ save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="
 <a id="org789ba4a"></a>
 </p>
 </div>
-<div id="outline-container-orgdeee29c" class="outline-4">
-<h4 id="orgdeee29c"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
+<div id="outline-container-org068c66b" class="outline-4">
+<h4 id="org068c66b"><span class="section-number-4">2.6.1</span> Control Architecture</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 The plant \(\bm{G}\) is pre-multiply by \(\bm{G}^{-1}(\omega = 0)\) such that the &ldquo;shaped plant&rdquo; \(\bm{G}_0 = \bm{G} \bm{G}^{-1}(\omega = 0)\) is diagonal at low frequency.
@@ -1095,8 +883,8 @@ The control architecture is shown in Figure <a href="#orgb226e44">15</a>.
 </div>
 </div>
 
-<div id="outline-container-org4c98210" class="outline-4">
-<h4 id="org4c98210"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
+<div id="outline-container-org114dd11" class="outline-4">
+<h4 id="org114dd11"><span class="section-number-4">2.6.2</span> Plant Analysis</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 The plant is pre-multiplied by \(\bm{G}^{-1}(\omega = 0)\).
@@ -1104,7 +892,7 @@ The diagonal and off-diagonal elements of the shaped plant are shown in Figure <
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G0 = G<span class="org-type">*</span>inv(freqresp(G, 0));
+<pre class="src src-matlab">G0 = G*inv(freqresp(G, 0));
 </pre>
 </div>
 
@@ -1117,8 +905,8 @@ The diagonal and off-diagonal elements of the shaped plant are shown in Figure <
 </div>
 </div>
 
-<div id="outline-container-orgbf66d4c" class="outline-4">
-<h4 id="orgbf66d4c"><span class="section-number-4">2.6.3</span> Controller Design</h4>
+<div id="outline-container-orge08ccd6" class="outline-4">
+<h4 id="orge08ccd6"><span class="section-number-4">2.6.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-2-6-3">
 <p>
 We have that:
@@ -1184,8 +972,8 @@ This error is much lower when using the diagonal control in the frame of the leg
 </div>
 </div>
 
-<div id="outline-container-orgd2764a2" class="outline-3">
-<h3 id="orgd2764a2"><span class="section-number-3">2.8</span> Conclusion</h3>
+<div id="outline-container-org06dbde5" class="outline-3">
+<h3 id="org06dbde5"><span class="section-number-3">2.8</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Both control architecture gives similar results even tough the control in the Leg&rsquo;s frame gives slightly better results.
@@ -1268,8 +1056,8 @@ Thus, this method should be quite robust against parameter variation (e.g. the p
 <a id="org14e3e5f"></a>
 </p>
 </div>
-<div id="outline-container-org539565c" class="outline-3">
-<h3 id="org539565c"><span class="section-number-3">3.1</span> Control Schematic</h3>
+<div id="outline-container-org6cef32b" class="outline-3">
+<h3 id="org6cef32b"><span class="section-number-3">3.1</span> Control Schematic</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Let&rsquo;s consider the control schematic shown in Figure <a href="#org3a1b1db">19</a>.
@@ -1310,31 +1098,31 @@ This second loop is responsible for the reference tracking.
 </div>
 </div>
 
-<div id="outline-container-orga9bdd4e" class="outline-3">
-<h3 id="orga9bdd4e"><span class="section-number-3">3.2</span> Initialize the Stewart platform</h3>
+<div id="outline-container-org7b3baad" class="outline-3">
+<h3 id="org7b3baad"><span class="section-number-3">3.2</span> Initialize the Stewart platform</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-comment">% Stewart Platform</span>
+<pre class="src src-matlab">% Stewart Platform
 stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'accelerometer'</span>, <span class="org-string">'freq'</span>, 5e3);
+stewart = initializeInertialSensor(stewart, 'type', 'accelerometer', 'freq', 5e3);
 
-<span class="org-comment">% Ground and Payload</span>
-ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'rigid'</span>);
-payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+% Ground and Payload
+ground = initializeGround('type', 'rigid');
+payload = initializePayload('type', 'none');
 
-<span class="org-comment">% Controller</span>
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+% Controller
+controller = initializeController('type', 'open-loop');
 
-<span class="org-comment">% Disturbances and References</span>
+% Disturbances and References
 disturbances = initializeDisturbances();
 references = initializeReferences(stewart);
 </pre>
@@ -1346,32 +1134,32 @@ references = initializeReferences(stewart);
 <h3 id="org3274a98"><span class="section-number-3">3.3</span> First Control Loop - \(\bm{K}_\mathcal{L}\)</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-orgd69b37c" class="outline-4">
-<h4 id="orgd69b37c"><span class="section-number-4">3.3.1</span> Identification</h4>
+<div id="outline-container-org6886bdb" class="outline-4">
+<h4 id="org6886bdb"><span class="section-number-4">3.3.1</span> Identification</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 Let&rsquo;s identify the transfer function from \(\bm{\tau}\) to \(\bm{L}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],        1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Stewart Platform'</span>],  1, <span class="org-string">'openoutput'</span>, [], <span class="org-string">'dLm'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 Gl = linearize(mdl, io);
-Gl.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-Gl.OutputName = {<span class="org-string">'L1'</span>, <span class="org-string">'L2'</span>, <span class="org-string">'L3'</span>, <span class="org-string">'L4'</span>, <span class="org-string">'L5'</span>, <span class="org-string">'L6'</span>};
+Gl.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+Gl.OutputName = {'L1', 'L2', 'L3', 'L4', 'L5', 'L6'};
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2a634da" class="outline-4">
-<h4 id="org2a634da"><span class="section-number-4">3.3.2</span> Obtained Plant</h4>
+<div id="outline-container-org0130d27" class="outline-4">
+<h4 id="org0130d27"><span class="section-number-4">3.3.2</span> Obtained Plant</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 The obtained plant is shown in Figure <a href="#orgf627577">20</a>.
@@ -1386,8 +1174,8 @@ The obtained plant is shown in Figure <a href="#orgf627577">20</a>.
 </div>
 </div>
 
-<div id="outline-container-org23695fa" class="outline-4">
-<h4 id="org23695fa"><span class="section-number-4">3.3.3</span> Controller Design</h4>
+<div id="outline-container-org7f5301a" class="outline-4">
+<h4 id="org7f5301a"><span class="section-number-4">3.3.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-3-3-3">
 <p>
 We apply a decentralized (diagonal) direct velocity feedback.
@@ -1401,7 +1189,7 @@ The obtain loop gain is shown in Figure <a href="#orgb74befe">21</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Kl = 1e4 <span class="org-type">*</span> s <span class="org-type">/</span> (1 <span class="org-type">+</span> s<span class="org-type">/</span>2<span class="org-type">/</span><span class="org-constant">pi</span><span class="org-type">/</span>1e4) <span class="org-type">*</span> eye(6);
+<pre class="src src-matlab">Kl = 1e4 * s / (1 + s/2/pi/1e4) * eye(6);
 </pre>
 </div>
 
@@ -1419,43 +1207,43 @@ The obtain loop gain is shown in Figure <a href="#orgb74befe">21</a>.
 <h3 id="org8440c0b"><span class="section-number-3">3.4</span> Second Control Loop - \(\bm{K}_\mathcal{X}\)</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
-<div id="outline-container-orgeec6c35" class="outline-4">
-<h4 id="orgeec6c35"><span class="section-number-4">3.4.1</span> Identification</h4>
+<div id="outline-container-org8ca6b32" class="outline-4">
+<h4 id="org8ca6b32"><span class="section-number-4">3.4.1</span> Identification</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <div class="org-src-container">
 <pre class="src src-matlab">Kx = tf(zeros(6));
 
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'ref-track-hac-dvf'</span>);
+controller = initializeController('type', 'ref-track-hac-dvf');
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Relative Displacement Outputs [m]</span>
+io(io_i) = linio([mdl, '/Controller'],              1, 'input');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [m]
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>, <span class="org-string">'Dz'</span>, <span class="org-string">'Rx'</span>, <span class="org-string">'Ry'</span>, <span class="org-string">'Rz'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org57836ee" class="outline-4">
-<h4 id="org57836ee"><span class="section-number-4">3.4.2</span> Obtained Plant</h4>
+<div id="outline-container-org5235b22" class="outline-4">
+<h4 id="org5235b22"><span class="section-number-4">3.4.2</span> Obtained Plant</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <p>
 We use the Jacobian matrix to apply forces in the cartesian frame.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Gx = G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>);
-Gx.InputName  = {<span class="org-string">'Fx'</span>, <span class="org-string">'Fy'</span>, <span class="org-string">'Fz'</span>, <span class="org-string">'Mx'</span>, <span class="org-string">'My'</span>, <span class="org-string">'Mz'</span>};
+<pre class="src src-matlab">Gx = G*inv(stewart.kinematics.J');
+Gx.InputName  = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
 </pre>
 </div>
 
@@ -1471,8 +1259,8 @@ The obtained plant is shown in Figure <a href="#org2517e3d">22</a>.
 </div>
 </div>
 
-<div id="outline-container-orgcebb0d5" class="outline-4">
-<h4 id="orgcebb0d5"><span class="section-number-4">3.4.3</span> Controller Design</h4>
+<div id="outline-container-orge58f568" class="outline-4">
+<h4 id="orge58f568"><span class="section-number-4">3.4.3</span> Controller Design</h4>
 <div class="outline-text-4" id="text-3-4-3">
 <p>
 The controller consists of:
@@ -1485,14 +1273,14 @@ The controller consists of:
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-matlab">wc = 2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>200; <span class="org-comment">% Bandwidth Bandwidth [rad/s]</span>
+<pre class="src src-matlab">wc = 2*pi*200; % Bandwidth Bandwidth [rad/s]
 
-h = 3; <span class="org-comment">% Lead parameter</span>
+h = 3; % Lead parameter
 
-Kx = (1<span class="org-type">/</span>h) <span class="org-type">*</span> (1 <span class="org-type">+</span> s<span class="org-type">/</span>wc<span class="org-type">*</span>h)<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>wc<span class="org-type">/</span>h) <span class="org-type">*</span> wc<span class="org-type">/</span>s <span class="org-type">*</span> ((s<span class="org-type">/</span>wc<span class="org-type">*</span>2 <span class="org-type">+</span> 1)<span class="org-type">/</span>(s<span class="org-type">/</span>wc<span class="org-type">*</span>2)) <span class="org-type">*</span> (1<span class="org-type">/</span>(1 <span class="org-type">+</span> s<span class="org-type">/</span>wc<span class="org-type">/</span>3));
+Kx = (1/h) * (1 + s/wc*h)/(1 + s/wc/h) * wc/s * ((s/wc*2 + 1)/(s/wc*2)) * (1/(1 + s/wc/3));
 
-<span class="org-comment">% Normalization of the gain of have a loop gain of 1 at frequency wc</span>
-Kx = Kx<span class="org-type">.*</span>diag(1<span class="org-type">./</span>diag(abs(freqresp(Gx<span class="org-type">*</span>Kx, wc))));
+% Normalization of the gain of have a loop gain of 1 at frequency wc
+Kx = Kx.*diag(1./diag(abs(freqresp(Gx*Kx, wc))));
 </pre>
 </div>
 
@@ -1507,7 +1295,7 @@ Kx = Kx<span class="org-type">.*</span>diag(1<span class="org-type">./</span>dia
 Then we include the Jacobian in the controller matrix.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Kx = inv(stewart.kinematics.J<span class="org-type">'</span>)<span class="org-type">*</span>Kx;
+<pre class="src src-matlab">Kx = inv(stewart.kinematics.J')*Kx;
 </pre>
 </div>
 </div>
@@ -1521,15 +1309,15 @@ Then we include the Jacobian in the controller matrix.
 We specify the reference path to follow.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">t = [0<span class="org-type">:</span>1e<span class="org-type">-</span>4<span class="org-type">:</span>10];
+<pre class="src src-matlab">t = [0:1e-4:10];
 
 r = zeros(6, length(t));
 
-r(1, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>sin(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(2, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t<span class="org-type">.*</span>cos(2<span class="org-type">*</span><span class="org-constant">pi</span><span class="org-type">*</span>t);
-r(3, <span class="org-type">:</span>) = 1e<span class="org-type">-</span>3<span class="org-type">.*</span>t;
+r(1, :) = 1e-3.*t.*sin(2*pi*t);
+r(2, :) = 1e-3.*t.*cos(2*pi*t);
+r(3, :) = 1e-3.*t;
 
-references = initializeReferences(stewart, <span class="org-string">'t'</span>, t, <span class="org-string">'r'</span>, r);
+references = initializeReferences(stewart, 't', t, 'r', r);
 </pre>
 </div>
 
@@ -1537,10 +1325,10 @@ references = initializeReferences(stewart, <span class="org-string">'t'</span>, 
 We run the simulation and we save the results.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-simulink-keyword">set_param</span>(<span class="org-string">'stewart_platform_model'</span>, <span class="org-string">'StopTime'</span>, <span class="org-string">'10'</span>)
-<span class="org-matlab-simulink-keyword">sim</span>(<span class="org-string">'stewart_platform_model'</span>)
+<pre class="src src-matlab">set_param('stewart_platform_model', 'StopTime', '10')
+sim('stewart_platform_model')
 simout_H = simout;
-save(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="org-string">'simout_H'</span>, <span class="org-string">'-append'</span>);
+save('./mat/control_tracking.mat', 'simout_H', '-append');
 </pre>
 </div>
 
@@ -1557,8 +1345,8 @@ The obtained position error is shown in Figure <a href="#org19456cf">24</a>.
 </div>
 </div>
 
-<div id="outline-container-org771bea0" class="outline-3">
-<h3 id="org771bea0"><span class="section-number-3">3.6</span> Conclusion</h3>
+<div id="outline-container-org9ce7b75" class="outline-3">
+<h3 id="org9ce7b75"><span class="section-number-3">3.6</span> Conclusion</h3>
 </div>
 </div>
 
@@ -1573,7 +1361,7 @@ The obtained position error is shown in Figure <a href="#org19456cf">24</a>.
 Let&rsquo;s load the simulation results and compare them in Figure <a href="#org6fa53fa">25</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">load(<span class="org-string">'./mat/control_tracking.mat'</span>, <span class="org-string">'simout_D'</span>, <span class="org-string">'simout_L'</span>, <span class="org-string">'simout_X'</span>, <span class="org-string">'simout_H'</span>);
+<pre class="src src-matlab">load('./mat/control_tracking.mat', 'simout_D', 'simout_L', 'simout_X', 'simout_H');
 </pre>
 </div>
 
@@ -1613,7 +1401,7 @@ Reference Position with respect to fixed frame {W}: \({}^WT_R\)
 <pre class="src src-matlab">Dxr = 0;
 Dyr = 0;
 Dzr = 0.1;
-Rxr = <span class="org-constant">pi</span>;
+Rxr = pi;
 Ryr = 0;
 Rzr = 0;
 </pre>
@@ -1626,7 +1414,7 @@ Measured Position with respect to fixed frame {W}: \({}^WT_M\)
 <pre class="src src-matlab">Dxm = 0;
 Dym = 0;
 Dzm = 0;
-Rxm = <span class="org-constant">pi</span>;
+Rxm = pi;
 Rym = 0;
 Rzm = 0;
 </pre>
@@ -1637,19 +1425,19 @@ We measure the position and orientation (pose) of the element represented by the
 Thus we can compute the Homogeneous transformation matrix \({}^WT_M\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Measured Pose</span></span>
+<pre class="src src-matlab">%% Measured Pose
 WTm = zeros(4,4);
 
-WTm(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = [cos(Rzm) <span class="org-type">-</span>sin(Rzm) 0;
+WTm(1:3, 1:3) = [cos(Rzm) -sin(Rzm) 0;
      sin(Rzm)  cos(Rzm) 0;
-     0        0         1] <span class="org-type">*</span> ...
+     0        0         1] * ...
     [cos(Rym)  0        sin(Rym);
      0        1        0;
-     <span class="org-type">-</span>sin(Rym)  0        cos(Rym)] <span class="org-type">*</span> ...
+     -sin(Rym)  0        cos(Rym)] * ...
     [1        0        0;
-     0        cos(Rxm) <span class="org-type">-</span>sin(Rxm);
+     0        cos(Rxm) -sin(Rxm);
      0        sin(Rxm)  cos(Rxm)];
-WTm(1<span class="org-type">:</span>4, 4) = [Dxm ; Dym ; Dzm; 1];
+WTm(1:4, 4) = [Dxm ; Dym ; Dzm; 1];
 </pre>
 </div>
 
@@ -1657,19 +1445,19 @@ WTm(1<span class="org-type">:</span>4, 4) = [Dxm ; Dym ; Dzm; 1];
 We can also compute the Homogeneous transformation matrix \({}^WT_R\) corresponding to the transformation required to go from fixed frame \(\{W\}\) to the wanted frame \(\{R\}\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Reference Pose</span></span>
+<pre class="src src-matlab">%% Reference Pose
 WTr = zeros(4,4);
 
-WTr(1<span class="org-type">:</span>3, 1<span class="org-type">:</span>3) = [cos(Rzr) <span class="org-type">-</span>sin(Rzr) 0;
+WTr(1:3, 1:3) = [cos(Rzr) -sin(Rzr) 0;
      sin(Rzr)  cos(Rzr) 0;
-     0        0         1] <span class="org-type">*</span> ...
+     0        0         1] * ...
     [cos(Ryr)  0        sin(Ryr);
      0        1        0;
-     <span class="org-type">-</span>sin(Ryr)  0        cos(Ryr)] <span class="org-type">*</span> ...
+     -sin(Ryr)  0        cos(Ryr)] * ...
     [1        0        0;
-     0        cos(Rxr) <span class="org-type">-</span>sin(Rxr);
+     0        cos(Rxr) -sin(Rxr);
      0        sin(Rxr)  cos(Rxr)];
-WTr(1<span class="org-type">:</span>4, 4) = [Dxr ; Dyr ; Dzr; 1];
+WTr(1:4, 4) = [Dxr ; Dyr ; Dzr; 1];
 </pre>
 </div>
 
@@ -1678,7 +1466,7 @@ We can also compute \({}^WT_V\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">WTv = eye(4);
-WTv(1<span class="org-type">:</span>3, 4) = WTm(1<span class="org-type">:</span>3, 4);
+WTv(1:3, 4) = WTm(1:3, 4);
 </pre>
 </div>
 
@@ -1689,8 +1477,8 @@ This homogeneous transformation can be computed from the previously computed mat
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Wanted pose expressed in a frame corresponding to the actual measured pose</span></span>
-MTr = [WTm(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'</span>, <span class="org-type">-</span>WTm(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'*</span>WTm(1<span class="org-type">:</span>3,4) ; 0 0 0 1]<span class="org-type">*</span>WTr;
+<pre class="src src-matlab">%% Wanted pose expressed in a frame corresponding to the actual measured pose
+MTr = [WTm(1:3,1:3)', -WTm(1:3,1:3)'*WTm(1:3,4) ; 0 0 0 1]*WTr;
 </pre>
 </div>
 
@@ -1699,22 +1487,22 @@ Now we want to express \({}^VT_R\):
 \[ {}^VT_R = ({{}^WT_V}^{-1}) {}^WT_R \]
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Wanted pose expressed in a frame coincident with the actual position but with no rotation</span></span>
-VTr = [WTv(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'</span>, <span class="org-type">-</span>WTv(1<span class="org-type">:</span>3,1<span class="org-type">:</span>3)<span class="org-type">'*</span>WTv(1<span class="org-type">:</span>3,4) ; 0 0 0 1] <span class="org-type">*</span> WTr;
+<pre class="src src-matlab">%% Wanted pose expressed in a frame coincident with the actual position but with no rotation
+VTr = [WTv(1:3,1:3)', -WTv(1:3,1:3)'*WTv(1:3,4) ; 0 0 0 1] * WTr;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Extract Translations and Rotations from the Homogeneous Matrix</span></span>
+<pre class="src src-matlab">%% Extract Translations and Rotations from the Homogeneous Matrix
 T = MTr;
 Edx = T(1, 4);
 Edy = T(2, 4);
 Edz = T(3, 4);
 
-<span class="org-comment">% The angles obtained are u-v-w Euler angles (rotations in the moving frame)</span>
-Ery = atan2( T(1, 3),          sqrt(T(1, 1)<span class="org-type">^</span>2 <span class="org-type">+</span> T(1, 2)<span class="org-type">^</span>2));
-Erx = atan2(<span class="org-type">-</span>T(2, 3)<span class="org-type">/</span>cos(Ery), T(3, 3)<span class="org-type">/</span>cos(Ery));
-Erz = atan2(<span class="org-type">-</span>T(1, 2)<span class="org-type">/</span>cos(Ery), T(1, 1)<span class="org-type">/</span>cos(Ery));
+% The angles obtained are u-v-w Euler angles (rotations in the moving frame)
+Ery = atan2( T(1, 3),          sqrt(T(1, 1)^2 + T(1, 2)^2));
+Erx = atan2(-T(2, 3)/cos(Ery), T(3, 3)/cos(Ery));
+Erz = atan2(-T(1, 2)/cos(Ery), T(1, 1)/cos(Ery));
 </pre>
 </div>
 </div>
@@ -1722,7 +1510,7 @@ Erz = atan2(<span class="org-type">-</span>T(1, 2)<span class="org-type">/</span
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-16 lun. 11:22</p>
+<p class="date">Created: 2020-08-05 mer. 13:27</p>
 </div>
 </body>
 </html>

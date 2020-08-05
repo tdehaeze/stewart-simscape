@@ -1,239 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-02 lun. 17:57 -->
+<!-- 2020-08-05 mer. 13:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stewart Platform - Dynamics Study</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Dehaeze Thomas" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
 <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/jquery.stickytableheaders.min.js"></script>
 <script src="./js/readtheorg.js"></script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.cacheClassElem = elem.className;
-         elem.cacheClassTarget = target.className;
-         target.className = "code-highlighted";
-         elem.className   = "code-highlighted";
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(elem.cacheClassElem)
-         elem.className = elem.cacheClassElem;
-       if(elem.cacheClassTarget)
-         target.className = elem.cacheClassTarget;
-     }
-    /*]]>*///-->
-// @license-end
-</script>
-<script>
-      MathJax = {
-          tex: { macros: {
-                  bm: ["\\boldsymbol{#1}",1],
-                  }
-              }
+<script>MathJax = {
+          tex: {
+            tags: 'ams',
+            macros: {bm: ["\\boldsymbol{#1}",1],}
+            }
           };
           </script>
-          <script type="text/javascript"
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -250,13 +38,13 @@
 <ul>
 <li><a href="#org4509b7d">1.1. Comparison with fixed support</a></li>
 <li><a href="#org8662186">1.2. Comparison with a flexible support</a></li>
-<li><a href="#orgbb930ae">1.3. Conclusion</a></li>
+<li><a href="#org55e0dad">1.3. Conclusion</a></li>
 </ul>
 </li>
 <li><a href="#org81ab204">2. Comparison of the static transfer function and the Compliance matrix</a>
 <ul>
 <li><a href="#orge7e7242">2.1. Analysis</a></li>
-<li><a href="#org5acc4c0">2.2. Conclusion</a></li>
+<li><a href="#org9ee3939">2.2. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -279,16 +67,16 @@ Let&rsquo;s generate a Stewart platform.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+stewart = initializeInertialSensor(stewart, 'type', 'none');
 </pre>
 </div>
 
@@ -297,9 +85,9 @@ We don&rsquo;t put any flexibility below the Stewart platform such that <b>its b
 We also don&rsquo;t put any payload on top of the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
-payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'none');
+controller = initializeController('type', 'open-loop');
 </pre>
 </div>
 
@@ -307,22 +95,22 @@ controller = initializeController(<span class="org-string">'type'</span>, <span 
 The transfer function from actuator forces \(\bm{\tau}\) to the relative displacement of the mobile platform \(\mathcal{\bm{X}}\) is extracted.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+<pre class="src src-matlab">%% Options for Linearized
 options = linearizeOptions;
 options.SampleTime = 0;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 </pre>
 </div>
 
@@ -330,8 +118,8 @@ G.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">
 Using the Jacobian matrix, we compute the transfer function from force/torques applied by the actuators on the frame \(\{B\}\) fixed to the mobile platform:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Gc = minreal(G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>));
-Gc.InputName = {<span class="org-string">'Fnx'</span>, <span class="org-string">'Fny'</span>, <span class="org-string">'Fnz'</span>, <span class="org-string">'Mnx'</span>, <span class="org-string">'Mny'</span>, <span class="org-string">'Mnz'</span>};
+<pre class="src src-matlab">Gc = minreal(G*inv(stewart.kinematics.J'));
+Gc.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
 </pre>
 </div>
 
@@ -339,15 +127,15 @@ Gc.InputName = {<span class="org-string">'Fnx'</span>, <span class="org-string">
 We also extract the transfer function from external forces \(\bm{\mathcal{F}}_{\text{ext}}\) on the frame \(\{B\}\) fixed to the mobile platform to the relative displacement \(\mathcal{\bm{X}}\) of \(\{B\}\) with respect to frame \(\{A\}\):
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+<pre class="src src-matlab">%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Disturbances'</span>], 1, <span class="org-string">'openinput'</span>, [], <span class="org-string">'F_ext'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% External forces/torques applied on {B}</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, '/Disturbances'], 1, 'openinput', [], 'F_ext');  io_i = io_i + 1; % External forces/torques applied on {B}
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 Gd = linearize(mdl, io, options);
-Gd.InputName  = {<span class="org-string">'Fex'</span>, <span class="org-string">'Fey'</span>, <span class="org-string">'Fez'</span>, <span class="org-string">'Mex'</span>, <span class="org-string">'Mey'</span>, <span class="org-string">'Mez'</span>};
-Gd.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+Gd.InputName  = {'Fex', 'Fey', 'Fez', 'Mex', 'Mey', 'Mez'};
+Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 </pre>
 </div>
 
@@ -382,7 +170,7 @@ This can be understood from figure <a href="#org8bd3e63">2</a> where \(\mathcal{
 We now add a flexible support under the Stewart platform.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'flexible'</span>);
+<pre class="src src-matlab">ground = initializeGround('type', 'flexible');
 </pre>
 </div>
 
@@ -390,28 +178,28 @@ We now add a flexible support under the Stewart platform.
 And we perform again the identification.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+<pre class="src src-matlab">%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 
-Gc = minreal(G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>));
-Gc.InputName = {<span class="org-string">'Fnx'</span>, <span class="org-string">'Fny'</span>, <span class="org-string">'Fnz'</span>, <span class="org-string">'Mnx'</span>, <span class="org-string">'Mny'</span>, <span class="org-string">'Mnz'</span>};
+Gc = minreal(G*inv(stewart.kinematics.J'));
+Gc.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Disturbances'</span>], 1, <span class="org-string">'openinput'</span>, [], <span class="org-string">'F_ext'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% External forces/torques applied on {B}</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, '/Disturbances'], 1, 'openinput', [], 'F_ext');  io_i = io_i + 1; % External forces/torques applied on {B}
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 Gd = linearize(mdl, io, options);
-Gd.InputName  = {<span class="org-string">'Fex'</span>, <span class="org-string">'Fey'</span>, <span class="org-string">'Fez'</span>, <span class="org-string">'Mex'</span>, <span class="org-string">'Mey'</span>, <span class="org-string">'Mez'</span>};
-Gd.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+Gd.InputName  = {'Fex', 'Fey', 'Fez', 'Mex', 'Mey', 'Mez'};
+Gd.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 </pre>
 </div>
 
@@ -442,8 +230,8 @@ And thus \(\mathcal{F}_{x}\) and \(\mathcal{F}_{x,\text{ext}}\) have clearly <b>
 </div>
 
 
-<div id="outline-container-orgbb930ae" class="outline-3">
-<h3 id="orgbb930ae"><span class="section-number-3">1.3</span> Conclusion</h3>
+<div id="outline-container-org55e0dad" class="outline-3">
+<h3 id="org55e0dad"><span class="section-number-3">1.3</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="important">
 <p>
@@ -471,16 +259,16 @@ Initialization of the Stewart platform.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">stewart = initializeStewartPlatform();
-stewart = initializeFramesPositions(stewart, <span class="org-string">'H'</span>, 90e<span class="org-type">-</span>3, <span class="org-string">'MO_B'</span>, 45e<span class="org-type">-</span>3);
+stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 45e-3);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
 stewart = initializeStrutDynamics(stewart);
-stewart = initializeJointDynamics(stewart, <span class="org-string">'type_F'</span>, <span class="org-string">'universal_p'</span>, <span class="org-string">'type_M'</span>, <span class="org-string">'spherical_p'</span>);
+stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
 stewart = initializeStewartPose(stewart);
-stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
+stewart = initializeInertialSensor(stewart, 'type', 'none');
 </pre>
 </div>
 
@@ -488,9 +276,9 @@ stewart = initializeInertialSensor(stewart, <span class="org-string">'type'</spa
 No flexibility below the Stewart platform and no payload.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">ground = initializeGround(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
-payload = initializePayload(<span class="org-string">'type'</span>, <span class="org-string">'none'</span>);
-controller = initializeController(<span class="org-string">'type'</span>, <span class="org-string">'open-loop'</span>);
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'none');
+controller = initializeController('type', 'open-loop');
 </pre>
 </div>
 
@@ -498,28 +286,28 @@ controller = initializeController(<span class="org-string">'type'</span>, <span 
 Estimation of the transfer function from \(\mathcal{\bm{F}}\) to \(\mathcal{\bm{X}}\):
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Options for Linearized</span></span>
+<pre class="src src-matlab">%% Options for Linearized
 options = linearizeOptions;
 options.SampleTime = 0;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'stewart_platform_model'</span>;
+%% Name of the Simulink File
+mdl = 'stewart_platform_model';
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+%% Input/Output definition
 clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Controller'</span>],              1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Actuator Force Inputs [N]</span>
-io(io_i) = linio([mdl, <span class="org-string">'/Relative Motion Sensor'</span>],  1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1; <span class="org-comment">% Position/Orientation of {B} w.r.t. {A}</span>
+io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Position/Orientation of {B} w.r.t. {A}
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Run the linearization</span></span>
+%% Run the linearization
 G = linearize(mdl, io, options);
-G.InputName  = {<span class="org-string">'F1'</span>, <span class="org-string">'F2'</span>, <span class="org-string">'F3'</span>, <span class="org-string">'F4'</span>, <span class="org-string">'F5'</span>, <span class="org-string">'F6'</span>};
-G.OutputName = {<span class="org-string">'Edx'</span>, <span class="org-string">'Edy'</span>, <span class="org-string">'Edz'</span>, <span class="org-string">'Erx'</span>, <span class="org-string">'Ery'</span>, <span class="org-string">'Erz'</span>};
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Edx', 'Edy', 'Edz', 'Erx', 'Ery', 'Erz'};
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Gc = minreal(G<span class="org-type">*</span>inv(stewart.kinematics.J<span class="org-type">'</span>));
-Gc.InputName = {<span class="org-string">'Fnx'</span>, <span class="org-string">'Fny'</span>, <span class="org-string">'Fnz'</span>, <span class="org-string">'Mnx'</span>, <span class="org-string">'Mny'</span>, <span class="org-string">'Mnz'</span>};
+<pre class="src src-matlab">Gc = minreal(G*inv(stewart.kinematics.J'));
+Gc.InputName = {'Fnx', 'Fny', 'Fnz', 'Mnx', 'Mny', 'Mnz'};
 </pre>
 </div>
 
@@ -677,8 +465,8 @@ And now at the Compliance matrix.
 </div>
 </div>
 
-<div id="outline-container-org5acc4c0" class="outline-3">
-<h3 id="org5acc4c0"><span class="section-number-3">2.2</span> Conclusion</h3>
+<div id="outline-container-org9ee3939" class="outline-3">
+<h3 id="org9ee3939"><span class="section-number-3">2.2</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="important">
 <p>
@@ -692,7 +480,7 @@ The low frequency transfer function matrix from \(\mathcal{\bm{F}}\) to \(\mathc
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-03-02 lun. 17:57</p>
+<p class="date">Created: 2020-08-05 mer. 13:27</p>
 </div>
 </body>
 </html>
