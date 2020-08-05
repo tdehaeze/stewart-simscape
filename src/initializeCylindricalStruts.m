@@ -27,6 +27,8 @@ function [stewart] = initializeCylindricalStruts(stewart, args)
 
 arguments
     stewart
+    args.type_F    char   {mustBeMember(args.type_F,{'cylindrical', 'none'})} = 'cylindrical'
+    args.type_M    char   {mustBeMember(args.type_M,{'cylindrical', 'none'})} = 'cylindrical'
     args.Fsm (1,1) double {mustBeNumeric, mustBePositive} = 0.1
     args.Fsh (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
     args.Fsr (1,1) double {mustBeNumeric, mustBePositive} = 5e-3
@@ -56,14 +58,24 @@ for i = 1:6
                      1/2  * Msm(i) * Msr(i)^2]);
 end
 
-stewart.struts_M.type = 1;
+switch args.type_M
+  case 'cylindrical'
+    stewart.struts_M.type = 1;
+  case 'none'
+    stewart.struts_M.type = 2;
+end
 
 stewart.struts_M.I = I_M;
 stewart.struts_M.M = Msm;
 stewart.struts_M.R = Msr;
 stewart.struts_M.H = Msh;
 
-stewart.struts_F.type = 1;
+switch args.type_F
+  case 'cylindrical'
+    stewart.struts_F.type = 1;
+  case 'none'
+    stewart.struts_F.type = 2;
+end
 
 stewart.struts_F.I = I_F;
 stewart.struts_F.M = Fsm;

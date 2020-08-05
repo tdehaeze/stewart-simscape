@@ -951,6 +951,8 @@ This Matlab function is accessible [[file:../src/initializeCylindricalStruts.m][
 #+begin_src matlab
   arguments
       stewart
+      args.type_F    char   {mustBeMember(args.type_F,{'cylindrical', 'none'})} = 'cylindrical'
+      args.type_M    char   {mustBeMember(args.type_M,{'cylindrical', 'none'})} = 'cylindrical'
       args.Fsm (1,1) double {mustBeNumeric, mustBePositive} = 0.1
       args.Fsh (1,1) double {mustBeNumeric, mustBePositive} = 50e-3
       args.Fsr (1,1) double {mustBeNumeric, mustBePositive} = 5e-3
@@ -995,7 +997,12 @@ This Matlab function is accessible [[file:../src/initializeCylindricalStruts.m][
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  stewart.struts_M.type = 1;
+  switch args.type_M
+    case 'cylindrical'
+      stewart.struts_M.type = 1;
+    case 'none'
+      stewart.struts_M.type = 2;
+  end
 
   stewart.struts_M.I = I_M;
   stewart.struts_M.M = Msm;
@@ -1004,7 +1011,12 @@ This Matlab function is accessible [[file:../src/initializeCylindricalStruts.m][
 #+end_src
 
 #+begin_src matlab
-  stewart.struts_F.type = 1;
+  switch args.type_F
+    case 'cylindrical'
+      stewart.struts_F.type = 1;
+    case 'none'
+      stewart.struts_F.type = 2;
+  end
 
   stewart.struts_F.I = I_F;
   stewart.struts_F.M = Fsm;
@@ -1237,10 +1249,83 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
   stewart.actuators.Cr = args.Cr;
 
   stewart.actuators.K = K;
-  stewart.actuators.C = K;
+  stewart.actuators.C = C;
 #+end_src
 
-** =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints
+** TODO =initializeFlexibleStrutDynamics=: Model each strut with a flexible element
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeFlexibleStrutDynamics.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeFlexibleStrutDynamics>>
+
+This Matlab function is accessible [[file:../src/initializeFlexibleStrutDynamics.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = initializeFlexibleStrutDynamics(stewart, args)
+  % initializeFlexibleStrutDynamics - Add Stiffness and Damping properties of each strut
+  %
+  % Syntax: [stewart] = initializeFlexibleStrutDynamics(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - K [nxn] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+  %        - M [nxn] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+  %        - xi        [1x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
+  %        - step_file [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.K        double {mustBeNumeric} = zeros(6,6)
+      args.M        double {mustBeNumeric} = zeros(6,6)
+      args.H        double {mustBeNumeric} = 0
+      args.n_xyz    double {mustBeNumeric} = zeros(2,3)
+      args.xi       double {mustBeNumeric} = 0.1
+      args.step_file char {} = ''
+  end
+#+end_src
+
+*** Compute the axial offset
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+begin_src matlab
+  stewart.actuators.ax_off = (stewart.geometry.l(1) - args.H)/2; % Axial Offset at the ends of the actuator
+#+end_src
+
+*** Populate the =stewart= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  stewart.actuators.type = 3;
+
+  stewart.actuators.Km = args.K;
+  stewart.actuators.Mm = args.M;
+
+  stewart.actuators.n_xyz = args.n_xyz;
+  stewart.actuators.xi = args.xi;
+
+  stewart.actuators.step_file = args.step_file;
+
+  stewart.actuators.K = args.K(3,3); % Axial Stiffness
+#+end_src
+
+** TODO =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints
 :PROPERTIES:
 :header-args:matlab+: :tangle ../src/initializeJointDynamics.m
 :header-args:matlab+: :comments none :mkdirp yes :eval no
@@ -1291,8 +1376,8 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
 #+begin_src matlab
   arguments
       stewart
-      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'universal'
-      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p'})} = 'spherical'
+      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'universal'
+      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'spherical'
       args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
       args.Cf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
       args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
@@ -1301,6 +1386,16 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
       args.Cf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
       args.Kt_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
       args.Ct_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
+      args.K_M        double {mustBeNumeric} = zeros(6,6)
+      args.M_M        double {mustBeNumeric} = zeros(6,6)
+      args.n_xyz_M    double {mustBeNumeric} = zeros(2,3)
+      args.xi_M       double {mustBeNumeric} = 0.1
+      args.step_file_M char {} = ''
+      args.K_F        double {mustBeNumeric} = zeros(6,6)
+      args.M_F        double {mustBeNumeric} = zeros(6,6)
+      args.n_xyz_F    double {mustBeNumeric} = zeros(2,3)
+      args.xi_F       double {mustBeNumeric} = 0.1
+      args.step_file_F char {} = ''
   end
 #+end_src
 
@@ -1318,6 +1413,8 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
       stewart.joints_F.type = 3;
     case 'spherical_p'
       stewart.joints_F.type = 4;
+    case 'flexible'
+      stewart.joints_F.type = 5;
   end
 
   switch args.type_M
@@ -1329,6 +1426,8 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
       stewart.joints_M.type = 3;
     case 'spherical_p'
       stewart.joints_M.type = 4;
+    case 'flexible'
+      stewart.joints_M.type = 5;
   end
 #+end_src
 
@@ -1371,7 +1470,6 @@ Rotational Stiffness
   stewart.joints_F.Kt = args.Kf_F;
 #+end_src
 
-
 Rotational Damping
 #+begin_src matlab
   stewart.joints_M.Cf = args.Cf_M;
@@ -1379,6 +1477,26 @@ Rotational Damping
 
   stewart.joints_F.Cf = args.Cf_F;
   stewart.joints_F.Ct = args.Cf_F;
+#+end_src
+
+*** Stiffness and Mass matrices for flexible joint
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+begin_src matlab
+  stewart.joints_F.M = args.M_F;
+  stewart.joints_F.K = args.K_F;
+  stewart.joints_F.n_xyz = args.n_xyz_F;
+  stewart.joints_F.xi = args.xi_F;
+  stewart.joints_F.xi = args.xi_F;
+  stewart.joints_F.step_file = args.step_file_F;
+
+  stewart.joints_M.M = args.M_M;
+  stewart.joints_M.K = args.K_M;
+  stewart.joints_M.n_xyz = args.n_xyz_M;
+  stewart.joints_M.xi = args.xi_M;
+  stewart.joints_M.step_file = args.step_file_M;
 #+end_src
 
 ** =initializeInertialSensor=: Initialize the inertial sensor in each strut

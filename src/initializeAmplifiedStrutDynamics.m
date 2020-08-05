@@ -40,4 +40,4 @@ stewart.actuators.Kr = args.Kr;
 stewart.actuators.Cr = args.Cr;
 
 stewart.actuators.K = K;
-stewart.actuators.C = K;
+stewart.actuators.C = C;

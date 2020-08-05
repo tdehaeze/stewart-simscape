@@ -613,6 +613,64 @@ data2orgtable([1e6*L_min, 1e6*L_max, 1e6*(min(min(rs)))], {}, {'=L_min= [$\mu m$
 *** TODO Do that by slice                                         :noexport:
 using this function https://fr.mathworks.com/help/matlab/ref/contour3.html
 
+* Estimation of the Joint required Stroke
+** Introduction                                                      :ignore:
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+** Example of the initialization of a Stewart Platform
+Let's first define the Stewart Platform Geometry.
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 150e-3);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+
+  As_init = stewart.geometry.As;
+#+end_src
+
+#+begin_src matlab
+  Tx_max = 50e-6; % Translation [m]
+  Ty_max = 50e-6; % Translation [m]
+  Tz_max = 50e-6; % Translation [m]
+#+end_src
+
+#+begin_src matlab
+  Ps = [2*(dec2bin(0:3^2-2,3)-'0')-1].*[Tx_max Ty_max Tz_max];
+#+end_src
+
+#+begin_src matlab
+  flex_ang = zeros(size(Ps, 1), 6);
+
+  for Ps_i = 1:size(Ps, 1)
+      stewart.geometry.FO_M = [0; 0; 90e-3] + Ps(Ps_i, :)';
+
+      stewart = generateGeneralConfiguration(stewart);
+      stewart = computeJointsPose(stewart);
+
+      flex_ang(Ps_i, :) = acos(sum(As_init.*stewart.geometry.As));
+  end
+#+end_src
+
+And the maximum bending of the flexible joints is: (in [mrad])
+#+begin_src matlab :results replace value
+  1e3*max(max(abs(flex_ang)))
+#+end_src
+
+#+RESULTS:
+: 0.90937
+
 * Functions
 <<sec:functions>>
 ** =computeJacobian=: Compute the Jacobian Matrix
