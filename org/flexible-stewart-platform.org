@@ -1,0 +1,362 @@
+#+TITLE: Stewart Platform with Flexible Elements
+:DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/tikz/org/}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports results
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
+:END:
+
+* Simscape Model
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+** Flexible APA
+#+begin_src matlab
+  apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+#+end_src
+
+#+begin_src matlab :exports results :results value table replace :tangle no
+  data2orgtable([length(apa.n_i); length(apa.int_i); size(apa.M,1) - 6*length(apa.int_i); size(apa.M,1)], {'Total number of Nodes', 'Number of interface Nodes', 'Number of Modes', 'Size of M and K matrices'}, {}, ' %.0f ');
+#+end_src
+
+#+RESULTS:
+| Total number of Nodes     |  7 |
+| Number of interface Nodes |  7 |
+| Number of Modes           |  6 |
+| Size of M and K matrices  | 48 |
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  data2orgtable([[1:length(apa.int_i)]', apa.int_i, apa.int_xyz], {}, {'Node i', 'Node Number', 'x [m]', 'y [m]', 'z [m]'}, ' %f ');
+#+end_src
+
+#+caption: Coordinates of the interface nodes
+#+RESULTS:
+| Node i | Node Number |   x [m] |  y [m] | z [m] |
+|--------+-------------+---------+--------+-------|
+|    1.0 |     53917.0 |     0.0 | -0.015 |   0.0 |
+|    2.0 |     53918.0 |     0.0 |  0.015 |   0.0 |
+|    3.0 |     53919.0 | -0.0325 |    0.0 |   0.0 |
+|    4.0 |     53920.0 | -0.0125 |    0.0 |   0.0 |
+|    5.0 |     53921.0 | -0.0075 |    0.0 |   0.0 |
+|    6.0 |     53922.0 |  0.0125 |    0.0 |   0.0 |
+|    7.0 |     53923.0 |  0.0325 |    0.0 |   0.0 |
+
+** Flexible Joint
+#+begin_src matlab
+  flex_joint = load('./mat/flexor_ID16.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+#+end_src
+
+#+begin_src matlab :exports results :results value table replace :tangle no
+  data2orgtable([length(flex_joint.n_i); length(flex_joint.int_i); size(flex_joint.M,1) - 6*length(flex_joint.int_i); size(flex_joint.M,1)], {'Total number of Nodes', 'Number of interface Nodes', 'Number of Modes', 'Size of M and K matrices'}, {}, ' %.0f ');
+#+end_src
+
+#+RESULTS:
+| Total number of Nodes     |  2 |
+| Number of interface Nodes |  2 |
+| Number of Modes           |  6 |
+| Size of M and K matrices  | 18 |
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  data2orgtable([[1:length(flex_joint.int_i)]', flex_joint.int_i, flex_joint.int_xyz], {}, {'Node i', 'Node Number', 'x [m]', 'y [m]', 'z [m]'}, ' %f ');
+#+end_src
+
+#+caption: Coordinates of the interface nodes
+#+RESULTS:
+| Node i | Node Number | x [m] | y [m] | z [m] |
+|--------+-------------+-------+-------+-------|
+|    1.0 |    181278.0 |   0.0 |   0.0 |   0.0 |
+|    2.0 |    181279.0 |   0.0 |   0.0 |  -0.0 |
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  data2orgtable([1e-6*flex_joint.K(3,3), flex_joint.K(4,4), flex_joint.K(5,5), flex_joint.K(6,6)]', {'Axial Stiffness [N/um]', 'Bending Stiffness [Nm/rad]', 'Bending Stiffness [Nm/rad]', 'Torsion Stiffness [Nm/rad]'}, {'*Caracteristic*', '*Value*'}, ' %0.f ');
+#+end_src
+
+#+RESULTS:
+| *Caracteristic*            | *Value* |
+|----------------------------+---------|
+| Axial Stiffness [N/um]     |     119 |
+| Bending Stiffness [Nm/rad] |      33 |
+| Bending Stiffness [Nm/rad] |      33 |
+| Torsion Stiffness [Nm/rad] |     236 |
+
+** Identification
+And we identify the dynamics from force actuators to force sensors.
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Taum'); io_i = io_i + 1; % Force Sensors [N]
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'rigid', 'm', 50);
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
+
+** No Flexible Elements
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  % stewart = initializeStrutDynamics(stewart, 'K', 1.8e6*ones(6,1));
+  stewart = initializeAmplifiedStrutDynamics(stewart, 'Kr', 0.9e6*ones(6,1), 'Ka', 0.9e6*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'Kf_M', 33*ones(6,1), 'Kt_M', 235*ones(6,1), 'Kf_F', 33*ones(6,1), 'Kt_F', 235*ones(6,1));
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+** Flexible joints
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeAmplifiedStrutDynamics(stewart, 'Kr', 0.9e6*ones(6,1), 'Ka', 0.9e6*ones(6,1));
+  stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart);
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  %% Run the linearization
+  Gj = linearize(mdl, io, options);
+  Gj.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gj.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+** Flexible APA
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+  stewart = initializeJointDynamics(stewart, 'Kf_M', 33*ones(6,1), 'Kt_M', 235, 'Kf_F', 33*ones(6,1), 'Kt_F', 235);
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  %% Run the linearization
+  Ga = -linearize(mdl, io, options);
+  Ga.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Ga.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+** Flexible Joints and APA
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart);
+  stewart = generateGeneralConfiguration(stewart);
+  stewart = computeJointsPose(stewart);
+  stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+  stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
+  stewart = initializeCylindricalPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  Gf = -linearize(mdl, io, options);
+  Gf.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  Gf.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 'Fm4', 'Fm5', 'Fm6'};
+#+end_src
+
+** Direct Velocity Feedback
+#+begin_src matlab :exports none
+  freqs = logspace(0, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(G(i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(Gj(i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(44*Ga(i,i), freqs, 'Hz'))), 'color', [0.9290 0.6940 0.1250 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(44*Gf(i,i), freqs, 'Hz'))), 'color', [0.4940 0.1840 0.5560 0.2]);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G(i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gj(i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Ga(i,i), freqs, 'Hz'))), 'color', [0.9290 0.6940 0.1250 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gf(i,i), freqs, 'Hz'))), 'color', [0.4940 0.1840 0.5560 0.2]);
+  end
+  h = zeros(4, 1);
+  h(1) = plot(NaN, NaN, 'color', [0 0.4470 0.7410 0.2]);
+  h(2) = plot(NaN, NaN, 'color', [0.8500 0.3250 0.0980 0.2]);
+  h(3) = plot(NaN, NaN, 'color', [0.9290 0.6940 0.1250 0.2]);
+  h(4) = plot(NaN, NaN, 'color', [0.4940 0.1840 0.5560 0.2]);
+  legend(h, 'No flexible', 'Flexible Joints', 'Flexible APA', 'All Flexible');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/flexible_elements_effect_dvf.pdf', 'width', 'full', 'height', 'full');
+#+end_src
+
+#+name: fig:flexible_elements_effect_dvf
+#+caption: Change of the DVF plant dynamics with the added flexible elements
+#+RESULTS:
+[[file:figs/flexible_elements_effect_dvf.png]]
+
+** Integral Force Feedback
+#+begin_src matlab :exports none
+  freqs = logspace(0, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(G(6+i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(Gj(6+i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(1e9*Ga(6+i,i), freqs, 'Hz'))), 'color', [0.9290 0.6940 0.1250 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(1e9*Gf(6+i,i), freqs, 'Hz'))), 'color', [0.4940 0.1840 0.5560 0.2]);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G(6+i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gj(6+i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Ga(6+i,i), freqs, 'Hz'))), 'color', [0.9290 0.6940 0.1250 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gf(6+i,i), freqs, 'Hz'))), 'color', [0.4940 0.1840 0.5560 0.2]);
+  end
+  h = zeros(4, 1);
+  h(1) = plot(NaN, NaN, 'color', [0 0.4470 0.7410 0.2]);
+  h(2) = plot(NaN, NaN, 'color', [0.8500 0.3250 0.0980 0.2]);
+  h(3) = plot(NaN, NaN, 'color', [0.9290 0.6940 0.1250 0.2]);
+  h(4) = plot(NaN, NaN, 'color', [0.4940 0.1840 0.5560 0.2]);
+  legend(h, 'No flexible', 'Flexible Joints', 'Flexible APA', 'All Flexible');
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/flexible_elements_effect_iff.pdf', 'width', 'full', 'height', 'full');
+#+end_src
+
+#+name: fig:flexible_elements_effect_iff
+#+caption: Change of the IFF plant dynamics with the added flexible elements
+#+RESULTS:
+[[file:figs/flexible_elements_effect_iff.png]]
