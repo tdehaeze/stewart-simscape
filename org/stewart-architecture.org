@@ -1168,45 +1168,20 @@ An amplified piezoelectric actuator is shown in Figure [[fig:cedrat_apa95ml]].
 #+caption: Example of an Amplified piezoelectric actuator with an integrated displacement sensor (Cedrat Technologies)
 [[file:figs/amplified_piezo_with_displacement_sensor.jpg]]
 
-A simplistic model of such amplified actuator is shown in Figure [[fig:amplified_piezo_model]] where:
-- $K_{r}$ represent the vertical stiffness when the piezoelectric stack is removed
-- $K_{a}$ is the vertical stiffness contribution of the piezoelectric stack
-- $F_{i}$ represents the part of the piezoelectric stack that is used as a force actuator
-- $F_{m,i}$ represents the remaining part of the piezoelectric stack that is used as a force sensor
-- $v_{m,i}$ represents the absolute velocity of the top part of the actuator
-- $d_{m,i}$ represents the total relative displacement of the actuator
+A simplistic model of such amplified actuator is shown in Figure [[fig:souleille18_model_piezo]] where the parameters are described in Table [[tab:parameters_amplified_piezo]].
 
-#+begin_src latex :file iff_1dof.pdf
-  \begin{tikzpicture}
-    % Ground
-    \draw (-1.2, 0) -- (1, 0);
+#+name: tab:parameters_amplified_piezo
+#+caption: Parameters used for the model of the APA 100M
+|       | Meaning                                                        |
+|-------+----------------------------------------------------------------|
+| $k_e$ | Stiffness used to adjust the pole of the isolator              |
+| $k_1$ | Stiffness of the metallic suspension when the stack is removed |
+| $k_a$ | Stiffness of the actuator                                      |
+| $c_1$ | Added viscous damping                                          |
 
-    % Mass
-    \draw (-1.2, 1.4) -- ++(2.2, 0);
-    \node[forcesensor={0.4}{0.4}] (fsensn) at (0, 1){};
-    \draw[] (-0.4, 1) -- (0.4, 1);
-    \node[right] at (fsensn.east) {$F_{m}$};
-
-    % Spring, Damper, and Actuator
-    \draw[spring] (-0.4, 0) -- (-0.4, 1) node[midway, right=0.1]{$K_{a}$};
-    \draw[actuator={0.4}{0.2}] (0.4, 0) -- (0.4, 1) node[midway, right=0.1]{$F$};
-
-    \draw[spring] (-1, 0) -- (-1, 1.4) node[midway, left=0.1]{$K_{r}$};
-
-    \draw[dashed] (1, 0) -- ++(0.4, 0);
-
-    \draw[dashed] (1, 1.4) -- ++(0.4, 0);
-
-    \draw[->] (0, 1.4)node[]{$\bullet$} -- ++(0, 0.5) node[right]{$v_{m}$};
-
-    \draw[<->] (1.4, 0) -- ++(0, 1.4) node[midway, right]{$d_{m}$};
-  \end{tikzpicture}
-#+end_src
-
-#+name: fig:amplified_piezo_model
-#+caption: Model of an amplified actuator
-#+RESULTS:
-[[file:figs/iff_1dof.png]]
+#+name: fig:souleille18_model_piezo
+#+caption: Picture of an APA100M from Cedrat Technologies. Simplified model of a one DoF payload mounted on such isolator
+[[file:./figs/souleille18_model_piezo.png]]
 
 *** Function description
 :PROPERTIES:
@@ -1220,20 +1195,20 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
   %
   % Inputs:
   %    - args - Structure with the following fields:
-  %        - Ka [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
-  %        - Ca [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
-  %        - Kr [6x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
-  %        - Cr [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
+  %        - Ka [6x1] - Stiffness of the actuator [N/m]
+  %        - Ke [6x1] - Stiffness used to adjust the pole of the isolator [N/m]
+  %        - K1 [6x1] - Stiffness of the metallic suspension when the stack is removed [N/m]
+  %        - C1 [6x1] - Added viscous damping [N/(m/s)]
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
   %      - actuators.type = 2
   %      - actuators.K   [6x1] - Total Stiffness of each strut [N/m]
   %      - actuators.C   [6x1] - Total Damping of each strut [N/(m/s)]
-  %      - actuators.Ka [6x1] - Vertical stiffness contribution of the piezoelectric stack [N/m]
-  %      - actuators.Ca [6x1] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
-  %      - actuators.Kr [6x1] - Vertical stiffness when the piezoelectric stack is removed [N/m]
-  %      - actuators.Cr [6x1] - Vertical damping when the piezoelectric stack is removed [N/(m/s)]
+  %      - actuators.Ka [6x1] - Stiffness of the actuator [N/m]
+  %      - actuators.Ke [6x1] - Stiffness used to adjust the pole of the isolator [N/m]
+  %      - actuators.K1 [6x1] - Stiffness of the metallic suspension when the stack is removed [N/m]
+  %      - actuators.C1 [6x1] - Added viscous damping [N/(m/s)]
 #+end_src
 
 *** Optional Parameters
@@ -1243,10 +1218,10 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
 #+begin_src matlab
   arguments
       stewart
-      args.Kr (6,1) double {mustBeNumeric, mustBeNonnegative} = 5e6*ones(6,1)
-      args.Cr (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
-      args.Ka (6,1) double {mustBeNumeric, mustBeNonnegative} = 15e6*ones(6,1)
-      args.Ca (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.Ke (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.5e6*ones(6,1)
+      args.Ka (6,1) double {mustBeNumeric, mustBeNonnegative} = 43e6*ones(6,1)
+      args.K1 (6,1) double {mustBeNumeric, mustBeNonnegative} = 0.4e6*ones(6,1)
+      args.C1 (6,1) double {mustBeNumeric, mustBeNonnegative} = 10*ones(6,1)
   end
 #+end_src
 
@@ -1255,8 +1230,8 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
 :UNNUMBERED: t
 :END:
 #+begin_src matlab
-  K = args.Ka + args.Kr;
-  C = args.Ca + args.Cr;
+  K = args.K1 + args.Ka.*args.Ke./(args.Ka + args.Ke);
+  C = args.C1;
 #+end_src
 
 *** Populate the =stewart= structure
@@ -1267,10 +1242,9 @@ A simplistic model of such amplified actuator is shown in Figure [[fig:amplified
   stewart.actuators.type = 2;
 
   stewart.actuators.Ka = args.Ka;
-  stewart.actuators.Ca = args.Ca;
-
-  stewart.actuators.Kr = args.Kr;
-  stewart.actuators.Cr = args.Cr;
+  stewart.actuators.Ke = args.Ke;
+  stewart.actuators.K1 = args.K1;
+  stewart.actuators.C1 = args.C1;
 
   stewart.actuators.K = K;
   stewart.actuators.C = C;
@@ -1301,6 +1275,7 @@ This Matlab function is accessible [[file:../src/initializeFlexibleStrutDynamics
   %        - M [nxn] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
   %        - xi        [1x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
   %        - step_file [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
+  %        - Gf [6x1] - Gain from strain in [m] to measured [N] such that it matches
   %
   % Outputs:
   %    - stewart - updated Stewart structure with the added fields:
@@ -1318,6 +1293,7 @@ This Matlab function is accessible [[file:../src/initializeFlexibleStrutDynamics
       args.H        double {mustBeNumeric} = 0
       args.n_xyz    double {mustBeNumeric} = zeros(2,3)
       args.xi       double {mustBeNumeric} = 0.1
+      args.Gf       double {mustBeNumeric} = 1
       args.step_file char {} = ''
   end
 #+end_src
@@ -1347,6 +1323,8 @@ This Matlab function is accessible [[file:../src/initializeFlexibleStrutDynamics
   stewart.actuators.step_file = args.step_file;
 
   stewart.actuators.K = args.K(3,3); % Axial Stiffness
+
+  stewart.actuators.Gf = args.Gf;
 #+end_src
 
 ** TODO =initializeJointDynamics=: Add Stiffness and Damping properties for spherical joints
@@ -1400,16 +1378,24 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
 #+begin_src matlab
   arguments
       stewart
-      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'universal'
-      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'spherical'
-      args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
+      args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p', 'universal_3dof', 'spherical_3dof', 'flexible'})} = 'universal'
+      args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p', 'universal_3dof', 'spherical_3dof', 'flexible'})} = 'spherical'
+      args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 33*ones(6,1)
       args.Cf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-      args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
+      args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 236*ones(6,1)
       args.Ct_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
-      args.Kf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
+      args.Kf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 33*ones(6,1)
       args.Cf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-      args.Kt_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
+      args.Kt_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 236*ones(6,1)
       args.Ct_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
+      args.Ka_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.2e8*ones(6,1)
+      args.Ca_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.Kr_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.1e7*ones(6,1)
+      args.Cr_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.Ka_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.2e8*ones(6,1)
+      args.Ca_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+      args.Kr_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.1e7*ones(6,1)
+      args.Cr_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
       args.K_M        double {mustBeNumeric} = zeros(6,6)
       args.M_M        double {mustBeNumeric} = zeros(6,6)
       args.n_xyz_M    double {mustBeNumeric} = zeros(2,3)
@@ -1439,6 +1425,10 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
       stewart.joints_F.type = 4;
     case 'flexible'
       stewart.joints_F.type = 5;
+    case 'universal_3dof'
+      stewart.joints_F.type = 6;
+    case 'spherical_3dof'
+      stewart.joints_F.type = 7;
   end
 
   switch args.type_M
@@ -1452,6 +1442,10 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
       stewart.joints_M.type = 4;
     case 'flexible'
       stewart.joints_M.type = 5;
+    case 'universal_3dof'
+      stewart.joints_M.type = 6;
+    case 'spherical_3dof'
+      stewart.joints_M.type = 7;
   end
 #+end_src
 
@@ -1459,26 +1453,22 @@ This Matlab function is accessible [[file:../src/initializeJointDynamics.m][here
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
-Translation Stiffness
+Axial and Radial (shear) Stiffness
 #+begin_src matlab
-  stewart.joints_M.Kx = zeros(6,1);
-  stewart.joints_M.Ky = zeros(6,1);
-  stewart.joints_M.Kz = zeros(6,1);
+  stewart.joints_M.Ka = args.Ka_M;
+  stewart.joints_M.Kr = args.Kr_M;
 
-  stewart.joints_F.Kx = zeros(6,1);
-  stewart.joints_F.Ky = zeros(6,1);
-  stewart.joints_F.Kz = zeros(6,1);
+  stewart.joints_F.Ka = args.Ka_F;
+  stewart.joints_F.Kr = args.Kr_F;
 #+end_src
 
 Translation Damping
 #+begin_src matlab
-  stewart.joints_M.Cx = zeros(6,1);
-  stewart.joints_M.Cy = zeros(6,1);
-  stewart.joints_M.Cz = zeros(6,1);
+  stewart.joints_M.Ca = args.Ca_M;
+  stewart.joints_M.Cr = args.Cr_M;
 
-  stewart.joints_F.Cx = zeros(6,1);
-  stewart.joints_F.Cy = zeros(6,1);
-  stewart.joints_F.Cz = zeros(6,1);
+  stewart.joints_F.Ca = args.Ca_F;
+  stewart.joints_F.Cr = args.Cr_F;
 #+end_src
 
 *** Add Stiffness and Damping in Rotation of each strut
@@ -1488,19 +1478,19 @@ Translation Damping
 Rotational Stiffness
 #+begin_src matlab
   stewart.joints_M.Kf = args.Kf_M;
-  stewart.joints_M.Kt = args.Kf_M;
+  stewart.joints_M.Kt = args.Kt_M;
 
   stewart.joints_F.Kf = args.Kf_F;
-  stewart.joints_F.Kt = args.Kf_F;
+  stewart.joints_F.Kt = args.Kt_F;
 #+end_src
 
 Rotational Damping
 #+begin_src matlab
   stewart.joints_M.Cf = args.Cf_M;
-  stewart.joints_M.Ct = args.Cf_M;
+  stewart.joints_M.Ct = args.Ct_M;
 
   stewart.joints_F.Cf = args.Cf_F;
-  stewart.joints_F.Ct = args.Cf_F;
+  stewart.joints_F.Ct = args.Ct_F;
 #+end_src
 
 *** Stiffness and Mass matrices for flexible joint

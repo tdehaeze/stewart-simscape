@@ -29,16 +29,24 @@ function [stewart] = initializeJointDynamics(stewart, args)
 
 arguments
     stewart
-    args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'universal'
-    args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p', 'flexible'})} = 'spherical'
-    args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
+    args.type_F     char   {mustBeMember(args.type_F,{'universal', 'spherical', 'universal_p', 'spherical_p', 'universal_3dof', 'spherical_3dof', 'flexible'})} = 'universal'
+    args.type_M     char   {mustBeMember(args.type_M,{'universal', 'spherical', 'universal_p', 'spherical_p', 'universal_3dof', 'spherical_3dof', 'flexible'})} = 'spherical'
+    args.Kf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 33*ones(6,1)
     args.Cf_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-    args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
+    args.Kt_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 236*ones(6,1)
     args.Ct_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
-    args.Kf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 15*ones(6,1)
+    args.Kf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 33*ones(6,1)
     args.Cf_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-4*ones(6,1)
-    args.Kt_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 20*ones(6,1)
+    args.Kt_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 236*ones(6,1)
     args.Ct_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e-3*ones(6,1)
+    args.Ka_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.2e8*ones(6,1)
+    args.Ca_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.Kr_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.1e7*ones(6,1)
+    args.Cr_F (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.Ka_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.2e8*ones(6,1)
+    args.Ca_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
+    args.Kr_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1.1e7*ones(6,1)
+    args.Cr_M (6,1) double {mustBeNumeric, mustBeNonnegative} = 1e1*ones(6,1)
     args.K_M        double {mustBeNumeric} = zeros(6,6)
     args.M_M        double {mustBeNumeric} = zeros(6,6)
     args.n_xyz_M    double {mustBeNumeric} = zeros(2,3)
@@ -62,6 +70,10 @@ switch args.type_F
     stewart.joints_F.type = 4;
   case 'flexible'
     stewart.joints_F.type = 5;
+  case 'universal_3dof'
+    stewart.joints_F.type = 6;
+  case 'spherical_3dof'
+    stewart.joints_F.type = 7;
 end
 
 switch args.type_M
@@ -75,35 +87,35 @@ switch args.type_M
     stewart.joints_M.type = 4;
   case 'flexible'
     stewart.joints_M.type = 5;
+  case 'universal_3dof'
+    stewart.joints_M.type = 6;
+  case 'spherical_3dof'
+    stewart.joints_M.type = 7;
 end
 
-stewart.joints_M.Kx = zeros(6,1);
-stewart.joints_M.Ky = zeros(6,1);
-stewart.joints_M.Kz = zeros(6,1);
+stewart.joints_M.Ka = args.Ka_M;
+stewart.joints_M.Kr = args.Kr_M;
 
-stewart.joints_F.Kx = zeros(6,1);
-stewart.joints_F.Ky = zeros(6,1);
-stewart.joints_F.Kz = zeros(6,1);
+stewart.joints_F.Ka = args.Ka_F;
+stewart.joints_F.Kr = args.Kr_F;
 
-stewart.joints_M.Cx = zeros(6,1);
-stewart.joints_M.Cy = zeros(6,1);
-stewart.joints_M.Cz = zeros(6,1);
+stewart.joints_M.Ca = args.Ca_M;
+stewart.joints_M.Cr = args.Cr_M;
 
-stewart.joints_F.Cx = zeros(6,1);
-stewart.joints_F.Cy = zeros(6,1);
-stewart.joints_F.Cz = zeros(6,1);
+stewart.joints_F.Ca = args.Ca_F;
+stewart.joints_F.Cr = args.Cr_F;
 
 stewart.joints_M.Kf = args.Kf_M;
-stewart.joints_M.Kt = args.Kf_M;
+stewart.joints_M.Kt = args.Kt_M;
 
 stewart.joints_F.Kf = args.Kf_F;
-stewart.joints_F.Kt = args.Kf_F;
+stewart.joints_F.Kt = args.Kt_F;
 
 stewart.joints_M.Cf = args.Cf_M;
-stewart.joints_M.Ct = args.Cf_M;
+stewart.joints_M.Ct = args.Ct_M;
 
 stewart.joints_F.Cf = args.Cf_F;
-stewart.joints_F.Ct = args.Cf_F;
+stewart.joints_F.Ct = args.Ct_F;
 
 stewart.joints_F.M = args.M_F;
 stewart.joints_F.K = args.K_F;

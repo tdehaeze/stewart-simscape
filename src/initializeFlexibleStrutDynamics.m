@@ -9,6 +9,7 @@ function [stewart] = initializeFlexibleStrutDynamics(stewart, args)
 %        - M [nxn] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
 %        - xi        [1x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
 %        - step_file [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
+%        - Gf [6x1] - Gain from strain in [m] to measured [N] such that it matches
 %
 % Outputs:
 %    - stewart - updated Stewart structure with the added fields:
@@ -20,6 +21,7 @@ arguments
     args.H        double {mustBeNumeric} = 0
     args.n_xyz    double {mustBeNumeric} = zeros(2,3)
     args.xi       double {mustBeNumeric} = 0.1
+    args.Gf       double {mustBeNumeric} = 1
     args.step_file char {} = ''
 end
 
@@ -36,3 +38,5 @@ stewart.actuators.xi = args.xi;
 stewart.actuators.step_file = args.step_file;
 
 stewart.actuators.K = args.K(3,3); % Axial Stiffness
+
+stewart.actuators.Gf = args.Gf;

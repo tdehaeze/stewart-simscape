@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-07 ven. 09:55 -->
+<!-- 2020-09-01 mar. 13:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Stewart Platform with Flexible Elements</title>
 <meta name="generator" content="Org mode" />
@@ -28,15 +28,48 @@
 <ul>
 <li><a href="#orgbdb2a68">1. Simscape Model</a>
 <ul>
-<li><a href="#orgd80e541">1.1. Flexible APA</a></li>
+<li><a href="#org1a0f3d5">1.1. Flexible APA</a></li>
 <li><a href="#org3650a90">1.2. Flexible Joint</a></li>
 <li><a href="#org75c496c">1.3. Identification</a></li>
 <li><a href="#org52d500c">1.4. No Flexible Elements</a></li>
 <li><a href="#org6800cf5">1.5. Flexible joints</a></li>
-<li><a href="#org1a0f3d5">1.6. Flexible APA</a></li>
+<li><a href="#org17a6e21">1.6. Flexible APA</a></li>
 <li><a href="#org1609aa1">1.7. Flexible Joints and APA</a></li>
-<li><a href="#orge9b9e81">1.8. Direct Velocity Feedback</a></li>
-<li><a href="#org265a0a3">1.9. Integral Force Feedback</a></li>
+<li><a href="#org238cd25">1.8. Save</a></li>
+<li><a href="#orge9b9e81">1.9. Direct Velocity Feedback</a></li>
+<li><a href="#org265a0a3">1.10. Integral Force Feedback</a></li>
+<li><a href="#org15aa3b2">1.11. Procedure to include flexible elements into Simscape</a></li>
+<li><a href="#org0b65066">1.12. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#org90432f4">2. Control with flexible elements</a>
+<ul>
+<li><a href="#org1697b6a">2.1. Flexible APA and Flexible Joint</a></li>
+<li><a href="#org1a49c82">2.2. Identification</a></li>
+<li><a href="#org353e7e4">2.3. Decentralized Direct Velocity Feedback</a></li>
+<li><a href="#orgf84ea43">2.4. HAC</a></li>
+</ul>
+</li>
+<li><a href="#orge8b5f65">3. Flexible Joint Specifications</a>
+<ul>
+<li><a href="#orgfb150a0">3.1. Stewart Platform Initialization</a></li>
+<li><a href="#orga01758c">3.2. Effect of the Bending Stiffness</a></li>
+<li><a href="#orga98637e">3.3. Effect of the Torsion Stiffness</a></li>
+<li><a href="#org4f5ee79">3.4. Effect of the Axial Stiffness</a></li>
+<li><a href="#org4a85ef8">3.5. Effect of the Radial (Shear) Stiffness</a></li>
+<li><a href="#orgd0fd2ec">3.6. Comparison of perfect joint and worst specified joint</a></li>
+<li><a href="#orgbddb83e">3.7. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#org0017658">4. Flexible Joint Specifications with the APA300ML</a>
+<ul>
+<li><a href="#org96b5fde">4.1. Stewart Platform Initialization</a></li>
+<li><a href="#orgcb2d2af">4.2. Comparison of perfect joint and worst specified joint</a></li>
+</ul>
+</li>
+<li><a href="#org649a6c9">5. Relative Motion Sensors</a>
+<ul>
+<li><a href="#org36b0a8e">5.1. Stewart Platform Initialization</a></li>
 </ul>
 </li>
 </ul>
@@ -47,8 +80,8 @@
 <h2 id="orgbdb2a68"><span class="section-number-2">1</span> Simscape Model</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgd80e541" class="outline-3">
-<h3 id="orgd80e541"><span class="section-number-3">1.1</span> Flexible APA</h3>
+<div id="outline-container-org1a0f3d5" class="outline-3">
+<h3 id="org1a0f3d5"><span class="section-number-3">1.1</span> Flexible APA</h3>
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
 <pre class="src src-matlab">apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
@@ -76,12 +109,12 @@
 
 <tr>
 <td class="org-left">Number of Modes</td>
-<td class="org-right">6</td>
+<td class="org-right">120</td>
 </tr>
 
 <tr>
 <td class="org-left">Size of M and K matrices</td>
-<td class="org-right">48</td>
+<td class="org-right">162</td>
 </tr>
 </tbody>
 </table>
@@ -112,23 +145,23 @@
 <tbody>
 <tr>
 <td class="org-right">1.0</td>
-<td class="org-right">53917.0</td>
+<td class="org-right">697783.0</td>
+<td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">-0.015</td>
-<td class="org-right">0.0</td>
 </tr>
 
 <tr>
 <td class="org-right">2.0</td>
-<td class="org-right">53918.0</td>
+<td class="org-right">697784.0</td>
+<td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.015</td>
-<td class="org-right">0.0</td>
 </tr>
 
 <tr>
 <td class="org-right">3.0</td>
-<td class="org-right">53919.0</td>
+<td class="org-right">697785.0</td>
 <td class="org-right">-0.0325</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -136,7 +169,7 @@
 
 <tr>
 <td class="org-right">4.0</td>
-<td class="org-right">53920.0</td>
+<td class="org-right">697786.0</td>
 <td class="org-right">-0.0125</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -144,7 +177,7 @@
 
 <tr>
 <td class="org-right">5.0</td>
-<td class="org-right">53921.0</td>
+<td class="org-right">697787.0</td>
 <td class="org-right">-0.0075</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -152,7 +185,7 @@
 
 <tr>
 <td class="org-right">6.0</td>
-<td class="org-right">53922.0</td>
+<td class="org-right">697788.0</td>
 <td class="org-right">0.0125</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -160,7 +193,7 @@
 
 <tr>
 <td class="org-right">7.0</td>
-<td class="org-right">53923.0</td>
+<td class="org-right">697789.0</td>
 <td class="org-right">0.0325</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -174,7 +207,7 @@
 <h3 id="org3650a90"><span class="section-number-3">1.2</span> Flexible Joint</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-matlab">flex_joint = load('./mat/flexor_ID16.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+<pre class="src src-matlab">flex_joint = load('./mat/flexor_025.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
 </pre>
 </div>
 
@@ -235,7 +268,7 @@
 <tbody>
 <tr>
 <td class="org-right">1.0</td>
-<td class="org-right">181278.0</td>
+<td class="org-right">528875.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
@@ -243,7 +276,7 @@
 
 <tr>
 <td class="org-right">2.0</td>
-<td class="org-right">181279.0</td>
+<td class="org-right">528876.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">0.0</td>
 <td class="org-right">-0.0</td>
@@ -268,22 +301,22 @@
 <tbody>
 <tr>
 <td class="org-left">Axial Stiffness [N/um]</td>
-<td class="org-right">119</td>
+<td class="org-right">94</td>
 </tr>
 
 <tr>
 <td class="org-left">Bending Stiffness [Nm/rad]</td>
-<td class="org-right">33</td>
+<td class="org-right">5</td>
 </tr>
 
 <tr>
 <td class="org-left">Bending Stiffness [Nm/rad]</td>
-<td class="org-right">33</td>
+<td class="org-right">5</td>
 </tr>
 
 <tr>
 <td class="org-left">Torsion Stiffness [Nm/rad]</td>
-<td class="org-right">236</td>
+<td class="org-right">260</td>
 </tr>
 </tbody>
 </table>
@@ -334,9 +367,17 @@ controller = initializeController('type', 'open-loop');
 stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-% stewart = initializeStrutDynamics(stewart, 'K', 1.8e6*ones(6,1));
-stewart = initializeAmplifiedStrutDynamics(stewart, 'Kr', 0.9e6*ones(6,1), 'Ka', 0.9e6*ones(6,1));
-stewart = initializeJointDynamics(stewart, 'Kf_M', 33*ones(6,1), 'Kt_M', 235*ones(6,1), 'Kf_F', 33*ones(6,1), 'Kt_F', 235*ones(6,1));
+stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 40.5e6*ones(6,1), 'K1', 0.4e6*ones(6,1));
+stewart = initializeJointDynamics(stewart, 'type_M', 'spherical_3dof', ...
+                                           'Kr_M', flex_joint.K(1,1)*ones(6,1), ...
+                                           'Ka_M', flex_joint.K(3,3)*ones(6,1), ...
+                                           'Kf_M', flex_joint.K(4,4)*ones(6,1), ...
+                                           'Kt_M', flex_joint.K(6,6)*ones(6,1), ...
+                                           'type_F', 'universal_3dof', ...
+                                           'Kr_F', flex_joint.K(1,1)*ones(6,1), ...
+                                           'Ka_F', flex_joint.K(3,3)*ones(6,1), ...
+                                           'Kf_F', flex_joint.K(4,4)*ones(6,1), ...
+                                           'Kt_F', flex_joint.K(6,6)*ones(6,1));
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
 stewart = computeJacobian(stewart);
@@ -372,7 +413,7 @@ G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', '
 stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeAmplifiedStrutDynamics(stewart, 'Kr', 0.9e6*ones(6,1), 'Ka', 0.9e6*ones(6,1));
+stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 40.5e6*ones(6,1), 'K1', 0.4e6*ones(6,1));
 stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart);
@@ -392,8 +433,8 @@ Gj.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 </div>
 </div>
 
-<div id="outline-container-org1a0f3d5" class="outline-3">
-<h3 id="org1a0f3d5"><span class="section-number-3">1.6</span> Flexible APA</h3>
+<div id="outline-container-org17a6e21" class="outline-3">
+<h3 id="org17a6e21"><span class="section-number-3">1.6</span> Flexible APA</h3>
 <div class="outline-text-3" id="text-1-6">
 
 <div id="org774a034" class="figure">
@@ -407,8 +448,17 @@ Gj.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
-stewart = initializeJointDynamics(stewart, 'Kf_M', 33*ones(6,1), 'Kt_M', 235, 'Kf_F', 33*ones(6,1), 'Kt_F', 235);
+stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'Gf', -2.65e7, 'step_file', 'mat/APA300ML.STEP');
+stewart = initializeJointDynamics(stewart, 'type_M', 'spherical_3dof', ...
+                                           'Kr_M', flex_joint.K(1,1)*ones(6,1), ...
+                                           'Ka_M', flex_joint.K(3,3)*ones(6,1), ...
+                                           'Kf_M', flex_joint.K(4,4)*ones(6,1), ...
+                                           'Kt_M', flex_joint.K(6,6)*ones(6,1), ...
+                                           'type_F', 'universal_3dof', ...
+                                           'Kr_F', flex_joint.K(1,1)*ones(6,1), ...
+                                           'Ka_F', flex_joint.K(3,3)*ones(6,1), ...
+                                           'Kf_F', flex_joint.K(4,4)*ones(6,1), ...
+                                           'Kt_F', flex_joint.K(6,6)*ones(6,1));
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
 stewart = computeJacobian(stewart);
@@ -442,7 +492,7 @@ Ga.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 stewart = initializeFramesPositions(stewart);
 stewart = generateGeneralConfiguration(stewart);
 stewart = computeJointsPose(stewart);
-stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'Gf', -2.65e7, 'step_file', 'mat/APA300ML.STEP');
 stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
 stewart = initializeCylindricalPlatforms(stewart);
 stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
@@ -461,9 +511,19 @@ Gf.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 </div>
 </div>
 
-<div id="outline-container-orge9b9e81" class="outline-3">
-<h3 id="orge9b9e81"><span class="section-number-3">1.8</span> Direct Velocity Feedback</h3>
+<div id="outline-container-org238cd25" class="outline-3">
+<h3 id="org238cd25"><span class="section-number-3">1.8</span> Save</h3>
 <div class="outline-text-3" id="text-1-8">
+<div class="org-src-container">
+<pre class="src src-matlab">save('./mat/flexible_stewart_platform.mat', 'G', 'Gj', 'Ga', 'Gf');
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge9b9e81" class="outline-3">
+<h3 id="orge9b9e81"><span class="section-number-3">1.9</span> Direct Velocity Feedback</h3>
+<div class="outline-text-3" id="text-1-9">
 
 <div id="org2d35259" class="figure">
 <p><img src="figs/flexible_elements_effect_dvf.png" alt="flexible_elements_effect_dvf.png" />
@@ -474,8 +534,8 @@ Gf.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 </div>
 
 <div id="outline-container-org265a0a3" class="outline-3">
-<h3 id="org265a0a3"><span class="section-number-3">1.9</span> Integral Force Feedback</h3>
-<div class="outline-text-3" id="text-1-9">
+<h3 id="org265a0a3"><span class="section-number-3">1.10</span> Integral Force Feedback</h3>
+<div class="outline-text-3" id="text-1-10">
 
 <div id="org81cc646" class="figure">
 <p><img src="figs/flexible_elements_effect_iff.png" alt="flexible_elements_effect_iff.png" />
@@ -484,11 +544,492 @@ Gf.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', 'Fm1', 'Fm2', 'Fm3', 
 </div>
 </div>
 </div>
+
+<div id="outline-container-org15aa3b2" class="outline-3">
+<h3 id="org15aa3b2"><span class="section-number-3">1.11</span> Procedure to include flexible elements into Simscape</h3>
+<div class="outline-text-3" id="text-1-11">
+<p>
+In order to model a flexible element with only few mass-spring-damper elements:
+</p>
+<ul class="org-ul">
+<li>FEM of the flexible element</li>
+<li>Super-Element extraction</li>
+<li>Parameters to extract
+<ul class="org-ul">
+<li>For the flexible joint: axial, shear, bending and torsion stiffnesses</li>
+<li>For the APA: k1, ka, ke, c1</li>
+</ul></li>
+<li>This can be done directly from the Stiffness matrix or using identification from a simple Simscape model</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0b65066" class="outline-3">
+<h3 id="org0b65066"><span class="section-number-3">1.12</span> Conclusion</h3>
+<div class="outline-text-3" id="text-1-12">
+<div class="important">
+<p>
+The results seems to indicate that the model is well represented with only few degrees of freedom.
+This permit to have a relatively sane number of states for the model.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org90432f4" class="outline-2">
+<h2 id="org90432f4"><span class="section-number-2">2</span> Control with flexible elements</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1697b6a" class="outline-3">
+<h3 id="org1697b6a"><span class="section-number-3">2.1</span> Flexible APA and Flexible Joint</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+flex_joint = load('./mat/flexor_ID16.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'rigid', 'm', 50);
+controller = initializeController('type', 'open-loop');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+references = initializeReferences(stewart);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a49c82" class="outline-3">
+<h3 id="org1a49c82"><span class="section-number-3">2.2</span> Identification</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+And we identify the dynamics from force actuators to force sensors.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">%% Options for Linearized
+options = linearizeOptions;
+options.SampleTime = 0;
+
+%% Name of the Simulink File
+mdl = 'stewart_platform_model';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">G = -linearize(mdl, io, options);
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org353e7e4" class="outline-3">
+<h3 id="org353e7e4"><span class="section-number-3">2.3</span> Decentralized Direct Velocity Feedback</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Controller Design
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">Kl = -1e5*s/(1 + s/2/pi/2e2)/(1 + s/2/pi/5e2) * eye(6);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">isstable(feedback(G(1:6,1:6)*Kl, eye(6), -1))
+</pre>
+</div>
+
+<pre class="example">
+1
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf84ea43" class="outline-3">
+<h3 id="orgf84ea43"><span class="section-number-3">2.4</span> HAC</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-matlab">Kx = tf(zeros(6));
+
+controller = initializeController('type', 'ref-track-hac-dvf');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'stewart_platform_model';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/Controller'],              1, 'input');  io_i = io_i + 1; % Actuator Force Inputs [N]
+io(io_i) = linio([mdl, '/Relative Motion Sensor'],  1, 'openoutput'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+
+%% Run the linearization
+G = linearize(mdl, io);
+G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+G.OutputName = {'Dx', 'Dy', 'Dz', 'Rx', 'Ry', 'Rz'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Gl = -stewart.kinematics.J*G;
+Gl.OutputName  = {'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">wc = 2*pi*300;
+Kl = diag(1./diag(abs(freqresp(Gl, wc)))) * wc/s * 1/(1 + s/3/wc);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge8b5f65" class="outline-2">
+<h2 id="orge8b5f65"><span class="section-number-2">3</span> Flexible Joint Specifications</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgfb150a0" class="outline-3">
+<h3 id="orgfb150a0"><span class="section-number-3">3.1</span> Stewart Platform Initialization</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 43e6*ones(6,1), 'K1', 0.4e6*ones(6,1), 'C1', 10*ones(6,1));
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart);
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart);
+
+references = initializeReferences(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'rigid', 'm', 50);
+controller = initializeController('type', 'open-loop');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('stewart_platform_model.slx')
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga01758c" class="outline-3">
+<h3 id="orga01758c"><span class="section-number-3">3.2</span> Effect of the Bending Stiffness</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-matlab">Kfs = [1, 10, 100, 1000]; % [Nm/rad]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga98637e" class="outline-3">
+<h3 id="orga98637e"><span class="section-number-3">3.3</span> Effect of the Torsion Stiffness</h3>
+<div class="outline-text-3" id="text-3-3">
+<div class="org-src-container">
+<pre class="src src-matlab">Kts = [10, 100, 500, 1000]; % [Nm/rad]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4f5ee79" class="outline-3">
+<h3 id="org4f5ee79"><span class="section-number-3">3.4</span> Effect of the Axial Stiffness</h3>
+<div class="outline-text-3" id="text-3-4">
+<div class="org-src-container">
+<pre class="src src-matlab">Kas = [1e6, 1e7, 1e8, 5e8, 1e9]; % [N/m]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4a85ef8" class="outline-3">
+<h3 id="org4a85ef8"><span class="section-number-3">3.5</span> Effect of the Radial (Shear) Stiffness</h3>
+<div class="outline-text-3" id="text-3-5">
+<div class="org-src-container">
+<pre class="src src-matlab">Krs = [1e4, 1e5, 1e6, 1e7]; % [N/m]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd0fd2ec" class="outline-3">
+<h3 id="orgd0fd2ec"><span class="section-number-3">3.6</span> Comparison of perfect joint and worst specified joint</h3>
+</div>
+<div id="outline-container-orgbddb83e" class="outline-3">
+<h3 id="orgbddb83e"><span class="section-number-3">3.7</span> Conclusion</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+Qualitatively:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left"><b>Specification</b></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Axial Stiffness</td>
+<td class="org-left">Much larger than the Actuator axial stiffness</td>
+</tr>
+
+<tr>
+<td class="org-left">Shear Stiffness</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Bending Stiffness</td>
+<td class="org-left">Much smaller than the Actuator bending stiffness</td>
+</tr>
+
+<tr>
+<td class="org-left">Torsion Stiffness</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Quantitatively:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left"><b>Specification</b></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Axial Stiffness</td>
+<td class="org-left">&gt; 200  [N/um]</td>
+</tr>
+
+<tr>
+<td class="org-left">Shear Stiffness</td>
+<td class="org-left">&gt; 1 [N/um]</td>
+</tr>
+
+<tr>
+<td class="org-left">Bending Stiffness</td>
+<td class="org-left">&lt; 100  [Nm/rad]</td>
+</tr>
+
+<tr>
+<td class="org-left">Torsion Stiffness</td>
+<td class="org-left">&lt; 500  [Nm/rad]</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0017658" class="outline-2">
+<h2 id="org0017658"><span class="section-number-2">4</span> Flexible Joint Specifications with the APA300ML</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org96b5fde" class="outline-3">
+<h3 id="org96b5fde"><span class="section-number-3">4.1</span> Stewart Platform Initialization</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-matlab">apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+stewart = initializeCylindricalPlatforms(stewart);
+stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart);
+
+references = initializeReferences(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'rigid', 'm', 50);
+controller = initializeController('type', 'open-loop');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('stewart_platform_model.slx')
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcb2d2af" class="outline-3">
+<h3 id="orgcb2d2af"><span class="section-number-3">4.2</span> Comparison of perfect joint and worst specified joint</h3>
+</div>
+</div>
+<div id="outline-container-org649a6c9" class="outline-2">
+<h2 id="org649a6c9"><span class="section-number-2">5</span> Relative Motion Sensors</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org36b0a8e" class="outline-3">
+<h3 id="org36b0a8e"><span class="section-number-3">5.1</span> Stewart Platform Initialization</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-matlab">apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeStewartPlatform();
+stewart = initializeFramesPositions(stewart);
+stewart = generateGeneralConfiguration(stewart);
+stewart = computeJointsPose(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 43e6*ones(6,1), 'K1', 0.4e6*ones(6,1), 'C1', 10*ones(6,1));
+% stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeJointDynamics(stewart, 'type_F', 'universal_3dof', ...
+                                           'type_M', 'spherical_3dof', ...
+                                           'Kf_M', 100*ones(6,1), ...
+                                           'Kt_M', 500*ones(6,1), ...
+                                           'Kf_F', 100*ones(6,1), ...
+                                           'Kt_F', 500*ones(6,1), ...
+                                           'Ka_M', 200e6*ones(6,1), ...
+                                           'Kr_M', 1e6*ones(6,1), ...
+                                           'Ka_F', 200e6*ones(6,1), ...
+                                           'Kr_F', 1e6*ones(6,1));
+% stewart = initializeJointDynamics(stewart, 'type_F', 'universal_3dof', ...
+%                                            'type_M', 'spherical_3dof', ...
+%                                            'Kf_M', 100*ones(6,1), ...
+%                                            'Kt_M', 500*ones(6,1), ...
+%                                            'Kf_F', 100*ones(6,1), ...
+%                                            'Kt_F', 500*ones(6,1), ...
+%                                            'Ka_M', 1e6*ones(6,1), ...
+%                                            'Kr_M', 1e6*ones(6,1), ...
+%                                            'Ka_F', 1e6*ones(6,1), ...
+%                                            'Kr_F', 1e6*ones(6,1));
+% stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalPlatforms(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = initializeCylindricalStruts(stewart);
+% stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">stewart = computeJacobian(stewart);
+stewart = initializeStewartPose(stewart);
+stewart = initializeInertialSensor(stewart);
+
+references = initializeReferences(stewart);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">ground = initializeGround('type', 'none');
+payload = initializePayload('type', 'rigid', 'm', 50);
+controller = initializeController('type', 'open-loop');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">disturbances = initializeDisturbances();
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('stewart_platform_model.slx')
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dehaeze Thomas</p>
-<p class="date">Created: 2020-08-07 ven. 09:55</p>
+<p class="date">Created: 2020-09-01 mar. 13:18</p>
 </div>
 </body>
 </html>
