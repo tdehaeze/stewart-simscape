@@ -1,0 +1,88 @@
+#+TITLE: Stewart Platform - NASS
+:DRAWER:
+#+STARTUP: overview
+
+#+LANGUAGE: en
+#+EMAIL: dehaeze.thomas@gmail.com
+#+AUTHOR: Dehaeze Thomas
+
+#+HTML_LINK_HOME: ./index.html
+#+HTML_LINK_UP: ./index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/readtheorg.css"/>
+#+HTML_HEAD: <script src="./js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="./js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="./js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="./js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+PROPERTY: header-args:matlab+ :comments org
+#+PROPERTY: header-args:matlab+ :exports both
+#+PROPERTY: header-args:matlab+ :results none
+#+PROPERTY: header-args:matlab+ :eval no-export
+#+PROPERTY: header-args:matlab+ :noweb yes
+#+PROPERTY: header-args:matlab+ :mkdirp yes
+#+PROPERTY: header-args:matlab+ :output-dir figs
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{$HOME/Cloud/tikz/org/}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports results
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
+:END:
+
+* NASS
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  simulinkproject('../');
+#+end_src
+
+#+begin_src matlab
+  open('stewart_platform_model.slx')
+#+end_src
+
+** Identification of the Dynamics
+#+begin_src matlab
+  apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+  flex_joint = load('./mat/flexor_ID16.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+#+end_src
+
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 90e-3, 'MO_B', 175e-3);
+  stewart = generateGeneralConfiguration(stewart, 'FH', 20e-3, 'MH', 20e-3, 'FR', 228e-3/2, 'MR', 220e-3/2, 'FTh', [-9, 9, 120-9, 120+9, 240-9, 240+9]*(pi/180), 'MTh', [-60+15, 60-15, 60+15, 180-15, 180+15, -60-15]*(pi/180));
+  stewart = computeJointsPose(stewart);
+  stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
+  stewart = initializeJointDynamics(stewart, 'type_F', 'flexible', 'K_F', flex_joint.K, 'M_F', flex_joint.M, 'n_xyz_F', flex_joint.n_xyz, 'xi_F', 0.1, 'step_file_F', 'mat/flexor_ID16.STEP', 'type_M', 'flexible', 'K_M', flex_joint.K, 'M_M', flex_joint.M, 'n_xyz_M', flex_joint.n_xyz, 'xi_M', 0.1, 'step_file_M', 'mat/flexor_ID16.STEP');
+  stewart = initializeCylindricalPlatforms(stewart, 'Fpr', 150e-3, 'Mpr', 125e-3);
+  stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'rigid', 'm', 50);
+  controller = initializeController('type', 'open-loop');
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  references = initializeReferences(stewart);
+#+end_src
