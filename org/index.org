@@ -20,8 +20,8 @@
 
 * Introduction                                                       :ignore:
 The goal of this project is to provide a Matlab/Simscape Toolbox to study Stewart platforms.
-
 The project is divided into several section listed below.
+The git repository of the project is accessible [[https://git.tdehaeze.xyz/tdehaeze/stewart-simscape][here]].
 
 * Simulink Project ([[file:simulink-project.org][link]])
 The project is managed with a *Simulink Project*.
