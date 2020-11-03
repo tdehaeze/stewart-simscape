@@ -1450,11 +1450,11 @@ Quantitatively:
   simulinkproject('../');
 #+end_src
 
-** Stewart Platform Initialization
 #+begin_src matlab
-  apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+  open('stewart_platform_model.slx')
 #+end_src
 
+** Stewart Platform Initialization
 #+begin_src matlab
   stewart = initializeStewartPlatform();
   stewart = initializeFramesPositions(stewart);
@@ -1463,32 +1463,23 @@ Quantitatively:
 #+end_src
 
 #+begin_src matlab
-  stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 43e6*ones(6,1), 'K1', 0.4e6*ones(6,1), 'C1', 10*ones(6,1));
+  apa = load('./mat/APA300ML.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+  stewart = initializeAmplifiedStrutDynamics(stewart, 'Ke', 1.5e6*ones(6,1), 'Ka', 40.5e6*ones(6,1), 'K1', 0.4e6*ones(6,1));
   % stewart = initializeFlexibleStrutDynamics(stewart, 'H', 0.03, 'K', apa.K, 'M', apa.M, 'n_xyz', apa.n_xyz, 'xi', 0.1, 'step_file', 'mat/APA300ML.STEP');
 #+end_src
 
 #+begin_src matlab
-  stewart = initializeJointDynamics(stewart, 'type_F', 'universal_3dof', ...
-                                             'type_M', 'spherical_3dof', ...
-                                             'Kf_M', 100*ones(6,1), ...
-                                             'Kt_M', 500*ones(6,1), ...
-                                             'Kf_F', 100*ones(6,1), ...
-                                             'Kt_F', 500*ones(6,1), ...
-                                             'Ka_M', 200e6*ones(6,1), ...
-                                             'Kr_M', 1e6*ones(6,1), ...
-                                             'Ka_F', 200e6*ones(6,1), ...
-                                             'Kr_F', 1e6*ones(6,1));
-  % stewart = initializeJointDynamics(stewart, 'type_F', 'universal_3dof', ...
-  %                                            'type_M', 'spherical_3dof', ...
-  %                                            'Kf_M', 100*ones(6,1), ...
-  %                                            'Kt_M', 500*ones(6,1), ...
-  %                                            'Kf_F', 100*ones(6,1), ...
-  %                                            'Kt_F', 500*ones(6,1), ...
-  %                                            'Ka_M', 1e6*ones(6,1), ...
-  %                                            'Kr_M', 1e6*ones(6,1), ...
-  %                                            'Ka_F', 1e6*ones(6,1), ...
-  %                                            'Kr_F', 1e6*ones(6,1));
-  % stewart = initializeJointDynamics(stewart, 'type_F', 'universal_p', 'type_M', 'spherical_p');
+  flex_joint = load('./mat/flexor_025.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+  stewart = initializeJointDynamics(stewart, 'type_M', 'spherical_3dof', ...
+                                             'Kr_M', flex_joint.K(1,1)*ones(6,1), ...
+                                             'Ka_M', flex_joint.K(3,3)*ones(6,1), ...
+                                             'Kf_M', flex_joint.K(4,4)*ones(6,1), ...
+                                             'Kt_M', flex_joint.K(6,6)*ones(6,1), ...
+                                             'type_F', 'universal_3dof', ...
+                                             'Kr_F', flex_joint.K(1,1)*ones(6,1), ...
+                                             'Ka_F', flex_joint.K(3,3)*ones(6,1), ...
+                                             'Kf_F', flex_joint.K(4,4)*ones(6,1), ...
+                                             'Kt_F', flex_joint.K(6,6)*ones(6,1));
 #+end_src
 
 #+begin_src matlab
@@ -1497,7 +1488,6 @@ Quantitatively:
 
 #+begin_src matlab
   stewart = initializeCylindricalStruts(stewart);
-  % stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
 #+end_src
 
 #+begin_src matlab
@@ -1518,10 +1508,6 @@ Quantitatively:
   disturbances = initializeDisturbances();
 #+end_src
 
-#+begin_src matlab
-  open('stewart_platform_model.slx')
-#+end_src
-
 ** Initialization                                                  :noexport:
 #+begin_src matlab
   %% Options for Linearized
@@ -1533,9 +1519,9 @@ Quantitatively:
 
   %% Input/Output definition
   clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/Controller'],              1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');              io_i = io_i + 1; % Actuator Force Inputs [N]
   io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm');  io_i = io_i + 1; % Relative Motion - Actuators [m]
-  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Lm');  io_i = io_i + 1;  % Relative Motion - Legs [m]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Lm');   io_i = io_i + 1;  % Relative Motion - Legs [m]
 #+end_src
 
 #+begin_src matlab :exports none
@@ -1581,3 +1567,156 @@ Quantitatively:
 
   linkaxes([ax1,ax2],'x');
 #+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/comp_relative_motion_sensor_act_leg.pdf', 'width', 'full', 'height', 'full');
+#+end_src
+
+#+name: fig:comp_relative_motion_sensor_act_leg
+#+caption: Comparison of the dynamique from actuator to relative motion sensor located in parallel with the actuator or with the leg (flexible joints included)
+#+RESULTS:
+[[file:figs/comp_relative_motion_sensor_act_leg.png]]
+
+* Struts with Encoders
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab :results none :exports none
+  simulinkproject('../');
+#+end_src
+
+** Flexible Strut
+#+begin_src matlab
+  apa = load('./mat/strut_encoder.mat', 'int_xyz', 'int_i', 'n_xyz', 'n_i', 'nodes', 'M', 'K');
+#+end_src
+
+#+begin_src matlab :exports results :results value table replace :tangle no
+  data2orgtable([length(apa.n_i); length(apa.int_i); size(apa.M,1) - 6*length(apa.int_i); size(apa.M,1)], {'Total number of Nodes', 'Number of interface Nodes', 'Number of Modes', 'Size of M and K matrices'}, {}, ' %.0f ');
+#+end_src
+
+#+RESULTS:
+| Total number of Nodes     |  8 |
+| Number of interface Nodes |  8 |
+| Number of Modes           |  6 |
+| Size of M and K matrices  | 54 |
+
+#+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
+  data2orgtable([[1:length(apa.int_i)]', apa.int_i, apa.int_xyz], {}, {'Node i', 'Node Number', 'x [m]', 'y [m]', 'z [m]'}, ' %f ');
+#+end_src
+
+#+caption: Coordinates of the interface nodes
+#+RESULTS:
+| Node i | Node Number |   x [m] |  y [m] |    z [m] |
+|--------+-------------+---------+--------+----------|
+|    1.0 |    504411.0 |     0.0 |    0.0 |   0.0405 |
+|    2.0 |    504412.0 |     0.0 |    0.0 |  -0.0405 |
+|    3.0 |    504413.0 | -0.0325 |    0.0 |      0.0 |
+|    4.0 |    504414.0 | -0.0125 |    0.0 |      0.0 |
+|    5.0 |    504415.0 | -0.0075 |    0.0 |      0.0 |
+|    6.0 |    504416.0 |  0.0325 |    0.0 |      0.0 |
+|    7.0 |    504417.0 |   0.004 | 0.0145 | -0.00175 |
+|    8.0 |    504418.0 |   0.004 | 0.0166 | -0.00175 |
+
+** Stewart Platform
+#+begin_src matlab
+  stewart = initializeStewartPlatform();
+  stewart = initializeFramesPositions(stewart, 'H', 95e-3, 'MO_B', 220e-3);
+  stewart = generateGeneralConfiguration(stewart, 'FH', 22.5e-3, 'FR', 114e-3, 'FTh', [   -11,    11, 120-11, 120+11, 240-11, 240+11]*(pi/180), ...
+                                                  'MH', 22.5e-3, 'MR', 110e-3, 'MTh', [-60+15, 60-15,  60+15, 180-15, 180+15, -60-15]*(pi/180));
+  stewart = computeJointsPose(stewart);
+
+  stewart = initializeFlexibleStrutAndJointDynamics(stewart, 'H', (apa.int_xyz(1,3) - apa.int_xyz(2,3)), ...
+                                                             'K', apa.K, ...
+                                                             'M', apa.M, ...
+                                                             'n_xyz', apa.n_xyz, ...
+                                                             'xi', 0.1, ...
+                                                             'Gf', -2.65e7, ...
+                                                             'step_file', 'mat/APA300ML.STEP');
+
+  stewart = initializeSolidPlatforms(stewart);
+  stewart = initializeCylindricalStruts(stewart, 'type_F', 'none', 'type_M', 'none');
+  stewart = computeJacobian(stewart);
+  stewart = initializeStewartPose(stewart);
+  stewart = initializeInertialSensor(stewart);
+#+end_src
+
+#+begin_src matlab
+  disturbances = initializeDisturbances();
+  ground = initializeGround('type', 'none');
+  payload = initializePayload('type', 'rigid', 'm', 1);
+  controller = initializeController('type', 'open-loop');
+  references = initializeReferences(stewart);
+#+end_src
+
+
+#+begin_src matlab
+  %% Options for Linearized
+  options = linearizeOptions;
+  options.SampleTime = 0;
+
+  %% Name of the Simulink File
+  mdl = 'stewart_platform_model';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Controller'],        1, 'openinput');  io_i = io_i + 1; % Actuator Force Inputs [N]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'dLm'); io_i = io_i + 1; % Relative Displacement Outputs [m]
+  io(io_i) = linio([mdl, '/Stewart Platform'],  1, 'openoutput', [], 'Lm'); io_i = io_i + 1; % Force Sensors [N]
+#+end_src
+
+#+begin_src matlab
+  %% Run the linearization
+  G = linearize(mdl, io, options);
+  G.InputName  = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
+  G.OutputName = {'Dm1', 'Dm2', 'Dm3', 'Dm4', 'Dm5', 'Dm6', ...
+                  'D1', 'D2', 'D3', 'D4', 'D5', 'D6'};
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(0, 3, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(G(i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, abs(squeeze(freqresp(G(6+i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [m/N]'); set(gca, 'XTickLabel',[]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G(i,i), freqs, 'Hz'))), 'color', [0 0.4470 0.7410 0.2]);
+  end
+  for i = 1:6
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G(6+i,i), freqs, 'Hz'))), 'color', [0.8500 0.3250 0.0980 0.2]);
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  ylabel('Phase [deg]'); xlabel('Frequency [Hz]');
+  ylim([-180, 180]);
+  yticks([-180, -90, 0, 90, 180]);
+
+  linkaxes([ax1,ax2],'x');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+exportFig('figs/comp_relative_motion_sensor_act_leg_encoder.pdf', 'width', 'full', 'height', 'full');
+#+end_src
+
+#+name: fig:comp_relative_motion_sensor_act_leg_encoder
+#+caption:
+#+RESULTS:
+[[file:figs/comp_relative_motion_sensor_act_leg_encoder.png]]

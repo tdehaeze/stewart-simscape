@@ -926,6 +926,66 @@ This Matlab function is accessible [[file:../src/initializeCylindricalPlatforms.
   stewart.platform_M.H = args.Mph;
 #+end_src
 
+** =initializeSolidPlatforms=: Initialize the geometry of the Fixed and Mobile Platforms
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeSolidPlatforms.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeSolidPlatforms>>
+
+This Matlab function is accessible [[file:../src/initializeSolidPlatforms.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = initializeSolidPlatforms(stewart, args)
+  % initializeSolidPlatforms - Initialize the geometry of the Fixed and Mobile Platforms
+  %
+  % Syntax: [stewart] = initializeSolidPlatforms(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - density [1x1] - Density of the platforms [kg]
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+  %      - platform_F [struct] - structure with the following fields:
+  %        - type = 2
+  %        - M [1x1] - Fixed Platform Density [kg/m^3]
+  %      - platform_M [struct] - structure with the following fields:
+  %        - type = 2
+  %        - M [1x1] - Mobile Platform Density [kg/m^3]
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.density (1,1) double {mustBeNumeric, mustBePositive} = 7800
+  end
+#+end_src
+
+*** Populate the =stewart= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  stewart.platform_F.type = 2;
+
+  stewart.platform_F.density = args.density;
+#+end_src
+
+#+begin_src matlab
+  stewart.platform_M.type = 2;
+
+  stewart.platform_M.density = args.density;
+#+end_src
+
 ** =initializeCylindricalStruts=: Define the inertia of cylindrical struts
 :PROPERTIES:
 :header-args:matlab+: :tangle ../src/initializeCylindricalStruts.m
@@ -1511,6 +1571,96 @@ Rotational Damping
   stewart.joints_M.n_xyz = args.n_xyz_M;
   stewart.joints_M.xi = args.xi_M;
   stewart.joints_M.step_file = args.step_file_M;
+#+end_src
+
+** TODO =initializeFlexibleStrutAndJointDynamics=: Model each strut with a flexible element
+:PROPERTIES:
+:header-args:matlab+: :tangle ../src/initializeFlexibleStrutAndJointDynamics.m
+:header-args:matlab+: :comments none :mkdirp yes :eval no
+:END:
+<<sec:initializeFlexibleStrutAndJointDynamics>>
+
+This Matlab function is accessible [[file:../src/initializeFlexibleStrutAndJointDynamics.m][here]].
+
+*** Function description
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  function [stewart] = initializeFlexibleStrutAndJointDynamics(stewart, args)
+  % initializeFlexibleStrutAndJointDynamics - Add Stiffness and Damping properties of each strut
+  %
+  % Syntax: [stewart] = initializeFlexibleStrutAndJointDynamics(args)
+  %
+  % Inputs:
+  %    - args - Structure with the following fields:
+  %        - K [nxn] - Vertical stiffness contribution of the piezoelectric stack [N/m]
+  %        - M [nxn] - Vertical damping contribution of the piezoelectric stack [N/(m/s)]
+  %        - xi        [1x1] - Vertical (residual) stiffness when the piezoelectric stack is removed [N/m]
+  %        - step_file [6x1] - Vertical (residual) damping when the piezoelectric stack is removed [N/(m/s)]
+  %        - Gf [6x1] - Gain from strain in [m] to measured [N] such that it matches
+  %
+  % Outputs:
+  %    - stewart - updated Stewart structure with the added fields:
+#+end_src
+
+*** Optional Parameters
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+begin_src matlab
+  arguments
+      stewart
+      args.K        double {mustBeNumeric} = zeros(6,6)
+      args.M        double {mustBeNumeric} = zeros(6,6)
+      args.H        double {mustBeNumeric} = 0
+      args.n_xyz    double {mustBeNumeric} = zeros(2,3)
+      args.xi       double {mustBeNumeric} = 0.1
+      args.Gf       double {mustBeNumeric} = 1
+      args.step_file char {} = ''
+  end
+#+end_src
+
+*** Compute the axial offset
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+begin_src matlab
+  stewart.actuators.ax_off = (stewart.geometry.l(1) - args.H)/2; % Axial Offset at the ends of the actuator
+#+end_src
+
+*** Populate the =stewart= structure
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+No discrete joints:
+#+begin_src matlab
+  stewart.joints_F.type = 10;
+  stewart.joints_M.type = 10;
+
+#+end_src
+
+No discrete struts:
+#+begin_src matlab
+  stewart.struts_F.type = 3;
+  stewart.struts_M.type = 3;
+#+end_src
+
+#+begin_src matlab
+  stewart.actuators.type = 4;
+
+  stewart.actuators.Km = args.K;
+  stewart.actuators.Mm = args.M;
+
+  stewart.actuators.n_xyz = args.n_xyz;
+  stewart.actuators.xi = args.xi;
+
+  stewart.actuators.step_file = args.step_file;
+
+  stewart.actuators.K = args.K(3,3); % Axial Stiffness
+
+  stewart.actuators.Gf = args.Gf;
 #+end_src
 
 ** =initializeInertialSensor=: Initialize the inertial sensor in each strut
